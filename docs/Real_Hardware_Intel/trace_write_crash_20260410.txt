@@ -1,0 +1,64 @@
+=== TRACE ===
+[   0.016] POLL stack=['MainActivity'] 
+[   0.016] === ALL INSTALLED ===
+[  53.888] START(AutoCopyActivity)
+[  53.952] PM3> hf 14a info (timeout=5000)
+[  54.091] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  54.095] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[  54.125] PM3> lf sea (timeout=10000)
+[  55.263] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[  55.327] CACHE: {"data": "'FC,CN: 64725,719622'", "fc": "'64725'", "cn": "'719622'", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[  55.566] PM3> lf gallagher read (timeout=10000)
+[  55.595] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[  55.765] PM3< ret=1 [usb|script] pm3 --> lf gallagher read\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\nNikola.D: 0\n
+[  58.899] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[  59.101] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=29 uid=
+[  60.657] FINISH(top=WarningWriteActivity d=3)
+[  60.667] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[  61.008] PM3> lf t55xx detect (timeout=10000)
+[  61.105] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=29 uid=
+[  62.132] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  62.135] PM3> lf t55xx wipe p 20206666 (timeout=10000)
+[  62.987] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe p 20206666\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  62.988] PM3> lf t55xx wipe (timeout=10000)
+[  63.839] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  63.840] PM3> lf gallagher clone b 7FEAA30768D46A35868C35CF (timeout=10000)
+[  73.851] PM3< ret=1 timeout while waiting for reply
+[  73.852] PM3> lf sea (timeout=10000)
+[  83.863] PM3< ret=1 timeout while waiting for reply
+[  83.863] PM3> lf gallagher read (timeout=10000)
+[  93.874] PM3< ret=1 timeout while waiting for reply
+[ 118.602] FINISH(top=WriteActivity d=3)
+[ 118.678] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 119.191] FINISH(top=AutoCopyActivity d=2)
+[ 119.681] POLL stack=['MainActivity'] type=29 uid=
+[ 121.190] START(ScanActivity)
+[ 121.204] PM3> hf 14a info (timeout=5000)
+[ 121.684] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 126.211] PM3< ret=1 timeout while waiting for reply
+[ 126.213] PM3> lf sea (timeout=10000)
+[ 136.225] PM3< ret=1 timeout while waiting for reply
+[ 136.231] PM3> hf sea (timeout=10000)
+[ 146.234] PM3< ret=1 timeout while waiting for reply
+[ 146.246] PM3> lf t55xx detect (timeout=10000)
+[ 156.249] PM3< ret=1 timeout while waiting for reply
+[ 156.251] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 161.257] PM3< ret=1 timeout while waiting for reply
+[ 161.259] PM3> hf felica reader (timeout=10000)
+[ 171.270] PM3< ret=1 timeout while waiting for reply
+[ 175.943] FINISH(top=ScanActivity d=2)
+[ 176.252] POLL stack=['MainActivity'] type=29 uid=
+[ 179.094] START(AutoCopyActivity)
+[ 179.107] PM3> hf 14a info (timeout=5000)
+[ 179.257] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 188.847] PM3< ret=1 timeout while waiting for reply
+[ 188.849] PM3> lf sea (timeout=10000)
+[ 198.860] PM3< ret=1 timeout while waiting for reply
+[ 198.862] PM3> hf sea (timeout=10000)
+[ 208.874] PM3< ret=1 timeout while waiting for reply
+[ 208.876] PM3> lf t55xx detect (timeout=10000)
+[ 218.887] PM3< ret=1 timeout while waiting for reply
+[ 218.888] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 223.895] PM3< ret=1 timeout while waiting for reply
+[ 223.896] PM3> hf felica reader (timeout=10000)
+[ 233.908] PM3< ret=1 timeout while waiting for reply

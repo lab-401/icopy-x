@@ -1,0 +1,95 @@
+=== SNIFF TRACE (ORIGINAL FW + GD32 SERIAL) ===
+[   0.002] presspm3 hook OK
+[   0.004] POLL stack=['dict']
+[   0.004] === ALL INSTALLED ===
+[   1.664] SERIAL_TX> b'restartpm3'
+[   1.666] SERIAL_TX> b'\r\n'
+[   1.848] SERIAL_TX> b'pctbat'
+[   1.849] SERIAL_TX> b'\r\n'
+[   1.874] SERIAL_TX> b'version'
+[   1.875] SERIAL_TX> b'\r\n'
+[   1.908] SERIAL_TX> b'charge'
+[   1.909] SERIAL_TX> b'\r\n'
+[   1.942] SERIAL_TX> b'givemetime'
+[   1.943] SERIAL_TX> b'\r\n'
+[   1.905] SERIAL_TX> b'version'
+[   1.907] SERIAL_TX> b'\r\n'
+[   1.931] SERIAL_TX> b'sethighcurrent'
+[   1.932] SERIAL_TX> b'\r\n'
+[  11.950] SERIAL_TX> b'pctbat'
+[  11.951] SERIAL_TX> b'\r\n'
+[  11.994] SERIAL_TX> b'charge'
+[  11.996] SERIAL_TX> b'\r\n'
+[  22.020] SERIAL_TX> b'pctbat'
+[  22.021] SERIAL_TX> b'\r\n'
+[  22.054] SERIAL_TX> b'charge'
+[  22.056] SERIAL_TX> b'\r\n'
+[  32.083] SERIAL_TX> b'pctbat'
+[  32.084] SERIAL_TX> b'\r\n'
+[  32.106] SERIAL_TX> b'charge'
+[  32.107] SERIAL_TX> b'\r\n'
+[  42.151] SERIAL_TX> b'pctbat'
+[  42.152] SERIAL_TX> b'\r\n'
+[  42.174] SERIAL_TX> b'charge'
+[  42.174] SERIAL_TX> b'\r\n'
+[  52.199] SERIAL_TX> b'pctbat'
+[  52.201] SERIAL_TX> b'\r\n'
+[  52.227] SERIAL_TX> b'charge'
+[  52.228] SERIAL_TX> b'\r\n'
+[  55.416] KEY> DOWN
+[  55.724] KEY> DOWN
+[  56.008] KEY> DOWN
+[  56.251] KEY> DOWN
+[  56.665] KEY> OK
+[  56.666] START(SniffActivity, None) bundle=None
+[  56.692] SERIAL_TX> b'pctbat'
+[  56.694] SERIAL_TX> b'\r\n'
+[  56.907] POLL stack=['dict', 'dict']
+[  56.949] SERIAL_TX> b'charge'
+[  56.951] SERIAL_TX> b'\r\n'
+[  58.543] KEY> OK
+[  66.991] SERIAL_TX> b'pctbat'
+[  66.992] SERIAL_TX> b'\r\n'
+[  67.014] SERIAL_TX> b'charge'
+[  67.015] SERIAL_TX> b'\r\n'
+[  71.090] KEY> M1
+[  71.261] PM3> hf 14a sniff (timeout=8000)
+[  71.277] PM3< ret=1 content_len=1 \n
+[  77.054] SERIAL_TX> b'pctbat'
+[  77.055] SERIAL_TX> b'\r\n'
+[  77.077] SERIAL_TX> b'charge'
+[  77.078] SERIAL_TX> b'\r\n'
+[  83.008] KEY> M2
+[  83.011] PRESSPM3> called
+[  83.013] SERIAL_TX> b'presspm3'
+[  83.030] SERIAL_TX> b'\r\n'
+[  83.437] PRESSPM3< done
+[  84.481] PM3> hf list mf (timeout=-1)
+[  87.110] SERIAL_TX> b'pctbat'
+[  87.115] SERIAL_TX> b'\r\n'
+[  87.212] SERIAL_TX> b'charge'
+[  87.222] SERIAL_TX> b'\r\n'
+[  97.432] SERIAL_TX> b'pctbat'
+[  97.438] SERIAL_TX> b'\r\n'
+[  97.596] SERIAL_TX> b'charge'
+[  97.618] SERIAL_TX> b'\r\n'
+[ 104.477] PM3< ret=1 content_len=151881 \n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 17189 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n   
+[ 107.858] SERIAL_TX> b'pctbat'
+[ 107.859] SERIAL_TX> b'\r\n'
+[ 107.902] SERIAL_TX> b'charge'
+[ 107.902] SERIAL_TX> b'\r\n'
+[ 109.460] KEY> M2
+[ 114.874] KEY> PWR
+[ 115.315] KEY> PWR
+[ 116.020] KEY> PWR
+[ 116.021] FINISH(top=dict d=2)
+[ 116.024] SERIAL_TX> b'pctbat'
+[ 116.025] SERIAL_TX> b'\r\n'
+[ 116.109] SERIAL_TX> b'charge'
+[ 116.110] SERIAL_TX> b'\r\n'
+[ 116.254] POLL stack=['dict']
+[ 116.578] KEY> PWR
+[ 126.136] SERIAL_TX> b'pctbat'
+[ 126.137] SERIAL_TX> b'\r\n'
+[ 126.158] SERIAL_TX> b'charge'
+[ 126.159] SERIAL_TX> b'\r\n'

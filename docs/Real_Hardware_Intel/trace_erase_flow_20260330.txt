@@ -1,0 +1,794 @@
+=== TRACE ===
+[   0.004] === ALL INSTALLED ===
+[   0.005] POLL stack=['dict'] 
+[  61.228] START(WipeTagActivity, None)
+[  61.533] POLL stack=['dict', 'dict'] 
+[  63.953] PM3> hf 14a info (timeout=5000)
+[  64.112] PM3< ret=1 \n
+[  69.786] PM3> hf 14a info (timeout=5000)
+[  70.572] PM3< ret=1 \n\n[+]  UID: 42 EC BF B9 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[  70.620] PM3> hf mf cwipe (timeout=28888)
+[  71.047] POLL stack=['dict', 'dict'] type=1 uid=42ECBFB9
+[  84.461] PM3< ret=1 \n[|]wipe block 0[/]wipe block 1[-]wipe block 2[\]wipe block 3[|]wipe block 4[/]wipe block 5[-]wipe block 6[\]wipe block 7[|]wipe block 8[/]wipe block 9[-]wipe block 10[\]wipe block 11[|]w
+[  85.129] PM3> hf 14a info (timeout=5000)
+[  85.991] PM3< ret=1 \n\n[+]  UID: 01 02 03 04 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[  86.070] POLL stack=['dict', 'dict'] type=1 uid=01020304
+[  97.133] PM3> hf 14a info (timeout=5000)
+[  98.215] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[  98.219] PM3> hf mf cgetblk 0 (timeout=5888)
+[  98.444] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[  98.591] POLL stack=['dict', 'dict'] type=0 uid=00000000
+[  99.329] PM3> hf mf fchk 4 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 100.174] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.6s | found 80/80 keys (85)\n[=] time in checkkeys (fast) 0.6s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----
+[ 100.633] PM3> hf mf wrbl 240 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 100.881] PM3< ret=1 \n--block no 240, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 100.883] PM3> hf mf wrbl 241 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 101.118] PM3< ret=1 \n--block no 241, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 101.119] PM3> hf mf wrbl 242 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 101.340] PM3< ret=1 \n--block no 242, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 101.341] PM3> hf mf wrbl 243 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 101.562] PM3< ret=1 \n--block no 243, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 101.563] PM3> hf mf wrbl 244 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 101.788] PM3< ret=1 \n--block no 244, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 101.788] PM3> hf mf wrbl 245 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 102.019] PM3< ret=1 \n--block no 245, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 102.020] PM3> hf mf wrbl 246 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 102.251] PM3< ret=1 \n--block no 246, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 102.252] PM3> hf mf wrbl 247 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 102.482] PM3< ret=1 \n--block no 247, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 102.483] PM3> hf mf wrbl 248 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 102.704] PM3< ret=1 \n--block no 248, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 102.705] PM3> hf mf wrbl 249 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 102.926] PM3< ret=1 \n--block no 249, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 102.927] PM3> hf mf wrbl 250 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 103.148] PM3< ret=1 \n--block no 250, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 103.149] PM3> hf mf wrbl 251 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 103.382] PM3< ret=1 \n--block no 251, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 103.383] PM3> hf mf wrbl 252 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 103.619] PM3< ret=1 \n--block no 252, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 103.620] PM3> hf mf wrbl 253 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 103.848] PM3< ret=1 \n--block no 253, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 103.849] PM3> hf mf wrbl 254 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 104.076] PM3< ret=1 \n--block no 254, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 104.079] PM3> hf mf wrbl 224 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 104.319] PM3< ret=1 \n--block no 224, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 104.320] PM3> hf mf wrbl 225 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 104.547] PM3< ret=1 \n--block no 225, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 104.548] PM3> hf mf wrbl 226 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 104.781] PM3< ret=1 \n--block no 226, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 104.782] PM3> hf mf wrbl 227 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 105.008] PM3< ret=1 \n--block no 227, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 105.009] PM3> hf mf wrbl 228 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 105.236] PM3< ret=1 \n--block no 228, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 105.237] PM3> hf mf wrbl 229 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 105.484] PM3< ret=1 \n--block no 229, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 105.486] PM3> hf mf wrbl 230 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 105.723] PM3< ret=1 \n--block no 230, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 105.724] PM3> hf mf wrbl 231 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 105.946] PM3< ret=1 \n--block no 231, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 105.947] PM3> hf mf wrbl 232 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 106.174] PM3< ret=1 \n--block no 232, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 106.175] PM3> hf mf wrbl 233 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 106.408] PM3< ret=1 \n--block no 233, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 106.409] PM3> hf mf wrbl 234 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 106.636] PM3< ret=1 \n--block no 234, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 106.637] PM3> hf mf wrbl 235 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 106.863] PM3< ret=1 \n--block no 235, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 106.864] PM3> hf mf wrbl 236 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 107.112] PM3< ret=1 \n--block no 236, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 107.113] PM3> hf mf wrbl 237 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 107.345] PM3< ret=1 \n--block no 237, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 107.346] PM3> hf mf wrbl 238 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 107.575] PM3< ret=1 \n--block no 238, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 107.578] PM3> hf mf wrbl 208 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 107.816] PM3< ret=1 \n--block no 208, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 107.817] PM3> hf mf wrbl 209 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 108.044] PM3< ret=1 \n--block no 209, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.045] PM3> hf mf wrbl 210 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 108.293] PM3< ret=1 \n--block no 210, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.294] PM3> hf mf wrbl 211 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 108.526] PM3< ret=1 \n--block no 211, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.527] PM3> hf mf wrbl 212 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 108.754] PM3< ret=1 \n--block no 212, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.756] PM3> hf mf wrbl 213 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 108.982] PM3< ret=1 \n--block no 213, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.983] PM3> hf mf wrbl 214 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 109.219] PM3< ret=1 \n--block no 214, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.220] PM3> hf mf wrbl 215 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 109.447] PM3< ret=1 \n--block no 215, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.448] PM3> hf mf wrbl 216 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 109.691] PM3< ret=1 \n--block no 216, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.692] PM3> hf mf wrbl 217 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 109.923] PM3< ret=1 \n--block no 217, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.924] PM3> hf mf wrbl 218 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 110.157] PM3< ret=1 \n--block no 218, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.158] PM3> hf mf wrbl 219 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 110.385] PM3< ret=1 \n--block no 219, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.386] PM3> hf mf wrbl 220 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 110.623] PM3< ret=1 \n--block no 220, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.624] PM3> hf mf wrbl 221 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 110.846] PM3< ret=1 \n--block no 221, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.847] PM3> hf mf wrbl 222 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 111.074] PM3< ret=1 \n--block no 222, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.078] PM3> hf mf wrbl 192 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 111.317] PM3< ret=1 \n--block no 192, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.319] PM3> hf mf wrbl 193 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 111.544] PM3< ret=1 \n--block no 193, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.545] PM3> hf mf wrbl 194 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 111.786] PM3< ret=1 \n--block no 194, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.787] PM3> hf mf wrbl 195 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 112.007] PM3< ret=1 \n--block no 195, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.008] PM3> hf mf wrbl 196 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 112.229] PM3< ret=1 \n--block no 196, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.230] PM3> hf mf wrbl 197 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 112.451] PM3< ret=1 \n--block no 197, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.452] PM3> hf mf wrbl 198 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 112.683] PM3< ret=1 \n--block no 198, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.684] PM3> hf mf wrbl 199 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 112.905] PM3< ret=1 \n--block no 199, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.906] PM3> hf mf wrbl 200 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 113.128] PM3< ret=1 \n--block no 200, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.129] PM3> hf mf wrbl 201 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 113.350] PM3< ret=1 \n--block no 201, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.351] PM3> hf mf wrbl 202 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 113.578] PM3< ret=1 \n--block no 202, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.579] PM3> hf mf wrbl 203 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 113.806] PM3< ret=1 \n--block no 203, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.807] PM3> hf mf wrbl 204 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 114.040] PM3< ret=1 \n--block no 204, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.041] PM3> hf mf wrbl 205 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 114.268] PM3< ret=1 \n--block no 205, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.269] PM3> hf mf wrbl 206 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 114.496] PM3< ret=1 \n--block no 206, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.499] PM3> hf mf wrbl 176 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 114.734] PM3< ret=1 \n--block no 176, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.736] PM3> hf mf wrbl 177 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 114.963] PM3< ret=1 \n--block no 177, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.964] PM3> hf mf wrbl 178 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 115.211] PM3< ret=1 \n--block no 178, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.213] PM3> hf mf wrbl 179 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 115.450] PM3< ret=1 \n--block no 179, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.451] PM3> hf mf wrbl 180 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 115.677] PM3< ret=1 \n--block no 180, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.678] PM3> hf mf wrbl 181 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 115.915] PM3< ret=1 \n--block no 181, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.916] PM3> hf mf wrbl 182 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 116.143] PM3< ret=1 \n--block no 182, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.144] PM3> hf mf wrbl 183 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 116.392] PM3< ret=1 \n--block no 183, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.393] PM3> hf mf wrbl 184 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 116.630] PM3< ret=1 \n--block no 184, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.631] PM3> hf mf wrbl 185 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 116.858] PM3< ret=1 \n--block no 185, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.859] PM3> hf mf wrbl 186 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 117.097] PM3< ret=1 \n--block no 186, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.098] PM3> hf mf wrbl 187 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 117.326] PM3< ret=1 \n--block no 187, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.327] PM3> hf mf wrbl 188 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 117.564] PM3< ret=1 \n--block no 188, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.564] PM3> hf mf wrbl 189 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 117.792] PM3< ret=1 \n--block no 189, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.793] PM3> hf mf wrbl 190 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 118.036] PM3< ret=1 \n--block no 190, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.040] PM3> hf mf wrbl 160 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 118.274] PM3< ret=1 \n--block no 160, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.275] PM3> hf mf wrbl 161 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 118.501] PM3< ret=1 \n--block no 161, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.502] PM3> hf mf wrbl 162 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 118.728] PM3< ret=1 \n--block no 162, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.729] PM3> hf mf wrbl 163 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 118.976] PM3< ret=1 \n--block no 163, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.977] PM3> hf mf wrbl 164 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 119.214] PM3< ret=1 \n--block no 164, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.215] PM3> hf mf wrbl 165 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 119.438] PM3< ret=1 \n--block no 165, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.439] PM3> hf mf wrbl 166 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 119.662] PM3< ret=1 \n--block no 166, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.663] PM3> hf mf wrbl 167 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 119.890] PM3< ret=1 \n--block no 167, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.891] PM3> hf mf wrbl 168 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 120.128] PM3< ret=1 \n--block no 168, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.129] PM3> hf mf wrbl 169 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 120.356] PM3< ret=1 \n--block no 169, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.357] PM3> hf mf wrbl 170 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 120.604] PM3< ret=1 \n--block no 170, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.605] PM3> hf mf wrbl 171 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 120.841] PM3< ret=1 \n--block no 171, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.842] PM3> hf mf wrbl 172 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 121.066] PM3< ret=1 \n--block no 172, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.067] PM3> hf mf wrbl 173 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 121.294] PM3< ret=1 \n--block no 173, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.295] PM3> hf mf wrbl 174 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 121.535] PM3< ret=1 \n--block no 174, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.538] PM3> hf mf wrbl 144 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 121.777] PM3< ret=1 \n--block no 144, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.778] PM3> hf mf wrbl 145 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 122.005] PM3< ret=1 \n--block no 145, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.006] PM3> hf mf wrbl 146 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 122.253] PM3< ret=1 \n--block no 146, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.254] PM3> hf mf wrbl 147 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 122.492] PM3< ret=1 \n--block no 147, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.493] PM3> hf mf wrbl 148 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 122.719] PM3< ret=1 \n--block no 148, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.720] PM3> hf mf wrbl 149 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 122.953] PM3< ret=1 \n--block no 149, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.954] PM3> hf mf wrbl 150 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 123.176] PM3< ret=1 \n--block no 150, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.177] PM3> hf mf wrbl 151 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 123.415] PM3< ret=1 \n--block no 151, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.416] PM3> hf mf wrbl 152 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 123.647] PM3< ret=1 \n--block no 152, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.648] PM3> hf mf wrbl 153 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 123.869] PM3< ret=1 \n--block no 153, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.870] PM3> hf mf wrbl 154 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 124.102] PM3< ret=1 \n--block no 154, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.102] PM3> hf mf wrbl 155 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 124.344] PM3< ret=1 \n--block no 155, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.345] PM3> hf mf wrbl 156 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 124.566] PM3< ret=1 \n--block no 156, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.567] PM3> hf mf wrbl 157 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 124.788] PM3< ret=1 \n--block no 157, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.789] PM3> hf mf wrbl 158 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 125.010] PM3< ret=1 \n--block no 158, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.013] PM3> hf mf wrbl 128 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 125.236] PM3< ret=1 \n--block no 128, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.237] PM3> hf mf wrbl 129 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 125.459] PM3< ret=1 \n--block no 129, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.460] PM3> hf mf wrbl 130 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 125.687] PM3< ret=1 \n--block no 130, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.688] PM3> hf mf wrbl 131 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 125.914] PM3< ret=1 \n--block no 131, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.915] PM3> hf mf wrbl 132 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 126.152] PM3< ret=1 \n--block no 132, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.153] PM3> hf mf wrbl 133 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 126.376] PM3< ret=1 \n--block no 133, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.377] PM3> hf mf wrbl 134 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 126.605] PM3< ret=1 \n--block no 134, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.607] PM3> hf mf wrbl 135 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 126.849] PM3< ret=1 \n--block no 135, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.850] PM3> hf mf wrbl 136 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 127.098] PM3< ret=1 \n--block no 136, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.099] PM3> hf mf wrbl 137 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 127.336] PM3< ret=1 \n--block no 137, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.337] PM3> hf mf wrbl 138 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 127.564] PM3< ret=1 \n--block no 138, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.565] PM3> hf mf wrbl 139 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 127.802] PM3< ret=1 \n--block no 139, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.803] PM3> hf mf wrbl 140 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 128.030] PM3< ret=1 \n--block no 140, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.031] PM3> hf mf wrbl 141 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 128.278] PM3< ret=1 \n--block no 141, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.279] PM3> hf mf wrbl 142 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 128.516] PM3< ret=1 \n--block no 142, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.519] PM3> hf mf wrbl 124 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 128.759] PM3< ret=1 \n--block no 124, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.760] PM3> hf mf wrbl 125 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 128.987] PM3< ret=1 \n--block no 125, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.988] PM3> hf mf wrbl 126 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 129.221] PM3< ret=1 \n--block no 126, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.224] PM3> hf mf wrbl 120 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 129.453] PM3< ret=1 \n--block no 120, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.454] PM3> hf mf wrbl 121 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 129.697] PM3< ret=1 \n--block no 121, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.698] PM3> hf mf wrbl 122 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 129.946] PM3< ret=1 \n--block no 122, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.949] PM3> hf mf wrbl 116 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 130.190] PM3< ret=1 \n--block no 116, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.191] PM3> hf mf wrbl 117 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 130.428] PM3< ret=1 \n--block no 117, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.429] PM3> hf mf wrbl 118 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 130.672] PM3< ret=1 \n--block no 118, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.676] PM3> hf mf wrbl 112 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 130.914] PM3< ret=1 \n--block no 112, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.915] PM3> hf mf wrbl 113 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 131.142] PM3< ret=1 \n--block no 113, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.143] PM3> hf mf wrbl 114 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 131.390] PM3< ret=1 \n--block no 114, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.394] PM3> hf mf wrbl 108 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 131.628] PM3< ret=1 \n--block no 108, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.629] PM3> hf mf wrbl 109 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 131.856] PM3< ret=1 \n--block no 109, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.857] PM3> hf mf wrbl 110 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 132.094] PM3< ret=1 \n--block no 110, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.098] PM3> hf mf wrbl 104 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 132.346] PM3< ret=1 \n--block no 104, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.347] PM3> hf mf wrbl 105 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 132.584] PM3< ret=1 \n--block no 105, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.585] PM3> hf mf wrbl 106 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 132.813] PM3< ret=1 \n--block no 106, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.816] PM3> hf mf wrbl 100 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 133.054] PM3< ret=1 \n--block no 100, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.055] PM3> hf mf wrbl 101 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 133.296] PM3< ret=1 \n--block no 101, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.297] PM3> hf mf wrbl 102 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 133.541] PM3< ret=1 \n--block no 102, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.544] PM3> hf mf wrbl 96 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 133.775] PM3< ret=1 \n--block no 96, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.776] PM3> hf mf wrbl 97 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 134.007] PM3< ret=1 \n--block no 97, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.008] PM3> hf mf wrbl 98 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 134.229] PM3< ret=1 \n--block no 98, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.232] PM3> hf mf wrbl 92 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 134.454] PM3< ret=1 \n--block no 92, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.455] PM3> hf mf wrbl 93 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 134.676] PM3< ret=1 \n--block no 93, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.677] PM3> hf mf wrbl 94 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 134.898] PM3< ret=1 \n--block no 94, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.901] PM3> hf mf wrbl 88 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 135.123] PM3< ret=1 \n--block no 88, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.124] PM3> hf mf wrbl 89 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 135.346] PM3< ret=1 \n--block no 89, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.347] PM3> hf mf wrbl 90 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 135.573] PM3< ret=1 \n--block no 90, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.577] PM3> hf mf wrbl 84 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 135.821] PM3< ret=1 \n--block no 84, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.822] PM3> hf mf wrbl 85 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.065] PM3< ret=1 \n--block no 85, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.067] PM3> hf mf wrbl 86 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.313] PM3< ret=1 \n--block no 86, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.317] PM3> hf mf wrbl 80 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.551] PM3< ret=1 \n--block no 80, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.552] PM3> hf mf wrbl 81 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.778] PM3< ret=1 \n--block no 81, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.779] PM3> hf mf wrbl 82 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.016] PM3< ret=1 \n--block no 82, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.020] PM3> hf mf wrbl 76 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.248] PM3< ret=1 \n--block no 76, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.249] PM3> hf mf wrbl 77 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.486] PM3< ret=1 \n--block no 77, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.487] PM3> hf mf wrbl 78 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.714] PM3< ret=1 \n--block no 78, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.717] PM3> hf mf wrbl 72 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.951] PM3< ret=1 \n--block no 72, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.952] PM3> hf mf wrbl 73 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.179] PM3< ret=1 \n--block no 73, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.180] PM3> hf mf wrbl 74 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.407] PM3< ret=1 \n--block no 74, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.411] PM3> hf mf wrbl 68 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.647] PM3< ret=1 \n--block no 68, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.648] PM3> hf mf wrbl 69 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.875] PM3< ret=1 \n--block no 69, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.876] PM3> hf mf wrbl 70 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.113] PM3< ret=1 \n--block no 70, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.116] PM3> hf mf wrbl 64 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.339] PM3< ret=1 \n--block no 64, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.341] PM3> hf mf wrbl 65 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.563] PM3< ret=1 \n--block no 65, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.564] PM3> hf mf wrbl 66 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.791] PM3< ret=1 \n--block no 66, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.794] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.028] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.029] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.256] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.257] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.484] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.487] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.722] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.723] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.950] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.951] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 141.188] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.191] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 141.418] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.419] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 141.652] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.653] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 141.881] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.884] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 142.128] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.129] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 142.372] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.373] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 142.599] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.603] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 142.836] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.837] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 143.064] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.065] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 143.308] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.311] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 143.546] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.547] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 143.773] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.774] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 144.001] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.004] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 144.242] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.243] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 144.470] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.471] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 144.710] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.713] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 144.963] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.964] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 145.201] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.202] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 145.449] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.452] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 145.691] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.692] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 145.923] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.924] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 146.155] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.158] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 146.400] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.401] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 146.621] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.622] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 146.843] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.846] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 147.068] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.069] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 147.290] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.291] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 147.512] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.516] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 147.744] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.745] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 147.991] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.992] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 148.229] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.233] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 148.483] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.484] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 148.721] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.722] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 148.969] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.972] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 149.206] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.207] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 149.433] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.434] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 149.681] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.685] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 149.925] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.926] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 150.162] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.163] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 150.390] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.393] PM3> hf mf wrbl 0 A ffffffffffff 0000000000180200016F016D4568F81D (timeout=5888)
+[ 150.627] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 18 02 00 01 6F 01 6D 45 68 F8 1D \nisOk:01\n
+[ 150.628] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 150.850] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.851] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 151.077] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 151.080] PM3> hf mf wrbl 255 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 151.324] PM3< ret=1 \n--block no 255, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 151.328] PM3> hf mf wrbl 239 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 151.566] PM3< ret=1 \n--block no 239, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 151.569] PM3> hf mf wrbl 223 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 151.817] PM3< ret=1 \n--block no 223, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 151.820] PM3> hf mf wrbl 207 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 152.064] PM3< ret=1 \n--block no 207, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 152.067] PM3> hf mf wrbl 191 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 152.300] PM3< ret=1 \n--block no 191, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 152.304] PM3> hf mf wrbl 175 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 152.540] PM3< ret=1 \n--block no 175, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 152.543] PM3> hf mf wrbl 159 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 152.767] PM3< ret=1 \n--block no 159, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 152.771] PM3> hf mf wrbl 143 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 153.019] PM3< ret=1 \n--block no 143, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 153.023] PM3> hf mf wrbl 127 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 153.258] PM3< ret=1 \n--block no 127, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 153.261] PM3> hf mf wrbl 123 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 153.494] PM3< ret=1 \n--block no 123, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 153.498] PM3> hf mf wrbl 119 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 153.727] PM3< ret=1 \n--block no 119, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 153.730] PM3> hf mf wrbl 115 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 153.968] PM3< ret=1 \n--block no 115, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 153.971] PM3> hf mf wrbl 111 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 154.212] PM3< ret=1 \n--block no 111, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 154.216] PM3> hf mf wrbl 107 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 154.455] PM3< ret=1 \n--block no 107, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 154.458] PM3> hf mf wrbl 103 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 154.707] PM3< ret=1 \n--block no 103, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 154.711] PM3> hf mf wrbl 99 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 154.949] PM3< ret=1 \n--block no 99, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 154.953] PM3> hf mf wrbl 95 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 155.192] PM3< ret=1 \n--block no 95, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 155.195] PM3> hf mf wrbl 91 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 155.433] PM3< ret=1 \n--block no 91, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 155.436] PM3> hf mf wrbl 87 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 155.673] PM3< ret=1 \n--block no 87, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 155.677] PM3> hf mf wrbl 83 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 155.904] PM3< ret=1 \n--block no 83, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 155.908] PM3> hf mf wrbl 79 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 156.147] PM3< ret=1 \n--block no 79, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 156.151] PM3> hf mf wrbl 75 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 156.390] PM3< ret=1 \n--block no 75, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 156.394] PM3> hf mf wrbl 71 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 156.631] PM3< ret=1 \n--block no 71, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 156.634] PM3> hf mf wrbl 67 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 156.878] PM3< ret=1 \n--block no 67, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 156.882] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 157.119] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 157.123] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 157.372] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 157.375] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 157.607] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 157.610] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 157.833] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 157.836] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 158.068] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 158.071] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 158.293] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 158.295] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 158.518] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 158.521] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 158.743] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 158.746] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 158.967] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 158.970] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 159.192] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 159.194] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 159.420] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 159.424] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 159.663] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 159.667] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 159.914] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 159.917] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 160.155] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 160.158] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 160.398] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 160.401] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 160.634] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 161.298] PM3> hf 14a info (timeout=5000)
+[ 162.384] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 162.387] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 162.617] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 174.158] PM3> hf 14a info (timeout=5000)
+[ 175.678] PM3< ret=1 \n\n[+]  UID: 31 C0 0D CF \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 175.681] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 175.911] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 176.231] POLL stack=['dict', 'dict'] type=1 uid=31C00DCF
+[ 176.762] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 177.311] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----
+[ 177.450] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 177.675] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 177.676] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 177.897] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 177.898] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 178.120] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 178.123] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 178.356] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 178.357] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 178.578] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 178.579] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 178.800] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 178.802] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 179.032] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 179.033] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 179.264] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 179.265] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 179.488] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 179.491] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 179.715] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 179.717] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 179.954] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 179.955] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 180.182] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 180.185] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 180.419] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 180.420] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 180.642] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 180.643] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 180.880] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 180.884] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 181.113] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 181.114] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 181.351] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 181.352] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 181.589] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 181.592] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 181.828] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 181.829] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 182.056] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 182.057] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 182.299] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 182.302] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 182.547] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 182.548] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 182.785] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 182.786] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 183.019] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 183.023] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 183.248] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 183.249] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 183.481] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 183.482] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 183.709] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 183.712] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 183.948] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 183.949] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 184.177] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 184.178] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 184.411] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 184.415] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 184.630] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 184.631] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 184.859] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 184.860] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 185.097] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 185.101] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 185.325] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 185.326] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 185.562] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 185.562] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 185.783] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 185.786] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 186.009] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 186.010] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 186.231] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 186.232] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 186.453] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 186.456] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 186.689] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 186.690] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 186.911] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 186.912] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 187.133] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 187.135] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 187.359] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 187.360] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 187.586] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 187.587] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 187.824] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 187.827] PM3> hf mf wrbl 0 A ffffffffffff 31C00DCF33080400016F016D4568F81D (timeout=5888)
+[ 188.067] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: 31 C0 0D CF 33 08 04 00 01 6F 01 6D 45 68 F8 1D \nisOk:01\n
+[ 188.068] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 188.304] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 188.305] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 188.532] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 188.535] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 188.772] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 188.775] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 189.014] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 189.016] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 189.256] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 189.259] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 189.496] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 189.499] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 189.726] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 189.729] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 189.967] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 189.970] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 190.207] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 190.210] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 190.447] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 190.450] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 190.687] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 190.690] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 190.927] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 190.930] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 191.152] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 191.155] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 191.388] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 191.390] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 191.614] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 191.616] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 191.839] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 191.842] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 192.080] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 192.082] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 192.319] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 192.588] PM3> hf 14a info (timeout=5000)
+[ 194.117] PM3< ret=1 \n\n[+]  UID: 31 C0 0D CF \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 194.119] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 194.349] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 200.208] PM3> hf 14a info (timeout=5000)
+[ 202.044] PM3< ret=1 \n\n[+]  UID: 11 22 33 55 66 77 88 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    Emosyn-EM Microelectronics USA\n[+]     NTAG21x Modifiable\n[+] TYPE: NTAG 216 888bytes (NT2H1611G0DU)\n[+]    MIFA
+[ 202.048] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 202.280] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 202.285] PM3> hf mfu info (timeout=8888)
+[ 202.773] POLL stack=['dict', 'dict'] type=? uid=
+[ 204.312] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n[+]       TYPE: NTAG 216 888bytes (NT2H1611G0DU)\n[+]        UID: 11 22 33 55 66 7
+[ 204.791] POLL stack=['dict', 'dict'] type=7 uid=11223355667788
+[ 205.187] PM3> hf mf fchk 0 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 218.483] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 1.8s | found 0/10 keys (85)\n[=] Chunk: 0.6s | found 0/10 keys (23)\n[=] Running strategy 2\n....[=] Chunk: 8.4s | found
+[ 230.498] PM3> hf 14a info (timeout=5000)
+[ 232.041] PM3< ret=1 \n\n[+]  UID: 0A D0 7A B8 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 232.044] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 232.269] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 232.333] POLL stack=['dict', 'dict'] type=1 uid=0AD07AB8
+[ 233.157] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 235.202] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 1.9s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 1.9s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----
+[ 235.333] PM3> hf mf wrbl 60 A 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 235.552] PM3< ret=1 \n--block no 60, key A - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 235.554] PM3> hf mf wrbl 60 A 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 235.775] PM3< ret=1 \n--block no 60, key A - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 235.776] PM3> hf mf wrbl 60 A 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 236.005] PM3< ret=1 \n--block no 60, key A - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 236.006] PM3> hf mf wrbl 60 B 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 236.225] PM3< ret=1 \n--block no 60, key B - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 236.226] PM3> hf mf wrbl 60 B 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 236.428] PM3< ret=1 \n--block no 60, key B - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 236.428] PM3> hf mf wrbl 60 B 484558414354 00000000000000000000000000000000 (timeout=5888)
+[ 236.633] PM3< ret=1 \n--block no 60, key B - 48 45 58 41 43 54 \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 249.219] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 250.104] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0
+[ 250.105] PM3> lf t55xx detect (timeout=10000)
+[ 250.438] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Bloc
+[ 250.905] PM3> lf t55xx detect (timeout=10000)
+[ 251.227] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Bloc
+[ 251.364] POLL stack=['dict', 'dict'] type=23 uid=
+[ 260.032] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 260.898] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0
+[ 260.898] PM3> lf t55xx detect (timeout=10000)
+[ 262.027] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[ 262.028] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 264.318] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[ 265.020] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys (timeout=180000)
+[ 296.881] PM3< ret=1 \n[+] loaded 107 keys from dictionary file /tmp/.keys/t5577_tmp_keys.dic\n[=] Testing 51243648\n[=] Testing 000D8787\n[=] Testing 19920427\n[=] Testing 65857569\n[=] Testing 05D73B9F\n[=] Testing 89A69E60\n[=
+[ 300.592] FINISH(top=dict d=2)
+[ 300.943] POLL stack=['dict'] type=23 uid=
+[ 308.960] START(ReadListActivity, None)
+[ 309.465] POLL stack=['dict', 'dict'] type=23 uid=
+[ 311.349] PM3> hf 14a info (timeout=5000)
+[ 312.360] PM3< ret=1 \n\n[+]  UID: 0A D0 7A B8 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 312.363] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 312.565] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 312.971] POLL stack=['dict', 'dict'] type=1 uid=0AD07AB8
+[ 314.311] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 317.174] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 1.9s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 1.9s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----
+[ 339.485] FINISH(top=dict d=2)
+[ 339.539] POLL stack=['dict'] type=1 uid=0AD07AB8
+[ 343.744] START(DiagnosisActivity, None)
+[ 344.048] POLL stack=['dict', 'dict'] type=1 uid=0AD07AB8
+[ 348.532] PM3> hf tune (timeout=8888)
+[ 349.129] PM3< ret=1 \n[=] Measuring HF antenna, click pm3 button or press Enter to exit\n[|] 37700 mV / 37 V[/] 37679 mV / 37 V[-] 37662 mV / 37 V[\] 37649 mV / 37 V[|] 37657 mV / 37 V[/] 37653 mV / 37 V\n[=] Done.\n
+[ 349.538] PM3> lf tune (timeout=8888)
+[ 350.119] PM3< ret=1 \n[=] Measuring LF antenna at 125.00 kHz, click pm3 button or press Enter to exit\n[-] 43312 mV /  43 V[\] 43312 mV /  43 V[|] 43286 mV /  43 V[/] 43312 mV /  43 V[-] 43295 mV /  43 V[\] 43312 mV 
+[ 350.527] PM3> hf 14a reader (timeout=5888)
+[ 350.749] PM3< ret=1 \n[!] iso14443a card select failed\n
+[ 350.772] PM3> lf sea (timeout=8888)
+[ 353.289] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag.
+[ 353.617] PM3> mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola (timeout=5888)
+[ 353.721] PM3< ret=1 \n[+] loaded 2 bytes from binary file /tmp/test_pm3_mem.nikola\n[+] Wrote 2 bytes to file test_pm3_mem.nikola\n
+[ 353.724] PM3> mem spiffs wipe (timeout=5888)
+[ 353.794] PM3< ret=1 \n[=] Wiping all files from SPIFFS FileSystem\n[#] removed test_pm3_mem.nikola\n[=] Done!\n
+[ 358.924] FINISH(top=dict d=2)
+[ 359.080] POLL stack=['dict'] type=1 uid=0AD07AB8
+[ 359.878] START(DiagnosisActivity, None)
+[ 360.083] POLL stack=['dict', 'dict'] type=1 uid=0AD07AB8
+[ 362.074] PM3> hf tune (timeout=8888)
+[ 362.691] PM3< ret=1 \n[=] Measuring HF antenna, click pm3 button or press Enter to exit\n[/] 37649 mV / 37 V[-] 37632 mV / 37 V[\] 37636 mV / 37 V[|] 37623 mV / 37 V[/] 37623 mV / 37 V[-] 37614 mV / 37 V\n[=] Done.\n
+[ 363.098] PM3> lf tune (timeout=8888)
+[ 363.681] PM3< ret=1 \n[=] Measuring LF antenna at 125.00 kHz, click pm3 button or press Enter to exit\n[\] 43269 mV /  43 V[|] 43286 mV /  43 V[/] 43260 mV /  43 V[-] 43269 mV /  43 V[\] 43260 mV /  43 V[|] 43295 mV 
+[ 364.385] PM3> mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola (timeout=5888)
+[ 364.490] PM3< ret=1 \n[+] loaded 2 bytes from binary file /tmp/test_pm3_mem.nikola\n[+] Wrote 2 bytes to file test_pm3_mem.nikola\n
+[ 364.491] PM3> mem spiffs wipe (timeout=5888)
+[ 364.581] PM3< ret=1 \n[=] Wiping all files from SPIFFS FileSystem\n[#] removed test_pm3_mem.nikola\n[=] Done!\n
+[ 364.583] START(HFReaderTestActivity, None)
+[ 364.606] PM3> hf 14a info (timeout=5000)
+[ 364.741] PM3< ret=1 \n
+[ 365.102] POLL stack=['dict', 'dict', 'dict'] 
+[ 365.745] PM3> hf 14a info (timeout=5000)
+[ 365.877] PM3< ret=1 \n
+[ 366.880] PM3> hf 14a info (timeout=5000)
+[ 367.012] PM3< ret=1 \n
+[ 368.016] PM3> hf 14a info (timeout=5000)
+[ 368.157] PM3< ret=1 \n
+[ 369.160] PM3> hf 14a info (timeout=5000)
+[ 369.292] PM3< ret=1 \n
+[ 370.297] PM3> hf 14a info (timeout=5000)
+[ 370.436] PM3< ret=1 \n
+[ 371.440] PM3> hf 14a info (timeout=5000)
+[ 371.581] PM3< ret=1 \n
+[ 372.585] PM3> hf 14a info (timeout=5000)
+[ 372.726] PM3< ret=1 \n
+[ 373.729] FINISH(top=dict d=3)
+[ 373.743] START(LfReaderTestActivity, None)
+[ 373.788] PM3> lf em 410x_watch (timeout=10888)
+[ 381.803] FINISH(top=dict d=3)
+[ 381.819] START(UsbPortTestActivity, None)
+[ 387.224] PM3> b'Nikola.D.CMD = lf em 410x_watch\r\n' (timeout=10888)
+[ 400.650] PM3> b'Nikola.D.CMD = lf em 410x_watch\r\n' (timeout=10888)
+[ 411.551] PM3< ret=-1 \n
+[ 411.553] PM3< ret=-1 \n
+[ 411.555] PM3< ret=-1 \n
+[ 412.995] FINISH(top=dict d=3)
+[ 413.049] START(ButtonTestActivity, None)
+[ 420.123] FINISH(top=dict d=3)
+[ 420.189] POLL stack=['dict', 'dict'] 
+[ 420.227] START(ScreenTestActivity, None)
+[ 420.691] POLL stack=['dict', 'dict', 'dict'] 

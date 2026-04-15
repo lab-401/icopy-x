@@ -1,0 +1,22 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "MIFARE",
+      "M1 S70 4K (7B)",
+      "13.56MHZ",
+      "UID: 04112233445566",
+      "SAK: 18"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 41
+  },
+  "toast": "Tag Found"
+}

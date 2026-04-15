@@ -1,0 +1,13 @@
+{
+  "title": "Sniff TRF",
+  "toast": "Sniffing in progress",
+  "content_contains": [
+    "TraceLen"
+  ],
+  "result_buttons": {
+    "M1": "Start",
+    "M2": "Save",
+    "M1_active": true,
+    "M2_active": false
+  }
+}

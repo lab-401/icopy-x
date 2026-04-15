@@ -1,0 +1,8 @@
+{
+    "pm3_firmware_version": "v4.21128",
+    "pm3_firmware_sha256": "f63013bdb5ea904e199c443e01c80064c070f98c9c12dcafe3a0d982f16ed6fd",
+    "pm3_client_version": "Iceman/master/v4.21128",
+    "build_platform": "PM3ICOPYX",
+    "build_date": "2026-04-14T13:06:31Z",
+    "patches": ["pm3_14a_select_warning"]
+}

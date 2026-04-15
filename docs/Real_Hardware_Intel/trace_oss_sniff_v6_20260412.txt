@@ -1,0 +1,110 @@
+=== SNIFF v6 TRACE ===
+[   0.184] presspm3 hook OK
+[   0.188] POLL stack=['MainActivity'] 
+[   0.194] === ALL INSTALLED ===
+[   8.107] SERIAL_TX> b'pctbat\r\n'
+[   8.127] SERIAL_TX> b'rcharge\r\n'
+[  18.183] SERIAL_TX> b'pctbat\r\n'
+[  18.200] SERIAL_TX> b'rcharge\r\n'
+[  28.221] SERIAL_TX> b'pctbat\r\n'
+[  28.237] SERIAL_TX> b'rcharge\r\n'
+[  38.256] SERIAL_TX> b'pctbat\r\n'
+[  38.274] SERIAL_TX> b'rcharge\r\n'
+[  39.685] KEY> KEYDOWN_PRES!
+[  40.040] KEY> KEYDOWN_PRES!
+[  40.271] KEY> KEYDOWN_PRES!
+[  40.516] KEY> KEYDOWN_PRES!
+[  40.880] KEY> KEYOK_PRES!
+[  42.019] START(SniffActivity, None) bundle=None
+[  42.244] POLL stack=['MainActivity', 'SniffActivity'] 
+[  45.032] KEY> KEYOK_PRES!
+[  46.293] KEY> KEYM1_PRES!
+[  46.550] PM3> hf 14a sniff (timeout=8000)
+[  46.574] PM3< ret=1 content_len=47 [usb|script] pm3 --> hf 14a sniff\n\nNikola.D: 0\n
+[  48.297] SERIAL_TX> b'pctbat\r\n'
+[  48.309] SERIAL_TX> b'rcharge\r\n'
+[  58.315] KEY> KEYM2_PRES!
+[  58.318] PRESSPM3> called
+[  58.319] SERIAL_TX> b'presspm3\r\n'
+[  58.340] SERIAL_TX> b'pctbat\r\n'
+[  58.353] PRESSPM3< done
+[  58.355] PM3_STOP> stopPM3Task()
+[  58.356] PM3_STOP< ret=None
+[  58.366] SERIAL_TX> b'rcharge\r\n'
+[  58.387] PM3> hf list mf (timeout=-1)
+[  62.574] PM3< ret=1 content_len=233784 [usb|script] pm3 --> hf list mf\n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 26020 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       2196 |       4564 | Tag |04  00                                                                   |     |\n       9232 |      11696 | Rdr |93  20                                                                   |     | ANTICOLL\n      12836 |      17636 | Tag |5e  5b  ce  4c  01                                                       |     |\n    2088576 |    2089568 | Rdr |52(7)                                                                    |     | WUPA\n    2090772 |    2093140 | Tag |04  00                                                                   |     |\n    2101428 |    2107252 | Tag |5e  5b  ce  4c  87                                                       |     |\n    2123700 |    2127220 | Tag |08  b6  dd                                                               |     |\n    4072500 |    4074868 | Tag |04  00                                                                   |     |\n    4083140 |    4088964 | Tag |5e  5b  ce  4c  87                                                       |     |\n    4105412 |    4108932 | Tag |08  b6  dd                                                               |     |\n    4403684 |    4406052 | Tag |04  00                                                                   |     |\n    4414324 |    4420148 | Tag |5e  5b  ce  4c  87                                   
+[  66.425] KEY> KEYM2_PRES!
+[  68.399] SERIAL_TX> b'pctbat\r\n'
+[  68.419] SERIAL_TX> b'rcharge\r\n'
+[  69.789] KEY> KEY_PWR_CAN_PRES!
+[  78.446] SERIAL_TX> b'pctbat\r\n'
+[  78.460] SERIAL_TX> b'rcharge\r\n'
+[  88.479] SERIAL_TX> b'pctbat\r\n'
+[  88.501] SERIAL_TX> b'rcharge\r\n'
+[  98.540] SERIAL_TX> b'pctbat\r\n'
+[  98.562] SERIAL_TX> b'rcharge\r\n'
+[ 108.589] SERIAL_TX> b'pctbat\r\n'
+[ 108.609] SERIAL_TX> b'rcharge\r\n'
+[ 118.627] SERIAL_TX> b'pctbat\r\n'
+[ 118.651] SERIAL_TX> b'rcharge\r\n'
+[ 125.767] KEY> KEY_PWR_CAN_PRES!
+[ 125.771] FINISH(top=SniffActivity d=2)
+[ 125.979] POLL stack=['MainActivity'] 
+[ 128.673] SERIAL_TX> b'pctbat\r\n'
+[ 128.696] SERIAL_TX> b'rcharge\r\n'
+[ 130.861] KEY> KEYOK_PRES!
+[ 130.864] START(SniffActivity, None) bundle=None
+[ 131.010] POLL stack=['MainActivity', 'SniffActivity'] 
+[ 133.460] KEY> KEYDOWN_PRES!
+[ 133.636] KEY> KEYDOWN_PRES!
+[ 133.821] KEY> KEYDOWN_PRES!
+[ 133.983] KEY> KEYDOWN_PRES!
+[ 134.980] KEY> KEYOK_PRES!
+[ 138.720] SERIAL_TX> b'pctbat\r\n'
+[ 138.735] SERIAL_TX> b'rcharge\r\n'
+[ 148.763] SERIAL_TX> b'pctbat\r\n'
+[ 148.780] SERIAL_TX> b'rcharge\r\n'
+[ 153.287] KEY> KEYM1_PRES!
+[ 153.372] PM3> lf config a 0 t 20 s 10000 (timeout=5000)
+[ 153.389] PM3< ret=1 content_len=61 [usb|script] pm3 --> lf config a 0 t 20 s 10000\n\nNikola.D: 0\n
+[ 153.390] PM3> lf t55xx sniff (timeout=-1)
+[ 154.777] PM3< ret=1 content_len=1264 [usb|script] pm3 --> lf t55xx sniff\n[#] LF Sampling config\n[#]   [q] divisor.............95 ( 125.00 kHz )\n[#]   [b] bits per sample.....8\n[#]   [d] decimation..........1\n[#]   [a] averaging...........No\n[#]   [t] trigger threshold...20\n[#]   [s] samples to skip.....10000\n[#] LF Sampling Stack\n[#]   Max stack usage.........3968 / 8480 bytes\n[#] Done, saved 42260 out of 0 seen samples at 8 bits/sample\n[=] Reading 42259 bytes from device memory\n[+] Data fetched\n[=] Samples @ 8 bits/smpl, decimation 1:1\n\n[=] T55xx command detection\n[+] Downlink mode         | password |   Data   | blk | page |  0  |  1  | raw\n[+] ----------------------+----------+----------+-----+------+-----+-----+-------------------------------------------------------------------------------\n[+] Default Read          |          |          |  0  |   0  |  26 |  57 | 101000\n[+] Default Read          |          |          |  1  |   0  |  27 |  54 | 100001\n[+] Default Read          |          |          |  4  |   0  |  25 |  53 | 101100\n[+] Default Read          |          |          |  0  |   1  |  23 |  54 | 110000\n[+] -----------------------------------------------------------------------------------------------------------------------------------------------------\n\n\nNikola.D: 0\n
+[ 154.779] PRESSPM3> called
+[ 154.780] SERIAL_TX> b'presspm3\r\n'
+[ 154.794] PRESSPM3< done
+[ 154.795] PM3_STOP> stopPM3Task()
+[ 154.796] PM3_STOP< ret=None
+[ 156.359] KEY> KEYM2_PRES!
+[ 158.802] SERIAL_TX> b'pctbat\r\n'
+[ 158.815] SERIAL_TX> b'rcharge\r\n'
+[ 159.013] KEY> KEY_PWR_CAN_PRES!
+[ 161.657] KEY> KEYUP_PRES!
+[ 161.903] KEY> KEYUP_PRES!
+[ 163.397] KEY> KEYDOWN_PRES!
+[ 163.669] KEY> KEYDOWN_PRES!
+[ 165.576] KEY> KEYUP_PRES!
+[ 165.839] KEY> KEYUP_PRES!
+[ 166.635] KEY> KEYUP_PRES!
+[ 166.978] KEY> KEYUP_PRES!
+[ 168.070] KEY> KEYOK_PRES!
+[ 168.841] SERIAL_TX> b'pctbat\r\n'
+[ 168.857] SERIAL_TX> b'rcharge\r\n'
+[ 170.847] KEY> KEYM1_PRES!
+[ 170.927] PM3> hf 14a sniff (timeout=8000)
+[ 170.932] PM3< ret=1 content_len=47 [usb|script] pm3 --> hf 14a sniff\n\nNikola.D: 0\n
+[ 176.850] KEY> KEYM2_PRES!
+[ 176.853] PRESSPM3> called
+[ 176.854] SERIAL_TX> b'presspm3\r\n'
+[ 176.869] PRESSPM3< done
+[ 176.870] PM3_STOP> stopPM3Task()
+[ 176.871] PM3_STOP< ret=None
+[ 176.875] PM3> hf list mf (timeout=-1)
+[ 177.173] PM3< ret=1 content_len=131 [usb|script] pm3 --> hf list mf\n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 0 bytes)\n\nNikola.D: 0\n
+[ 178.702] KEY> KEY_PWR_CAN_PRES!
+[ 178.885] SERIAL_TX> b'pctbat\r\n'
+[ 178.904] SERIAL_TX> b'rcharge\r\n'
+[ 179.656] KEY> KEY_PWR_CAN_PRES!
+[ 179.659] FINISH(top=SniffActivity d=2)
+[ 180.114] POLL stack=['MainActivity'] 
+[ 188.929] SERIAL_TX> b'pctbat\r\n'
+[ 188.949] SERIAL_TX> b'rcharge\r\n'

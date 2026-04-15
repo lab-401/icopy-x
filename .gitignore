@@ -1,0 +1,35 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.ipk
+*.img
+*.7z
+.coverage
+
+# Build outputs (Docker-produced, not checked in)
+build/proxmark3
+build/lua.zip
+
+# Screenshots (dev only)
+screenshot_*.png
+qemu_api_dump_*.txt
+qemu_run.sh
+
+# IDE / AI tools
+.vscode/
+.idea/
+
+*.swp
+*.swo
+
+# Test artifacts
+/tmp/
+tests/flows/_results/
+
+# Debug logs
+icopy_debug.log
+.claude/
+.claude/
+.claude/

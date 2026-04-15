@@ -1,0 +1,8 @@
+{
+  "title": "Erase Tag",
+  "toast": "No tag found",
+  "result_buttons": {
+    "M1": "Erase",
+    "M2": "Erase"
+  }
+}

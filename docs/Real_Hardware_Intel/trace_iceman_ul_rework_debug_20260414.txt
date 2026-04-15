@@ -1,0 +1,25 @@
+=== FULL TRACE ===
+[   0.088] DEBUG ver='iceman'
+[   0.091] === ALL INSTALLED ===
+[   0.092] POLL stack=['MainActivity'] 
+[   0.094] KEY> KEYUP_PRES!
+[   0.339] KEY> KEYUP_PRES!
+[   0.613] KEY> KEYUP_PRES!
+[   0.846] KEY> KEYUP_PRES!
+[   1.069] KEY> KEYUP_PRES!
+[   1.302] KEY> KEYUP_PRES!
+[   1.828] KEY> KEYUP_PRES!
+[   7.737] KEY> KEYUP_PRES!
+[   8.273] KEY> KEYUP_PRES!
+[   8.454] KEY> KEYUP_PRES!
+[   8.610] KEY> KEYUP_PRES!
+[   8.756] KEY> KEYUP_PRES!
+[   9.087] KEY> KEYUP_PRES!
+[   9.954] KEY> KEYOK_PRES!
+[  10.901] START(ScanActivity, None) bundle=None
+[  11.118] PM3> hf 14a info (timeout=5000)
+[  11.218] POLL stack=['MainActivity', 'ScanActivity'] 
+[  11.275] PM3< ret=1 len=30 iso14443a card select failed\n\n
+[  11.330] PM3> lf sea (timeout=10000)
+[  15.947] PM3< ret=1 len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  16.000] PM3> hf sea (timeout=10000)

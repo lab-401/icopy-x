@@ -1,0 +1,9 @@
+{
+    "name": "Quick LF Clone",
+    "version": "1.0.0",
+    "author": "Lab401",
+    "description": "One-button LF tag clone workflow",
+    "entry_class": "QuickLFClonePlugin",
+    "permissions": ["pm3"],
+    "order": 21
+}

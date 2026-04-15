@@ -1,0 +1,21 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "FDX-B",
+      "Animal ID",
+      "125KHZ",
+      "UID: 0060-030207"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 28
+  },
+  "toast": "Tag Found"
+}

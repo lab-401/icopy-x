@@ -1,0 +1,110 @@
+=== FULL TRACE ===
+[   0.121] === ALL INSTALLED ===
+[   0.122] POLL stack=['MainActivity'] 
+[   6.720] SERIAL_TX> b'pctbat\r\n'
+[   6.736] SERIAL_TX> b'charge\r\n'
+[  16.754] SERIAL_TX> b'pctbat\r\n'
+[  16.766] SERIAL_TX> b'charge\r\n'
+[  26.782] SERIAL_TX> b'pctbat\r\n'
+[  26.796] SERIAL_TX> b'charge\r\n'
+[  31.747] KEY> KEYOK_PRES!
+[  32.708] START(AutoCopyActivity, None) bundle=None
+[  32.802] PM3> hf 14a info (timeout=5000)
+[  33.013] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  33.723] KEY> KEY_PWR_CAN_PRES!
+[  33.725] PRESSPM3> called
+[  33.725] SERIAL_TX> b'presspm3\r\n'
+[  33.740] PRESSPM3< done
+[  33.741] PM3_STOP> stopPM3Task()
+[  35.235] PM3< ret=-1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  35.244] PM3_STOP< ret=None
+[  35.245] FINISH(top=AutoCopyActivity d=2)
+[  35.519] POLL stack=['MainActivity'] 
+[  36.813] SERIAL_TX> b'pctbat\r\n'
+[  36.826] SERIAL_TX> b'charge\r\n'
+[  39.835] KEY> KEYDOWN_PRES!
+[  40.065] KEY> KEYDOWN_PRES!
+[  40.381] KEY> KEYOK_PRES!
+[  40.384] START(ScanActivity, None) bundle=None
+[  40.487] PM3> hf 14a info (timeout=5000)
+[  40.527] POLL stack=['MainActivity', 'ScanActivity'] 
+[  42.888] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  42.945] PM3> hf mf cgetblk 0 (timeout=5000)
+[  43.105] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  43.116] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  43.382] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  43.533] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  44.182] KEY> KEY_PWR_CAN_PRES!
+[  44.496] KEY> KEY_PWR_CAN_PRES!
+[  44.498] FINISH(top=ScanActivity d=2)
+[  44.535] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  45.657] KEY> KEYUP_PRES!
+[  45.861] KEY> KEYUP_PRES!
+[  46.307] KEY> KEYOK_PRES!
+[  46.309] START(AutoCopyActivity, None) bundle=None
+[  46.338] PM3> hf 14a info (timeout=5000)
+[  46.539] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[  46.843] SERIAL_TX> b'pctbat\r\n'
+[  46.857] SERIAL_TX> b'charge\r\n'
+[  48.754] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  48.756] PM3> hf mf cgetblk 0 (timeout=5000)
+[  48.932] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  48.933] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  49.432] PM3> hf mf cgetblk 0 (timeout=5888)
+[  49.596] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  49.608] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  50.480] KEY> KEY_PWR_CAN_PRES!
+[  50.483] PRESSPM3> called
+[  50.483] SERIAL_TX> b'presspm3\r\n'
+[  50.500] PRESSPM3< done
+[  50.501] PM3_STOP> stopPM3Task()
+[  56.873] SERIAL_TX> b'pctbat\r\n'
+[  56.886] SERIAL_TX> b'charge\r\n'
+[  69.485] PM3< ret=-1 content_len=886 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nRunning strategy 2\n\nTime in checkkeys (fast) 19.9s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n 011 | 047 | 484558414
+[  69.491] PM3_STOP< ret=None
+[  69.492] FINISH(top=AutoCopyActivity d=2)
+[  69.574] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  71.089] KEY> KEYDOWN_PRES!
+[  71.753] KEY> KEYDOWN_PRES!
+[  72.175] KEY> KEYOK_PRES!
+[  72.178] START(ScanActivity, None) bundle=None
+[  72.243] PM3> hf 14a info (timeout=5000)
+[  72.249] CONNECT> connect2PM3()
+[  72.264] CONNECT< socket=True
+[  72.580] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  74.680] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  74.682] PM3> hf mf cgetblk 0 (timeout=5000)
+[  74.858] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  74.859] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  75.064] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  75.666] KEY> KEY_PWR_CAN_PRES!
+[  75.934] KEY> KEY_PWR_CAN_PRES!
+[  75.937] FINISH(top=ScanActivity d=2)
+[  76.087] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  79.552] SERIAL_TX> b'pctbat\r\n'
+[  79.566] SERIAL_TX> b'charge\r\n'
+[  89.583] SERIAL_TX> b'pctbat\r\n'
+[  89.596] SERIAL_TX> b'charge\r\n'
+[  99.613] SERIAL_TX> b'pctbat\r\n'
+[  99.627] SERIAL_TX> b'charge\r\n'
+[ 109.648] SERIAL_TX> b'pctbat\r\n'
+[ 109.661] SERIAL_TX> b'charge\r\n'
+[ 111.654] KEY> KEYDOWN_PRES!
+[ 112.065] KEY> KEYOK_PRES!
+[ 112.068] START(ReadListActivity, None) bundle=None
+[ 112.144] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[ 112.811] KEY> KEYOK_PRES!
+[ 112.814] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[ 112.880] PM3> hf 14a info (timeout=5000)
+[ 113.147] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=7AF2ECB2
+[ 114.286] KEY> KEY_PWR_CAN_PRES!
+[ 115.277] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[ 115.279] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 115.455] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 115.456] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 115.691] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 115.864] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 115.868] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 116.616] KEY> KEY_PWR_CAN_PRES!
+[ 119.678] SERIAL_TX> b'pctbat\r\n'
+[ 119.691] SERIAL_TX> b'charge\r\n'

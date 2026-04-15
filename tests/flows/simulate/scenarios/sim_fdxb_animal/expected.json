@@ -1,0 +1,9 @@
+{
+  "title": "Simulation",
+  "content_contains": [
+    "FDX-B Animal"
+  ],
+  "sim_buttons": {
+    "M2": "Start"
+  }
+}

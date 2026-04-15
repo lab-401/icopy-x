@@ -1,0 +1,11 @@
+{
+  "title": "Read Tag",
+  "toast": "File saved",
+  "result_buttons": {
+    "M1": "Reread",
+    "M2": "Write"
+  },
+  "scan_cache": {
+    "type": 14
+  }
+}

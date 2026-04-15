@@ -1,0 +1,9 @@
+{
+    "name": "PM3 Raw",
+    "version": "1.0.0",
+    "author": "Lab401",
+    "description": "Run hw version and display output",
+    "entry_class": "PM3RawPlugin",
+    "permissions": ["pm3"],
+    "order": 99
+}

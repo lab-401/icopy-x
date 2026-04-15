@@ -1,0 +1,54 @@
+=== FULL TRACE (iceman-fw compat test) ===
+[   0.091] presspm3 hook OK
+[   0.092] pm3_compat version=iceman needs_translation=True
+[   0.094] POLL stack=['MainActivity'] 
+[   0.094] === ALL INSTALLED ===
+[   6.023] SERIAL_TX> b'pctbat\r\n'
+[   6.036] SERIAL_TX> b'charge\r\n'
+[  16.052] SERIAL_TX> b'pctbat\r\n'
+[  16.066] SERIAL_TX> b'charge\r\n'
+[  22.744] KEY> KEYDOWN_PRES!
+[  22.988] KEY> KEYDOWN_PRES!
+[  23.480] KEY> KEYOK_PRES!
+[  24.463] START(ScanActivity, None) bundle=None
+[  24.647] PM3> hf 14a info (timeout=5000)
+[  24.775] POLL stack=['MainActivity', 'ScanActivity'] 
+[  26.062] PM3< ret=1 content_len=176 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\nNikola.D: 0\n
+[  26.089] SERIAL_TX> b'pctbat\r\n'
+[  26.121] SERIAL_TX> b'charge\r\n'
+[  26.131] PM3> hf mf cgetblk 0 (timeout=5000)
+[  26.251] PM3< ret=1 content_len=54 wupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[  26.260] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  26.278] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  26.486] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  28.475] KEY> KEY_PWR_CAN_PRES!
+[  29.004] KEY> KEY_PWR_CAN_PRES!
+[  29.007] FINISH(top=ScanActivity d=2)
+[  29.283] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[  32.703] KEY> KEYOK_PRES!
+[  32.706] START(ScanActivity, None) bundle=None
+[  32.762] PM3> hf 14a info (timeout=5000)
+[  32.789] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  32.870] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  32.873] PM3> lf sea (timeout=10000)
+[  36.149] SERIAL_TX> b'pctbat\r\n'
+[  36.161] SERIAL_TX> b'charge\r\n'
+[  37.497] PM3< ret=1 content_len=215 \nNote: False Positives ARE possible\nChecking for known tags: [-]Searching for MOTOROLA tag...[\]Searching for COTAG tag...\n[!] command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\nNikola.D: -10\n
+[  37.556] PM3> hf sea (timeout=10000)
+[  43.125] PM3< ret=1 content_len=998 [|]                                          [/] Searching for ThinFilm tag: [-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO14443-A tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for TEXKOM tag...[|]                                          [/] Searching for Fuji/Xerox tag...[-]                                          [\] Searching for ISO14443-B tag...[|]                                          [/] Searching for ISO15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for FeliCa tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[  43.214] PM3> lf t55xx detect (timeout=10000)
+[  46.178] SERIAL_TX> b'pctbat\r\n'
+[  46.191] SERIAL_TX> b'charge\r\n'
+[  46.676] PM3< ret=1 content_len=107 [!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  46.703] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  46.911] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[  46.913] PM3> hf felica reader (timeout=10000)
+[  48.044] PM3< ret=1 content_len=36 [!] card timeout (-4)\n\nNikola.D: -4\n
+[  56.214] SERIAL_TX> b'pctbat\r\n'
+[  56.226] SERIAL_TX> b'charge\r\n'
+[  65.668] KEY> KEY_PWR_CAN_PRES!
+[  66.248] SERIAL_TX> b'pctbat\r\n'
+[  66.261] SERIAL_TX> b'charge\r\n'
+[  66.394] KEY> KEY_PWR_CAN_PRES!
+[  66.396] FINISH(top=ScanActivity d=2)
+[  66.839] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C

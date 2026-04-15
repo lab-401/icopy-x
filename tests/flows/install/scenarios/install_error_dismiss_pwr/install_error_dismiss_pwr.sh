@@ -1,0 +1,8 @@
+#!/bin/bash
+# Error dismiss via PWR key. Uses corrupt install.so → error 0x03.
+# QEMU original: background thread toast invisible. Verifies error path + process alive.
+# Full dismiss test (PWR on error toast → return to About): --target=current only.
+PROJECT="${PROJECT:-/home/qx/icopy-x-reimpl}"
+SCENARIO="install_error_dismiss_pwr"
+source "${PROJECT}/tests/flows/install/includes/install_common.sh"
+run_install_scenario "corrupt_install.ipk" "title:Update|M2:Start|KEY:M2|SLEEP:10|toast:Install failed|KEY:PWR|SLEEP:3|title:About" 5

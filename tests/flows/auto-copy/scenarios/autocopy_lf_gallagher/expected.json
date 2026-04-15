@@ -1,0 +1,15 @@
+{
+  "warning_title": "Data ready",
+  "write_title": "Write Tag",
+  "content_contains": [
+    "Writing..."
+  ],
+  "result_buttons": {
+    "M1": "Verify",
+    "M2": "Rewrite",
+    "M1_active": true,
+    "M2_active": true
+  },
+  "write_toast": "Write successful!",
+  "verify_toast": "Verification successful"
+}

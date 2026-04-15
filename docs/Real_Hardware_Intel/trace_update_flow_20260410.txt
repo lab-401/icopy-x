@@ -1,0 +1,20 @@
+
+=== BOOT pid=15458 ===
+[   0.001] resources.get_str PATCHED
+[   0.001] executor PATCHED
+[   0.003] POLL stack=['dict'] d=1
+[   0.004] === ALL PATCHES INSTALLED ===
+[  65.027] START(AboutActivity, None)
+[  65.107] POLL stack=['dict', 'dict'] d=2
+[  65.188] PM3> hw ver (timeout=6888)
+[  65.345] PM3< ret=1 \n\n [ Proxmark3 RFID instrument ]\n\n [ CLIENT ]\n  client: RRG/Iceman/master/385d892-dirty-unclean 2022-08-16 04:16:56\n  compiled with GCC 5.4.0 20160609 OS:Linux ARCH:arm\n\n [ PROXMARK3 RDV4 ]\n  external flash:                  present\n  smartcard reader:                absent\n\n [ PROXMARK3 RDV4 Extras ]\n  FPC USART for BT add-on support: absent\n\n [ ARM ]\n  bootrom: RRG/Iceman/master/release (git) \n       os: RRG/Iceman/master/385d892f-dirty-unclean 2022-06-09 14:19:31\n   NIKOLA: v3.1 2022-06-09 14:19:31\n  compiled with GCC 10.1.0\n\n [ FPGA ] \n  LF image built for 2s30vq100 on 2020-04-27 at 06:32:07\n  HF image built for 2s30vq100 on 2020-08-13 at 15:34:17\n  HF FeliCa image built for 2s30vq100 on 2020-04-27 at 08:02:36\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Nonvolatile Program Memory Size: 512K bytes, Used: 248280 bytes (47%) Free: 276008 bytes (53%)\n  --= Second Nonvolatile Program Memory Size: None\n  --= Internal SRAM Size: 64K bytes\n  --= Architecture Identifier: AT91SAM7Sxx Series\n  --= Nonvolatile Program Memory Type: Embedded Flash Memory\n\n\n
+[  74.723] START(UpdateActivity, '/mnt/upan/ipk_old/9_02150004_1.0.90.ipk')
+[  75.026] POLL stack=['dict', 'dict', 'dict'] d=3
+
+=== BOOT pid=15968 ===
+[   0.001] resources.get_str PATCHED
+[   0.001] executor PATCHED
+[   0.003] POLL stack=['dict'] d=1
+[   0.004] === ALL PATCHES INSTALLED ===
+[   2.487] PM3> hw ver (timeout=6888)
+[   6.996] PM3< ret=1 \n\n [ Proxmark3 RFID instrument ]\n\n [ CLIENT ]\n  client: RRG/Iceman/master/385d892-dirty-unclean 2022-08-16 04:16:56\n  compiled with GCC 5.4.0 20160609 OS:Linux ARCH:arm\n\n [ PROXMARK3 RDV4 ]\n  external flash:                  present\n  smartcard reader:                absent\n\n [ PROXMARK3 RDV4 Extras ]\n  FPC USART for BT add-on support: absent\n\n [ ARM ]\n  bootrom: RRG/Iceman/master/release (git) \n       os: RRG/Iceman/master/385d892f-dirty-unclean 2022-06-09 14:19:31\n   NIKOLA: v3.1 2022-06-09 14:19:31\n  compiled with GCC 10.1.0\n\n [ FPGA ] \n  LF image built for 2s30vq100 on 2020-04-27 at 06:32:07\n  HF image built for 2s30vq100 on 2020-08-13 at 15:34:17\n  HF FeliCa image built for 2s30vq100 on 2020-04-27 at 08:02:36\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Nonvolatile Program Memory Size: 512K bytes, Used: 248280 bytes (47%) Free: 276008 bytes (53%)\n  --= Second Nonvolatile Program Memory Size: None\n  --= Internal SRAM Size: 64K bytes\n  --= Architecture Identifier: AT91SAM7Sxx Series\n  --= Nonvolatile Program Memory Type: Embedded Flash Memory\n\n\n

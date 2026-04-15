@@ -1,0 +1,21 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "G-Prox",
+      "G-Prox II ID",
+      "125KHZ",
+      "FC,CN: 123,04567"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 13
+  },
+  "toast": "Tag Found"
+}

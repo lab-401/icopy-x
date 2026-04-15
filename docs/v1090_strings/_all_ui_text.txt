@@ -1,0 +1,1831 @@
+    except AttributeError: pass
+  Enter known keys
+ Wrong type found!
+ hf mfu dump f 
+ icopy-x.com/update
+#  You can add some known keys.
+# This is the default key library.
+$A_CARD_START$
+$A_CARD_STOP$
+%.200s() keywords must be strings
+%.200s() takes no keyword arguments
+%s() got an unexpected keyword argument '%U'
+%s() got multiple values for keyword argument '%U'
+(?:Card|ID|id|CARD|ID|UID|uid|Uid)\s*:*\s*([xX0-9a-fA-F ]+)
+(CN|Card|Card ID):*\s+(\d+)
+...{}/{}Keys
+/home/tcwg-buildslave/workspace/tcwg-make-release_1/_build/builds/i686-w64-mingw32/arm-linux-gnueabihf/gcc.git~linaro-7.5-2019.12-stage2/arm-linux-gnueabihf/libgcc
+/tmp/.keys/
+1. Copy UID
+2.Plug USB, Copy firmware to device.
+3. Write data
+65857569 //chinese "handheld RFID writer" blue cloner from circa 2013 (also sold by xfpga.com)
+<Key>
+ARE_YOU_ICOPY?
+AboutActivity.onKeyEvent
+AbsReader
+AbsReader.__init__
+AbsReader.callReadFailed
+AbsReader.callReadSuccess
+AbsReader.call_on_finish
+AbsReader.isSupport
+AbsReader.start
+AbsReader.stop
+Activity.callKeyEvent
+Activity.onKeyEvent
+Auth error
+Auto Copy
+AutoCopyActivity
+AutoCopyActivity.__init__
+AutoCopyActivity.getManifest
+AutoCopyActivity.onCreate
+AutoCopyActivity.onKeyEvent
+AutoCopyActivity.onScanFinish
+AutoCopyActivity.showScanToast
+AutoCopyActivity.startScan
+B0_WRITE_MAP
+BCC repair failed
+BL Error
+BacklightActivity.onKeyEvent
+BaseActivity.callKeyEvent
+BaseActivity.onKeyEvent
+ButtonTestActivity.onKeyEvent
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp7cx7j9f6\hfmfuread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp7cx7j9f6\hfmfuread.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpbmc1q0po\legicread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpbmc1q0po\legicread.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpchm0nlsy\hf15write.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpchm0nlsy\hf15write.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpcluzea0i\lfwrite.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpcluzea0i\lfwrite.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpcmb4elxa\keymap.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpcmb4elxa\keymap.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpdn72oh60\felicaread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpdn72oh60\felicaread.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpe2a5lml_\audio_copy.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpe2a5lml_\audio_copy.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpg3e0u47c\write.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpg3e0u47c\write.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmple9vyxw4\scan.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmple9vyxw4\scan.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpmcmm_v0g\tagtypes.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpmcmm_v0g\tagtypes.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpprjshjok\hfmfkeys.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpprjshjok\hfmfkeys.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpq363k6fc\hf14aread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpq363k6fc\hf14aread.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmprfo4nbmb\hf15read.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmprfo4nbmb\hf15read.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmps3xwfz13\hfmfread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmps3xwfz13\hfmfread.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpud921cfo\hfmfwrite.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpud921cfo\hfmfwrite.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmput91eecm\hfmfuwrite.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmput91eecm\hfmfuwrite.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpylmw5bak\read.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpylmw5bak\read.py
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpzfzp1d9p\lfread.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpzfzp1d9p\lfread.py
+C:\Users\Administrator\Desktop\tools\arm-gcc-icopy\include_py/objimpl.h
+CMD_DETECT_NO_KEY
+CMD_DETECT_ON_KEY
+CMD_DUMP_NO_KEY
+CODE_PM3_TASK_ERROR
+CODE_TAG_LOST
+CODE_TAG_MULT
+CODE_TAG_NO
+CODE_TAG_TYPE_WRONG
+CRC check failed
+Can't select card
+Can't select card \(ALL\)
+Can't set magic card block
+Cannot overwrite C type %s
+Card doesn't support standard iso14443-3 anticollision
+Card loaded \d+ blocks from file
+Card wiped successfully
+CardWalletActivity
+CardWalletActivity.__init__
+CardWalletActivity.delDump
+CardWalletActivity.getKeyInfo
+CardWalletActivity.getManifest
+CardWalletActivity.onKeyEvent
+CardWalletActivity.onMultiPIUpdate
+CardWalletActivity.parseInfoByIDFileName
+CardWalletActivity.parseInfoByLegicInfoFileName
+CardWalletActivity.parseInfoByM1FileName
+CardWalletActivity.parseInfoByT55xxInfoFileName
+CardWalletActivity.parseInfoByUIDInfoFileName
+CardWalletActivity.setBtn2DelMode
+CardWalletActivity.setBtn2ListMode
+CardWalletActivity.setTipsTxt
+CardWalletActivity.showDetail
+CardWalletActivity.showDumps
+CardWalletActivity.showDumps.<locals>.get_ctime
+CardWalletActivity.showDumps.<locals>.get_file
+Change tag position on the antenna.
+Check pwd failed
+ConsolePrinterActivity.onKeyEvent
+DCloseReadThread
+DEFAULT_KEYS
+DIR_NAME_SECURAKEY
+DOpenReadThread
+DUMP_TEMP
+DUMP_TYPE_MAP
+DUMP_WRITE_MAP
+Data ready for copy!
+Data ready!
+Default pwd write\s+\|\s+([A-Fa-f0-9]{8})\s\|
+Default write\s+\|\s+([A-Fa-f0-9]{8})\s\|
+DiagnosisActivity._test_hf_reader_factory
+DiagnosisActivity._test_hfreader
+DiagnosisActivity._test_hfvoltage
+DiagnosisActivity._test_lf_reader_factory
+DiagnosisActivity._test_lfreader
+DiagnosisActivity._test_lfvoltage
+DiagnosisActivity._test_reader
+DiagnosisActivity._test_voltage
+DiagnosisActivity._test_voltage.<locals>.newlines
+DiagnosisActivity.onKeyEvent
+Does the computer have a USBSerial(Gadget Serial) found?
+Dump Files
+EM TAG ID
+EM TAG ID\s+:[\s]+([xX0-9a-fA-F]+)
+EMPTY_KEY
+ERROR
+Encrypted cards are not supported.
+Enter a known key for 
+Erase
+Erase MF1/L1/L2/L3
+Erase T5577
+Erase Tag
+Erase failed
+Erase successful
+FILE_MFU_READ
+FILE_PREFIX_SECURAKEY
+FILE_READ
+FORCE_READ_EM4305
+FORCE_READ_M1
+FORCE_READ_T55XX
+FORCE_Reread
+Fail
+Failed
+Failed to identify tagtype
+Failed to receive the file
+FeliCa tag info
+FelicaReader
+FelicaReader.isSupport
+FelicaReader.start
+Found
+Found valid key
+Found valid key (.*)
+Found valid password:
+Found valid password: \[([ a-fA-F0-9]+)\]
+GreedySnake.draw_thread
+HF Voltage  
+HF reader   
+HFReaderTestActivity
+HFReaderTestActivity.__init__
+HFReaderTestActivity.onCreate
+HFReaderTestActivity.onKeyEvent
+HFReaderTestActivity.run_check
+HFReaderTestActivity.showTips
+HIDIClassReader
+HIDIClassReader.isSupport
+HIDIClassReader.start
+HITAG
+HITAG2_ID
+Hitag
+Hitag2 ID
+ICLASS_E_WRITE_BLOCK
+ICLASS_L_WRITE_BLOCK
+IClassSEActivity.onKeyEvent
+IClassSEActivity.onSEReader
+IClassSEActivity.wait_exit_and_go_write
+IOError
+ISO1443AReader
+ISO1443AReader.isSupport
+ISO1443AReader.start
+ISO15693Reader
+ISO15693Reader.isSupport
+ISO15693Reader.start
+Install failed, code = {}
+KEYS_ICLASS_NIKOLA
+KEYS_MAP
+KEYWORD_CASE1
+KEY_FILE_USER_NAME
+KEY_READ
+KEY_TEMP
+Key Enter
+Key:
+KeyEnterM1Activity
+KeyEnterM1Activity.__init__
+KeyEnterM1Activity.create_key_index
+KeyEnterM1Activity.onCreate
+KeyEnterM1Activity.onKeyEvent
+KeyEnterM1Activity.run_save_keys_and_finish
+KeyError
+KeyEvent
+KeyEvent.__init__
+KeyEvent._compat
+KeyEvent._run_shutdown
+KeyEvent.bind
+KeyEvent.onKey
+KeyEvent.unbind
+Key{}: 
+LABEL_READ_RUNNING
+LABEL_RUN_READ
+LF Voltage  
+LF reader   
+LF125KHZReader
+LF125KHZReader.isSupport
+LF125KHZReader.start
+LOCK_THREAD
+LUAScriptCMDActivity.onKeyEvent
+Leading [0-9a-zA-Z]* pwd write\s+\|\s+([A-Fa-f0-9]{8})\s\|
+LegicMim256Reader
+LegicMim256Reader.isSupport
+LegicMim256Reader.start
+LfReaderTestActivity
+LfReaderTestActivity.__init__
+LfReaderTestActivity.onCreate
+LfReaderTestActivity.onKeyEvent
+LfReaderTestActivity.run_check
+LfReaderTestActivity.run_watch
+LfReaderTestActivity.run_watch.<locals>.onWatchLine
+LfReaderTestActivity.showTips
+Loading...
+METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS))
+MainActivity.onKeyEvent
+MainActivity.read_nanopi_info
+MifareClassicReader
+MifareClassicReader.isSupport
+MifareClassicReader.start
+MifareUltralightReader
+MifareUltralightReader.isSupport
+MifareUltralightReader.start
+Missing keys
+Multiple tags detected
+Multiple tags detected!
+NFCTAG
+NTAG
+NTAG 213
+NTAG 215
+NTAG 216
+NTAG213
+NTAG213 144b
+NTAG213/5/6
+NTAG213_144B
+NTAG215
+NTAG215 504b
+NTAG215_504B
+NTAG216
+NTAG216 888b
+NTAG216_888B
+No data found!
+No dump info. 
+No keys found
+No known 125/134 kHz tags found!
+No known/supported 13.56 MHz tags found
+No tag found
+No tag found 
+No tag found.
+No valid key
+No valid keys
+Ntag
+Ntag215
+OTAActivity.onKeyEvent
+OTAActivity.onKeyEvent.<locals>.<lambda>
+OTAActivity.onKeyEvent.<locals>.run_internal
+Option 1) Go to reader to sniff keys
+Option 1) Go to reader to sniff keys.
+Option 2) Enter known keys manually
+Option 2) Enter known keys manually.
+Option 3) Force read  to get partial data
+PATH_DUMP
+PATH_DUMP_AWID
+PATH_DUMP_EM410x
+PATH_DUMP_EM4X05
+PATH_DUMP_FDX
+PATH_DUMP_FELICA
+PATH_DUMP_GALLAGHER
+PATH_DUMP_GPROXII
+PATH_DUMP_HF14A
+PATH_DUMP_HID
+PATH_DUMP_ICLASS
+PATH_DUMP_ICODE
+PATH_DUMP_INDALA
+PATH_DUMP_IOPROX
+PATH_DUMP_JABLOTRON
+PATH_DUMP_KERI
+PATH_DUMP_LEGIC
+PATH_DUMP_M1
+PATH_DUMP_MFU
+PATH_DUMP_NEDAP
+PATH_DUMP_NEXWATCH
+PATH_DUMP_NORALSY
+PATH_DUMP_PAC
+PATH_DUMP_PARADOX
+PATH_DUMP_PRESCO
+PATH_DUMP_PYRAMID
+PATH_DUMP_SECURAKEY
+PATH_DUMP_T55XX
+PATH_DUMP_VIKING
+PATH_DUMP_VISA2000
+PATH_KEYS
+PATH_KEYS_M1
+PATH_KEYS_T5577
+PCModeActivity.onKeyEvent
+PCModeActivity.onKeyEvent.<locals>.run_finish
+PCModeActivity.onKeyEvent.<locals>.run_press
+PM3_VER_TAG
+PREFIX_NAME_NTAG213
+PREFIX_NAME_NTAG215
+PREFIX_NAME_NTAG216
+Partial dump created
+Percentage: {}
+Please place Tag with 'IC Test'
+Please place Tag with 'ID Test'
+Please place new tag for copy.
+Please use 'Auto Copy' first, Then erase
+Please use your watch to record the UID from the tag(new) and then click 'Finish'.
+PyDict_GetItemWithError
+PyExc_AssertionError
+PyExc_AttributeError
+PyExc_ImportError
+PyExc_IndexError
+PyExc_KeyError
+PyExc_NameError
+PyExc_OverflowError
+PyExc_RuntimeError
+PyExc_SystemError
+PyExc_TypeError
+PyExc_UnboundLocalError
+PyExc_ValueError
+PyExc_ZeroDivisionError
+PyInit_audio_copy
+PyInit_felicaread
+PyInit_hf14aread
+PyInit_hf15read
+PyInit_hf15write
+PyInit_hfmfkeys
+PyInit_hfmfread
+PyInit_hfmfuread
+PyInit_hfmfuwrite
+PyInit_hfmfwrite
+PyInit_keymap
+PyInit_legicread
+PyInit_lfread
+PyInit_lfwrite
+PyInit_read
+PyInit_scan
+PyInit_tagtypes
+PyInit_write
+PyMapping_Keys
+PyThreadState_Get
+PyType_Ready
+PyUnicode_Check(key)
+PyUnicode_IS_READY(**argname)
+PyUnicode_IS_READY(**name)
+PyUnicode_IS_READY(key)
+PyUnicode_IS_READY(name)
+PyUnicode_IS_READY(result_uval)
+PyUnicode_IS_READY(s1)
+PyUnicode_IS_READY(s2)
+PyUnicode_IS_READY(text)
+PyUnicode_IS_READY(uval)
+PyUnicode_IS_READY(x)
+READ
+READ_A_RESP
+REGEX_CARD_ID
+Read
+Read Failed!
+Read Tag
+Read block error
+Read sector\s+\d+\s+block\s+\d+\s+error
+ReadActivity
+ReadActivity.FORCE_READ_EM4305
+ReadActivity.FORCE_READ_M1
+ReadActivity.FORCE_READ_T55XX
+ReadActivity.FORCE_Reread
+ReadActivity.__init__
+ReadActivity.canidle
+ReadActivity.getManifest
+ReadActivity.hideReadToast
+ReadActivity.onCreate
+ReadActivity.onData
+ReadActivity.onDestroy
+ReadActivity.onKeyEvent
+ReadActivity.onReading
+ReadActivity.onResume
+ReadActivity.seconds_to_time
+ReadActivity.showReadToast
+ReadActivity.startRead
+ReadActivity.stopRead
+ReadError
+ReadFromHistoryActivity
+ReadFromHistoryActivity.__init__
+ReadFromHistoryActivity.get_info
+ReadFromHistoryActivity.get_type
+ReadFromHistoryActivity.onData
+ReadFromHistoryActivity.onKeyEvent
+ReadFromHistoryActivity.sim_for_info
+ReadFromHistoryActivity.write_file_base
+ReadFromHistoryActivity.write_id
+ReadFromHistoryActivity.write_lf_dump
+ReadListActivity
+ReadListActivity.__init__
+ReadListActivity.getManifest
+ReadListActivity.how2Scan
+ReadListActivity.initList
+ReadListActivity.onAutoScan
+ReadListActivity.onCreate
+ReadListActivity.onKeyEvent
+ReadListActivity.set_tag_list_enable
+ReadListActivity.showScanToast
+Reader
+Reader.__init__
+Reader.call_exception
+Reader.call_reading
+Reader.find_reader
+Reader.find_readers
+Reader.is_reading
+Reader.start
+Reader.start.<locals>.run
+Reader.stop
+Reading (\d+) bytes from device memory
+Reading...
+Reading...{}/{}Keys
+Reread
+Rescan
+Rewrite
+SECURAKEY_ID
+Scan Tag
+ScanActivity
+ScanActivity.__init__
+ScanActivity.canidle
+ScanActivity.getManifest
+ScanActivity.how2Scan
+ScanActivity.onAutoScan
+ScanActivity.onCreate
+ScanActivity.onKeyEvent
+ScanActivity.onScanFinish
+ScanActivity.onScanFinish.<locals>.getD
+ScanActivity.onScanning
+ScanActivity.playScanning
+ScanActivity.showButton
+ScanActivity.showScanToast
+ScanActivity.startScan
+Scanner
+Scanner.__init__
+Scanner._is_can_next
+Scanner._raise_on_multi_scan
+Scanner._set_run_label
+Scanner._set_stop_label
+Scanner.call_exception
+Scanner.call_progress
+Scanner.call_resulted
+Scanner.scan_all_asynchronous
+Scanner.scan_all_synchronous
+Scanner.scan_stop
+Scanner.scan_type_asynchronous
+Scanner.scan_type_synchronous
+Scanning...
+ScreenTestActivity.onKeyEvent
+SecuraKey 
+Securakey ID
+Securakey-ID
+SerialKeyCode
+SetComReadBack
+SimulationActivity.onKeyEvent
+SimulationTraceActivity.onKeyEvent
+SleepModeActivity.onKeyEvent
+SleepModeActivity.onKeyEvent.<locals>.<lambda>
+SnakeGameActivity.onKeyEvent
+SniffActivity.onKeyEvent
+SniffForMfReadActivity
+SniffForMfReadActivity.onSniffFinish
+SniffForMfReadActivity.showHfResult
+SniffForSpecificTag
+SniffForSpecificTag.getManifest
+SniffForSpecificTag.onKeyEvent
+SniffForSpecificTag.onSniffFinish
+SniffForSpecificTag.onSniffOk
+SniffForT5XReadActivity
+SniffForT5XReadActivity.onSniffFinish
+SniffForT5XReadActivity.showT5577Result
+SoundTestActivity.onKeyEvent
+Success writing to tag
+Successful!
+Swipe tag on iCopy 
+Synchronization successful!
+T55xx Reading...
+T55xx keys checking...
+TIME_ST_ALLKEY_MAX
+TIME_ST_ONEKEY_MAX
+Tag Found
+Tag Info
+Tag isn't vulnerable to Nested Attack
+The original tag and tag(new)
+The update is successful.
+Thread
+ThreadPoolExecutor
+TimeSyncActivity.onKeyEvent
+UART:: write time-out
+UID write failed. Make sure the tag is placed on the antenna.
+Ultralight & NTAG
+Unknown error
+Unknown error.
+Until you get keys.
+UpdateActivity.onKeyEvent
+UpdateActivity.onKeyEvent.<locals>.<lambda>
+UsbPortTestActivity.onKeyEvent
+Valid Hitag
+Valid Securakey ID
+Valid iCLASS tag
+ValueError
+Verification failed
+Verification failed!
+Verification successful!
+VolumeActivity.onKeyEvent
+WarningDiskFullActivity.onKeyEvent
+WarningM1Activity.onKeyEvent
+WarningT5X4X05KeyEnterActivity
+WarningT5X4X05KeyEnterActivity.__init__
+WarningT5X4X05KeyEnterActivity.onCreate
+WarningT5X4X05KeyEnterActivity.onData
+WarningT5X4X05KeyEnterActivity.onKeyEvent
+WarningT5XActivity.onKeyEvent
+WarningWriteActivity
+WarningWriteActivity.__init__
+WarningWriteActivity.draw_and_play
+WarningWriteActivity.finish
+WarningWriteActivity.onCreate
+WarningWriteActivity.onData
+WarningWriteActivity.onKeyEvent
+WearableDeviceActivity.onKeyEvent
+WearableDeviceActivity.on_wearable_write_call
+WearableDeviceActivity.write_dat_to_wearable
+WearableDeviceActivity.write_uid_to_container
+WipeTagActivity
+WipeTagActivity.__init__
+WipeTagActivity.call_on_wipe_t55xx
+WipeTagActivity.call_on_write_magic_m1
+WipeTagActivity.call_on_write_std_m1
+WipeTagActivity.getManifest
+WipeTagActivity.onCreate
+WipeTagActivity.onKeyEvent
+WipeTagActivity.start_wipe
+WipeTagActivity.wipe_m1
+WipeTagActivity.wipe_magic_m1
+WipeTagActivity.wipe_std_m1
+WipeTagActivity.wipe_t5577
+Write
+Write OK
+Write Tag
+Write UID to tag(new), please place new card on iCopy antenna, then click 'start'
+Write and Verify successful!
+Write failed!
+Write successful!
+WriteActivity
+WriteActivity.__init__
+WriteActivity.onCreate
+WriteActivity.onData
+WriteActivity.onKeyEvent
+WriteActivity.on_verify
+WriteActivity.on_write
+WriteActivity.playVerifying
+WriteActivity.playWriting
+WriteActivity.setBtnEnable
+WriteActivity.startVerify
+WriteActivity.startWrite
+Writing failed
+Wrong key. Can't authenticate to block
+Xor div key :
+Xor div key : ([0-9A-Fa-f ]+)
+YES!ICOPY!
+[comm]<- key methord received:
+_IO_read_base
+_IO_read_end
+_IO_read_ptr
+_IO_write_base
+_IO_write_end
+_IO_write_ptr
+_PyThreadState_UncheckedGet
+_PyUnicode_FastCopyCharacters
+_PyUnicode_Ready
+__assert_fail
+__assert_fail@@GLIBC_2.4
+__key_audio_enable
+_key.dic
+_listener_reading
+_raise_on_multi_scan
+_read_resp_com
+_read_result_bundle
+_reader
+_readers
+_reading
+_scan_lock
+_scan_running
+_serial_key_handle
+_test_hf_reader_factory
+_test_hfreader
+_test_hfvoltage
+_test_lf_reader_factory
+_test_lfreader
+_test_lfvoltage
+_test_reader
+_test_voltage
+_write_progressbar
+_write_toast
+able to identify tag.
+actbase.BaseActivity.callKeyEvent
+actbase.BaseActivity.onKeyEvent
+activity_main.AboutActivity.onKeyEvent
+activity_main.AutoCopyActivity.__init__
+activity_main.AutoCopyActivity.getManifest
+activity_main.AutoCopyActivity.onCreate
+activity_main.AutoCopyActivity.onKeyEvent
+activity_main.AutoCopyActivity.onScanFinish
+activity_main.AutoCopyActivity.showScanToast
+activity_main.AutoCopyActivity.startScan
+activity_main.BacklightActivity.onKeyEvent
+activity_main.CardWalletActivity.__init__
+activity_main.CardWalletActivity.delDump
+activity_main.CardWalletActivity.getKeyInfo
+activity_main.CardWalletActivity.getManifest
+activity_main.CardWalletActivity.onKeyEvent
+activity_main.CardWalletActivity.onMultiPIUpdate
+activity_main.CardWalletActivity.parseInfoByIDFileName
+activity_main.CardWalletActivity.parseInfoByLegicInfoFileName
+activity_main.CardWalletActivity.parseInfoByM1FileName
+activity_main.CardWalletActivity.parseInfoByT55xxInfoFileName
+activity_main.CardWalletActivity.parseInfoByUIDInfoFileName
+activity_main.CardWalletActivity.setBtn2DelMode
+activity_main.CardWalletActivity.setBtn2ListMode
+activity_main.CardWalletActivity.setTipsTxt
+activity_main.CardWalletActivity.showDetail
+activity_main.CardWalletActivity.showDumps
+activity_main.CardWalletActivity.showDumps.get_ctime
+activity_main.CardWalletActivity.showDumps.get_file
+activity_main.ConsolePrinterActivity.onKeyEvent
+activity_main.IClassSEActivity.onKeyEvent
+activity_main.IClassSEActivity.onSEReader
+activity_main.IClassSEActivity.wait_exit_and_go_write
+activity_main.KeyEnterM1Activity.__init__
+activity_main.KeyEnterM1Activity.create_key_index
+activity_main.KeyEnterM1Activity.onCreate
+activity_main.KeyEnterM1Activity.onKeyEvent
+activity_main.KeyEnterM1Activity.run_save_keys_and_finish
+activity_main.LUAScriptCMDActivity.onKeyEvent
+activity_main.PCModeActivity.onKeyEvent
+activity_main.PCModeActivity.onKeyEvent.run_finish
+activity_main.PCModeActivity.onKeyEvent.run_press
+activity_main.ReadActivity.__init__
+activity_main.ReadActivity.canidle
+activity_main.ReadActivity.hideReadToast
+activity_main.ReadActivity.onCreate
+activity_main.ReadActivity.onData
+activity_main.ReadActivity.onDestroy
+activity_main.ReadActivity.onKeyEvent
+activity_main.ReadActivity.onReading
+activity_main.ReadActivity.onResume
+activity_main.ReadActivity.seconds_to_time
+activity_main.ReadActivity.showReadToast
+activity_main.ReadActivity.startRead
+activity_main.ReadActivity.stopRead
+activity_main.ReadFromHistoryActivity.__init__
+activity_main.ReadFromHistoryActivity.get_info
+activity_main.ReadFromHistoryActivity.get_type
+activity_main.ReadFromHistoryActivity.onData
+activity_main.ReadFromHistoryActivity.onKeyEvent
+activity_main.ReadFromHistoryActivity.sim_for_info
+activity_main.ReadFromHistoryActivity.write_file_base
+activity_main.ReadFromHistoryActivity.write_id
+activity_main.ReadFromHistoryActivity.write_lf_dump
+activity_main.ReadListActivity.__init__
+activity_main.ReadListActivity.getManifest
+activity_main.ReadListActivity.how2Scan
+activity_main.ReadListActivity.initList
+activity_main.ReadListActivity.onCreate
+activity_main.ReadListActivity.onKeyEvent
+activity_main.ReadListActivity.set_tag_list_enable
+activity_main.ReadListActivity.showScanToast
+activity_main.ScanActivity.__init__
+activity_main.ScanActivity.canidle
+activity_main.ScanActivity.getManifest
+activity_main.ScanActivity.how2Scan
+activity_main.ScanActivity.onAutoScan
+activity_main.ScanActivity.onCreate
+activity_main.ScanActivity.onKeyEvent
+activity_main.ScanActivity.onScanFinish
+activity_main.ScanActivity.onScanFinish.getD
+activity_main.ScanActivity.onScanning
+activity_main.ScanActivity.playScanning
+activity_main.ScanActivity.showButton
+activity_main.ScanActivity.showScanToast
+activity_main.ScanActivity.startScan
+activity_main.SimulationActivity.onKeyEvent
+activity_main.SimulationTraceActivity.onKeyEvent
+activity_main.SnakeGameActivity.onKeyEvent
+activity_main.SniffActivity.onKeyEvent
+activity_main.SniffForMfReadActivity.onSniffFinish
+activity_main.SniffForMfReadActivity.showHfResult
+activity_main.SniffForSpecificTag.onKeyEvent
+activity_main.SniffForSpecificTag.onSniffOk
+activity_main.SniffForT5XReadActivity.onSniffFinish
+activity_main.SniffForT5XReadActivity.showT5577Result
+activity_main.TimeSyncActivity.onKeyEvent
+activity_main.VolumeActivity.onKeyEvent
+activity_main.WarningM1Activity.onKeyEvent
+activity_main.WarningT5X4X05KeyEnterActivity.__init__
+activity_main.WarningT5X4X05KeyEnterActivity.onCreate
+activity_main.WarningT5X4X05KeyEnterActivity.onData
+activity_main.WarningT5X4X05KeyEnterActivity.onKeyEvent
+activity_main.WarningT5XActivity.onKeyEvent
+activity_main.WarningWriteActivity.__init__
+activity_main.WarningWriteActivity.draw_and_play
+activity_main.WarningWriteActivity.finish
+activity_main.WarningWriteActivity.onCreate
+activity_main.WarningWriteActivity.onData
+activity_main.WarningWriteActivity.onKeyEvent
+activity_main.WearableDeviceActivity.onKeyEvent
+activity_main.WearableDeviceActivity.on_wearable_write_call
+activity_main.WearableDeviceActivity.write_dat_to_wearable
+activity_main.WearableDeviceActivity.write_uid_to_container
+activity_main.WipeTagActivity.__init__
+activity_main.WipeTagActivity.call_on_wipe_t55xx
+activity_main.WipeTagActivity.call_on_write_magic_m1
+activity_main.WipeTagActivity.call_on_write_std_m1
+activity_main.WipeTagActivity.getManifest
+activity_main.WipeTagActivity.onCreate
+activity_main.WipeTagActivity.onKeyEvent
+activity_main.WipeTagActivity.start_wipe
+activity_main.WipeTagActivity.wipe_m1
+activity_main.WipeTagActivity.wipe_magic_m1
+activity_main.WipeTagActivity.wipe_std_m1
+activity_main.WipeTagActivity.wipe_t5577
+activity_main.WriteActivity.__init__
+activity_main.WriteActivity.onCreate
+activity_main.WriteActivity.onData
+activity_main.WriteActivity.onKeyEvent
+activity_main.WriteActivity.on_verify
+activity_main.WriteActivity.on_write
+activity_main.WriteActivity.playVerifying
+activity_main.WriteActivity.playWriting
+activity_main.WriteActivity.setBtnEnable
+activity_main.WriteActivity.startVerify
+activity_main.WriteActivity.startWrite
+activity_tools.ButtonTestActivity.onKeyEvent
+activity_tools.DiagnosisActivity._test_hf_reader_factory
+activity_tools.DiagnosisActivity._test_hfreader
+activity_tools.DiagnosisActivity._test_hfvoltage
+activity_tools.DiagnosisActivity._test_lf_reader_factory
+activity_tools.DiagnosisActivity._test_lfreader
+activity_tools.DiagnosisActivity._test_lfvoltage
+activity_tools.DiagnosisActivity._test_reader
+activity_tools.DiagnosisActivity._test_voltage
+activity_tools.DiagnosisActivity._test_voltage.newlines
+activity_tools.DiagnosisActivity.onKeyEvent
+activity_tools.HFReaderTestActivity.__init__
+activity_tools.HFReaderTestActivity.onCreate
+activity_tools.HFReaderTestActivity.onKeyEvent
+activity_tools.HFReaderTestActivity.run_check
+activity_tools.HFReaderTestActivity.showTips
+activity_tools.LfReaderTestActivity.__init__
+activity_tools.LfReaderTestActivity.onCreate
+activity_tools.LfReaderTestActivity.onKeyEvent
+activity_tools.LfReaderTestActivity.run_check
+activity_tools.LfReaderTestActivity.run_watch
+activity_tools.LfReaderTestActivity.run_watch.onWatchLine
+activity_tools.LfReaderTestActivity.showTips
+activity_tools.ScreenTestActivity.onKeyEvent
+activity_tools.SoundTestActivity.onKeyEvent
+activity_tools.UsbPortTestActivity.onKeyEvent
+activity_update.UpdateActivity.onKeyEvent
+activity_update.UpdateActivity.onKeyEvent.lambda1
+actmain.MainActivity.onKeyEvent
+actmain.MainActivity.read_nanopi_info
+actmain.OTAActivity.onKeyEvent
+actmain.OTAActivity.onKeyEvent.lambda1
+actmain.OTAActivity.onKeyEvent.run_internal
+actmain.SleepModeActivity.onKeyEvent
+actmain.SleepModeActivity.onKeyEvent.lambda3
+actmain.WarningDiskFullActivity.onKeyEvent
+actstack.Activity.callKeyEvent
+actstack.Activity.onKeyEvent
+append_keys_files_unique
+append_keys_unique
+append_str_on_icopy
+appfiles.create_mf1_keys
+appfiles.create_securakey
+appfiles.create_t5577_keys
+appfiles.get_card_list
+appfiles.read_text
+appfiles.search_mf1_dump
+appfiles.search_mf1_keys
+audio.playKeyDisable
+audio.playKeyEnable
+audio.playMissingKey
+audio.playMultiCard
+audio.playNoValidKeyHF
+audio.playNoValidKeyLF
+audio.playReadAll
+audio.playReadFail
+audio.playReadPart
+audio.playReading1p32
+audio.playReadingKeys
+audio.playScanning
+audio.playTagNotfound
+audio.playTagfound
+audio.playVerifiFail
+audio.playVerifiSuccess
+audio.playWriteFail
+audio.playWriteSuccess
+audio.playwrongTagfound
+audio.setKeyAudioEnable
+audio_copy
+audio_copy.c
+audio_copy.playReadyForCopy
+audio_copy.py
+auto_copy
+base_dump_cmd
+bca3jnS9UYZCgUHPPZzj5to3MHFOh/weN/4NcD12NzvK11b/PdCUXej+UsFRdoqVpcRrnaqGlHoUE0KAGjTDwsEQEdrMIpale/OyPmtYtdSPOeU9ytEJz1pEFxHFAzxN0V2n0hcU1X4rXNHXvxlmTSV2MsHumjDQYaoA8MoYunO3ZQ+nPgHCx3rbydvFp8GEWoWX/nzufi/HcCpRSEcuHKKPAI7gFu7Q0LFYeyInzGwFSuZrlVYKyNw3ltzQwzp78FMohZ6b+vX0kZuN+BcvhKSqnNL1PZIjLpo7e9oRukra1mvx4Kzj0nZ04JOWRvfsoY8QIWAQe9liLTaZYWAo1XYT5tNh/VMLNkt/onIAENEjlh2KHKntvcgUhKmuTRPZ4CzLpsc/Ee5UyGxcLdWXMu8MG9ZTsnN1ecQIK14maBtg64mZO8+v94B98YZf38QQ8DI4fadtBZzRO9zX55j5WWpWdOczrnf6JWRaTuxSFnVyx2l8j8qDoeoq4iW/kTPoJl4QkN+l4bLtnTJA54SEkpm+pJNaXWMrrfnO0NBg/UTDlb3NPmCZjH8PBs5FRTMX41wx3p/oqtmhpiV1LdGlD6/LjoJSwOnEPznHvHg7jKyJQWWYqNkxKZ62Hco/Gx+rb994Nnl4BBi05HRfPF0F/qp5WhdbbxNr9y9eAK2N2DB3AmmFsU2kwvawJOmT7svL0QA7RDmrVq7/ZcrC4bRH5oPLQ3TqiklUpbEbrntqOn74tPdZJPYlxwZtmpBsg3EYbQUG8cWDk4qld1vPSdmrmxBrbNj5F2YYIRY7kPK+GQzDSQ7ZpLpv5EtD0oACofFon4XcCdnhEwcU/p6Th3zEF+1Sj047338muaaqwXYPsKIEvONA5KkK0mozERWcvbkzrvN2+Q2sEVYPWTZ+ruUm1j/IsG8zIR8maRXMTXKs2vP6B3HP8aVuu9y1NG6DeugCpnISKtGJeaFEvqX+rfMHaSJEVFbER0U/lRWvEsImf8ZiY4bvpP5618ntk7ADhNa4RO4nvO6do+2qBd9feHMEO8a7AKZIIbSQ1bnUyxsCc2dSXuiLdiAaLR0uce2ApxjmbtSB/Fm6jZjw7YJfM2uWWONRgAOKBVThO7ORPO3+bZIIfzh1UvaA1SRy1a3em2ooPUHCv3k4j9FStWVmS4XeW11MovNSlcMzco1I9NTIjysgPWov0x/tRclj98V+Lb9zMJHyfD9mIAjTZhMzzF5WDxj806gKH8hwKKjfvbT1fWXEbwNDM34BSrwvAuTDoeqp8ANjkdJpQH/u3R6lNSlp9pMWJ2cVXJYsFSjudU17ns/0rYOfK3Y4eFCKQ7jGFrcRx3ukR7rreXHtLBIIp/FhkQI1fwGQpEuQ0YDNSyEVDIibB3Aeq2ecdxsTLKaY2EVLZ3JvqvSR0Jnu9jaWcjLc6pvF0tA2dbLOzMafrbg5WS6MEIdlvrHpUkZzO7cfNtT6MoqLoCqUgw3fd+fjuGcwv2OCyv0MjlqieMjqrF8+2Zspg1sQkeeAAX0rj+I6T2jd7t7RVGWTXH3JcV9dQbNSTfIQ4QAbGRdhmPkpBA9zd5mRYdL9dOLLpSTdSHCVRa0aCB3EMmu/VpykHAdZBi+aMMcr/LPEQxY38B0bDlhysflS2Oa1SODJ8m58gENnWz0VHjNYoXcJLNTYHnC1E4uOcHwBwR6qw62QsADsHabBwM4WC8dRpnHcdJs5cducQuxvBd3dUe04TOCE+i5Ebbd9zYkOyeSePHZFojsU2OVdaIH2F2XzasU8M09iKv2R7mmdks63SXGtc68TWhq5VA5h/15j++Nvpa2+hut1d7dF6s+D0w6rp0UZqCkC94zmZyk0ZQLVna7aHtW+3H2Buc8Ck4v+ZY+/GtfgpqXFcDqv42H7cv8D89tBF3wH0gYvc/91PzumylgxwRdrEJs4ZMwz3IZy5b9Gg5vXKJIVXAEhpKyIuSxijX8WQmNaYnO7AgvNDTKjEtytVjBuSgEHpPUD3EebgW9Ofnq6b+0DAoZwVR8NM0CJZuUs95mbJOxJdxvBG7uSUCIhucJ2oKGXCJyBSTE2+Qe8mokTn/S98ic4XQjUs3B0KV9q01w745v/0yaaGnfuc4HErwIpNRscEodTTXiuvqhJ2V60LyvXr7ELykfnNm0SNIGFN5sDWTIReFry5+8lMdnfRySBPMVMOM5mgeNdaQY25LimKAzUyvScToOQTk3v4WjayEa6W6TNlEo1U/bnC0jTtuUD8gEuHJkQ9yo5CDVq/ExyK00TqSR/r4fRXutklGENQuRVOtO7pNj1DWtuTNByMUNeEdqaGPf5WroP7Fipl2S8jpyYUCdY5LX12lvfNibx/AG1F6NEVUWCHfXqwkw7GvhzRMIaOp975ecpRMB+LyG5taizDv0ZoVCteYw7nlFZ50vVsJfoZGspNL49R17J5VTnLUCIskVUgOfmEWyfPcuPuPTB1ZAf1PKiiZRxfgBfE0i33Xsni9a3yQJbxToQhrem13DvMLl21cQF7ypUyNY3X3vCywRs/F1qGFuVVoYBwPac+qGGpqu8bzD6oHEUwpypbpeg6qDlbe3C0U2C5u2UINO3LSkvZ8Hb0qMUT7uZSr7WZIpo/icT5uJSG1kw8qWdvsD/9GpfypY6yrh4CNsFSJukA34nzyQdy5mlFchQogrkU3QRsJt8Czycnyg/mBgeLWMNp/VSIMW0/jBYSj0LLoCSX0UETamz9MsUo2Cyey4QHpl/ASAG7aiXaaCFn0LzNHYLH8rZj1nfkU5OBmw3WN8hm5uqLP3XIlOOm5LKqzOGvvpq4VvMpIvUe1Baq4B2pv2PuuHRTHcCViD4DR6fyuwbjgnYGNe1mAvTyVy9ec/Q/Xm3FIbomin4GChpLEZQpJCt8C/E6itpjxhC2x5q6CgCrPl1eU3zxfuQDXZcsruNCeTJaACpMRMaHxgyN8JfrwKolS/fGwHRLtDQyOQeYPfKaqHeSz4hdNGGJfM1rlFKf2kmMmIxvN4HOAaQpHAd/vJjD1ecrBCXITfEPBi9mF0k58H9sfwkm8ghRwBW98+oUDTLLjCbDgz5gm4jm1q0TDKIB9Ez/45uK9xt0Be4gmyIZM+tIy4LeTt9NuERJoUVOWR7DyhJT3gqLIHk4Dmi58jYsuWLGAGURgYUyN4dnUde18j0zhCWyODgYmXCbYNgxwnWh+3q3e/ZysTUmCeTd07sVYExeX1D7mkhOO26u0i2G4t9mEEIOXUU6KExZMCz5pABbp2AX2rc+Gr7pArMZu75gGzPyX70Bq6H4njXu8wauH0rFF7ugVRwolhafydo+HYaUPTNJPYF7xVcdPUQvtzHj05ReZ27TTAkM0a6UYEYAh+gFFQCcqtFP1mNbI48X6lJHjm5ooYzjC2WKx+yQViIEuWx1JEPinU2GqLcpJR0U7DdZviwWvN0xTe6rw4lGVQ/d9FXblsGUUQMbUHwOj499cM2iQv9dA2J0OIKd3XQ50xYpfHzzHaY27YS14qR912/xO3oI0gyBUU9jhcRkbFo6MmmA9yhg8b8/xozmlIJYYXM1rOgyf2ZhWb+siKTAMdJ5kZ3yNLgOVLVrV4bzM9b2dTaYCnw+duLOtO8Io1G1TyT2LNeVY28Av1DlJzM0KuBUIFNl80YLHcy1bR1+G6ZZLWJZnTEdfGk6XvnWSxBIAdmCoq6pGAiwLc+vFmIWRLVvzkA/iNjn/UGWUkdyH23yWaq+CEK63P28YQxceRPgZk8Cypime5Z+4aMacSYRXb0m+gt2j8vDuQk49LmUzxaqU0hVJMBXRSCrF4xKH4lS2JA8KGYkWuBF9jmsH3tCkI6tn07QyOClpRI2dlt6ZqLtqMVz64EeNr0B6nvwvzYS2XeU2pxKazQfm/oILHj+4H8cJ1mjlrLYRdqvwwDBXDLTXAIkw36Et0WtskMSY+sZRu44hPIhzdDRfGOjtYoRDJFrwAXQ3Lj8TZzIXtgaffju8vDxWmNPZH3WPXz4PGubXpZaYqF6bvwevDkCOpRRrraLHNjjwbvsBf8Eqi58nB5hH5+cK8c0LdLmhpGyr7IGmSmfXXP79/WMnoX01MI4i7DvEgJAFQX4xKBz4k7YSvPWczWx7eILFkot2yj/4jKHOSmcGtnDZd3pY1vqJ4mwzOm0gMO/7rFGtLsBH7SrsEVVCnfP9/jQntw3FYfUL/8WkMrbk5WgomU2YWuTAxxsPS08ve80fWDr5ZOPDx1apEmDt+d1JZUCs/8HiALfYOFQenwy2JuhhtViYfYXZ2puClI8n3PklOrYDKY5OqPKVrrqr4p+RxM6A3JLoeIuOdExdd2eY/lJIC/q9mgJXs2HU3rWlyBqXTEqlPl2WneuriMCBz63A0dIpYIYcWACTB9OnsKCmbONlii8UW0/A/OpfqSPyo0rPdvEU+4fqJkZldq37cMt1sNtYy2X9j1gSvdO/UuQtvDy35/+zA/IfDKtuZq+TDYPDOL7DDDR02p9GidRSbUOWGd5NSOuHreXhyErosAGY3rbfukaseikAVBdSKSE1Pk1exvh6DF4tQWmd4VcZhfOXnarQ1zwNyd4AsG3YgpWz4FTyTYpTKUVZYQ1iW7r4BKGxlIhBN38iQkpODIyAjINY7up55Z+APIjDbQ1myqR4L3bggbX4COO8F3Gm16Wc8YmGoF9Bu8xIEVN69H0DGpboOLcptyC05xesr/Y8iEMamFHUDyW/qBFGkiCsv6STfgQbcbrOwuhYo8ZIa7pE5PJj8I9wsasT/JhUvPLPm6o2wFVq2MGBmGWd2LM0Ys+8oMXHAh/J30cQk8nyBubcJ8YIksS5ydT1Q9GKJq2hVMxAdkg7/9ADTZlqJunhFRXdq4ZclRM8HhWyCEd5PfmfjS2lUr9nghrs56M2MIzJl3zjE8QkPx/e6mAh3/IRIz7EYTHmSq2VJjbbVNXOB01RqPJ4mf27I6Uv7LABdCxwcnvBtIfdyYUAxs97kX8KKhqZkmLYLmq3OrsqZlVQ09jo1gniQ/b9t2xP7giLuhe9hs6XaYJFLoqvEzlGxG+nuXb4aKXZgQtnsu4Zc1UGRlzWxra9DeXMjGewHjMSVNPVwpljhwf+iGX+rRq7CjVx/nt2osv3i0rarGsPrDTts1kFi00GW2a3UbqFH8l4pKYz128f8JLtp3QumTokyf9SBvAAqmmtGkznfyTea9rzl2+khBq9Hx5RiwLB3TDu2tGl7u17Z/+OSipOlgYMwCtOVHi+mwMLpT6e6YdQUTrHfNbkdt5sZx1TgtnIYY9hbotwBaZaZaU/SeWy/Co2dibw3PuLEwbUOGxPZpcl4BxU3z8DwQiiKd/E7D9r1o5gkzTjpKQT71bYMuWp24Bu2YNDdgWon3P8DKhpc6YVtdF17ROls9hLGRMN5RO74SJ0eqVZ/izPXac/Nezhq//D4AKOhL7VpuBWqfI2yDU7PCcY5r34KsMYByjZtfEZhtZE9Y21lG9VEHcGUTIP72POijintEBbTjlNcXcr8D79rQtlZIyhLaCpD3yaES5EsMxYtKuU7zRZ9NxrAmn3RxYPMhOihq1kJnrvoEVAZ7ADDXS06L/HRkzGvQ9jJgv1NQMMGjAY990/Ta/nBcV8S0SbcQgZzeENALtjSkNyElhZ44W+AZn1YrPNGleVh1VDsv6STQT7znaJElxUlHC2I1t0050wMn/y6eB4au+gDi55W50JK0RRcHSKNIClRtVoW9Ua14iFjTtyHnesWbcxu0TBdX91CX+qWoG/mklohapYjGn1jWcg6VpJQjGhuOts4mGYkg0knu6GUwhrVfOH4+Ve/Ig3F3wkV4UbtFAU0KsHbMdhjyMkMtVWQly7iRXewcd9Z0OOvXfPeX9fXm/Dt/tUy/IiiwjvU5sa/dk83APWYrVi7TZPEEEXosgvXA2RMYkvh7gd8b76ZFV57PmtqnlzXfjIi53A9TKbnUQ1jw7ea8c87Zl7tf/M0nQaVtYo74b0n4h3ds2kN++fd6fVwAlMamg2YOzvM7PbqzSYJU6S172HkVgWJ6oyZ8V8yqUSqntl94lrM5yO2m1dDwPoQMDNEadP3adaV4V59PW+Wm9dEPl0al05lYY5LmpaBa2rLx5LFuo2ee/KCX37oZtnmJ408M9I3V6/25aDe1Mhg57hWbV7eylcfQuwugrFxfluXuENX4o5T8IuRvk9TZN0ciUL63S1sc44rIvEcACGU3d7KmTdAUB4ipm5BiV9QrVLkPfrTvWwZLpHSsqHh9znog3bJhycOXqdSUQlRkIfzCBkEWcDjtSL1h6al2+LLpyZrXSFW0d0uEprAB05R6NxkM2rXzCgRo5EjtIYv06gilkdoHwjiOT7RSZqXyMAejyaHTkXLuGy12rBkVgcBvroM5WrgZWJBmAL8TesgA0M+Cb1uFG7ZRSzrVsssnJPgBYQKIuKW6SlW1e4fJUT525PKSuWCXAOn0wh+A0H3nWfGw48JV/NQVt9ZqcRiQyPHVcojSifVQyxwUOddIpqIcXkF2+U5ie0wIgUEfTK7MUrycS67W/UmUBIaGIw3zmADEqvO2ujLf4y1k+gcOmVZoNVg1TvYrbclkmCmVDs1Gs6HPjTEjB+mi1t/LLixyZmpMbkaqrrP3hTMMzuvj2Wx9nbevdd1qqzJx/AD7plKUGNDcqfzHOaSj2/xevAsUMMv85fGqA/uy1YXp/6sbyp1P0E7IaV9bmWC6rU4RZdYzqPIFY9dgvd+7mHVPihbTBBfYNUrRPXVUKUN4S+KLdQmVPQ3spItKWw8bf2t4M3hw2qIEl9cI8tm+QC1RStD4oHQqL2p2wG1qcr1AVicATQxXAruCpFw91jjQGlhHPD+jXs3p2CFg90fUkqVuCy3cl5ynHE2xfyYxzaVWwo+UcKCS1vp5gRD4JimmPWFDSMENP0hWf1pxRnC0vUr2ZFSDbTa0qLx8ghnM5LlhPnrKelGRb3+Tquuri6ZUeGDEYXcnGfuYiw1inXcZhqlwQeFE7yvnePlLZa2MSIzCgr95gPUzGlemYUm5uVY6a7m5QdgNpWSAZuCoiRttQm7MGXMqL9LTpIvmE+tejCpgNdZX6qb/PPeNuzJJ73tb57CmcwYG5FjSfUVA+/Vt2pKO+mNQReQpGsXyb73rgUx8uywsyNMp4NB4zmD4+DOZT7F0GWJ3rTi5v6AIZBlVbVxZnaOmgsi1/iXGo45BAoOcK7J3MJ7mZhCg7t7oy1UIBsWyCgSQyP/h9tUPc4AGAVgdPTRcRALBBaajqXJfkUJyX3Ymtp8Yo1Yh7Lpm589kgbK0jkidEKqYvdWLjf31VvjqQPoCgb4vtlbjDd51vG6wTbn0siQZ787CBkzWAD00ob/+lPdYy6yWGN3gdfSBOJvRgSqwwO7ULXYKNlMekI4IDqP1kjplYXk4+KQgPUe9J1k3NjD16qD7KbY5vGkxL3/Nvh6/ReHVk4hu7ZsqRTBs1Tlxf12s8L+wIYCQS5d1ShJm0R2u9iira7R8sE7bAQrVyRkvGN9y5UhyFeflwfK85ATEvVU5EhLH+dtUlKaGgieOjYiAn3xYcINv4Tv+NeG8e0siKB082coroHZ4FoA8PgktsubvLz2Bhzd6XDe61SoNJ6cffPdkeoTWMFEWXM4+uBtq5pTB1ZAvAny9AU2GcdeI6ra0GmY0Fx2/52bTejx2rXwS874MQ2RI9g7+eRF3qw5HGow8d+QyEAgi/abBGOn3OQ1H7UjA715VN15RhFrcEf24d86O4itI7a+5G0/SddqPEB/apR2JO9HEBGUF8pw/XRQQP18xsBnvaoK7M2ahzg1Qlf7Q1nWoMVmamkXOqgg4bKMfAJQbwh3JKkioJ5YCFYu5lbBcyco0WM0NJc2E3CwJG/RkBbtySgvHfo2GaRbVcz/THpZQeAaKGGhJHLIVW9u830vi9zU4G8QMd43XV6up3LVTQ28yUyKq+kr3bL4ubf88T5PacK8iRJKvSpK37y9sMZkZYLhnWMxtOSLOM8JdQSd9/1AzXCZvjjDVVzGPtipsLVbhBpM3tCWOdVTARMAXJCdoXoJjCo9cpXVgDasTbR2ItR7wu5Rbxlf1pGkCBIsIgrljIQ1TLB+K47xm2oryto0bv/R88MwLeqLB/1CmSVWCDKKuGuxi6YWbg/a1XEYTuH3nb+TCgal4qLu+SbkppWfoDiPQAfn7I0D+Tn5TRMkUcRBHbvJ4aVpE0d4oY08HbMfOXzI9RhnbleH01jPvcom0gq5w5ekHuslYtPPrUP7wumKxraDGlM0BxwxHyZwegpoz/T4cBFPt2Fgk5poabCNcz+DiCVLd8eO8cIqIkmueRLOuqmnXzFSEb3cxIAEavIAW5DI0hpu2hFoQ7cXjkcw6EMiYNEKKZ92LHV+lb5GPAmy8BDNrab29rE11X4ePfvLvKX+TUwFJCCJAiElcVUJJZIJOmrSBJGX3B9LniULXmJkBmDL3WQVnfVpCWd5OKL7JRePujVgKrMxt5as29PaHbvyHMAOPbbi2IKC9jm7plJj2Qyj2RS2GeFxgqFLlgO9xQb4kYpDPeRP+KYqEIboptXx9en3Nj2JVlPSHzS1/hRgZuA68yuHgZYQORXI/VQlS5dLvQ8wfEJNegJ5hBUAyDpT3B+vWNeLTZrp9FRagDm63oF6OagK+OEXXr/OEYLxVPFfa/MtxRNtUnSSF26J13jyAuoWXdJaAg3FKDmABkVnDa6I1zd6aA6BTw9fGOxU8REDO9QZiYjo8pyICukbyDoiO2IlonEdOk3u7he3GxmkrO3Fc6gw+srqcVNruSVAooGGTdTJ/A03dCiMMIkxSaWT/PUufPfhCHHfnN2+r7cbL/5Bn89XMlavcL0nVQVt454XXlAwEZ+Wx+6JSrVpaofuDqM/mtFOPS8Kmeiiq5dCqohgdzOpk+YryCI+k8Wryjn0vEtvJvKl5heacOq09ys3hrJsrQPw5Tk1M3gsALKiRU/TnTlFt5kuReVgLAaBnWb/AalbD2Z2etVsNiPEvmS5HcInWN+ANDf+1bmx4eUtWf3PjgEJK7CUVe2GN7QrsQ1govX6M9MAFBQZhNrS7bCh+6oRyViWinBQc2rH2MJuyC/QtPN4zMcjVr/3/YKA30PCl/uGPuaRvnCevgjgCx/7pHfIS2eTMRQ8kTDKOLeACO8CZaO6kAyU2+rz0PvsOOjtu+SnuA/heVYicWMNt/aVKHlQisoqYo6m4FKW6NzorTbWn2oN7+3MfwdqcHoV4sPi27EqfWMz9OG+HN05davXVnJTyBOGrjjm+AXLkF/uPYZCgDMp5wuaNsBNu4l+H2A6IoJUpXZfbll7xKcYIZm7YhhbHeeWivUJ4UZY3FQgGYA1KCNGGqP8V5hdBe3Y2SfJxxLacdqryj7joA4D79GbNKboytWCUBy7BcKDNb2piqYeI0X8TTpzKs11r4XXJ3Tchbb8x2f0HUvVWWWv79x1iphBAYe2pUSqsW7bqLimmbD3oFAKSwlW1/TGUyvMJf/bIH2HyLJiyZJ+pLbDdAFLhLdxJHh8qFKkSUomuF1OZW4SWSDf2UPQu9uBJrQo/C94MkMGMvGvSL2REJEdRMfiWK9HK/u2PuzzcZNFAUo/kahEa3kO+ZQxgIxSrcP4XzTJNIONZP0I7QUVX99fFRliClmiW5vPlksrgVUpRky5+ipCds52fIYhNeuv6xZKazIYxD5WO7GTZT/zvPKRE7/5vKOBZ1vXin+eWb9mLNzsqpR95Qp3bESimolDMlOGWPpPFw/8RsvWJyAQJdGDyEwGG2zZSZL1zNLi+kqfv0XD7f0mYWqqorUQmdPB7/yxG6z/fcPCzBZGZk2itB9aVIEffwSg+vsnR5MDPbAAWzTmWWdKA5E4Chm+dleiaXCCmo5ynH7edNHPJBuWxRZ0TqFHKMdHSU1pcPgu4R8zJUaq2vau+GcQfBuU8DklRmk3J/45Ew1kQNN9kshDf7oX9gbtw3dLbIa5NRz332WiZITErUt3FAZqeKMHSfX/uS0JOwLLDiur2zB3Tn9tiGQdxbdR27CdI/feC6kjxRwyoru5QQR52AaPRxsGPri3H52ZHauKuVhDzZoS9DDIBvkeyZGB7difrsTOeLmKksRI/acjfcRvyAe/V8Wt5jtD2q+STTeN1GC6V3n9D8JMqS6VUQi4zdDo+sDniu+F5i1PydNkiWeqF2p7t72fStqav6TJtMR9qeZ8BVQIpCtt4qqEqur1VXvyVq9M72SBjbMganMnn+GnXI30w3+jyBtxFcSL/5cTf8rF+tNoe5d2iLyNVtswPbqWcAdW16ZNua2as83wAq2f3mSCNoi9B4sLnRhk/OzuSc79gmcGpot7SBrkGsiz3RsVv+k2XUnVllp9bICjzhtBtWEC6AoghuMIQdr3NxzuMTb+v1FC240SQqMon+Jhd0VMwa7edTgb0s2f55dg/ZwKYToH0d0Xg0jQWqTcvH8NIHXVcdgEkHVBQjwW/Vyh1QW9mt6dBswH/E7Y7QwPdE03lyQzLplLbzHFbCCglkZpjlmnw4IaS4R5MzlYz0wRvqFj5cDccRSI/KJhkLY1MYveYkVkMJOZ+MoIni+IFf3ETDmOarWz/nnBMpRtZpdLyJFsi4XW5sqMqUAWFFH4iA6OQDT3tYQOVlNBht4QM3h9WifV5+9ADI91xdmPMSN03dgG0P3KghX2LHsZeEbgeHSJ4Lb3BrsNdlRQF1tSo88pHk5rDAbIxBmioZLEWEAlvdhUIQEisqYCTyrTayqCuH3FmGiZvSoEzvfg5lCulF2w1fibNeAWLU7bInsWxRZ0oBkAiJHTKzsvvRpywez8Tyt2tbRaOGz1G/LGowQ9lPYwoqkf4AHfUHnNl2bp9qi4caROYArhyrqztDe7OxwXNRRaG3V/lZfmvoi/yyyxzADOrzw+aVPNOwikHkW4W7TTcqHAtQIMknvBaaaAJlhim5lG5z95irQX5F0libVGazgyYc7L8kIAafhxHO1srpMtKRU3Yo0PodhPLABurse374QHZmV2pX8XpHKQzLQMPndUeeH0mJo5nKYzhmguA5I0lx1iVnoUmCQeMLRKTZ+6DbCXdGWvsAR0hHTL5K2uyy6QANPsWZjy/G5r1BJlIKxL6ydDb2sb45JnXjxCj1mRKmkFKWz9ocpvpxpDQNg+ciCb1Iqcca7U712fTuM/MwkY1AwOnGpMK61O+aRvBtpD+09KBrE2KOn39qSws3dA8GB/IivL7R1WbzGVmE8OTHE4Hpw8rB/dfehVf6te+tvwHBu9e45dg+C/bsLvbu2FJbNhvUZ5lghrsrZoczDWMjLIKYe5DGH+38nbWvkjUh8Cqq6CV5vOrqDzC++osN0XDcATHoNseW3TbSwpH3zk5bbt1YLGOXb9oB7pUCflVFbjzj5GO3DlLtWio22BuLISf97XYMtYedueKoNupzcpGjNXaqO6K0Xv0zYL/rwCflrn9B4mauKlQdk85pCx55/7uutxwnc6Ux6z316rtfAEx7riA1pEyITu+snMcGTc0+OzYRRjPBfhyIO6Oa4eJ7VpVC8JHgLWltFNSc5aaS6lq0j8aw6QC7dNji8ehdEEnFhBCG1YS1AGcR/B7uaHgrcPIwSxHycGFZ3MbR+n1wqtLXkewR+JMZe2+ekyHnZlA0LTT4wcrjdhxmY26uWM7gqw+YeBpq0TKt5Pp9n30nAJ+FJR+YGT4GOqKWvDG8rBjuZvuSpkP1sazxObD+u1bOGYpz3nEYNYlrsfuOiu9oH0+WjwGCxIz1c6yVmI4+N1cjR3C0D3sYE4ABXhkNVjdW6NnfzTORSPe+VgFZhA5n8Kaby63Fc5KqAfpwGF/aJYpW8aPunQU5sw8o1COdiriUFoRZA8u7OYQeXnVTsQaUCwQUIyx1UdVLa51rM6cQQyD748+jfO8/IfOYWw7LHD/ur0Wdzkkk5u6jMrMhhqaft+14iSKrgKmeUXyAtmngDsm2DpLJlj4f1YQkSTF2USBGpox32gkXDZw/rlETm0jufsHaW2RvxxK/HuUzxgV+T3acSoZrGsnjT12GqSImQ9A5o7qQyP2cAOKxszHk3tsFdqZcOyT0ttk+yu+uCFpzzqERd7oyz/Jo+IMRlUyGpuUCQ+PK0754BDk0hBK0tONfSXDxmv8Lfniq8DyK4XviipjocA6eAoZ+wZ4/pbK7WvFNb1r0GhptCvAbKK3SZII3mY/vFrkG8rFVYFPnWsYxz/lQg4cBtvQdo8pLE/FVOnfldTXNf4JRIL1TrFGYb1MwTuPIwm3wtapFqZSemhtNthX8m2BA1ls30JG7jClgYisnxwwbLiik1TU7joxOrdnWkeupIN0Y4Kuq++9oO73XaUGpbZWjwazM2VEVX+b66M0KcdOSmJlJj8Xn1vUrZMPi7HH+yEWLN0SZJze60xJ7GlC1G/MvacLgqG4nw9guqBTdcJwkRp3hTzTThTLCjzt5xt+X0If3sF6qi4AcFqcFPNs5TO4zY34n6795FvvvL7lYAWKF9dDR5uQShWnCruevm5P331T9MA+9BObHAc9lWoef9drTu3emJrU04VTYGMOAhaImkSLzwQOpXbK/mqUMelctVwZQDU4SEJuKyRX/1G4bGrb1de+w0GWW9tOac0KI0AYZh1P2NqPqc3WBH+PqE9pt+1Z86twXmFybbvv784TrNHAlqHsOenFFOhmPvVNbRj5vxumaTbAFIQOg75r/0bzmDTDO5Nn6bl0o2Mu9PYz8veAhkGK7CopuxrPSQrhOhXt/jR0RsQ6HyU14Vyt3Psx6DPlVR1xhveXlQigbO8VhMRTAshkfDh1C4OscyehR9mkeKBMmUB4uIxrC21cnY8UwzcnpPKyCCn98gfPWKJt32tJ899KX2XnjiYCbZwMiELb9xm1I5MMI8E4r/uZbmdqcATz5Jm6JqaWcJRSyUfysIatdTAOmqEABBvy82TRBryvw6auljqlDtR16Ci3X0TYoncZKuLjna4GcnOumxZYVu/4SnWlv1i2A3Jh5cbfVLDZUoloo+oBetI1/e8Q8buBIchC9pAK3VL97RXlF41l0SjoojAUX3DBB6FXT9i9SgAulsmPa+v5IefWcKoD5OXrtYRzeMHwALb+AF1kYrxanTOxSc/V7qzKvvErQx/yrSIVPZJaSY4wVQEqs02YlKIkFizzfB13vZl0btax8tSlvWuB24Ywnj1WMDb5r6QQzkJm4/ENjXSpXn5lIhzpz459gXsZhlzJO5ah7ihXQ7CBIkVSw+7pcwAd2C9HhLRp61UBmw9oRzfyW9POjr3sCzjFFv8L4/kkrAVhxw4nDJ1gMmjHQspBWdpDpm/RkQ5+Ju5mONabdLR6sCadeHnESdFQ3J3qaNpVLOWm4maT7bVz8DYMXAg3QfXxXtKXIAVxIbkNIjesoGmoe7dhyigyEznFxAnHCkrq/qMeLoKCKyYbtEj5xcShwA17XVvNxLtT/Kc3DgUqNlfYGMBK9Hwk7I+LdK13GTrfXEONRicNkqhO5zXlWOf54hru6uWmT+tr3tbp5xgajoAssqATsbrox958pMjk/6cOvIRSe3mafBtCHSbBnyJ2MdHynOw/mcOFhFhu9CZQ72OV8LW6EdgU3hPB1E4uWE1n9SDDSeouvJp12O5gLnGcn1+rWT6hJucOZnUS0k0/o2V8WRwz0fWarqFj39YUw7kdxcpkVKLXI0fUN7z20LJo80JaDnJ0+7Yr4FeaoWsG4TiV0emlQzA7+c/QT/Wgd7EwUAxHSDddnreMNFxYQJIu0fEE2Y8LvBpvTlkz0rzHT9XO9tS+lI1RqRdHalBLEgwMXvp7hGW34Wtsdw0gtgjCLjitVt6rKzCUviVMIqvldrd8g2rCnjWjhn1pDhzcqcAxHj8pexvvs9jgDoXz7/KjnORc28P9c8IjRT3HxidhUVucfCtxlamXkvABkrk3QzkDzss97qapfUPKbk/W0LKNi2D2WavYuwvAKOt+gkjXhyDI73P14Ik93To3X6leUywebBEKO4HZln4gCE344AKE9mrts8pXndvWHsTYXY1CMfJNbzWTcfy+nW2lkprqsB+7SHwi+xYAKE88rgqAWacVxwiqwAHD3i/LpIqrerPlr40wAejGvXwx+s+iTHIdZo10atJSXAB8l3V63b83ARYUi/qq1QE0Od/KBAfpESTzECtN0wBx4SnKxQIdicxEf4J0r3TEgQvCyEW41Ob7fljVaxJQeJ8/93OHtSBcn/VNImIzgtsDrhD05HCIG8vU2biZ8pGIPKJ5ixTyNAqzc3JL1Rgl0KhMYyN3GJZmHomKj/tQr1T9yELbrdUms+cW1dUQIFupzzzApC8KjEQPKY9ccCkyjr8Qm5khu95zsiBXnmIJXNPiLrQzdElNSeWECT10tJP+QtuJHlJ7Uxpgx1GQUfK3Q/v5CyS2890pgBOThDcBd3IoNGz40VuwZPwx+wQWndjZyFIZBUyj579CTe36yi4Nc2zuN1rPbObBUpkDGwBva4/2K1VYRAPCqKuLkfUWZHJAC+y19tFuwW0sXoFOjlqdb7BJR7J6cEo0anvHuEKupITjomqYvfNrApu6tgIzqNAT7xa/vi/3uElS38J4w35f8vvoEK9cEc/XIh4o4vQz0/APeThv5MMRjT8qMgGXtbc0I1ARkr5ZwpuzToZjvd87LN4TpPicJbg30zedltBIwqmvYGTrGKlo9bka06PKueltgIBmKkoui/ic2FJd8b0TxtrTbGxQJ4IWY2XLdlRH5icGEzAFNJaOsEmWayFdXQ2C7N/Vxjz67uAk68Pk+TVuPBMCwuDbyJ8JsS5dl2hZG4/I+76x1Urtud+2XWuJLxXLzZ0g5d5yw7u6U3sAS8h1Qn24oGy7Srf3eXOmgW1l5Yv2PRIwOFRv+51tA1Yx21z5S0qj/VcVf3lpLe0ZQ6JkgCdhX4Xcu+QT4YDblBM60YkZOGL9mnHa50dxk+hK0Q7fC+bcCvPZrdxWYPr3alHFAlX0d4t11WMqN7USqbcubCY7Mcv+ywBZUSnDdC0opfr0jeqlaZ3CfpME7LczBryESOuqnlwFHp+Rpj8VM0g1slLBDH6LOYUKhrHCUZ+NkjeidxADL+VB6moDPDuoTZr9vqeZx8853DPpTuoSZ6Er5zq9SIU8805/KA8XNRhpHEqLkAvUchkFf5FwPo2vCj0kbm0UWScMLpax9AFFcKJ/wBrkMUQOSwNz/3fmpRMUSneVM3fc4YTSH6NX+X/lf2CxNh1YvbFLIxI+GmPq301/gOYxy14TczN/m3jgwIIlSz/YAOxJV3KZzKadB5EJbKovsFzAq26lk6IKxsVU3HUecnS1716SOsTaTwVpcHcddvrYKxmZFc6NiR8EtUKBNSxVml+nO5r2S37gVT3/fWKJOijlIMB+Zb01xK04p6osBqUcT5hRX/omJfKVcjDd//LikDbFCdbmsz6nwBIrTEpdxYh1LjwcppIPckbtE4ewxSEwANnYv/zfh8eODVLA37Wx9dftLV/X+FCFUH4BcBs8b8qXsZQMs1Ixfu3399AQZlIHE1XK691nn7Q0r05WYRmxipYJLxPybqNl3IJZm8hMq/ekwtK+YRLTD6yLSMC24dCDic3Itp1TLx5qzEnm+HJpid3k4vOS3gIKqIaQWrnMqBSaowAb2hiWWCZ6LeigPa6SQfS8vDK1PDsYB69En5Vzv76/oEge51yTLhE7pP8dVnB9z1XE+zjXnJv0ulj7Lh95hbc9JKPjnBojSWEnNrMVlw94VAi2Pcih9o69dC9fiMY4VAkt4/B0RzoDCC0R+SzUZ3KN+CYQ1TwsU68UyAkGXHasoRDPL0uNt1Q5NUOX7MDVuV0LYV9yxmVQ0NSMx+xvGk+2bTZxjU6OPGrlu5Yy9eZRBTz9eCXYqGSHHOR4SiP/9aN4opRQbR24LUfqQB8rHCSdsYxxT12/xYyGILBoqqMMxbbMRdfDS9J03AIhgSL2vz1uu0qV4mL3VY2TFlvkXfGbSi6a8Zdv+NedfMMht9vyBO1l4XVertm/2ZFQ6OWIMkgCi+kwKcUnEQhBhHkNNmSKbMTP0V4XhGl+1DPX9WpNhjlOououyJQPsJpqbS3+koeuoDiAw+IsLxRNQEBEiQ+3voCQk0b/VHKN7L6jdAlzQCGx2cWS+OmQ7/5XzQ9OkyMNeky6BcdXZ/IEaAu/+EeigpbXgn0T1RoBLZUsuV45QQAzmarLof3qbDNKb67OuaolSk15KWLe7IxqG7cvH3m1S/xBHtlawCoG2czB8/1v2uIO36OhDHoTlldyAvMFMBAov4AS5a9h4G2LQ6jCOYdRiNIXeu0mJZsd9RYccqG1n69h/7EpuWtAOJ9CopfoKrTytsYP3fWx99sjPDpc08yo46YFO15ajMoS3ILiBgZ+Oa0zgppsejZwexjzZq7QMu5yGk7WVy6A86u/qGgyka9GNLAFPRvPDkaLlt/SPac5zKR9kPLySU668MRmW7AMRb+lO9ZD8pmSwoWHgCSZg0T9XOgFZMmSFMHtY1na3oSm5m6U440x0oseXiJTuy6v40yofLwJCQ/rcBTHuNMwFv/cfqD3hDTKZdXhmGdcJwJ1Z3+k1slcpcmcJNgNjLUIO37/f1dS/pTrs14lJS5H0V9HuRpxOLbapaX3s+7mhjj8rU1pU/ExUyncBbVQLpV6ZxN+ofe8tNnLXbzewlIA93wbQxn/XoRWV63GEtVEoygB5/Addj1B9u72CMReV3X0bBiKraNuyPBLCegUZLlxlJoXS7wPoWIMBZPGEza57dKyCzvS9qGqk+mX/XKP3sEmECOuVUwtTxVmefQZtUsViFlzGLUS3FBFXG8TztY4Y+K3hHmWryHUNpiXTqqqDyn72kMP8Zx0FyQBX8xMhbGy7gc3PqsvBAAXClQros2YfCfJGqiew0ixf4GcHRbf6ZhD67ivK6rWeVDEIUQZTEmJ072idSVSaueUUqMDH+NdVxZ0qWZ6z3JWipzGadcc3IgjGygOHY1vSZzjjEwX0yKFyedpU0Yj2T433bJVXzQ7h2TYdePZcvlVWIGuMjOFzKb1idlbkZak72XW2UcPP+OHjywu1bxeI1Y1qus2uxKIdYCa7ElovZm88yg5LHraopY5Tu5pGjo9ZuOc49EKnT+9r5jKLRaUYglUMNn5szIzXxoVLqJc/RG/F/VYCiMXrpGtcAuIwK4aRSl6MP8ZjqQ8Hb7wiuvaXNm17QLJjhwegj5FdkbSGcrAHAtbLlDrL3zBzuQC2Pg3VmzQCNmemo8e/M4f7otsr/0OtBfyA2hTU0EOrDd127E/yTHDjupLbXW6e0Wzdkonx00YZNnqRGD1OArd+g5EjvMODojupCB74WHTZrvVCsrjd2VqhZwpFZc0Ip6GlE9rn5RM0DGBTBQTnQmsI86gCuNJo1qrF/ijjg==
+bcc_fix_failed
+block0_read
+block_from_tag
+c:/users/administrator/desktop/tools/arm-gcc-icopy/bin/../arm-linux-gnueabihf/libc/usr/lib/crti.o
+c:/users/administrator/desktop/tools/arm-gcc-icopy/bin/../arm-linux-gnueabihf/libc/usr/lib/crtn.o
+cache_key
+cache_user_keys
+calcNewKey
+callKeyEvent
+callReadFailed
+callReadSuccess
+call_listener_on_success
+call_on_write_magic_m1
+call_on_write_std_m1
+call_reading
+can't read card UID
+can_write
+card timeout
+card_wallet
+checkKey
+checkkeys
+chkAndDumpT55xx
+chkKeys
+chkKeys_1
+chkKeys_2
+clearScanCahe
+commons.append_str_on_icopy
+commons.delfile_on_icopy
+commons.mkdirs_on_icopy
+commons.mkfile_on_icopy
+commons.recreate_on_icopy
+config.setKeyValue
+copy
+count_key_found
+createTag
+createTagLost
+createTagMulti
+createTagNoFound
+createTagTypeWrong
+create_key_index
+create_mf1_keys
+create_securakey
+create_t5577_keys
+darksideOneKey
+data_ready
+deepcopy
+default_reader
+delDump
+delKey4Map
+delfile_on_icopy
+detectAndDumpT55xxByKey
+dict_key
+draw_thread
+ds_key
+dump
+dump4X05
+dumpT55XX
+dumpT55XX_Text
+dump_file
+dump_files
+dump_list
+dump_selection
+dump_text
+enter_55xx_key_tips
+enter_known_keys
+enter_known_keys_55xx
+erase.png
+errorCode
+error_count
+errors
+executor.hasKeyword
+fail
+failed
+failed tag-select
+failed to write block
+fd_read
+fd_write
+felicaread
+felicaread.c
+felicaread.py
+felicaread.read
+fillKeys2DataMap
+find_reader
+find_readers
+find_withtag
+found
+found valid key
+found valid key.*([a-zA-Z0-9]{12}).*
+games.GreedySnake.draw_thread
+genKeyFile
+generator already executing
+getAllLowCanDump
+getAllLowNoDump
+getAnyKey
+getB0WithKey
+getB0WithKeys
+getKey4Map
+getKeyCount
+getKeyInfo
+getKeyMax4Size
+getLostKeySector
+getNeedWriteBlock
+getReadable
+getReadable.<locals>.box
+getScanCache
+getUnreadable
+get_card_list
+hasAllKeys
+hasKeyA
+hasKeyB
+hasKeyword
+hf 14a reader
+hf 15 dump
+hf felica litedump
+hf felica reader
+hf legic dump
+hf legic dump h
+hf mf nested o {knownBlock} {knownType} {knownKey} {targetBlock} {targetType}
+hf mf {{loudong}} {size} {block} {type} {key}
+hf14aread
+hf14aread.c
+hf14aread.py
+hf14aread.read
+hf15read
+hf15read.c
+hf15read.py
+hf15read.read
+hf15write
+hf15write.c
+hf15write.py
+hf15write.verify
+hf15write.write
+hf_found
+hfmfkeys
+hfmfkeys.append_keys_unique
+hfmfkeys.c
+hfmfkeys.callProgress
+hfmfkeys.count_down
+hfmfkeys.createTk
+hfmfkeys.darkside
+hfmfkeys.darksideOneKey
+hfmfkeys.delKey4Map
+hfmfkeys.fchks
+hfmfkeys.genKeyFile
+hfmfkeys.getAnyKey
+hfmfkeys.getKey4Map
+hfmfkeys.getKeyMax4Size
+hfmfkeys.getLostKeySector
+hfmfkeys.getSectorFromTK
+hfmfkeys.getSizeFromBigSize
+hfmfkeys.getTypeFromTK
+hfmfkeys.hasAllKeys
+hfmfkeys.hasKeyA
+hfmfkeys.hasKeyB
+hfmfkeys.init_m1_key_file
+hfmfkeys.is_keys_check_call
+hfmfkeys.keys
+hfmfkeys.keysFromPrintParse
+hfmfkeys.list_split
+hfmfkeys.nested
+hfmfkeys.nestedAllKeys
+hfmfkeys.nestedAllKeys.call_nested_progress
+hfmfkeys.nestedAllKeys.rA
+hfmfkeys.nestedAllKeys.rB
+hfmfkeys.nestedOneKey
+hfmfkeys.onNestedCall
+hfmfkeys.putKey2Map
+hfmfkeys.py
+hfmfkeys.read_keys_of_file
+hfmfkeys.updateKeyFound
+hfmfkeys.updateKeyMax
+hfmfkeys.updateRecovery
+hfmfread
+hfmfread.c
+hfmfread.cacheFile
+hfmfread.callListener
+hfmfread.createEmptyBlock
+hfmfread.createManufacturerBlock
+hfmfread.createTempDatas
+hfmfread.createTempSector
+hfmfread.create_name_by_type
+hfmfread.endian
+hfmfread.fillKeys2DataMap
+hfmfread.parseAllKeyFromDataFile
+hfmfread.py
+hfmfread.readAllSector
+hfmfread.readAllSector.readByKeyA
+hfmfread.readBlock
+hfmfread.readBlocks
+hfmfread.readIfIsGen1a
+hfmfread.readSector
+hfmfread.save_bin
+hfmfread.save_eml
+hfmfread.sizeGuess
+hfmfread.xor
+hfmfuread
+hfmfuread.c
+hfmfuread.createFileNamePreByType
+hfmfuread.py
+hfmfuread.read
+hfmfuwrite
+hfmfuwrite.c
+hfmfuwrite.py
+hfmfuwrite.verify
+hfmfuwrite.write
+hfmfuwrite.write_call
+hfmfwrite
+hfmfwrite.c
+hfmfwrite.call_progress
+hfmfwrite.gen1afreeze
+hfmfwrite.py
+hfmfwrite.read_blocks_4file
+hfmfwrite.start_wrbl_cmd
+hfmfwrite.tagChk1
+hfmfwrite.tagChk1.init_tag
+hfmfwrite.tagChk1.init_tag1
+hfmfwrite.tagChk2
+hfmfwrite.tagChk3
+hfmfwrite.tagChk4
+hfmfwrite.verify
+hfmfwrite.verify_only_uid
+hfmfwrite.write
+hfmfwrite.write.write_on_magic
+hfmfwrite.write.write_on_standard
+hfmfwrite.write_block
+hfmfwrite.write_common
+hfmfwrite.write_only_blank
+hfmfwrite.write_only_blank.write_internal
+hfmfwrite.write_only_uid
+hfmfwrite.write_only_uid.write_on_magic
+hfmfwrite.write_only_uid.write_on_standard
+hfmfwrite.write_only_uid_unlimited
+hfmfwrite.write_only_uid_unlimited.write_on_magic
+hfmfwrite.write_only_uid_unlimited.write_on_standard
+hfmfwrite.write_unlimited
+hfmfwrite.write_with_gen1a
+hfmfwrite.write_with_gen1a_only_uid
+hfmfwrite.write_with_standard
+hfmfwrite.write_with_standard.write_internal
+hfmfwrite.write_with_standard_only_uid
+hideReadToast
+hmi_driver.DCloseReadThread
+hmi_driver.DOpenReadThread
+hmi_driver.SetComReadBack
+hmi_driver._read_resp_com
+hmi_driver._serial_key_handle
+hmi_driver.readbatpercent
+hmi_driver.readbatvol
+hmi_driver.readhmiversion
+hmi_driver.readline
+hmi_driver.readrtc
+hmi_driver.readstid
+hmi_driver.readvccvol
+how2Scan
+iClass SE tag on
+iCopy
+iCopy on reader.
+iCopy-XS
+ignore_errors
+infoAndDumpEM4x05ByKey
+init audio_copy
+init felicaread
+init hf14aread
+init hf15read
+init hf15write
+init hfmfkeys
+init hfmfread
+init hfmfuread
+init hfmfuwrite
+init hfmfwrite
+init keymap
+init legicread
+init lfread
+init lfwrite
+init read
+init scan
+init tagtypes
+init write
+init_m1_key_file
+init_tag
+init_tag1
+install_failed
+isCanNext
+isTagCanRead
+isTagCanRead.<locals>.box
+isTagCanWrite
+isTagCanWrite.<locals>.box
+isTagFound
+isTagLost
+isTagMulti
+isTagTypeWrong
+is_card_list_empty
+is_dump_del_mode
+is_dump_list_empty
+is_dump_show_date
+is_found
+is_keys_check_call
+is_keys_same
+is_m1_tag_type
+is_reading
+iso14443a card select failed
+key2
+keyA
+keyB
+keyCountMax
+keyFound
+keyInTagMax
+keyIndex
+keyL
+keyU
+key\s+([A-Fa-f0-9]+)
+key_a
+key_auto
+key_b
+key_calc_result
+key_code
+key_count_max
+key_device
+key_enter
+key_exists
+key_found
+key_info
+key_item
+key_list
+key_max
+key_remount
+key_ret
+keycode
+keymap
+keymap.KeyEvent.__init__
+keymap.KeyEvent._compat
+keymap.KeyEvent._run_shutdown
+keymap.KeyEvent.bind
+keymap.KeyEvent.onKey
+keymap.KeyEvent.unbind
+keymap.c
+keymap.py
+keys
+keysFromPrintParse
+keys_check_failed
+keys_list
+keys_list_tmp
+keys_regex
+keys_regex_tmp
+keywords
+knownKey
+known_key_map
+label_found
+legicread
+legicread.c
+legicread.py
+legicread.read
+lf awid read
+lf em 410x_read
+lf em 410x_write {} 1
+lf em 4x05_dump
+lf em 4x05_read {} {}
+lf em 4x05_write {} {} {}
+lf fdx read
+lf gallagher read
+lf gproxii read
+lf hid read
+lf indala read
+lf io read
+lf jablotron read
+lf keri read
+lf nedap read
+lf nexwatch read
+lf noralsy read
+lf pac read
+lf paradox read
+lf presco read
+lf pyramid read
+lf securakey clone b {}
+lf securakey read
+lf t55xx dump
+lf t55xx read b 0
+lf t55xx read b {} p {} o {}
+lf t55xx read b {} {}
+lf t55xx write b 0 d 
+lf t55xx write b 7 d 
+lf t55xx write b {} d {}
+lf viking read
+lf visa2000 read
+lf_can_dump
+lfem4x05.dump4X05
+lfem4x05.infoAndDumpEM4x05ByKey
+lfem4x05.read4x05
+lfem4x05.readBlocks
+lfem4x05.set_key
+lfread
+lfread.c
+lfread.createRetObj
+lfread.py
+lfread.read
+lfread.readAWID
+lfread.readCardIdAndRaw
+lfread.readEM410X
+lfread.readEM4X05
+lfread.readFCCNAndRaw
+lfread.readFDX
+lfread.readGALLAGHER
+lfread.readGProx2
+lfread.readHID
+lfread.readIndala
+lfread.readJablotron
+lfread.readKeri
+lfread.readNedap
+lfread.readNexWatch
+lfread.readNoralsy
+lfread.readPAC
+lfread.readParadox
+lfread.readPresco
+lfread.readProxIO
+lfread.readPyramid
+lfread.readSecurakey
+lfread.readT55XX
+lfread.readViking
+lfread.readVisa2000
+lft55xx.append_keys_files_unique
+lft55xx.append_keys_unique
+lft55xx.chkAndDumpT55xx
+lft55xx.detectAndDumpT55xxByKey
+lft55xx.dumpT55XX
+lft55xx.dumpT55XX_Text
+lft55xx.genKeyFile
+lft55xx.getB0WithKey
+lft55xx.getB0WithKeys
+lft55xx.readBlock
+lft55xx.read_keys_of_file
+lft55xx.set_key
+lfwrite
+lfwrite.c
+lfwrite.py
+lfwrite.write
+lfwrite.write_b0_need
+lfwrite.write_block_em4x05
+lfwrite.write_dump_em4x05
+lfwrite.write_dump_t55xx
+lfwrite.write_em410x
+lfwrite.write_fdx_par
+lfwrite.write_hid
+lfwrite.write_indala
+lfwrite.write_nedap
+lfwrite.write_raw
+lfwrite.write_raw_clone
+lfwrite.write_raw_t55xx
+libpthread.so.0
+list_dump
+loaded ([\d]+) keys
+lvCards
+lvDumps
+lvTags
+m1_keys
+max_key
+mf_tmp_keys
+mifare.getKeyCount
+missing_keys
+missing_keys_msg1
+missing_keys_msg2
+missing_keys_msg3
+missing_keys_t57
+mkdirs_on_icopy
+mkfile_on_icopy
+nestedAllKeys
+nestedAllKeys.<locals>.call_nested_progress
+nestedAllKeys.<locals>.rA
+nestedAllKeys.<locals>.rB
+nestedOneKey
+new_key
+newkey
+nextRead
+no candidates found, trying again
+no_tag_found
+no_tag_found2
+no_tag_history
+no_valid_key
+no_valid_key_t55xx
+oldkey
+on iCopy and place 
+onAutoScan
+onKey
+onKeyEvent
+onReading
+onSEReader
+onScanFinish
+onScanning
+on_wearable_write_call
+on_write
+ord() expected a character, but string of length %zd found
+ord() expected string of length 1, but %.200s found
+parseAllKeyFromDataFile
+parserKeyForLine
+parserKeyForM1
+parserKeysForT5577
+parserM1KeyForLine
+parserT5577LeadingKeyForLine
+parserT5577OkKeyForLine
+parserT5577WriteKeyForLine
+parserUidForKeyIndex
+path_dump
+place your watch on iCopy antenna, then click 'start' to write data to your watch.
+place_empty_tag
+playKeyDisable
+playKeyEnable
+playMissingKey
+playMultiCard
+playNoValidKeyHF
+playNoValidKeyLF
+playReadAll
+playReadFail
+playReadPart
+playReading1p32
+playReadingKeys
+playReadyForCopy
+playScanning
+playTagNotfound
+playTagfound
+playVerifiFail
+playVerifiSuccess
+playWriteFail
+playWriteSuccess
+playwrongTagfound
+progresscanvas
+putKey2Map
+read
+read cw fail
+read.AbsReader.__init__
+read.AbsReader.callReadFailed
+read.AbsReader.callReadSuccess
+read.AbsReader.call_on_finish
+read.AbsReader.start
+read.AbsReader.stop
+read.FelicaReader.isSupport
+read.FelicaReader.start
+read.HIDIClassReader.isSupport
+read.HIDIClassReader.start
+read.ISO1443AReader.isSupport
+read.ISO1443AReader.start
+read.ISO15693Reader.isSupport
+read.ISO15693Reader.start
+read.LF125KHZReader.isSupport
+read.LF125KHZReader.start
+read.LegicMim256Reader.isSupport
+read.LegicMim256Reader.start
+read.MifareClassicReader.isSupport
+read.MifareClassicReader.start
+read.MifareUltralightReader.isSupport
+read.MifareUltralightReader.start
+read.Reader.__init__
+read.Reader.call_exception
+read.Reader.call_reading
+read.Reader.find_reader
+read.Reader.find_readers
+read.Reader.is_reading
+read.Reader.start
+read.Reader.start.run
+read.Reader.stop
+read.c
+read.py
+read4x05
+readAWID
+readAllSector
+readAllSector.<locals>.readByKeyA
+readBlock
+readBlockHex
+readBlocks
+readByKeyA
+readCardIdAndRaw
+readEM410X
+readEM4X05
+readElite
+readFCCNAndRaw
+readFDX
+readFromKey
+readGALLAGHER
+readGProx2
+readHID
+readIfIsGen1a
+readIndala
+readJablotron
+readKeri
+readLegacy
+readNedap
+readNexWatch
+readNoralsy
+readPAC
+readParadox
+readPresco
+readProxIO
+readPyramid
+readSector
+readSecurakey
+readT55XX
+readTagBlock
+readViking
+readVisa2000
+read_blocks_4file
+read_failed
+read_keys_of_file
+read_nanopi_info
+read_ok_1
+read_ok_2
+read_progressbar
+read_result_bundle
+read_result_toast
+read_success
+read_tag
+read_text
+read_thread
+readable
+readableList
+readbatpercent
+readbatvol
+reader
+reader and tag, 
+reader_clz
+readhmiversion
+reading
+reading_with_keys
+readline
+readlines
+readrtc
+readstid
+readvccvol
+recreate_on_icopy
+reread
+rescan
+resources.is_keys_same
+restore failed
+rewrite
+run_on_subthread
+run_save_keys_and_finish
+run_tag_listener
+saving dump file - 19 blocks read
+scan
+scan.Scanner.__init__
+scan.Scanner._is_can_next
+scan.Scanner._raise_on_multi_scan
+scan.Scanner._set_run_label
+scan.Scanner._set_stop_label
+scan.Scanner.call_exception
+scan.Scanner.call_progress
+scan.Scanner.call_resulted
+scan.Scanner.scan_all_asynchronous
+scan.Scanner.scan_all_synchronous
+scan.Scanner.scan_stop
+scan.Scanner.scan_type_asynchronous
+scan.Scanner.scan_type_synchronous
+scan.c
+scan.clearScanCahe
+scan.createExecTimeout
+scan.createTagLost
+scan.createTagMulti
+scan.createTagNoFound
+scan.createTagTypeWrong
+scan.getScanCache
+scan.isCanNext
+scan.isTagFound
+scan.isTagLost
+scan.isTagMulti
+scan.isTagTypeWrong
+scan.isTimeout
+scan.lf_wav_filter
+scan.py
+scan.scanForType
+scan.scanForType.run
+scan.scanForType.run.call_listener_on_success
+scan.scan_14a
+scan.scan_em4x05
+scan.scan_felica
+scan.scan_hfsea
+scan.scan_lfsea
+scan.scan_t55xx
+scan.setScanCache
+scan.set_infos_cache
+scan.set_scan_em4x05_key
+scan.set_scan_t55xx_key
+scanForType
+scanForType.<locals>.run
+scanForType.<locals>.run.<locals>.call_listener_on_success
+scan_14a
+scan_14a_ret
+scan_all_asynchronous
+scan_all_synchronous
+scan_em4x05
+scan_felica
+scan_found
+scan_hfsea
+scan_infos
+scan_lfsea
+scan_progressbar
+scan_ret
+scan_stop
+scan_t55xx
+scan_tag
+scan_toast
+scan_type_asynchronous
+scan_type_synchronous
+scanner
+scanning
+search_mf1_dump
+search_mf1_keys
+search_se_dev_reader
+search_se_tag_reader
+securakey
+serialreskey
+setKeyAudioEnable
+setKeyValue
+setScanCache
+set_key
+set_scan_em4x05_key
+set_scan_t55xx_key
+set_tag_list_enable
+setkey
+showDumps
+showReadToast
+showScanToast
+sniff.parserKeyForLine
+sniff.parserKeyForM1
+sniff.parserKeysForT5577
+sniff.parserM1KeyForLine
+sniff.parserT5577LeadingKeyForLine
+sniff.parserT5577OkKeyForLine
+sniff.parserT5577WriteKeyForLine
+sniff.parserUidForKeyIndex
+sniff_notag
+sniff_tag
+startRead
+startScan
+startWrite
+start_read
+stopRead
+str_key
+success
+successful
+swipe iCopy on reader.
+t5577_key.dic
+t5577_tmp_keys
+t55xx_reading
+tagChk1
+tagChk1.<locals>.<lambda>
+tagChk1.<locals>.init_tag
+tagChk1.<locals>.init_tag1
+tagChk2
+tagChk3
+tagChk4
+tag_attach
+tag_data
+tag_fixing
+tag_found
+tag_info
+tag_multi
+tag_typ
+tag_type
+tag_wiping
+tags
+tags_arrow
+tags_bg
+tags_bottom_down
+tags_bottom_multi
+tags_bottom_up
+tags_btn_bg
+tags_btn_left
+tags_btn_right
+tags_chk1
+tags_chk2
+tags_contact
+tags_diagnosis_tips
+tags_external
+tags_hl
+tags_icon
+tags_internal
+tags_items
+tags_mask_layer
+tags_ota_bg
+tags_ota_txt
+tags_pb
+tags_snake_body
+tags_snake_food
+tags_text
+tags_text_bg
+tags_timer
+tags_tips
+tags_tips_txt
+tags_title
+tags_top
+tags_win
+tagtypes
+tagtypes._get_name
+tagtypes.c
+tagtypes.getAllHigh
+tagtypes.getAllLow
+tagtypes.getAllLowCanDump
+tagtypes.getAllLowNoDump
+tagtypes.getHfOtherTypes
+tagtypes.getM11KTypes
+tagtypes.getM12KTypes
+tagtypes.getM14BTypes
+tagtypes.getM14KTypes
+tagtypes.getM17BTypes
+tagtypes.getM1MiniTypes
+tagtypes.getM1Types
+tagtypes.getName
+tagtypes.getReadable
+tagtypes.getReadable.box
+tagtypes.getULTypes
+tagtypes.getUnreadable
+tagtypes.getiClassTypes
+tagtypes.isTagCanRead
+tagtypes.isTagCanRead.box
+tagtypes.isTagCanWrite
+tagtypes.isTagCanWrite.box
+tagtypes.py
+test_hf_reader_tips
+test_lf_reader_tips
+test_usb_found_tips
+text_auto_copy
+text_bcc_fix_failed
+text_card_wallet
+text_data_ready
+text_enter_55xx_key_tips
+text_enter_known_keys
+text_enter_known_keys_55xx
+text_fail
+text_install_failed
+text_key_enter
+text_key_item
+text_keys_check_failed
+text_missing_keys
+text_missing_keys_msg1
+text_missing_keys_msg2
+text_missing_keys_msg3
+text_no_tag_found
+text_no_tag_found2
+text_no_tag_history
+text_no_valid_key
+text_no_valid_key_t55xx
+text_place_empty_tag
+text_read
+text_read_failed
+text_read_ok_1
+text_read_ok_2
+text_read_tag
+text_reading
+text_reading_with_keys
+text_reread
+text_rescan
+text_rewrite
+text_scan_tag
+text_scanning
+text_sniff_notag
+text_sniff_tag
+text_t55xx_reading
+text_tag_fixing
+text_tag_found
+text_tag_info
+text_tag_multi
+text_tag_wiping
+text_test_hf_reader_tips
+text_test_lf_reader_tips
+text_test_usb_found_tips
+text_trace_loading
+text_unknown_error
+text_update_success
+text_verify_failed
+text_verify_success
+text_wipe_failed
+text_wipe_no_valid_keys
+text_wipe_success
+text_wipe_tag
+text_write
+text_write_failed
+text_write_success
+text_write_tag
+text_write_wearable
+text_write_wearable_err1
+text_write_wearable_err2
+text_write_wearable_err3
+text_write_wearable_err4
+text_write_wearable_tips1
+text_write_wearable_tips2
+text_write_wearable_tips3
+thread
+threading
+tmp_key_list_str
+tmp_keys_file
+tmp_keys_path_linux
+to ensure reader 
+top_tag
+trace_loading
+unknown_error
+updateKeyFound
+updateKeyMax
+update_successful
+use_read_data_draw
+verify_failed
+verify_success
+visible_key
+wait_exit_and_go_write
+widget.createTag
+wipe_failed
+wipe_no_valid_keys
+wipe_success
+wipe_tag
+write
+write.<locals>.run
+write.<locals>.write_on_magic
+write.<locals>.write_on_standard
+write.c
+write.callReadFailed
+write.callReadSuccess
+write.call_on_finish
+write.call_on_state
+write.py
+write.run_action
+write.verify
+write.verify.run
+write.write
+write.write.run
+writeDataBlock
+writeDataBlocks
+writePassword
+write_b0_need
+write_block
+write_block_em4x05
+write_call
+write_cmd
+write_common
+write_dat_to_wearable
+write_data
+write_dump_em4x05
+write_dump_t55xx
+write_em410x
+write_failed
+write_fdx_par
+write_file_base
+write_hid
+write_id
+write_indala
+write_internal
+write_lf_dump
+write_map
+write_nedap
+write_on_magic
+write_on_standard
+write_only_blank
+write_only_blank.<locals>.write_internal
+write_only_uid
+write_only_uid.<locals>.write_on_magic
+write_only_uid.<locals>.write_on_standard
+write_only_uid_unlimited
+write_only_uid_unlimited.<locals>.write_on_magic
+write_only_uid_unlimited.<locals>.write_on_standard
+write_raw
+write_raw_clone
+write_raw_t55xx
+write_ret
+write_success
+write_success_list
+write_tag
+write_uid_to_container
+write_unlimited
+write_verify_success
+write_wearable
+write_wearable_err1
+write_wearable_err2
+write_wearable_err3
+write_wearable_err4
+write_wearable_tips1
+write_wearable_tips2
+write_wearable_tips3
+write_with_gen1a
+write_with_gen1a_only_uid
+write_with_standard
+write_with_standard.<locals>.write_internal
+write_with_standard_only_uid
+writeable
+writelines

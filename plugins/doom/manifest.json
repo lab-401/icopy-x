@@ -1,0 +1,23 @@
+{
+    "name": "DOOM",
+    "version": "1.0.0",
+    "author": "Lab401 / id Software (shareware)",
+    "description": "DOOM Episode 1 -- Knee-Deep in the Dead",
+    "canvas_mode": true,
+    "entry_class": "DoomPlugin",
+    "binary": "doom",
+    "args": ["-iwad", "doom1.wad", "-width", "240", "-height", "240"],
+    "key_map": {
+        "UP": "Up",
+        "DOWN": "Down",
+        "LEFT": "Left",
+        "RIGHT": "Right",
+        "OK": "Return",
+        "M1": "comma",
+        "M2": "period",
+        "ALL": "Control_L"
+    },
+    "min_fw_version": "1.0.0",
+    "order": 200,
+    "notes": "PWR exits unconditionally (kills process). doom1.wad is freely distributable shareware. Binary assets (doom, doom1.wad) must be placed in this directory."
+}

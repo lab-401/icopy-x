@@ -1,0 +1,12 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "toast": "No tag found",
+  "no_tag": {
+    "title": "Scan Tag",
+    "scan_cache": null
+  }
+}

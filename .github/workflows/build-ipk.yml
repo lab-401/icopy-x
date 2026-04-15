@@ -1,0 +1,600 @@
+name: Build iCopy-X IPK
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PM3_REPO: https://github.com/RfidResearchGroup/proxmark3.git
+  PM3_TAG: v4.21128
+  # Both client and firmware use PM3ICOPYX (iCopy-X with XC3S100E FPGA).
+  # hw version confirms: "fpga_icopyx_hf.ncd image 3s100evq100"
+  PM3_CLIENT_PLATFORM: PM3ICOPYX
+  PM3_FW_PLATFORM: PM3ICOPYX
+  ARM_TOOLCHAIN: arm-linux-gnueabihf
+
+jobs:
+  test:
+    name: Verify IPK Contents
+    needs: [cross-compile-pm3, cross-compile-pm3-firmware]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download PM3 client
+        uses: actions/download-artifact@v4
+        with:
+          name: pm3-client-arm
+          path: /tmp/pm3-client
+
+      - name: Download PM3 firmware
+        uses: actions/download-artifact@v4
+        with:
+          name: pm3-firmware
+          path: /tmp/pm3-firmware
+
+      - name: Prepare build artifacts
+        run: |
+          cp /tmp/pm3-client/proxmark3 build/proxmark3
+          chmod +x build/proxmark3
+          [ -f /tmp/pm3-client/lua.zip ] && cp /tmp/pm3-client/lua.zip build/lua.zip
+          find /tmp/pm3-firmware/ -name "fullimage.elf" -exec cp {} res/firmware/pm3/fullimage.elf \;
+          find /tmp/pm3-firmware/ -name "pm3_manifest.json" -exec cp {} res/firmware/pm3/manifest.json \; 2>/dev/null || true
+
+      - name: Build and verify flash IPK
+        env:
+          ICOPYX_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: |
+          python tools/build_ipk.py --sn UNIVERSAL --output flash.ipk
+
+          python3 -c "
+          import zipfile, sys
+          errors = []
+          with zipfile.ZipFile('flash.ipk') as z:
+              names = set(z.namelist())
+
+              # Core structure
+              for req in ['app.py', 'data/conf.ini']:
+                  if req not in names:
+                      errors.append(f'MISSING: {req}')
+
+              # Python modules
+              py_libs = [n for n in names if n.startswith('lib/') and n.endswith('.py')]
+              if len(py_libs) < 50:
+                  errors.append(f'Too few lib/*.py: {len(py_libs)} (expected 50+)')
+
+              # Screens
+              screens = [n for n in names if n.startswith('screens/') and n.endswith('.json')]
+              if len(screens) < 15:
+                  errors.append(f'Too few screens: {len(screens)} (expected 15+)')
+
+              # Resources
+              audio = [n for n in names if n.startswith('res/audio/')]
+              fonts = [n for n in names if n.startswith('res/font/')]
+              imgs = [n for n in names if n.startswith('res/img/')]
+              if len(audio) < 90:
+                  errors.append(f'Too few audio: {len(audio)} (expected 100+)')
+              if len(fonts) < 1:
+                  errors.append(f'No fonts found')
+              if len(imgs) < 30:
+                  errors.append(f'Too few images: {len(imgs)} (expected 30+)')
+
+              # PM3 binary + lua (iceman versions from Docker build)
+              if 'pm3/proxmark3' not in names:
+                  errors.append('MISSING: pm3/proxmark3')
+              if 'pm3/lua.zip' not in names:
+                  errors.append('MISSING: pm3/lua.zip')
+              else:
+                  lua_size = z.getinfo('pm3/lua.zip').file_size
+                  if lua_size < 200000:
+                      errors.append(f'pm3/lua.zip too small ({lua_size}b) — expected iceman lua (200KB+)')
+
+              # Firmware (MUST be present in flash IPK)
+              fw = [n for n in names if 'firmware' in n and n.endswith('.elf')]
+              if len(fw) == 0:
+                  errors.append('MISSING: firmware .elf in flash IPK')
+
+              # Plugins
+              plugins = [n for n in names if n.startswith('plugins/')]
+              if len(plugins) < 5:
+                  errors.append(f'Too few plugin files: {len(plugins)}')
+
+              print(f'Flash IPK: {len(names)} files, {len(py_libs)} py, {len(screens)} screens, {len(audio)} audio, {len(fw)} firmware')
+
+          if errors:
+              for e in errors:
+                  print(f'::error::{e}')
+              sys.exit(1)
+          print('Flash IPK verification PASSED')
+          "
+
+      - name: Build and verify no-flash IPK
+        env:
+          ICOPYX_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: |
+          python tools/build_ipk.py --sn UNIVERSAL --no-flash --output noflash.ipk
+
+          python3 -c "
+          import zipfile, sys
+          errors = []
+          with zipfile.ZipFile('noflash.ipk') as z:
+              names = set(z.namelist())
+
+              # Core structure
+              for req in ['app.py', 'data/conf.ini']:
+                  if req not in names:
+                      errors.append(f'MISSING: {req}')
+
+              # Python modules
+              py_libs = [n for n in names if n.startswith('lib/') and n.endswith('.py')]
+              if len(py_libs) < 50:
+                  errors.append(f'Too few lib/*.py: {len(py_libs)} (expected 50+)')
+
+              # PM3 binary + lua (factory versions from build/)
+              if 'pm3/proxmark3' not in names:
+                  errors.append('MISSING: pm3/proxmark3')
+              if 'pm3/lua.zip' not in names:
+                  errors.append('MISSING: pm3/lua.zip')
+
+              # PM3 binary should be factory (smaller than iceman)
+              if 'pm3/proxmark3' in names:
+                  pm3_size = z.getinfo('pm3/proxmark3').file_size
+                  if pm3_size > 3000000:
+                      errors.append(f'pm3/proxmark3 too large ({pm3_size}b) — expected factory client (<3MB)')
+
+              # Firmware (MUST NOT be present in no-flash IPK)
+              fw = [n for n in names if 'firmware' in n and n.endswith('.elf')]
+              if len(fw) > 0:
+                  errors.append(f'UNEXPECTED: firmware .elf in no-flash IPK: {fw}')
+
+              # Plugins
+              plugins = [n for n in names if n.startswith('plugins/')]
+              if len(plugins) < 5:
+                  errors.append(f'Too few plugin files: {len(plugins)}')
+
+              print(f'No-flash IPK: {len(names)} files, {len(py_libs)} py, {len(fw)} firmware (should be 0)')
+
+          if errors:
+              for e in errors:
+                  print(f'::error::{e}')
+              sys.exit(1)
+          print('No-flash IPK verification PASSED')
+          "
+
+  cross-compile-pm3:
+    name: Cross-compile Proxmark3 Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cross-compile PM3 client for iCopy-X (Docker ubuntu:16.04)
+        run: |
+          # The iCopy-X runs Ubuntu 16.04 (glibc 2.23). We MUST build inside
+          # a matching container to produce a compatible binary. Building on
+          # the CI host's native toolchain produces glibc 2.38+ binaries that
+          # fail on the device with "GLIBC_2.xx not found".
+          #
+          # SKIPREADLINE=1: the PM3 client runs as a daemon (-w --flush) on
+          # the iCopy-X, not interactively. Xenial's readline 6.3 is too old
+          # for the current PM3 codebase (missing rl_clear_visible_line).
+          mkdir -p /tmp/pm3-out
+
+          docker run --rm \
+            -v /tmp/pm3-out:/out \
+            -v ${{ github.workspace }}/tools/patches:/patches:ro \
+            ubuntu:16.04 bash -c '
+            set -e
+
+            # Configure apt for xenial (amd64 from archive, armhf from ports)
+            cat > /etc/apt/sources.list << SRCEOF
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial main restricted universe
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted universe
+          SRCEOF
+
+            dpkg --add-architecture armhf
+            apt-get update -qq
+            apt-get install -y -qq \
+              gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf \
+              make pkg-config git zip \
+              libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
+
+            git clone --depth 1 --branch '"$PM3_TAG"' '"$PM3_REPO"' /tmp/pm3
+            cd /tmp/pm3
+
+            echo "Applying iCopy-X patches..."
+            for p in /patches/pm3_*.patch; do
+              [ -f "$p" ] || continue
+              if git apply --check "$p" 2>/dev/null; then
+                git apply "$p" && echo "  Applied: $(basename $p)"
+              else
+                echo "  Skipped: $(basename $p)"
+              fi
+            done
+
+            export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig
+            export PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig
+
+            make -j$(nproc) client \
+              PLATFORM='"$PM3_CLIENT_PLATFORM"' \
+              CC=arm-linux-gnueabihf-gcc \
+              CXX=arm-linux-gnueabihf-g++ \
+              LD=arm-linux-gnueabihf-ld \
+              "AR=arm-linux-gnueabihf-ar rcs" \
+              RANLIB=arm-linux-gnueabihf-ranlib \
+              cpu_arch=arm \
+              SKIPQT=1 SKIPPYTHON=1 SKIPREVENGTEST=1 SKIPGD=1 SKIPBT=1 SKIPREADLINE=1
+
+            cp client/proxmark3 /out/proxmark3
+            echo "PM3 version: $(git describe --tags --always)" > /out/version.txt
+
+            # Package iceman-compatible LUA scripts + libs (includes auto-generated
+            # pm3_cmd.lua and mfc_default_keys.lua produced by the Makefile)
+            cd client
+            zip -r /out/lua.zip luascripts/ lualibs/
+            echo "lua.zip packaged: $(du -h /out/lua.zip | cut -f1)"
+          '
+
+          echo "=== Build result ==="
+          file /tmp/pm3-out/proxmark3
+          cat /tmp/pm3-out/version.txt
+
+          # Verify the binary is ARM
+          if ! file /tmp/pm3-out/proxmark3 | grep -qi "ARM"; then
+            echo "::error::Binary is NOT ARM! Cross-compilation failed."
+            exit 1
+          fi
+          echo "Binary confirmed as ARM (ELF 32-bit LSB, EABI5, glibc 2.23 compatible)"
+
+      - name: Upload PM3 client artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pm3-client-arm
+          path: |
+            /tmp/pm3-out/proxmark3
+            /tmp/pm3-out/lua.zip
+
+  cross-compile-pm3-firmware:
+    name: Cross-compile PM3 Firmware (fullimage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ARM cross-compiler and PM3 build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            pkg-config
+
+      - name: Clone RRG Proxmark3
+        run: |
+          git clone --depth 1 $PM3_REPO /tmp/proxmark3
+
+      - name: Apply iCopy-X firmware patches
+        run: |
+          cd /tmp/proxmark3
+          for p in ${{ github.workspace }}/tools/patches/pm3_*.patch; do
+            [ -f "$p" ] || continue
+            if git apply --check "$p" 2>/dev/null; then
+              git apply "$p" && echo "  Applied: $(basename $p)"
+            else
+              echo "  Skipped (client-only or N/A): $(basename $p)"
+            fi
+          done
+
+      - name: Build PM3 firmware (fullimage only — NEVER flash bootrom)
+        run: |
+          cd /tmp/proxmark3
+          # NEVER build bootrom — flashing it = permanent brick (no JTAG).
+          make -j$(nproc) fullimage \
+            PLATFORM=${{ env.PM3_FW_PLATFORM }} \
+            SKIPREVENGTEST=1
+
+      - name: Generate firmware manifest
+        run: |
+          cd /tmp/proxmark3
+          PM3_VER=$(git describe --tags --always 2>/dev/null || echo "unknown")
+          PM3_SHA=$(sha256sum armsrc/obj/fullimage.elf | cut -d' ' -f1)
+          PM3_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          PM3_PLATFORM="${{ env.PM3_FW_PLATFORM }}"
+
+          cat > /tmp/proxmark3/pm3_manifest.json << MANIFEST_EOF
+          {
+              "pm3_firmware_version": "${PM3_VER}",
+              "pm3_firmware_sha256": "${PM3_SHA}",
+              "pm3_client_version": "${PM3_VER}",
+              "build_platform": "${PM3_PLATFORM}",
+              "build_date": "${PM3_DATE}"
+          }
+          MANIFEST_EOF
+
+          echo "Manifest:"
+          cat /tmp/proxmark3/pm3_manifest.json
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pm3-firmware
+          path: |
+            /tmp/proxmark3/armsrc/obj/fullimage.elf
+            /tmp/proxmark3/pm3_manifest.json
+
+  build-iceman-client-linux:
+    name: Iceman PM3 Client (Linux x86_64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc g++ make pkg-config libreadline-dev \
+            libbz2-dev liblz4-dev zlib1g-dev libssl-dev
+
+      - name: Clone and build
+        run: |
+          git clone --depth 1 --branch ${{ env.PM3_TAG }} ${{ env.PM3_REPO }} /tmp/pm3
+          cd /tmp/pm3
+          make -j$(nproc) client \
+            PLATFORM=${{ env.PM3_CLIENT_PLATFORM }} \
+            SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
+          file client/proxmark3
+          mkdir -p /tmp/out/linux
+          cp client/proxmark3 /tmp/out/linux/
+          cp -r client/lualibs client/luascripts /tmp/out/
+          cp -r client/resources /tmp/out/ 2>/dev/null || true
+          cp client/dictionaries/*.dic /tmp/out/ 2>/dev/null || true
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: iceman-client-linux
+          path: /tmp/out/
+
+  build-iceman-client-windows:
+    name: Iceman PM3 Client (Windows x86_64)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-readline
+            mingw-w64-x86_64-bzip2
+            mingw-w64-x86_64-lz4
+            mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-jansson
+            git make pkg-config
+
+      - name: Clone and build
+        run: |
+          git clone --depth 1 --branch $PM3_TAG $PM3_REPO /tmp/pm3
+          cd /tmp/pm3
+          make -j$(nproc) client \
+            PLATFORM=$PM3_CLIENT_PLATFORM \
+            SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
+          file client/proxmark3.exe
+          mkdir -p $GITHUB_WORKSPACE/client-out/windows
+          cp client/proxmark3.exe $GITHUB_WORKSPACE/client-out/windows/
+          # Bundle MinGW runtime DLLs
+          for dll in libgcc_s_seh-1.dll libstdc++-6.dll libwinpthread-1.dll \
+                     libreadline8.dll libtermcap-0.dll libjansson-4.dll \
+                     libbz2-1.dll liblz4.dll zlib1.dll; do
+            find /mingw64/bin -name "$dll" -exec cp {} $GITHUB_WORKSPACE/client-out/windows/ \; 2>/dev/null
+          done
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: iceman-client-windows
+          path: ${{ github.workspace }}/client-out/windows/
+
+  build-iceman-client-macos:
+    name: Iceman PM3 Client (macOS)
+    runs-on: macos-latest
+    steps:
+      - name: Install dependencies
+        run: brew install readline pkg-config openssl lz4
+
+      - name: Clone and build
+        run: |
+          git clone --depth 1 --branch ${{ env.PM3_TAG }} ${{ env.PM3_REPO }} /tmp/pm3
+          cd /tmp/pm3
+          make -j$(sysctl -n hw.ncpu) client \
+            PLATFORM=${{ env.PM3_CLIENT_PLATFORM }} \
+            SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
+          file client/proxmark3
+          mkdir -p /tmp/out/macos
+          cp client/proxmark3 /tmp/out/macos/
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: iceman-client-macos
+          path: /tmp/out/macos/
+
+  build-ipk:
+    name: Build IPK Packages
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PM3 client
+        uses: actions/download-artifact@v4
+        with:
+          name: pm3-client-arm
+          path: /tmp/pm3-client
+
+      - name: Download PM3 firmware
+        uses: actions/download-artifact@v4
+        with:
+          name: pm3-firmware
+          path: /tmp/pm3-firmware
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prepare build artifacts
+        run: |
+          cp /tmp/pm3-client/proxmark3 build/proxmark3
+          chmod +x build/proxmark3
+          [ -f /tmp/pm3-client/lua.zip ] && cp /tmp/pm3-client/lua.zip build/lua.zip
+          find /tmp/pm3-firmware/ -name "fullimage.elf" -exec cp {} res/firmware/pm3/fullimage.elf \;
+          find /tmp/pm3-firmware/ -name "pm3_manifest.json" -exec cp {} res/firmware/pm3/manifest.json \; 2>/dev/null || true
+
+      - name: Build flash IPK
+        env:
+          ICOPYX_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: python tools/build_ipk.py --sn UNIVERSAL --output icopy-x-flash.ipk
+
+      - name: Build no-flash IPK
+        env:
+          ICOPYX_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: python tools/build_ipk.py --sn UNIVERSAL --no-flash --output icopy-x-noflash.ipk
+
+      - name: Upload flash IPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: icopy-x-flash-ipk
+          path: icopy-x-flash.ipk
+
+      - name: Upload no-flash IPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: icopy-x-noflash-ipk
+          path: icopy-x-noflash.ipk
+
+  release:
+    name: Create Release
+    needs: [build-ipk, build-iceman-client-linux, build-iceman-client-windows, build-iceman-client-macos]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download flash IPK
+        uses: actions/download-artifact@v4
+        with:
+          name: icopy-x-flash-ipk
+
+      - name: Download no-flash IPK
+        uses: actions/download-artifact@v4
+        with:
+          name: icopy-x-noflash-ipk
+
+      - name: Download iceman clients
+        uses: actions/download-artifact@v4
+        with:
+          name: iceman-client-linux
+          path: /tmp/iceman-linux
+      - uses: actions/download-artifact@v4
+        with:
+          name: iceman-client-windows
+          path: /tmp/iceman-windows
+      - uses: actions/download-artifact@v4
+        with:
+          name: iceman-client-macos
+          path: /tmp/iceman-macos
+
+      - name: Package clients-flash.zip
+        run: |
+          mkdir -p /tmp/clients-flash/linux /tmp/clients-flash/windows /tmp/clients-flash/macos
+          # Binaries per platform
+          cp /tmp/iceman-linux/linux/* /tmp/clients-flash/linux/
+          cp /tmp/iceman-windows/* /tmp/clients-flash/windows/
+          cp /tmp/iceman-macos/* /tmp/clients-flash/macos/
+          # Shared data from Linux build (iceman lualibs/luascripts/resources)
+          for d in lualibs luascripts resources; do
+            [ -d /tmp/iceman-linux/$d ] && cp -r /tmp/iceman-linux/$d /tmp/clients-flash/
+          done
+          cp /tmp/iceman-linux/*.dic /tmp/clients-flash/ 2>/dev/null || true
+          cd /tmp/clients-flash && zip -r ${{ github.workspace }}/clients-flash.zip .
+          echo "=== clients-flash.zip ===" && find . -type d | sort
+
+      - name: Package clients-noflash.zip
+        run: |
+          mkdir -p /tmp/clients-noflash/linux /tmp/clients-noflash/windows /tmp/clients-noflash/macos
+          # Binaries per platform
+          cp build/clients/factory/linux/proxmark3 /tmp/clients-noflash/linux/
+          cp build/clients/factory/macos/proxmark3 /tmp/clients-noflash/macos/
+          cp -r build/clients/factory/windows/* /tmp/clients-noflash/windows/
+          # Shared data (factory lualibs/luascripts/hardnested/json)
+          cp -r build/clients/factory/share/* /tmp/clients-noflash/
+          cd /tmp/clients-noflash && zip -r ${{ github.workspace }}/clients-noflash.zip .
+          echo "=== clients-noflash.zip ===" && find . -type d | sort
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            icopy-x-flash.ipk
+            icopy-x-noflash.ipk
+            clients-flash.zip
+            clients-noflash.zip
+          body: |
+            ## iCopy-X Open Source Firmware ${{ github.ref_name }}
+
+            ### Two IPK variants
+
+            | File | PM3 firmware | LUA scripts | Use when |
+            |------|-------------|-------------|----------|
+            | `icopy-x-flash.ipk` | RRG/Iceman (included) | Lua 5.4 (iceman) | You want the latest PM3 client + firmware |
+            | `icopy-x-noflash.ipk` | Unchanged (factory) | Lua 5.1 (factory) | You want to keep your current PM3 version |
+
+            ### Installation
+
+            1. Ensure that your device is up to date (1.0.90 - get it from here: https://icopyx.com/pages/update-your-icopy-x)
+            2. Download the IPK of your choice
+            3. Put your iCopy-X into PC-Mode
+            4. Delete ALL OTHER IPK files from the device
+            5. Transfer the IPK onto your device and close PC-Mode
+            6. Navigate to About > Update, and press [OK]
+            7. Device will restart
+            8. While restarting, the screen will flash and stay blank for up to 10 seconds. Don't panic!
+
+            If you're using the "flash" version, there will be some extra steps:
+
+            9. Device will restart and detect that you need to flash your device. Click OK.
+            10. Read the instructions: Make sure your device has charge, make sure it's plugged in, and then Start
+            11. After flashing, your device will restart.
+            12. While restarting, the screen will stay blank for up to 10 seconds. Don't panic!
+
+            ## Companion PM3 Clients (for PC-Mode)
+
+            Connect to your iCopy-X's Proxmark module directly from your computer.
+
+            | File | PM3 version | Contents |
+            |------|------------|----------|
+            | `clients-flash.zip` | RRG/Iceman ${{ env.PM3_TAG }} | Linux x86_64 + macOS + Windows CLI clients |
+            | `clients-noflash.zip` | Factory (iCopy-X original) | Windows client (pre-built) |
+
+            ### Using the companion client
+
+            1. Download the matching `clients-[flash|noflash].zip` for your IPK variant
+            2. Extract to a folder on your computer
+            3. Put your iCopy-X into PC-Mode
+            4. Connect via USB
+            5. Run: `proxmark3 /dev/ttyACM0` (Linux/macOS) or `proxmark3.exe COMx` (Windows)
+            Adjust `ttyACM0` and `COMx` according to the real port assigned to your iCopy-X.

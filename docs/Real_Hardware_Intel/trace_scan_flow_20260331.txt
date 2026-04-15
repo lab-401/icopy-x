@@ -1,0 +1,102 @@
+=== SCAN TRACE ===
+[   0.004] POLL stack=['dict'] 
+[   0.005] === ALL INSTALLED ===
+[ 189.572] START(ScanActivity, None)
+[ 189.636] PM3> hf 14a info (timeout=5000)
+[ 189.779] PM3< ret=1 \n
+[ 189.781] PM3> lf sea (timeout=10000)
+[ 189.980] POLL stack=['dict', 'dict'] 
+[ 192.293] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag.
+[ 192.298] PM3> hf sea (timeout=10000)
+[ 194.145] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                   
+[ 194.150] PM3> hf felica reader (timeout=10000)
+[ 196.148] PM3< ret=1 \n[!] card timeout\n
+[ 199.452] PM3> hf 14a info (timeout=5000)
+[ 199.680] PM3< ret=1 \n
+[ 199.683] PM3> lf sea (timeout=10000)
+[ 202.191] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-]Searching for MOTOROLA tag.
+[ 202.193] PM3> hf sea (timeout=10000)
+[ 204.041] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                   
+[ 204.042] PM3> hf felica reader (timeout=10000)
+[ 206.041] PM3< ret=1 \n[!] card timeout\n
+[ 208.155] FINISH(top=dict d=2)
+[ 208.508] POLL stack=['dict'] 
+[ 210.548] START(ScanActivity, None)
+[ 210.588] PM3> hf 14a info (timeout=5000)
+[ 211.013] POLL stack=['dict', 'dict'] 
+[ 212.564] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 00 00 00 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    no tag-info available\nTYPE: Unknown 000000\n[+]    MIFARE Ultralight/C/NTAG Compatible\n[=] SAK incorrectly claims
+[ 212.588] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 212.812] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 212.814] PM3> hf mfu info (timeout=8888)
+[ 213.017] POLL stack=['dict', 'dict'] type=? uid=
+[ 214.092] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n      TYPE: Unknown 000000\n[+]        UID: 00 00 00 00 00 00 00 \n[+]     UID[0]: 
+[ 214.520] POLL stack=['dict', 'dict'] type=2 uid=00000000000000
+[ 221.234] FINISH(top=dict d=2)
+[ 221.537] POLL stack=['dict'] type=2 uid=00000000000000
+[ 223.307] START(ScanActivity, None)
+[ 223.347] PM3> hf 14a info (timeout=5000)
+[ 223.541] POLL stack=['dict', 'dict'] type=2 uid=00000000000000
+[ 223.579] PM3< ret=1 \n
+[ 223.585] PM3> lf sea (timeout=10000)
+[ 224.043] POLL stack=['dict', 'dict'] 
+[ 226.108] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag.
+[ 226.111] PM3> hf sea (timeout=10000)
+[ 227.945] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                   
+[ 228.050] POLL stack=['dict', 'dict'] type=19 uid=E0530110CCA96A11
+[ 233.963] FINISH(top=dict d=2)
+[ 234.060] POLL stack=['dict'] type=19 uid=E0530110CCA96A11
+[ 235.495] START(ScanActivity, None)
+[ 235.536] PM3> hf 14a info (timeout=5000)
+[ 235.597] POLL stack=['dict', 'dict'] type=19 uid=E0530110CCA96A11
+[ 235.757] PM3< ret=1 \n
+[ 235.760] PM3> lf sea (timeout=10000)
+[ 236.102] POLL stack=['dict', 'dict'] 
+[ 236.886] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Indala - len 189, Raw: 8000
+[ 237.105] POLL stack=['dict', 'dict'] type=10 uid=
+[ 242.120] PM3> hf 14a info (timeout=5000)
+[ 242.280] PM3< ret=1 \n
+[ 242.282] PM3> lf sea (timeout=10000)
+[ 242.621] POLL stack=['dict', 'dict'] 
+[ 243.431] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Indala - len 234, Raw: 8000
+[ 243.623] POLL stack=['dict', 'dict'] type=10 uid=
+[ 246.205] FINISH(top=dict d=2)
+[ 246.629] POLL stack=['dict'] type=10 uid=
+[ 248.525] START(ScanActivity, None)
+[ 248.566] PM3> hf 14a info (timeout=5000)
+[ 248.633] POLL stack=['dict', 'dict'] type=10 uid=
+[ 249.568] PM3< ret=1 \n\n[+]  UID: 3A F7 35 01 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n
+[ 249.574] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 249.719] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 250.137] POLL stack=['dict', 'dict'] type=1 uid=3AF73501
+[ 259.358] START(SimulationActivity, {'found': True, 'uid': '3AF73501', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcEr)
+[ 259.689] POLL stack=['dict', 'dict', 'dict'] type=1 uid=3AF73501
+[ 259.802] PM3> hf 14a sim t 1 u 3AF73501  (timeout=-1)
+[ 262.964] PM3< ret=1 \n[+] Emulating ISO/IEC 14443 type A tag with 4 byte UID (3A F7 35 01 )\n[=] Press pm3-button to abort simulation\n[#] Emulator stopped. Trace length: 0 \n[=] Done\n
+[ 263.325] START(SimulationTraceActivity, None)
+[ 263.409] PM3> hf 14a list (timeout=18888)
+[ 263.444] PM3< ret=1 \n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 0 bytes)\n
+[ 263.696] POLL stack=['dict', 'dict', 'dict', 'dict'] type=1 uid=3AF73501
+[ 264.315] FINISH(top=dict d=4)
+[ 264.699] POLL stack=['dict', 'dict', 'dict'] type=1 uid=3AF73501
+[ 265.308] FINISH(top=dict d=3)
+[ 265.702] POLL stack=['dict', 'dict'] type=1 uid=3AF73501
+[ 266.288] FINISH(top=dict d=2)
+[ 266.704] POLL stack=['dict'] type=1 uid=3AF73501
+[ 268.041] START(ScanActivity, None)
+[ 268.083] PM3> hf 14a info (timeout=5000)
+[ 268.208] POLL stack=['dict', 'dict'] type=1 uid=3AF73501
+[ 268.355] PM3< ret=1 \n
+[ 268.357] PM3> lf sea (timeout=10000)
+[ 268.710] POLL stack=['dict', 'dict'] 
+[ 270.866] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-]Searching for MOTOROLA tag.
+[ 270.868] PM3> hf sea (timeout=10000)
+[ 272.706] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                   
+[ 272.708] PM3> hf felica reader (timeout=10000)
+[ 274.713] PM3< ret=1 \n[!] card timeout\n
+[ 278.135] PM3> hf 14a info (timeout=5000)
+[ 278.406] PM3< ret=1 \n
+[ 278.408] PM3> lf sea (timeout=10000)
+[ 279.547] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n
+[ 279.726] POLL stack=['dict', 'dict'] type=28 uid=
+[ 283.750] FINISH(top=dict d=2)
+[ 284.235] POLL stack=['dict'] type=28 uid=

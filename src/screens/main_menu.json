@@ -1,0 +1,98 @@
+{
+    "id": "main_menu",
+    "screen": {
+        "title": "Main Page",
+        "content": {
+            "type": "list",
+            "style": "menu",
+            "selected": 0,
+            "items": [
+                {
+                    "label": "Auto Copy",
+                    "icon": "1",
+                    "action": "push:autocopy"
+                },
+                {
+                    "label": "Dump Files",
+                    "icon": "2",
+                    "action": "push:dump_files"
+                },
+                {
+                    "label": "Scan Tag",
+                    "icon": "3",
+                    "action": "push:scan"
+                },
+                {
+                    "label": "Read Tag",
+                    "icon": "4",
+                    "action": "push:read_list"
+                },
+                {
+                    "label": "Sniff TRF",
+                    "icon": "5",
+                    "action": "push:sniff"
+                },
+                {
+                    "label": "Simulation",
+                    "icon": "6",
+                    "action": "push:simulation"
+                },
+                {
+                    "label": "PC-Mode",
+                    "icon": "7",
+                    "action": "push:pcmode"
+                },
+                {
+                    "label": "Diagnosis",
+                    "icon": "9",
+                    "action": "push:diagnosis"
+                },
+                {
+                    "label": "Backlight",
+                    "icon": "8",
+                    "action": "push:backlight"
+                },
+                {
+                    "label": "Volume",
+                    "icon": "10",
+                    "action": "push:volume"
+                },
+                {
+                    "label": "About",
+                    "icon": null,
+                    "action": "push:about"
+                },
+                {
+                    "label": "Erase Tag",
+                    "icon": null,
+                    "action": "push:erase"
+                },
+                {
+                    "label": "Time Settings",
+                    "icon": null,
+                    "action": "push:time_settings"
+                },
+                {
+                    "label": "LUA Script",
+                    "icon": null,
+                    "action": "push:lua_script"
+                },
+                {
+                    "label": "Settings",
+                    "icon": "3",
+                    "action": "push:settings_menu"
+                }
+            ]
+        },
+        "buttons": {
+            "left": null,
+            "right": null
+        },
+        "keys": {
+            "UP": "scroll:-1",
+            "DOWN": "scroll:1",
+            "OK": "select",
+            "M2": "select"
+        }
+    }
+}

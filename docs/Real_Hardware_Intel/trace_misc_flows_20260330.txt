@@ -1,0 +1,55 @@
+=== MISC FLOW TRACE ===
+[   0.002] PATCHED: startPM3Plat EXISTS
+[   0.003] PATCHED: startPM3Ctrl EXISTS
+[   0.003] PATCHED: hmi_driver.setbaklight
+[   0.004] PATCHED: settings.setBacklight/setVolume/get*
+[   0.004] PATCHED: audio.setVolume/playVolumeExam/setKeyAudioEnable
+[   0.006] POLL stack=['dict']
+[   0.007] === ALL INSTALLED ===
+[   0.877] PM3-PLAT> sudo rm /dev/ttyACM0
+[   1.034] PM3-PLAT< ret=
+ 
+[   1.175] PM3-CTRL> restart
+[   1.215] PM3-CTRL< ret=True 
+[   1.360] PM3-PLAT> sudo date -s "1970-2-19 1:44:34"
+[-1770640975.293] PM3-PLAT< ret=Thu Feb 19 01:44:34 UTC 1970
+
+ 
+[-1770640975.137] AUDIO> setKeyAudioEnable((True,))
+[-1770640870.223] START(BacklightActivity, None)
+[-1770640870.189] SETTINGS> getBacklight() = 0
+[-1770640870.162] POLL stack=['dict', 'dict']
+[-1770640868.574] HMI-BACKLIGHT> setbaklight((50,))
+[-1770640867.855] HMI-BACKLIGHT> setbaklight((100,))
+[-1770640866.748] SETTINGS> setBacklight((2,))
+[-1770640864.865] SETTINGS> getBacklight() = 2
+[-1770640864.862] HMI-BACKLIGHT> setbaklight((100,))
+[-1770640864.862] FINISH(top=dict d=2)
+[-1770640864.652] POLL stack=['dict']
+[-1770640862.701] START(VolumeActivity, None)
+[-1770640862.662] SETTINGS> getVolume() = 1
+[-1770640862.657] AUDIO> setKeyAudioEnable((False,))
+[-1770640862.648] POLL stack=['dict', 'dict']
+[-1770640861.493] AUDIO> playVolumeExam()
+[-1770640859.782] AUDIO> playVolumeExam()
+[-1770640859.119] SETTINGS> setVolume((3,))
+[-1770640859.111] AUDIO> setVolume((100,))
+[-1770640859.111] AUDIO> playVolumeExam()
+[-1770640857.926] AUDIO> setKeyAudioEnable((True,))
+[-1770640857.882] FINISH(top=dict d=2)
+[-1770640857.640] POLL stack=['dict']
+[-1770640852.091] START(LUAScriptCMDActivity, None)
+[-1770640851.628] POLL stack=['dict', 'dict']
+[-1770640846.398] PM3-TASK> script run hf_read
+[-1770640837.182] PM3-CTRL> stop
+[-1770640834.982] PM3-CTRL< ret=True 
+[-1770640834.982] PM3-PLAT> sudo rm /dev/ttyACM0
+[-1770640834.855] PM3-PLAT< ret=
+ 
+[-1770640834.706] PM3-CTRL> restart
+[-1770640834.670] PM3-CTRL< ret=True 
+[-1770640834.667] PM3-TASK< ret=-1 
+[-1770640833.383] PM3-TASK> script run hf_read
+[-1770640823.982] PM3-TASK< ret=1 \n[+] executing lua /mnt/upan/luascripts/hf_read.lua\n[+] args ''\nWORK IN PROGRESS - not expected to be functional yet\nWaiting for card... press Enter to quit\nReading with \n1\niso14443a card select failed\nReading with \n2\nNo response from card\nNo response from card\nReading with \n3\nCRC\nCRC failed\nCRC fai
+[-1770640820.842] FINISH(top=dict d=2)
+[-1770640820.573] POLL stack=['dict']

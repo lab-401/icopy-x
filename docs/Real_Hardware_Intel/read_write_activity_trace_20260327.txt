@@ -1,0 +1,14 @@
+=== Real Device Activity Stack Trace — Read + Write Flow (2026-03-27) ===
+Card: MIFARE Classic 1K 4B, UID B7785E50
+
+[01:19:49] ['dict']                          — Main Menu (MainActivity)
+[01:20:19] ['dict', 'dict']                  — Entered ReadListActivity
+[01:20:21] ['dict', 'dict'] cache=type=1     — Scan complete: found MF1K 4B, UID B7785E50
+[01:20:35] ['dict', 'dict', 'dict']          — M2 pressed → PUSHED 3rd activity (Read/Write)
+[01:21:04] ['dict', 'dict']                  — 3rd activity finished → back to ReadListActivity
+[01:21:05] ['dict']                          — Back to Main Menu
+
+Key finding: ReadListActivity does NOT call startRead() internally.
+It pushes a SEPARATE activity (3rd on stack) for the read+write phase.
+The scan runs within ReadListActivity (stack stays at 2).
+The read runs in a PUSHED activity (stack goes to 3).

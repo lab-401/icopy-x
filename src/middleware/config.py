@@ -1,0 +1,108 @@
+##########################################################################
+# Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
+#
+# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+#
+# This software is licensed under the PolyForm Noncommercial License 1.0.0.
+# You may not use this software for commercial purposes.
+#
+# A copy of the license is available at:
+# https://polyformproject.org/licenses/noncommercial/1.0.0
+#
+# This entire header "Required Notice" must remain in place.
+##########################################################################
+
+"""Configuration persistence via conf.ini.
+
+OSS reimplementation of config.so.
+
+Functions:
+    getConf()              — read all config as dict
+    getValue(key, default) — read single key
+    setConf(conf)          — write entire config dict
+    setKeyValue(k, v)      — write single key-value pair
+
+Storage: /mnt/sdcard/root2/root/home/pi/ipk_app_main/data/conf.ini
+Section: [DEFAULT]
+"""
+
+import configparser
+import os
+
+# Default settings from original config.so constants
+DEFAULT_SETTINGS = {'backlight': '2', 'volume': '2', 'screen_mirror': '0'}
+
+# Config file path — same as original firmware
+_CONF_PATH = '/mnt/sdcard/root2/root/home/pi/ipk_app_main/data/conf.ini'
+
+
+def _read_config():
+    """Read conf.ini into a configparser object."""
+    cp = configparser.ConfigParser()
+    if os.path.exists(_CONF_PATH):
+        cp.read(_CONF_PATH)
+    return cp
+
+
+def _write_config(cp):
+    """Write configparser object back to conf.ini."""
+    conf_dir = os.path.dirname(_CONF_PATH)
+    if not os.path.isdir(conf_dir):
+        os.makedirs(conf_dir, exist_ok=True)
+    with open(_CONF_PATH, 'w') as f:
+        cp.write(f)
+
+
+def getConf():
+    """Read all config values as a dict.
+
+    Returns dict of all keys in [DEFAULT] section.
+    """
+    cp = _read_config()
+    result = dict(DEFAULT_SETTINGS)
+    if cp.defaults():
+        result.update(dict(cp.defaults()))
+    return result
+
+
+def getValue(key, default=None):
+    """Read a single config value by key.
+
+    Args:
+        key: config key name (e.g. 'backlight', 'volume')
+        default: fallback if key not found
+
+    Returns:
+        str: the config value, or default
+    """
+    cp = _read_config()
+    try:
+        return cp.get('DEFAULT', key)
+    except (configparser.NoSectionError, configparser.NoOptionError):
+        if default is not None:
+            return default
+        return DEFAULT_SETTINGS.get(key)
+
+
+def setConf(conf):
+    """Write entire config dict to conf.ini.
+
+    Args:
+        conf: dict of key-value pairs to write
+    """
+    cp = configparser.ConfigParser()
+    for k, v in conf.items():
+        cp.set('DEFAULT', k, str(v))
+    _write_config(cp)
+
+
+def setKeyValue(k, v):
+    """Write a single key-value pair to conf.ini.
+
+    Args:
+        k: config key name
+        v: value to write (will be converted to string)
+    """
+    cp = _read_config()
+    cp.set('DEFAULT', k, str(v))
+    _write_config(cp)

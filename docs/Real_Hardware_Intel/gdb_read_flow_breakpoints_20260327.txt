@@ -1,0 +1,70 @@
+No executable file now.
+warning: Could not load vsyscall page because no executable was specified
+0xb6d19454 in ?? ()
+Hardware assisted breakpoint 1 at 0xb2f11bac
+Hardware assisted breakpoint 2 at 0xb2f9fa78
+Hardware assisted breakpoint 3 at 0xb2fb71c4
+[Detaching after fork from child process 8458]
+[Detaching after fork from child process 8461]
+[Detaching after fork from child process 8463]
+[Detaching after fork from child process 8465]
+[Detaching after fork from child process 8467]
+[Thread 7965.8128 exited]
+[New Thread 7965.8469]
+[New Thread 7965.8470]
+[Switching to Thread 7965.8127]
+
+Thread 5 "python3" hit Breakpoint 1, 0xb2f11bac in ?? ()
+#0  0xb2f11bac in ?? ()
+#1  0xb2f0425c in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+r0             0xb2a36918          2997053720
+r1             0xafbedb50          2948520784
+r2             0xb305521c          3003470364
+r3             0xb2f11bad          3002145709
+pc             0xb2f11bac          0xb2f11bac
+lr             0xb2f0425d          -1292877219
+[Detaching after fork from child process 8472]
+[Detaching after fork from child process 8475]
+[New Thread 7965.8471]
+[Thread 7965.8469 exited]
+[Thread 7965.8470 exited]
+[Switching to Thread 7965.8471]
+
+Thread 12 "python3" hit Breakpoint 2, 0xb2f9fa78 in ?? ()
+#0  0xb2f9fa78 in ?? ()
+#1  0xb2d14386 in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+r0             0xb2a34cc0          2997046464
+r1             0xafbe8d88          2948500872
+r2             0x0                 0
+r3             0xb2f9fa79          3002727033
+pc             0xb2f9fa78          0xb2f9fa78
+lr             0xb2d14387          -1294908537
+[Detaching after fork from child process 8478]
+
+Thread 12 "python3" hit Breakpoint 3, 0xb2fb71c4 in ?? ()
+#0  0xb2fb71c4 in ?? ()
+#1  0xb2f0425c in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+r0             0xb2a32570          2997036400
+r1             0xafbedc10          2948520976
+r2             0x0                 0
+r3             0xb2fb71c5          3002823109
+pc             0xb2fb71c4          0xb2fb71c4
+lr             0xb2f0425d          -1292877219
+[Detaching after fork from child process 8481]
+[New Thread 7965.8483]
+[Detaching after fork from child process 8485]
+[Detaching after fork from child process 8502]
+[Detaching after fork from child process 8511]
+[Detaching after fork from child process 8528]
+[Detaching after fork from child process 8539]
+[Detaching after fork from child process 8542]
+[Detaching after fork from child process 8567]
+[Detaching after fork from child process 8584]
+[Detaching after fork from child process 8601]
+[Detaching after fork from child process 8618]
+[Detaching after fork from child process 8635]
+[Detaching after fork from child process 8643]
+Remote connection closed

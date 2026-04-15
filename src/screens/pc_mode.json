@@ -1,0 +1,60 @@
+{
+  "screen_id": "pc_mode",
+  "title": "PC-Mode",
+  "title_bg": "#7C829A",
+  "content": {
+    "type": "text_display",
+    "states": {
+      "idle": {
+        "text_key": "connect_computer",
+        "text": "Please connect to\nthe computer.Then\npress start button"
+      },
+      "starting": {
+        "toast_key": "processing",
+        "toast": "Processing..."
+      },
+      "running": {
+        "toast_key": "pcmode_running",
+        "toast": "PC-mode Running..."
+      },
+      "stopping": {
+        "text": ""
+      }
+    }
+  },
+  "buttons": {
+    "idle": {
+      "M1": {"label": "Start", "enabled": true},
+      "M2": {"label": "Start", "enabled": true}
+    },
+    "starting": {
+      "M1": {"label": "Start", "enabled": false},
+      "M2": {"label": "Start", "enabled": false}
+    },
+    "running": {
+      "M1": {"label": "", "enabled": false},
+      "M2": {"label": "Stop", "enabled": true}
+    },
+    "stopping": {
+      "M1": {"label": "", "enabled": false},
+      "M2": {"label": "Stop", "enabled": false}
+    }
+  },
+  "key_map": {
+    "idle": {
+      "M1": "start_pc_mode",
+      "M2": "start_pc_mode",
+      "PWR": "finish"
+    },
+    "starting": {},
+    "running": {
+      "M1": "stop_pc_mode",
+      "M2": "stop_pc_mode",
+      "PWR": "stop_pc_mode_and_finish"
+    },
+    "stopping": {}
+  },
+  "audio": {
+    "running": "playPCModeRunning"
+  }
+}

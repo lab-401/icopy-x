@@ -1,0 +1,149 @@
+{
+    "id": "sniff",
+    "initial_state": "type_select",
+    "states": {
+        "type_select": {
+            "screen": {
+                "title": "Sniff TRF 1/1",
+                "content": {
+                    "type": "list",
+                    "items": [
+                        {
+                            "key": "sniff_item1",
+                            "text": "1. 14A Sniff",
+                            "pm3_cmd": "hf 14a sniff",
+                            "list_cmd": "hf list mf",
+                            "type_id": "14a"
+                        },
+                        {
+                            "key": "sniff_item2",
+                            "text": "2. 14B Sniff",
+                            "pm3_cmd": "hf 14b sniff",
+                            "list_cmd": "hf list 14b",
+                            "type_id": "14b"
+                        },
+                        {
+                            "key": "sniff_item3",
+                            "text": "3. iclass Sniff",
+                            "pm3_cmd": "hf iclass sniff",
+                            "list_cmd": "hf list iclass",
+                            "type_id": "iclass"
+                        },
+                        {
+                            "key": "sniff_item4",
+                            "text": "4. Topaz Sniff",
+                            "pm3_cmd": "hf topaz sniff",
+                            "list_cmd": "hf list topaz",
+                            "type_id": "topaz"
+                        },
+                        {
+                            "key": "sniff_item5",
+                            "text": "5. T5577 Sniff",
+                            "pm3_cmd": "lf t55xx sniff",
+                            "list_cmd": null,
+                            "type_id": "125k"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "M1": "finish",
+                    "M2": "run:setupOnTypeSelected",
+                    "OK": "run:setupOnTypeSelected",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "type_selected": "instruction"
+            }
+        },
+        "instruction": {
+            "screen": {
+                "title": "Sniff TRF {page}/{total}",
+                "content": {
+                    "type": "text",
+                    "pages": {
+                        "hf": [
+                            "Step 1: \nPrepare client's \nreader and tag, \nclick start.",
+                            "Step 2: \nRemove antenna cover \non iCopy and place \niCopy on reader.",
+                            "Step 3: \nSwipe tag on iCopy \nto ensure reader \nable to identify tag.",
+                            "Step 4: \nRepeat 3-5 times \nand click finish."
+                        ],
+                        "125k": [
+                            "Click start, then\nswipe iCopy on reader.\nUntil you get keys."
+                        ]
+                    }
+                },
+                "buttons": {
+                    "left": "Start",
+                    "right": "Finish"
+                },
+                "keys": {
+                    "M1": "run:startSniff",
+                    "M2": "noop",
+                    "UP": "page:-1",
+                    "DOWN": "page:1",
+                    "PWR": "goto:type_select"
+                }
+            },
+            "transitions": {
+                "sniff_started": "sniffing"
+            }
+        },
+        "sniffing": {
+            "screen": {
+                "title": "Sniff TRF",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Sniffing in progress...",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Start",
+                    "right": "Finish"
+                },
+                "keys": {
+                    "M1": "run:stopAndFinish",
+                    "M2": "run:stopAndShowResult",
+                    "PWR": "run:stopAndBack"
+                }
+            },
+            "transitions": {
+                "data.125k_sniff_finished": "result"
+            }
+        },
+        "result": {
+            "screen": {
+                "title": "Sniff TRF",
+                "content": {
+                    "type": "text",
+                    "value": "{trace_result}"
+                },
+                "buttons": {
+                    "left": "Start",
+                    "right": "Save"
+                },
+                "keys": {
+                    "M1": "run:startSniff",
+                    "M2": "run:saveSniffData",
+                    "OK": "run:saveSniffData",
+                    "UP": "run:prevPage",
+                    "DOWN": "run:nextPage",
+                    "PWR": "run:backToTypeSelect"
+                }
+            },
+            "toast_on_save": {
+                "text": "Trace file\nsaved",
+                "icon": "check",
+                "timeout": 3000
+            }
+        }
+    }
+}

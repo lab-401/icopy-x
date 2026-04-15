@@ -1,0 +1,20 @@
+[project]
+name = "icopy-x-reimpl"
+version = "0.1.0"
+description = "Open-source UI framework replacement for the iCopy-X RFID copier"
+requires-python = ">=3.8"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/ui"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+
+[tool.coverage.run]
+source = ["src/lib"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 0

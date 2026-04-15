@@ -1,0 +1,290 @@
+{
+    "id": "autocopy",
+    "initial_state": "scanning",
+    "states": {
+        "scanning": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {
+                    "type": "progress",
+                    "message": "Scanning...",
+                    "value": "{scan_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": "", "right": ""},
+                "buttons_enabled": false,
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.found==true": "reading",
+                "result.hasMulti==true": "scan_multi",
+                "result.return==-4": "scan_wrong_type",
+                "result.found==false": "scan_not_found"
+            }
+        },
+        "scan_not_found": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "No tag found", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "scan_wrong_type": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "No tag found \nOr\n Wrong type found!", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "scan_multi": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Multiple tags detected!", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "reading": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {
+                    "type": "progress",
+                    "message": "Reading...",
+                    "value": "{read_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": "", "right": ""},
+                "buttons_enabled": false,
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.read==read_ok_1": "place_card",
+                "result.read==read_ok_2": "place_card",
+                "result.read==read_failed": "read_failed",
+                "result.read==no_valid_key": "read_no_key_hf",
+                "result.read==no_valid_key_t55xx": "read_no_key_lf",
+                "result.read==missing_keys": "read_missing_keys",
+                "result.read==keys_check_failed": "read_timeout"
+            }
+        },
+        "read_failed": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Read Failed!", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Reread"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startRead",
+                    "OK": "run:startRead",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "read_no_key_hf": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "No valid key", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "read_no_key_lf": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "No valid key", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "read_missing_keys": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Missing keys", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Force-Use"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:promptSwapCard",
+                    "OK": "run:promptSwapCard",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "read_timeout": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Time out", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Retry"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startRead",
+                    "OK": "run:startRead",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "place_card": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Data ready for copy!\nPlease place new tag for copy.", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Write"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startWrite",
+                    "OK": "run:startWrite",
+                    "PWR": "finish"
+                }
+            },
+            "note": "M2/OK pushes WarningWriteActivity (not inline toast). WarningWriteActivity shows 'Data Ready!' confirmation, then pushes WriteActivity on confirm.",
+            "transitions": {}
+        },
+        "writing": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {
+                    "type": "progress",
+                    "message": "Writing...",
+                    "value": "{write_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": "", "right": ""},
+                "buttons_enabled": false,
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.write==write_success_hf": "write_success",
+                "result.write==write_success_lf": "verifying",
+                "result.write==write_failed": "write_failed"
+            }
+        },
+        "write_success": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Write successful!", "icon": "check", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "write_failed": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Write failed!", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rewrite"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startWrite",
+                    "OK": "run:startWrite",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "verifying": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {
+                    "type": "progress",
+                    "message": "Verifying...",
+                    "value": "{verify_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": "", "right": ""},
+                "buttons_enabled": false,
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.verify==success": "verify_success",
+                "result.verify==failed": "verify_failed"
+            }
+        },
+        "verify_success": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Write and Verify successful!", "icon": "check", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rescan"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "verify_failed": {
+            "screen": {
+                "title": "Auto Copy",
+                "content": {"type": "empty"},
+                "toast": {"text": "Verification failed!", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Rewrite"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startWrite",
+                    "OK": "run:startWrite",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        }
+    }
+}

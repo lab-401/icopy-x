@@ -1,0 +1,9 @@
+{
+    "name": "HF Deep Scan",
+    "version": "1.0.0",
+    "author": "Lab401",
+    "description": "Scan all HF tag types with detailed results",
+    "entry_class": "HFDeepScanPlugin",
+    "permissions": ["pm3"],
+    "order": 20
+}

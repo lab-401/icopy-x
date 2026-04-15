@@ -1,0 +1,21 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "MIFARE",
+      "Ultralight",
+      "13.56MHZ",
+      "UID: 04A1B2C3D4E5F6"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 2
+  },
+  "toast": "Tag Found"
+}

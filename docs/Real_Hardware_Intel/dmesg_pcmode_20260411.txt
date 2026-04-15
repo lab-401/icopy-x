@@ -1,0 +1,525 @@
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.14.111 (h3@h3-virtual-machine) (gcc version 4.9.3 (ctng-1.21.0-229g-FA)) #13 SMP Mon Jan 25 19:42:05 CST 2021
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: FriendlyElec NanoPi-NEO
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] Reserved memory: created CMA memory pool at 0x000000004bc00000, size 64 MiB
+[    0.000000] OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
+[    0.000000] On node 0 totalpages: 65536
+[    0.000000] free_area_init_node: node 0, pgdat c1260040, node_mem_map cfd5f000
+[    0.000000]   Normal zone: 576 pages used for memmap
+[    0.000000]   Normal zone: 0 pages reserved
+[    0.000000]   Normal zone: 65536 pages, LIFO batch:15
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: Using PSCI v0.1 Function IDs from DT
+[    0.000000] percpu: Embedded 17 pages/cpu @cfd1b000 s37120 r8192 d24320 u69632
+[    0.000000] pcpu-alloc: s37120 r8192 d24320 u69632 alloc=17*4096
+[    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 64960
+[    0.000000] Kernel command line: console=ttyS1,115200 earlyprintk root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait fsck.repair=yes panic=10 fbcon=map:0  data=/dev/mmcblk0p3 snd-soc-core.pmdown_time=3600000
+[    0.000000] PID hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+[    0.000000] Memory: 170216K/262144K available (10240K kernel code, 391K rwdata, 2080K rodata, 2048K init, 303K bss, 26392K reserved, 65536K cma-reserved, 0K highmem)
+[    0.000000] Virtual kernel memory layout:
+                   vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+                   fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
+                   vmalloc : 0xd0800000 - 0xff800000   ( 752 MB)
+                   lowmem  : 0xc0000000 - 0xd0000000   ( 256 MB)
+                   pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+                   modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+                     .text : 0xc0008000 - 0xc0c00000   (12256 kB)
+                     .init : 0xc1000000 - 0xc1200000   (2048 kB)
+                     .data : 0xc1200000 - 0xc1261f00   ( 392 kB)
+                      .bss : 0xc126a884 - 0xc12b6850   ( 304 kB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] Hierarchical RCU implementation.
+[    0.000000] 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=4.
+[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] GIC: Using split EOI/Deactivate mode
+[    0.000000] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
+[    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    0.000007] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[    0.000018] Switching to timer-based delay loop, resolution 41ns
+[    0.000215] Console: colour dummy device 80x30
+[    0.000251] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=120000)
+[    0.000266] pid_max: default: 32768 minimum: 301
+[    0.000430] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.000444] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.001173] CPU: Testing write buffer coherency: ok
+[    0.001637] CPU0: update cpu_capacity 1024
+[    0.001647] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.002021] Setting up static identity map for 0x40200000 - 0x40200060
+[    0.002147] Hierarchical SRCU implementation.
+[    0.002717] smp: Bringing up secondary CPUs ...
+[    0.013508] CPU1: update cpu_capacity 1024
+[    0.013515] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.024407] CPU2: update cpu_capacity 1024
+[    0.024413] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+[    0.035211] CPU3: update cpu_capacity 1024
+[    0.035216] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+[    0.035301] smp: Brought up 1 node, 4 CPUs
+[    0.035330] SMP: Total of 4 processors activated (192.00 BogoMIPS).
+[    0.035337] CPU: All CPU(s) started in HYP mode.
+[    0.035342] CPU: Virtualization extensions available.
+[    0.036128] devtmpfs: initialized
+[    0.042810] random: get_random_u32 called from bucket_table_alloc+0xf0/0x240 with crng_init=0
+[    0.043446] VFP support v0.3: implementor 41 architecture 2 part 30 variant 7 rev 5
+[    0.043749] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 9556302231375000 ns
+[    0.043772] futex hash table entries: 1024 (order: 4, 65536 bytes)
+[    0.046518] xor: measuring software checksum speed
+[    0.095034]    arm4regs  :  1372.000 MB/sec
+[    0.145082]    8regs     :   769.600 MB/sec
+[    0.195127]    32regs    :   850.400 MB/sec
+[    0.245179]    neon      :  1283.200 MB/sec
+[    0.245186] xor: using function: arm4regs (1372.000 MB/sec)
+[    0.245205] pinctrl core: initialized pinctrl subsystem
+[    0.246175] NET: Registered protocol family 16
+[    0.247817] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.248646] cpuidle: using governor ladder
+[    0.248687] cpuidle: using governor menu
+[    0.249100] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.249111] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.267792] SCSI subsystem initialized
+[    0.268006] libata version 3.00 loaded.
+[    0.268203] usbcore: registered new interface driver usbfs
+[    0.268250] usbcore: registered new interface driver hub
+[    0.268333] usbcore: registered new device driver usb
+[    0.268490] media: Linux media interface: v0.10
+[    0.268525] Linux video capture interface: v2.00
+[    0.268621] pps_core: LinuxPPS API ver. 1 registered
+[    0.268629] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.268646] PTP clock support registered
+[    0.268994] Advanced Linux Sound Architecture Driver Initialized.
+[    0.270575] clocksource: Switched to clocksource arch_sys_counter
+[    0.270773] VFS: Disk quotas dquot_6.6.0
+[    0.270854] VFS: Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
+[    0.271012] FS-Cache: Loaded
+[    0.278020] NET: Registered protocol family 2
+[    0.278696] TCP established hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.278734] TCP bind hash table entries: 2048 (order: 2, 16384 bytes)
+[    0.278770] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.278873] UDP hash table entries: 256 (order: 1, 8192 bytes)
+[    0.278915] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+[    0.279112] NET: Registered protocol family 1
+[    0.279621] RPC: Registered named UNIX socket transport module.
+[    0.279633] RPC: Registered udp transport module.
+[    0.279638] RPC: Registered tcp transport module.
+[    0.279644] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.279862] Unpacking initramfs...
+[    0.578216] Freeing initrd memory: 5744K
+[    0.578728] kvm [1]: 8-bit VMID
+[    0.579440] kvm [1]: vgic interrupt IRQ16
+[    0.579542] kvm [1]: Hyp mode initialized successfully
+[    0.582387] workingset: timestamp_bits=14 max_order=16 bucket_order=2
+[    0.587034] zbud: loaded
+[    0.588624] FS-Cache: Netfs 'nfs' registered for caching
+[    0.589127] NFS: Registering the id_resolver key type
+[    0.589167] Key type id_resolver registered
+[    0.589174] Key type id_legacy registered
+[    0.589189] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.589206] Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+[    0.590119] fuse init (API version 7.26)
+[    0.595509] async_tx: api initialized (async)
+[    0.595689] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
+[    0.595858] io scheduler noop registered (default)
+[    0.595869] io scheduler deadline registered
+[    0.596056] io scheduler cfq registered
+[    0.596067] io scheduler mq-deadline registered
+[    0.596203] io scheduler bfq registered
+[    0.596892] sun4i-usb-phy 1c19400.phy: Couldn't request ID GPIO, pinctrl may not init
+[    0.600525] sun8i-h3-pinctrl 1c20800.pinctrl: initialized sunXi PIO driver
+[    0.602117] sun8i-h3-r-pinctrl 1f02c00.pinctrl: initialized sunXi PIO driver
+[    0.607485] Serial: 8250/16550 driver, 8 ports, IRQ sharing disabled
+[    0.629524] 1c28000.serial: ttyS0 at MMIO 0x1c28000 (irq = 44, base_baud = 1500000) is a U6_16550A
+[    0.652360] 1c28400.serial: ttyS1 at MMIO 0x1c28400 (irq = 45, base_baud = 1500000) is a U6_16550A
+[    1.420246] console [ttyS1] enabled
+[    1.426047] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.432686] [drm] No driver support for vblank timestamp query.
+[    1.448025] sun4i-drm display-engine: bound 1100000.mixer (ops 0xc0c51ba8)
+[    1.455117] sun4i-drm display-engine: No panel or bridge found... RGB output disabled
+[    1.462963] sun4i-drm display-engine: bound 1c0c000.lcd-controller (ops 0xc0c508ac)
+[    1.595754] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller v1.32a with HDCP (sun8i_dw_hdmi_phy)
+[    1.605679] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI I2C bus driver
+[    1.613392] sun4i-drm display-engine: bound 1ee0000.hdmi (ops 0xc0c51f28)
+[    1.620244] [drm] Cannot find any crtc or sizes - going 1920x1080
+[    1.667513] Console: switching to colour frame buffer device 240x67
+[    1.698381] sun4i-drm display-engine: fb0:  frame buffer device
+[    1.704805] [drm] Initialized sun4i-drm 1.0.0 20150629 for display-engine on minor 0
+[    1.721642] loop: module loaded
+[    1.741164] st: Version 20160209, fixed bufsize 32768, s/g segs 256
+[    1.747550] osst :I: Tape driver with OnStream support version 0.99.4
+               osst :I: $Id: osst.c,v 1.73 2005/01/01 21:13:34 wriede Exp $
+[    1.760896] SCSI Media Changer driver v0.25 
+[    1.766984] libphy: Fixed MDIO Bus: probed
+[    1.771127] tun: Universal TUN/TAP device driver, 1.6
+[    1.776387] CAN device driver interface
+[    1.780732] dwmac-sun8i 1c30000.ethernet: PTP uses main clock
+[    1.786529] dwmac-sun8i 1c30000.ethernet: No regulator found
+[    1.792241] dwmac-sun8i 1c30000.ethernet: Will use internal PHY
+[    1.798370] dwmac-sun8i 1c30000.ethernet: Chain mode enabled
+[    1.804041] dwmac-sun8i 1c30000.ethernet: No HW DMA feature register supported
+[    1.811263] dwmac-sun8i 1c30000.ethernet: Normal descriptors
+[    1.816926] dwmac-sun8i 1c30000.ethernet: RX Checksum Offload Engine supported
+[    1.824147] dwmac-sun8i 1c30000.ethernet: COE Type 2
+[    1.829118] dwmac-sun8i 1c30000.ethernet: TX Checksum insertion supported
+[    1.836485] libphy: stmmac: probed
+[    1.845794] PPP generic driver version 2.4.2
+[    1.850287] PPP BSD Compression module registered
+[    1.855012] PPP Deflate Compression module registered
+[    1.860104] PPP MPPE Compression module registered
+[    1.864902] NET: Registered protocol family 24
+[    1.869473] usbcore: registered new interface driver qmi_wwan
+[    1.875257] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.881797] ehci-platform: EHCI generic platform driver
+[    1.887360] ehci-platform 1c1a000.usb: EHCI Host Controller
+[    1.892981] ehci-platform 1c1a000.usb: new USB bus registered, assigned bus number 1
+[    1.901135] ehci-platform 1c1a000.usb: irq 28, io mem 0x01c1a000
+[    1.920586] ehci-platform 1c1a000.usb: USB 2.0 started, EHCI 1.00
+[    1.926871] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[    1.933673] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.940897] usb usb1: Product: EHCI Host Controller
+[    1.945780] usb usb1: Manufacturer: Linux 4.14.111 ehci_hcd
+[    1.951356] usb usb1: SerialNumber: 1c1a000.usb
+[    1.956425] hub 1-0:1.0: USB hub found
+[    1.960206] hub 1-0:1.0: 1 port detected
+[    1.964823] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    1.971045] ohci-platform: OHCI generic platform driver
+[    1.976476] ohci-platform 1c1a400.usb: Generic Platform OHCI controller
+[    1.983119] ohci-platform 1c1a400.usb: new USB bus registered, assigned bus number 2
+[    1.991087] ohci-platform 1c1a400.usb: irq 29, io mem 0x01c1a400
+[    2.059760] usb usb2: New USB device found, idVendor=1d6b, idProduct=0001
+[    2.066570] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.073799] usb usb2: Product: Generic Platform OHCI controller
+[    2.079724] usb usb2: Manufacturer: Linux 4.14.111 ohci_hcd
+[    2.085300] usb usb2: SerialNumber: 1c1a400.usb
+[    2.092680] hub 2-0:1.0: USB hub found
+[    2.096476] hub 2-0:1.0: 1 port detected
+[    2.101109] usbcore: registered new interface driver cdc_acm
+[    2.106782] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    2.114831] usbcore: registered new interface driver usblp
+[    2.120354] usbcore: registered new interface driver cdc_wdm
+[    2.126051] usbcore: registered new interface driver uas
+[    2.131451] usbcore: registered new interface driver usb-storage
+[    2.137551] usbcore: registered new interface driver usbserial
+[    2.143421] usbcore: registered new interface driver usbserial_generic
+[    2.149979] usbserial: USB Serial support registered for generic
+[    2.156030] usbcore: registered new interface driver option
+[    2.161631] usbserial: USB Serial support registered for GSM modem (1-port)
+[    2.168729] usbcore: registered new interface driver qcserial
+[    2.174530] usbserial: USB Serial support registered for Qualcomm USB modem
+[    2.182353] mousedev: PS/2 mouse device common for all mice
+[    2.188430] sun6i-rtc 1f00000.rtc: rtc core: registered rtc-sun6i as rtc0
+[    2.195230] sun6i-rtc 1f00000.rtc: RTC enabled
+[    2.199750] i2c /dev entries driver
+[    2.205100] lirc_dev: IR Remote Control driver registered, major 244
+[    2.211486] IR NEC protocol handler initialized
+[    2.216025] IR RC5(x/sz) protocol handler initialized
+[    2.221079] IR RC6 protocol handler initialized
+[    2.225612] IR JVC protocol handler initialized
+[    2.230134] IR Sony protocol handler initialized
+[    2.234753] IR SANYO protocol handler initialized
+[    2.239458] IR Sharp protocol handler initialized
+[    2.244164] IR MCE Keyboard/mouse protocol handler initialized
+[    2.249998] IR LIRC bridge handler initialized
+[    2.254444] IR XMP protocol handler initialized
+[    2.259785] thermal thermal_zone0: failed to read out thermal zone (-16)
+[    2.267003] sunxi-wdt 1c20ca0.watchdog: Watchdog enabled (timeout=16 sec, nowayout=0)
+[    2.275298] device-mapper: ioctl: 4.37.0-ioctl (2017-09-20) initialised: dm-devel@redhat.com
+[    2.325638] sunxi-mmc 1c0f000.mmc: initialized, max. request size: 16384 KB
+[    2.334560] ledtrig-cpu: registered to indicate activity on CPUs
+[    2.340782] hidraw: raw HID events driver (C) Jiri Kosina
+[    2.346341] usbcore: registered new interface driver usbhid
+[    2.351925] usbhid: USB HID core driver
+[    2.356063] fbtft_of_value: buswidth = 8
+[    2.359986] fbtft_of_value: debug = 0
+[    2.363659] fbtft_of_value: rotate = 0
+[    2.367411] fbtft_of_value: fps = 60
+[    2.367891] mmc0: host does not support reading read-only switch, assuming write-enable
+[    2.380816] mmc0: new high speed SDXC card at address 59b4
+[    2.386799] mmcblk0: mmc0:59b4 SD64G 59.4 GiB 
+[    2.393017]  mmcblk0: p1 p2 p3 p4
+[    2.493803] random: fast init done
+[    2.522966] graphics fb1: fb_st7789v frame buffer, 240x240, 112 KiB video memory, 4 KiB buffer memory, fps=66, spi0.0 at 40 MHz
+[    2.547615] sun4i-codec 1c22c00.codec: Codec <-> 1c22c00.codec mapping ok
+[    2.557646] Initializing XFRM netlink socket
+[    2.562501] NET: Registered protocol family 10
+[    2.584369] Segment Routing with IPv6
+[    2.588178] NET: Registered protocol family 17
+[    2.592671] NET: Registered protocol family 15
+[    2.597125] can: controller area network core (rev 20170425 abi 9)
+[    2.603414] NET: Registered protocol family 29
+[    2.607874] can: raw protocol (rev 20170425)
+[    2.612163] can: broadcast manager protocol (rev 20170425 t)
+[    2.617853] can: netlink gateway (rev 20170425) max_hops=1
+[    2.623870] Key type dns_resolver registered
+[    2.628477] Registering SWP/SWPB emulation handler
+[    2.634633] registered taskstats version 1
+[    2.646928] Key type encrypted registered
+[    2.656941] vcc1v2: supplied by vcc5v0
+[    2.661120] vcc-dram: supplied by vcc5v0
+[    2.665280] vdd-cpux-en: supplied by vcc5v0
+[    2.671294] ehci-platform 1c1b000.usb: EHCI Host Controller
+[    2.676933] ehci-platform 1c1b000.usb: new USB bus registered, assigned bus number 3
+[    2.685282] ehci-platform 1c1b000.usb: irq 30, io mem 0x01c1b000
+[    2.705593] ehci-platform 1c1b000.usb: USB 2.0 started, EHCI 1.00
+[    2.711886] usb usb3: New USB device found, idVendor=1d6b, idProduct=0002
+[    2.718684] usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.725910] usb usb3: Product: EHCI Host Controller
+[    2.730801] usb usb3: Manufacturer: Linux 4.14.111 ehci_hcd
+[    2.736378] usb usb3: SerialNumber: 1c1b000.usb
+[    2.741522] hub 3-0:1.0: USB hub found
+[    2.745302] hub 3-0:1.0: 1 port detected
+[    2.749974] ehci-platform 1c1c000.usb: EHCI Host Controller
+[    2.755592] ehci-platform 1c1c000.usb: new USB bus registered, assigned bus number 4
+[    2.763719] ehci-platform 1c1c000.usb: irq 32, io mem 0x01c1c000
+[    2.780592] ehci-platform 1c1c000.usb: USB 2.0 started, EHCI 1.00
+[    2.786840] usb usb4: New USB device found, idVendor=1d6b, idProduct=0002
+[    2.793640] usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.800865] usb usb4: Product: EHCI Host Controller
+[    2.805748] usb usb4: Manufacturer: Linux 4.14.111 ehci_hcd
+[    2.811324] usb usb4: SerialNumber: 1c1c000.usb
+[    2.816354] hub 4-0:1.0: USB hub found
+[    2.820127] hub 4-0:1.0: 1 port detected
+[    2.824694] ehci-platform 1c1d000.usb: EHCI Host Controller
+[    2.830302] ehci-platform 1c1d000.usb: new USB bus registered, assigned bus number 5
+[    2.838345] ehci-platform 1c1d000.usb: irq 34, io mem 0x01c1d000
+[    2.855584] ehci-platform 1c1d000.usb: USB 2.0 started, EHCI 1.00
+[    2.861820] usb usb5: New USB device found, idVendor=1d6b, idProduct=0002
+[    2.868618] usb usb5: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.875840] usb usb5: Product: EHCI Host Controller
+[    2.880723] usb usb5: Manufacturer: Linux 4.14.111 ehci_hcd
+[    2.886299] usb usb5: SerialNumber: 1c1d000.usb
+[    2.891282] hub 5-0:1.0: USB hub found
+[    2.895055] hub 5-0:1.0: 1 port detected
+[    2.899637] ohci-platform 1c1b400.usb: Generic Platform OHCI controller
+[    2.906296] ohci-platform 1c1b400.usb: new USB bus registered, assigned bus number 6
+[    2.914274] ohci-platform 1c1b400.usb: irq 31, io mem 0x01c1b400
+[    2.979725] usb usb6: New USB device found, idVendor=1d6b, idProduct=0001
+[    2.986526] usb usb6: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.993750] usb usb6: Product: Generic Platform OHCI controller
+[    2.999673] usb usb6: Manufacturer: Linux 4.14.111 ohci_hcd
+[    3.005250] usb usb6: SerialNumber: 1c1b400.usb
+[    3.010624] hub 6-0:1.0: USB hub found
+[    3.014400] hub 6-0:1.0: 1 port detected
+[    3.018956] ohci-platform 1c1c400.usb: Generic Platform OHCI controller
+[    3.025615] ohci-platform 1c1c400.usb: new USB bus registered, assigned bus number 7
+[    3.033569] ohci-platform 1c1c400.usb: irq 33, io mem 0x01c1c400
+[    3.099727] usb usb7: New USB device found, idVendor=1d6b, idProduct=0001
+[    3.106527] usb usb7: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    3.113751] usb usb7: Product: Generic Platform OHCI controller
+[    3.119674] usb usb7: Manufacturer: Linux 4.14.111 ohci_hcd
+[    3.125251] usb usb7: SerialNumber: 1c1c400.usb
+[    3.130250] hub 7-0:1.0: USB hub found
+[    3.134046] hub 7-0:1.0: 1 port detected
+[    3.138568] ohci-platform 1c1d400.usb: Generic Platform OHCI controller
+[    3.145220] ohci-platform 1c1d400.usb: new USB bus registered, assigned bus number 8
+[    3.153201] ohci-platform 1c1d400.usb: irq 35, io mem 0x01c1d400
+[    3.219741] usb usb8: New USB device found, idVendor=1d6b, idProduct=0001
+[    3.226543] usb usb8: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    3.233767] usb usb8: Product: Generic Platform OHCI controller
+[    3.239691] usb usb8: Manufacturer: Linux 4.14.111 ohci_hcd
+[    3.245268] usb usb8: SerialNumber: 1c1d400.usb
+[    3.250269] hub 8-0:1.0: USB hub found
+[    3.254068] hub 8-0:1.0: 1 port detected
+[    3.258649] usb_phy_generic usb_phy_generic.3.auto: usb_phy_generic.3.auto supply vcc not found, using dummy regulator
+[    3.269744] musb-hdrc musb-hdrc.4.auto: MUSB HDRC host driver
+[    3.275518] musb-hdrc musb-hdrc.4.auto: new USB bus registered, assigned bus number 9
+[    3.283494] usb usb9: New USB device found, idVendor=1d6b, idProduct=0002
+[    3.290299] usb usb9: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    3.297526] usb usb9: Product: MUSB HDRC host driver
+[    3.302495] usb usb9: Manufacturer: Linux 4.14.111 musb-hcd
+[    3.308072] usb usb9: SerialNumber: musb-hdrc.4.auto
+[    3.313478] hub 9-0:1.0: USB hub found
+[    3.317291] hub 9-0:1.0: 1 port detected
+[    3.324401] asoc-simple-card soc:sound: i2s-hifi <-> 1c22800.i2s mapping ok
+[    3.333682] input: r_gpio_keys as /devices/platform/r_gpio_keys/input/input0
+[    3.341443] sun6i-rtc 1f00000.rtc: setting system clock to 1970-01-01 00:00:09 UTC (9)
+[    3.349751] vcc3v0: disabling
+[    3.352737] vcc5v0: disabling
+[    3.355711] usb0-vbus: disabling
+[    3.358938] ALSA device list:
+[    3.361911]   #0: Dummy 1
+[    3.364551]   #1: Loopback 1
+[    3.367437]   #2: H3 Audio Codec
+[    3.370667]   #3: allwinner,hdmi
+[    3.376446] Freeing unused kernel memory: 2048K
+[    3.760647] usb 1-1: new high-speed USB device number 2 using ehci-platform
+[    3.926629] usb 1-1: New USB device found, idVendor=1a86, idProduct=809d
+[    3.933520] usb 1-1: New USB device strings: Mfr=0, Product=2, SerialNumber=0
+[    3.940791] usb 1-1: Product: USB2.0 HUB
+[    3.947398] hub 1-1:1.0: USB hub found
+[    3.952548] hub 1-1:1.0: 6 ports detected
+[    4.172446] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
+[    4.305620] usb 1-1.5: new high-speed USB device number 3 using ehci-platform
+[    4.422496] usb 1-1.5: New USB device found, idVendor=1a86, idProduct=5394
+[    4.429430] usb 1-1.5: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[    4.436768] usb 1-1.5: Product: USB 10/100 LAN
+[    4.441230] usb 1-1.5: Manufacturer: wch.cn
+[    4.445422] usb 1-1.5: SerialNumber: 0C3D5EEF7596
+[    4.519931] EXT4-fs (mmcblk0p3): mounted filesystem with ordered data mode. Opts: (null)
+[    4.539297] EXT4-fs (mmcblk0p3): re-mounted. Opts: data=ordered
+[    4.894661] systemd[1]: System time before build time, advancing clock.
+[    4.990763] random: systemd: uninitialized urandom read (16 bytes read)
+[    4.999605] random: systemd: uninitialized urandom read (16 bytes read)
+[    5.010340] systemd[1]: systemd 229 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ -LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD -IDN)
+[    5.028950] systemd[1]: Detected architecture arm.
+[    5.059587] systemd[1]: Set hostname to <NanoPi-NEO>.
+[    5.103882] random: systemd-cryptse: uninitialized urandom read (16 bytes read)
+[    5.357331] systemd[1]: Listening on udev Control Socket.
+[    5.376061] systemd[1]: Listening on udev Kernel Socket.
+[    5.396116] systemd[1]: Listening on Journal Socket (/dev/log).
+[    5.435873] systemd[1]: Listening on Journal Socket.
+[    5.455924] systemd[1]: Reached target Remote File Systems (Pre).
+[    5.475770] systemd[1]: Reached target Remote File Systems.
+[    5.495760] systemd[1]: Reached target Encrypted Volumes.
+[    5.814805] Mass Storage Function, version: 2009/09/11
+[    5.820189] LUN: removable file: (no medium)
+[    5.824841] LUN: file: /dev/mmcblk0p1
+[    5.828560] Number of LUNs=1
+[    5.831808] g_mass_storage gadget: Mass Storage Gadget, version: 2009/09/11
+[    5.838883] g_mass_storage gadget: userspace failed to provide iSerialNumber
+[    5.838891] g_mass_storage gadget: g_mass_storage ready
+[    5.953384] 8821cu: loading out-of-tree module taints kernel.
+[    5.983360] usbcore: registered new interface driver rtl8821cu
+[    6.141024] usbcore: registered new interface driver rtl88xxau
+[    6.449609] systemd-journald[245]: Received request to flush runtime journal from PID 1
+[    7.666594] cdc_ether 1-1.5:2.0 eth1: register 'cdc_ether' at usb-1c1a000.usb-1.5, CDC Ethernet Device, 0c:3d:5e:ef:75:96
+[    7.669873] usbcore: registered new interface driver cdc_ether
+[    7.715369] FAT-fs (mmcblk0p1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[    7.837480] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: renamed from eth1
+[    9.830542] IPv6: ADDRCONF(NETDEV_UP): enx0c3d5eef7596: link is not ready
+[    9.878859] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[    9.880894] Generic PHY stmmac-0:01: attached PHY driver [Generic PHY] (mii_bus:phy_addr=stmmac-0:01, irq=POLL)
+[    9.883194] dwmac-sun8i 1c30000.ethernet eth0: No MAC Management Counters available
+[    9.883214] dwmac-sun8i 1c30000.ethernet eth0: PTP not supported by HW
+[    9.883684] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   10.001522] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   10.165348] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   10.519559] random: crng init done
+[   10.519580] random: 7 urandom warning(s) missed due to ratelimiting
+[   11.717448] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.751052] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.758038] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.758665] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.765157] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.765726] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.766191] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.775035] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.775534] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   11.776044] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   15.652362] FAT-fs (mmcblk0p4): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[   15.889584] g_serial gadget: Gadget Serial v2.4
+[   15.889600] g_serial gadget: g_serial ready
+[   27.680652] usb 6-1: new full-speed USB device number 2 using ohci-platform
+[   27.919760] usb 6-1: New USB device found, idVendor=9ac4, idProduct=4b8f
+[   27.919781] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   27.919794] usb 6-1: Product: proxmark3
+[   27.919805] usb 6-1: Manufacturer: proxmark.org
+[   27.919816] usb 6-1: SerialNumber: iceman
+[   27.928901] cdc_acm 6-1:1.0: ttyACM0: USB ACM device
+[   55.160107] net_ratelimit: 422 callbacks suppressed
+[   55.160136] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[   55.178733] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   55.308196] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   57.348208] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.364204] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.364916] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.367184] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.374299] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.374909] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.377198] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.378042] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[   57.382170] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  101.150169] net_ratelimit: 154 callbacks suppressed
+[  101.150197] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[  101.170181] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  101.307764] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  103.011059] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.020817] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.021794] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.038190] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.039542] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.040037] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.043553] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.048291] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  103.048803] ICMPv6: NA: someone advertises our address fe80:0000:0000:0000:c7aa:0760:2eee:b365 on enx0c3d5eef7596!
+[  147.085266] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  147.153039] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  192.099687] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  263.091672] net_ratelimit: 216 callbacks suppressed
+[  263.091700] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[  308.079222] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[  444.088412] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[  444.096322] IPv6: ADDRCONF(NETDEV_UP): enx0c3d5eef7596: link is not ready
+[  492.086187] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  537.115242] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  537.182387] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  582.117128] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  582.184160] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  627.106253] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  627.173806] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  672.105933] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[  972.149341] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1017.129876] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1017.197948] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1062.114906] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1062.181840] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1107.132633] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1107.199785] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1152.122816] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1235.138082] IPv6: ADDRCONF(NETDEV_CHANGE): enx0c3d5eef7596: link becomes ready
+[ 1235.138145] cdc_ether 1-1.5:2.0 enx0c3d5eef7596: kevent 12 may have been dropped
+[ 1451.343551] console [ttyGS-1] disabled
+[ 1451.472044] g_serial gadget: Gadget Serial v2.4
+[ 1451.472063] g_serial gadget: g_serial ready
+[ 1452.124683] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1458.695500] usb 6-1: USB disconnect, device number 2
+[ 1462.074450] usb 6-1: new full-speed USB device number 3 using ohci-platform
+[ 1462.313477] usb 6-1: New USB device found, idVendor=9ac4, idProduct=4b8f
+[ 1462.313501] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1462.313513] usb 6-1: Product: proxmark3
+[ 1462.313524] usb 6-1: Manufacturer: proxmark.org
+[ 1462.313535] usb 6-1: SerialNumber: iceman
+[ 1462.316485] cdc_acm 6-1:1.0: ttyACM0: USB ACM device
+[ 1484.603169] usb 6-1: USB disconnect, device number 3
+[ 1487.980342] usb 6-1: new full-speed USB device number 4 using ohci-platform
+[ 1488.224472] usb 6-1: New USB device found, idVendor=9ac4, idProduct=4b8f
+[ 1488.224495] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1488.224505] usb 6-1: Product: proxmark3
+[ 1488.224514] usb 6-1: Manufacturer: proxmark.org
+[ 1488.224522] usb 6-1: SerialNumber: iceman
+[ 1488.227050] cdc_acm 6-1:1.0: ttyACM0: USB ACM device
+[ 1490.727713] console [ttyGS-1] disabled
+[ 1491.168081] Mass Storage Function, version: 2009/09/11
+[ 1491.168105] LUN: removable file: (no medium)
+[ 1491.168312] LUN: removable file: /dev/mmcblk0p4
+[ 1491.168323] Number of LUNs=1
+[ 1491.168678] g_acm_ms gadget: Composite Gadget (ACM + MS), version: 2011/10/10
+[ 1491.168693] g_acm_ms gadget: g_acm_ms ready
+[ 1497.140377] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1497.207727] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1542.107787] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1542.173403] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1587.086112] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1587.152836] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1632.067122] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1890.638521] console [ttyGS-1] disabled
+[ 1890.937644] FAT-fs (mmcblk0p4): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[ 1891.093740] g_serial gadget: Gadget Serial v2.4
+[ 1891.093761] g_serial gadget: g_serial ready
+[ 1891.302830] usb 6-1: USB disconnect, device number 4
+[ 1894.677898] usb 6-1: new full-speed USB device number 5 using ohci-platform
+[ 1894.916114] usb 6-1: New USB device found, idVendor=9ac4, idProduct=4b8f
+[ 1894.916138] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1894.916150] usb 6-1: Product: proxmark3
+[ 1894.916161] usb 6-1: Manufacturer: proxmark.org
+[ 1894.916172] usb 6-1: SerialNumber: iceman
+[ 1894.926061] cdc_acm 6-1:1.0: ttyACM0: USB ACM device
+[ 1931.896047] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1976.886824] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[ 1976.952574] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready

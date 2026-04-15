@@ -1,0 +1,17 @@
+#######################################
+#
+#   Nikola 开发部D组员
+#   撰写，日期2021511
+#   请勿修改，以免此文件在其他位置引用，
+#   如果遇到任何疑问，请提交事务到工作流
+#   谢谢配合！
+#
+#######################################
+
+# 1、找到      需要安装的字体路径
+# 2、存放到    /usr/share/fonts/
+# 3、更新缓存：sudo fc-cache -fsv
+
+# 项目具体实现：
+INSTALL: sudo cp /home/pi/ipk_app_main/res/font/{安装的字体}.ttf /usr/share/fonts/
+UPDATE : sudo fc-cache -fsv

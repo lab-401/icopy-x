@@ -1,0 +1,21 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "Pyramid",
+      "Pyramid ID",
+      "125KHZ",
+      "FC,CN: 240,61456"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 16
+  },
+  "toast": "Tag Found"
+}

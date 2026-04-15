@@ -1,0 +1,84 @@
+# Dockerfile for cross-compiling PM3 client for iCopy-X
+#
+# The iCopy-X runs Ubuntu 16.04 (xenial) armhf with glibc 2.23.
+# We must build the PM3 client against matching libraries.
+#
+# Usage (from repo root):
+#   docker build -f tools/docker/Dockerfile.pm3-client -t pm3-client-builder .
+#   docker run --rm -v $(pwd)/build:/out pm3-client-builder
+#
+# Outputs to build/:
+#   proxmark3  — cross-compiled PM3 client binary (ARM)
+#   lua.zip    — iceman-compatible LUA scripts + libs (includes auto-generated
+#                pm3_cmd.lua and mfc_default_keys.lua from the PM3 build)
+#
+# CI/CD: GitHub Actions can use this as a container step.
+
+FROM ubuntu:16.04
+
+# Configure apt sources for xenial (amd64 from archive, armhf from ports)
+RUN echo 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial main restricted universe' > /etc/apt/sources.list && \
+    echo 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe' >> /etc/apt/sources.list && \
+    echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted universe' >> /etc/apt/sources.list && \
+    echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted universe' >> /etc/apt/sources.list
+
+# Add armhf architecture and install cross-compilation toolchain
+RUN dpkg --add-architecture armhf && \
+    apt-get update -qq && \
+    apt-get install -y -qq \
+        gcc-arm-linux-gnueabihf \
+        g++-arm-linux-gnueabihf \
+        make \
+        pkg-config \
+        git \
+        zip \
+        libbz2-dev:armhf \
+        zlib1g-dev:armhf \
+        liblz4-dev:armhf && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Build environment variables
+ENV PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig
+ENV PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig
+ENV PM3_PLATFORM=PM3ICOPYX
+ENV PM3_REPO=https://github.com/RfidResearchGroup/proxmark3.git
+
+# Default: clone, build, and copy to /out
+# Override PM3_TAG to build a specific version
+ENV PM3_TAG=v4.21128
+
+# Copy iCopy-X patches into the image (applied at build time)
+COPY tools/patches/pm3_*.patch /patches/
+
+CMD bash -c '\
+    set -e && \
+    echo "Cloning RRG PM3 at ${PM3_TAG}..." && \
+    git clone --depth 1 --branch ${PM3_TAG} ${PM3_REPO} /tmp/pm3 && \
+    cd /tmp/pm3 && \
+    echo "Applying iCopy-X patches..." && \
+    for p in /patches/pm3_*.patch; do \
+        [ -f "$p" ] || continue; \
+        if git apply --check "$p" 2>/dev/null; then \
+            git apply "$p" && echo "  Applied: $(basename $p)"; \
+        else \
+            echo "  Skipped (already applied or N/A): $(basename $p)"; \
+        fi; \
+    done && \
+    echo "Building PM3 client for iCopy-X (PLATFORM=${PM3_PLATFORM})..." && \
+    make -j$(nproc) client \
+        PLATFORM=${PM3_PLATFORM} \
+        CC=arm-linux-gnueabihf-gcc \
+        CXX=arm-linux-gnueabihf-g++ \
+        LD=arm-linux-gnueabihf-ld \
+        "AR=arm-linux-gnueabihf-ar rcs" \
+        RANLIB=arm-linux-gnueabihf-ranlib \
+        cpu_arch=arm \
+        SKIPQT=1 SKIPPYTHON=1 SKIPREVENGTEST=1 SKIPGD=1 SKIPBT=1 SKIPREADLINE=1 && \
+    echo "Build complete." && \
+    mkdir -p /out && \
+    cp client/proxmark3 /out/proxmark3 && \
+    echo "Binary copied to /out/proxmark3" && \
+    cd client && \
+    zip -r /out/lua.zip luascripts/ lualibs/ && \
+    echo "lua.zip packaged ($(du -h /out/lua.zip | cut -f1))"'

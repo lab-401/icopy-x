@@ -1,0 +1,28 @@
+{
+    "id": "warning_write",
+    "initial_state": "initial",
+    "states": {
+        "initial": {
+            "screen": {
+                "title": "Data ready!",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{place_empty_tag}", "size": "large", "align": "left", "color": "#1C6AEB"},
+                        {"text": "", "size": "normal"},
+                        {"text": "TYPE:", "size": "large", "align": "center", "color": "#1C6AEB"},
+                        {"text": "{tag_type_display}", "size": "xlarge", "align": "center", "color": "#1C6AEB"}
+                    ]
+                },
+                "buttons": {"left": "Cancel", "right": "Write"},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "run:confirmWrite",
+                    "OK": "run:confirmWrite",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        }
+    }
+}

@@ -1,0 +1,18 @@
+diff --git a/client/src/ui.c b/client/src/ui.c
+index 1a5f81a..1dd76fa 100644
+--- a/client/src/ui.c
++++ b/client/src/ui.c
+@@ -282,6 +282,13 @@ void PrintAndLogEx(logLevel_t level, const char *fmt, ...) {
+         return;
+     }
+
++    // iCopy-X: suppress INPLACE (spinner/progress) output when not on a
++    // real terminal.  INPLACE uses \r to overwrite lines, which produces
++    // garbage on TCP/pipe transports (the iCopy-X RTM bridge).
++    if (level == INPLACE && g_session.stdinOnTTY == false) {
++        return;
++    }
++
+     char prefix[40] = {0};
+     char buffer[MAX_PRINT_BUFFER] = {0};
+     char buffer2[MAX_PRINT_BUFFER + sizeof(prefix)] = {0};

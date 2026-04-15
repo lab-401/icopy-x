@@ -1,0 +1,114 @@
+{
+    "id": "erase_tag",
+    "initial_state": "type_select",
+    "states": {
+        "type_select": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {
+                    "type": "list",
+                    "items": [
+                        {"key": "wipe_m1", "text": "1. Erase MF1/L1/L2/L3"},
+                        {"key": "wipe_t55xx", "text": "2. Erase T5577"}
+                    ]
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "run:startErase",
+                    "OK": "run:startErase",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "scanning": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "progress", "message": "Scanning..."},
+                "buttons": {"left": "", "right": ""},
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.detected==true": "erasing",
+                "result.no_tag==true": "failed"
+            }
+        },
+        "erasing": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "progress", "message": "Processing..."},
+                "buttons": {"left": "", "right": ""},
+                "keys": {
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.success==true": "success",
+                "result.no_keys==true": "no_keys",
+                "result.failed==true": "failed"
+            }
+        },
+        "success": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "Erase successful", "icon": "check", "timeout": 0},
+                "buttons": {"left": "Erase", "right": "Erase"},
+                "keys": {
+                    "M1": "run:startErase",
+                    "M2": "run:startErase",
+                    "OK": "run:startErase",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "failed": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "Erase failed", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Erase", "right": "Erase"},
+                "keys": {
+                    "M1": "run:startErase",
+                    "M2": "run:startErase",
+                    "OK": "run:startErase",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "no_keys": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "No valid keys\uff0cPlease use 'Auto Copy' first, Then erase", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Erase", "right": "Erase"},
+                "keys": {
+                    "M1": "run:startErase",
+                    "M2": "run:startErase",
+                    "OK": "run:startErase",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "Erase Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "Unknown error", "icon": "error", "timeout": 0},
+                "buttons": {"left": "Erase", "right": "Erase"},
+                "keys": {
+                    "M1": "run:startErase",
+                    "M2": "run:startErase",
+                    "OK": "run:startErase",
+                    "PWR": "finish"
+                }
+            },
+            "note": "Maps to STATE_FAILED in activity code. Separate branch in _onEraseResult for result=='error' (err_at_wiping resource)."
+        }
+    }
+}

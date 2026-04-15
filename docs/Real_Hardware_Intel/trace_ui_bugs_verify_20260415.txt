@@ -1,0 +1,489 @@
+=== FULL TRACE ===
+[   0.093] presspm3 hook OK
+[   0.096] POLL stack=['MainActivity'] 
+[   0.096] === ALL INSTALLED ===
+[   6.612] SERIAL_TX> b'pctbat\r\n'
+[   6.626] SERIAL_TX> b'charge\r\n'
+[  16.648] SERIAL_TX> b'pctbat\r\n'
+[  16.661] SERIAL_TX> b'charge\r\n'
+[  26.683] SERIAL_TX> b'pctbat\r\n'
+[  26.696] SERIAL_TX> b'charge\r\n'
+[  32.449] KEY> KEYDOWN_PRES!
+[  32.630] KEY> KEYDOWN_PRES!
+[  33.546] KEY> KEYOK_PRES!
+[  34.432] START(ScanActivity, None) bundle=None
+[  34.585] PM3> hf 14a info (timeout=5000)
+[  34.731] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[  34.775] POLL stack=['MainActivity', 'ScanActivity'] 
+[  34.775] PM3> lf sea (timeout=10000)
+[  36.713] SERIAL_TX> b'pctbat\r\n'
+[  36.726] SERIAL_TX> b'charge\r\n'
+[  39.379] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  39.431] PM3> hf sea (timeout=10000)
+[  45.162] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[  45.257] PM3> lf t55xx detect (timeout=10000)
+[  46.743] SERIAL_TX> b'pctbat\r\n'
+[  46.756] SERIAL_TX> b'charge\r\n'
+[  48.656] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  48.684] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  48.894] PM3< ret=1 content_len=1 \n
+[  48.896] PM3> hf felica reader (timeout=10000)
+[  50.046] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[  56.773] SERIAL_TX> b'pctbat\r\n'
+[  56.786] SERIAL_TX> b'charge\r\n'
+[  57.938] KEY> KEY_PWR_CAN_PRES!
+[  57.941] FINISH(top=ScanActivity d=2)
+[  58.310] POLL stack=['MainActivity'] 
+[  58.842] KEY> KEYOK_PRES!
+[  58.845] START(ScanActivity, None) bundle=None
+[  58.876] PM3> hf 14a info (timeout=5000)
+[  59.313] POLL stack=['MainActivity', 'ScanActivity'] 
+[  60.754] PM3< ret=1 content_len=172 \n UID: 00 56 78 BB  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\n\n\n\n
+[  60.759] PM3> hf mf cgetblk 0 (timeout=5000)
+[  60.934] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  60.945] CACHE: {"found": "True", "uid": "'005678BB'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "True", "type": "1", "progress": "0", "return": "1"}
+[  61.172] CACHE: {"found": "True", "uid": "'005678BB'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "True", "type": "1", "progress": "0", "return": "1"}
+[  61.317] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=005678BB
+[  63.544] KEY> KEY_PWR_CAN_PRES!
+[  63.547] FINISH(top=ScanActivity d=2)
+[  63.821] POLL stack=['MainActivity'] type=1 uid=005678BB
+[  65.065] KEY> KEYOK_PRES!
+[  65.067] START(ScanActivity, None) bundle=None
+[  65.123] PM3> hf 14a info (timeout=5000)
+[  65.273] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[  65.276] PM3> lf sea (timeout=10000)
+[  65.325] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=005678BB
+[  66.808] SERIAL_TX> b'pctbat\r\n'
+[  66.821] SERIAL_TX> b'charge\r\n'
+[  68.511] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[  68.513] PM3> hf sea (timeout=10000)
+[  74.253] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[  74.255] PM3> lf t55xx detect (timeout=10000)
+[  76.838] SERIAL_TX> b'pctbat\r\n'
+[  76.851] SERIAL_TX> b'charge\r\n'
+[  77.289] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  77.291] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  77.499] PM3< ret=1 content_len=1 \n
+[  77.501] PM3> hf felica reader (timeout=10000)
+[  78.630] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[  81.868] KEY> KEYM2_PRES!
+[  82.625] KEY> KEYM2_PRES!
+[  83.439] KEY> KEYOK_PRES!
+[  85.058] KEY> KEYOK_PRES!
+[  86.867] SERIAL_TX> b'pctbat\r\n'
+[  86.881] SERIAL_TX> b'charge\r\n'
+[  86.909] KEY> KEYM2_PRES!
+[  88.481] KEY> KEYM2_PRES!
+[  89.764] KEY> KEY_PWR_CAN_PRES!
+[  89.767] FINISH(top=ScanActivity d=2)
+[  89.877] POLL stack=['MainActivity'] type=1 uid=005678BB
+[  96.897] SERIAL_TX> b'pctbat\r\n'
+[  96.911] SERIAL_TX> b'charge\r\n'
+[  97.062] KEY> KEYOK_PRES!
+[  97.065] START(ScanActivity, None) bundle=None
+[  97.103] PM3> hf 14a info (timeout=5000)
+[  97.390] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=005678BB
+[  99.567] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  99.568] PM3> hf mf cgetblk 0 (timeout=5000)
+[  99.744] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  99.745] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  99.895] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  99.924] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 103.734] KEY> KEY_PWR_CAN_PRES!
+[ 103.736] FINISH(top=ScanActivity d=2)
+[ 103.902] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 104.893] KEY> KEYUP_PRES!
+[ 105.519] KEY> KEYDOWN_PRES!
+[ 105.776] KEY> KEYDOWN_PRES!
+[ 106.512] KEY> KEYOK_PRES!
+[ 106.514] START(ReadListActivity, None) bundle=None
+[ 106.907] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[ 106.928] SERIAL_TX> b'pctbat\r\n'
+[ 106.941] SERIAL_TX> b'charge\r\n'
+[ 109.369] KEY> KEYOK_PRES!
+[ 109.372] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[ 109.412] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=7AF2ECB2
+[ 109.431] PM3> hf 14a info (timeout=5000)
+[ 111.828] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[ 111.829] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 112.004] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 112.006] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 112.458] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 112.609] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 112.613] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 116.958] SERIAL_TX> b'pctbat\r\n'
+[ 116.971] SERIAL_TX> b'charge\r\n'
+[ 124.533] PM3< ret=1 content_len=1172 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 11.9s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[ 124.537] PM3> hf mf rdsc 0 A 484558414354 (timeout=15000)
+[ 124.729] PM3< ret=1 content_len=219 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00\n\n\n
+[ 124.735] PM3> hf mf rdsc 1 A 484558414354 (timeout=15000)
+[ 124.908] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 124.911] PM3> hf mf rdsc 2 A 484558414354 (timeout=15000)
+[ 125.086] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 125.089] PM3> hf mf rdsc 3 A 484558414354 (timeout=15000)
+[ 125.267] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 125.270] PM3> hf mf rdsc 4 A 484558414354 (timeout=15000)
+[ 125.446] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 125.449] PM3> hf mf rdsc 5 A 484558414354 (timeout=15000)
+[ 125.626] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 125.629] PM3> hf mf rdsc 6 A 484558414354 (timeout=15000)
+[ 125.806] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 125.809] PM3> hf mf rdsc 7 A 484558414354 (timeout=15000)
+[ 125.986] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 125.989] PM3> hf mf rdsc 8 A 484558414354 (timeout=15000)
+[ 126.166] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 126.169] PM3> hf mf rdsc 9 A 484558414354 (timeout=15000)
+[ 126.346] PM3< ret=1 content_len=219 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 126.349] PM3> hf mf rdsc 10 A 484558414354 (timeout=15000)
+[ 126.526] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 126.529] PM3> hf mf rdsc 11 A 484558414354 (timeout=15000)
+[ 126.706] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 126.709] PM3> hf mf rdsc 12 A 484558414354 (timeout=15000)
+[ 126.886] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 126.889] PM3> hf mf rdsc 13 A 484558414354 (timeout=15000)
+[ 126.992] SERIAL_TX> b'pctbat\r\n'
+[ 127.007] SERIAL_TX> b'charge\r\n'
+[ 127.069] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 127.072] PM3> hf mf rdsc 14 A 484558414354 (timeout=15000)
+[ 127.246] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 127.249] PM3> hf mf rdsc 15 A 484558414354 (timeout=15000)
+[ 127.426] PM3< ret=1 content_len=219 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00\n\n\n
+[ 128.795] KEY> KEY_PWR_CAN_PRES!
+[ 128.798] FINISH(top=ReadActivity d=3)
+[ 128.954] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[ 130.998] KEY> KEY_PWR_CAN_PRES!
+[ 131.000] FINISH(top=ReadListActivity d=2)
+[ 131.459] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 137.023] SERIAL_TX> b'pctbat\r\n'
+[ 137.036] SERIAL_TX> b'charge\r\n'
+[ 147.052] SERIAL_TX> b'pctbat\r\n'
+[ 147.066] SERIAL_TX> b'charge\r\n'
+[ 157.088] SERIAL_TX> b'pctbat\r\n'
+[ 157.101] SERIAL_TX> b'charge\r\n'
+[ 167.118] SERIAL_TX> b'pctbat\r\n'
+[ 167.131] SERIAL_TX> b'charge\r\n'
+[ 177.148] SERIAL_TX> b'pctbat\r\n'
+[ 177.161] SERIAL_TX> b'charge\r\n'
+[ 178.758] KEY> KEYUP_PRES!
+[ 178.963] KEY> KEYUP_PRES!
+[ 179.167] KEY> KEYUP_PRES!
+[ 179.522] KEY> KEYOK_PRES!
+[ 179.525] START(AutoCopyActivity, None) bundle=None
+[ 179.562] PM3> hf 14a info (timeout=5000)
+[ 180.027] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[ 181.975] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[ 181.977] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 182.152] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 182.153] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 182.438] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 182.595] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 182.598] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 187.183] SERIAL_TX> b'pctbat\r\n'
+[ 187.196] SERIAL_TX> b'charge\r\n'
+[ 194.518] PM3< ret=1 content_len=1172 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 11.9s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[ 194.522] PM3> hf mf rdsc 0 A 484558414354 (timeout=15000)
+[ 194.710] PM3< ret=1 content_len=219 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00\n\n\n
+[ 194.713] PM3> hf mf rdsc 1 A 484558414354 (timeout=15000)
+[ 194.891] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 194.894] PM3> hf mf rdsc 2 A 484558414354 (timeout=15000)
+[ 195.071] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 195.074] PM3> hf mf rdsc 3 A 484558414354 (timeout=15000)
+[ 195.251] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 195.254] PM3> hf mf rdsc 4 A 484558414354 (timeout=15000)
+[ 195.430] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 195.433] PM3> hf mf rdsc 5 A 484558414354 (timeout=15000)
+[ 195.610] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 195.613] PM3> hf mf rdsc 6 A 484558414354 (timeout=15000)
+[ 195.790] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 195.793] PM3> hf mf rdsc 7 A 484558414354 (timeout=15000)
+[ 195.971] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 195.974] PM3> hf mf rdsc 8 A 484558414354 (timeout=15000)
+[ 196.150] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 196.153] PM3> hf mf rdsc 9 A 484558414354 (timeout=15000)
+[ 196.330] PM3< ret=1 content_len=219 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 196.333] PM3> hf mf rdsc 10 A 484558414354 (timeout=15000)
+[ 196.510] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 196.513] PM3> hf mf rdsc 11 A 484558414354 (timeout=15000)
+[ 196.691] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 196.694] PM3> hf mf rdsc 12 A 484558414354 (timeout=15000)
+[ 196.871] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 196.874] PM3> hf mf rdsc 13 A 484558414354 (timeout=15000)
+[ 197.050] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 197.053] PM3> hf mf rdsc 14 A 484558414354 (timeout=15000)
+[ 197.213] SERIAL_TX> b'pctbat\r\n'
+[ 197.228] SERIAL_TX> b'charge\r\n'
+[ 197.233] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 197.238] PM3> hf mf rdsc 15 A 484558414354 (timeout=15000)
+[ 197.410] PM3< ret=1 content_len=219 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00\n\n\n
+[ 207.236] SERIAL_TX> b'pctbat\r\n'
+[ 207.251] SERIAL_TX> b'charge\r\n'
+[ 217.268] SERIAL_TX> b'pctbat\r\n'
+[ 217.281] SERIAL_TX> b'charge\r\n'
+[ 227.298] SERIAL_TX> b'pctbat\r\n'
+[ 227.311] SERIAL_TX> b'charge\r\n'
+[ 237.332] SERIAL_TX> b'pctbat\r\n'
+[ 237.346] SERIAL_TX> b'charge\r\n'
+[ 243.356] KEY> KEYM1_PRES!
+[ 243.373] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 243.537] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 243.541] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 247.363] SERIAL_TX> b'pctbat\r\n'
+[ 247.376] SERIAL_TX> b'charge\r\n'
+[ 255.459] PM3< ret=1 content_len=1172 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 11.9s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[ 255.463] PM3> hf mf rdsc 0 A 484558414354 (timeout=15000)
+[ 255.651] PM3< ret=1 content_len=219 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00\n\n\n
+[ 255.654] PM3> hf mf rdsc 1 A 484558414354 (timeout=15000)
+[ 255.832] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 255.835] PM3> hf mf rdsc 2 A 484558414354 (timeout=15000)
+[ 256.012] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 256.015] PM3> hf mf rdsc 3 A 484558414354 (timeout=15000)
+[ 256.191] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 256.195] PM3> hf mf rdsc 4 A 484558414354 (timeout=15000)
+[ 256.372] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[ 256.375] PM3> hf mf rdsc 5 A 484558414354 (timeout=15000)
+[ 256.552] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 256.555] PM3> hf mf rdsc 6 A 484558414354 (timeout=15000)
+[ 256.732] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 256.735] PM3> hf mf rdsc 7 A 484558414354 (timeout=15000)
+[ 256.912] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 256.915] PM3> hf mf rdsc 8 A 484558414354 (timeout=15000)
+[ 257.092] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.095] PM3> hf mf rdsc 9 A 484558414354 (timeout=15000)
+[ 257.272] PM3< ret=1 content_len=219 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.275] PM3> hf mf rdsc 10 A 484558414354 (timeout=15000)
+[ 257.393] SERIAL_TX> b'pctbat\r\n'
+[ 257.406] SERIAL_TX> b'charge\r\n'
+[ 257.451] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.454] PM3> hf mf rdsc 11 A 484558414354 (timeout=15000)
+[ 257.631] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.634] PM3> hf mf rdsc 12 A 484558414354 (timeout=15000)
+[ 257.812] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.815] PM3> hf mf rdsc 13 A 484558414354 (timeout=15000)
+[ 257.992] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 257.995] PM3> hf mf rdsc 14 A 484558414354 (timeout=15000)
+[ 258.171] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 258.175] PM3> hf mf rdsc 15 A 484558414354 (timeout=15000)
+[ 258.352] PM3< ret=1 content_len=219 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00\n\n\n
+[ 260.480] KEY> KEYM2_PRES!
+[ 260.482] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin"
+[ 260.641] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=1 uid=7AF2ECB2
+[ 261.384] KEY> KEYM2_PRES!
+[ 261.386] FINISH(top=WarningWriteActivity d=3)
+[ 261.418] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin"
+[ 261.644] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=1 uid=7AF2ECB2
+[ 261.823] PM3> hf 14a info (timeout=10000)
+[ 263.805] PM3< ret=1 content_len=213 \n UID: 00 56 78 BB  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 263.807] PM3> hf mf cgetblk 0 (timeout=10000)
+[ 263.990] PM3< ret=1 content_len=57 \ndata: 00 56 78 BB 95 08 04 00 02 B2 1E 24 23 27 1E 1D\n\n\n
+[ 264.000] PM3> hf mf cload b /mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin (timeout=10000)
+[ 265.830] PM3< ret=1 content_len=165 Loaded 1024 bytes from binary file `/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_12.bin`\nCopying to magic gen1a MIFARE Classic 1K\n..: Card loaded 64 blocks from file\nDone!\n\n
+[ 265.832] PM3> hf 14a raw -p -a -b 7 40 (timeout=10000)
+[ 265.952] PM3< ret=1 content_len=4 0A\n\n
+[ 265.953] PM3> hf 14a raw -c -p -a 43 (timeout=10000)
+[ 266.084] PM3< ret=1 content_len=1 \n
+[ 266.085] PM3> hf 14a raw -c -p -a e000 (timeout=10000)
+[ 266.217] PM3< ret=1 content_len=1 \n
+[ 266.218] PM3> hf 14a raw -c -p -a 85000000000000000000000000000008 (timeout=10000)
+[ 266.351] PM3< ret=1 content_len=1 \n
+[ 266.352] PM3> hf 14a raw -c -a 5000 (timeout=10000)
+[ 266.485] PM3< ret=1 content_len=1 \n
+[ 266.486] PM3> hf 14a info (timeout=10000)
+[ 267.423] SERIAL_TX> b'pctbat\r\n'
+[ 267.436] SERIAL_TX> b'charge\r\n'
+[ 268.462] PM3< ret=1 content_len=213 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 268.463] PM3> hf mf cgetblk 0 (timeout=10000)
+[ 268.647] PM3< ret=1 content_len=57 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n\n\n
+[ 277.458] SERIAL_TX> b'pctbat\r\n'
+[ 277.471] SERIAL_TX> b'charge\r\n'
+[ 278.797] KEY> KEYM1_PRES!
+[ 279.112] PM3> hf 14a info (timeout=10000)
+[ 281.097] PM3< ret=1 content_len=213 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 281.098] PM3> hf 14a info (timeout=10000)
+[ 283.093] PM3< ret=1 content_len=213 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 283.097] PM3> hf mf cgetblk 0 (timeout=10000)
+[ 283.277] PM3< ret=1 content_len=57 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n\n\n
+[ 287.027] KEY> KEY_PWR_CAN_PRES!
+[ 287.467] KEY> KEY_PWR_CAN_PRES!
+[ 287.469] PRESSPM3> called
+[ 287.469] SERIAL_TX> b'presspm3\r\n'
+[ 287.491] PRESSPM3< done
+[ 287.491] SERIAL_TX> b'pctbat\r\n'
+[ 287.492] PM3_STOP> stopPM3Task()
+[ 287.511] SERIAL_TX> b'charge\r\n'
+[ 287.511] PM3_STOP< ret=None
+[ 287.512] FINISH(top=WriteActivity d=3)
+[ 287.683] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[ 288.043] KEY> KEY_PWR_CAN_PRES!
+[ 288.045] PRESSPM3> called
+[ 288.046] SERIAL_TX> b'presspm3\r\n'
+[ 288.060] PRESSPM3< done
+[ 288.061] PM3_STOP> stopPM3Task()
+[ 288.061] PM3_STOP< ret=None
+[ 288.062] FINISH(top=AutoCopyActivity d=2)
+[ 288.185] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 288.908] KEY> KEYUP_PRES!
+[ 289.248] KEY> KEYUP_PRES!
+[ 289.594] KEY> KEYUP_PRES!
+[ 289.782] KEY> KEYUP_PRES!
+[ 290.003] KEY> KEYUP_PRES!
+[ 290.391] KEY> KEYOK_PRES!
+[ 290.393] START(WipeTagActivity, None) bundle=None
+[ 290.691] POLL stack=['MainActivity', 'WipeTagActivity'] type=1 uid=7AF2ECB2
+[ 290.923] KEY> KEYOK_PRES!
+[ 290.976] PM3> hf 14a info (timeout=5000)
+[ 292.952] PM3< ret=1 content_len=213 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 292.953] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 293.137] PM3< ret=1 content_len=57 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n\n\n
+[ 293.147] PM3> hf mf cwipe (timeout=28888)
+[ 297.583] SERIAL_TX> b'pctbat\r\n'
+[ 297.596] SERIAL_TX> b'charge\r\n'
+[ 302.032] PM3< ret=1 content_len=26 \nCard wiped successfully\n\n
+[ 307.613] SERIAL_TX> b'pctbat\r\n'
+[ 307.626] SERIAL_TX> b'charge\r\n'
+[ 309.733] KEY> KEYM1_PRES!
+[ 309.747] PM3> hf 14a info (timeout=5000)
+[ 311.864] PM3< ret=1 content_len=199 \n UID: A7 F4 38 50  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 2 / CUID\nPrng detection: weak\n\n\n\n
+[ 311.864] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 312.043] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 312.051] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 312.366] PM3< ret=1 content_len=1171 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 0.3s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[ 312.391] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 312.541] PM3< ret=1 content_len=110 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 312.546] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 312.685] PM3< ret=1 content_len=110 Writing block no 61, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 312.691] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 312.831] PM3< ret=1 content_len=110 Writing block no 62, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 312.836] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 312.976] PM3< ret=1 content_len=110 Writing block no 56, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 312.981] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.121] PM3< ret=1 content_len=110 Writing block no 57, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.126] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.266] PM3< ret=1 content_len=110 Writing block no 58, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.272] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.410] PM3< ret=1 content_len=110 Writing block no 52, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.415] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.556] PM3< ret=1 content_len=110 Writing block no 53, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.562] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.701] PM3< ret=1 content_len=110 Writing block no 54, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.707] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.845] PM3< ret=1 content_len=110 Writing block no 48, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.850] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 313.991] PM3< ret=1 content_len=110 Writing block no 49, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 313.997] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.136] PM3< ret=1 content_len=110 Writing block no 50, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.141] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.281] PM3< ret=1 content_len=110 Writing block no 44, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.288] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.426] PM3< ret=1 content_len=110 Writing block no 45, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.431] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.570] PM3< ret=1 content_len=110 Writing block no 46, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.576] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.716] PM3< ret=1 content_len=110 Writing block no 40, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.721] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 314.861] PM3< ret=1 content_len=110 Writing block no 41, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 314.866] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.006] PM3< ret=1 content_len=110 Writing block no 42, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.012] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.151] PM3< ret=1 content_len=110 Writing block no 36, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.156] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.296] PM3< ret=1 content_len=110 Writing block no 37, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.302] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.440] PM3< ret=1 content_len=110 Writing block no 38, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.445] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.585] PM3< ret=1 content_len=110 Writing block no 32, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.591] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.731] PM3< ret=1 content_len=110 Writing block no 33, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.736] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 315.875] PM3< ret=1 content_len=110 Writing block no 34, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 315.881] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.021] PM3< ret=1 content_len=110 Writing block no 28, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.027] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.165] PM3< ret=1 content_len=110 Writing block no 29, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.171] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.310] PM3< ret=1 content_len=110 Writing block no 30, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.316] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.456] PM3< ret=1 content_len=110 Writing block no 24, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.461] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.600] PM3< ret=1 content_len=110 Writing block no 25, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.606] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.746] PM3< ret=1 content_len=110 Writing block no 26, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.751] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 316.890] PM3< ret=1 content_len=110 Writing block no 20, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 316.896] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.036] PM3< ret=1 content_len=110 Writing block no 21, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.041] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.181] PM3< ret=1 content_len=110 Writing block no 22, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.187] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.325] PM3< ret=1 content_len=110 Writing block no 16, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.331] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.471] PM3< ret=1 content_len=110 Writing block no 17, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.476] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.615] PM3< ret=1 content_len=110 Writing block no 18, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.621] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.643] SERIAL_TX> b'pctbat\r\n'
+[ 317.656] SERIAL_TX> b'charge\r\n'
+[ 317.761] PM3< ret=1 content_len=110 Writing block no 12, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.766] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 317.906] PM3< ret=1 content_len=110 Writing block no 13, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 317.911] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.051] PM3< ret=1 content_len=110 Writing block no 14, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.056] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.196] PM3< ret=1 content_len=109 Writing block no 8, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.202] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.340] PM3< ret=1 content_len=109 Writing block no 9, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.346] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.486] PM3< ret=1 content_len=110 Writing block no 10, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.491] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.630] PM3< ret=1 content_len=109 Writing block no 4, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.636] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.776] PM3< ret=1 content_len=109 Writing block no 5, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.781] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 318.921] PM3< ret=1 content_len=109 Writing block no 6, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 318.926] PM3> hf mf wrbl 0 A ffffffffffff A7F438503B080400016F016D4568F81D (timeout=5888)
+[ 319.066] PM3< ret=1 content_len=109 Writing block no 0, key type:A - FFFFFFFFFFFF\ndata: A7 F4 38 50 3B 08 04 00 01 6F 01 6D 45 68 F8 1D\nisOk:01\n\n
+[ 319.071] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 319.210] PM3< ret=1 content_len=109 Writing block no 1, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 319.216] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 319.356] PM3< ret=1 content_len=109 Writing block no 2, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[ 319.362] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 319.501] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 63, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 319.507] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 319.646] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 59, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 319.651] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 319.791] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 55, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 319.797] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 319.936] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 51, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 319.942] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.081] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 47, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.087] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.226] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 43, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.231] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.371] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 39, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.376] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.516] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 35, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.522] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.661] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 31, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.667] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.806] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 27, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.811] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 320.950] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 23, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 320.956] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 321.096] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 19, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 321.102] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 321.240] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 15, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 321.246] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 321.386] PM3< ret=1 content_len=163 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 11, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 321.391] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 321.530] PM3< ret=1 content_len=162 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 7, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 321.536] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 321.676] PM3< ret=1 content_len=162 Sector trailer (ST) write detected\nST checks isOk:01\nWriting block no 3, key type:A - FFFFFFFFFFFF\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\n
+[ 327.674] SERIAL_TX> b'pctbat\r\n'
+[ 327.686] SERIAL_TX> b'charge\r\n'
+[ 337.703] SERIAL_TX> b'pctbat\r\n'
+[ 337.716] SERIAL_TX> b'charge\r\n'
+[ 338.268] KEY> KEY_PWR_CAN_PRES!
+[ 338.599] KEY> KEY_PWR_CAN_PRES!
+[ 338.601] FINISH(top=WipeTagActivity d=2)
+[ 338.767] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 339.040] KEY> KEY_PWR_CAN_PRES!
+[ 339.681] KEY> KEY_PWR_CAN_PRES!

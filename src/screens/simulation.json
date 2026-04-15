@@ -1,0 +1,73 @@
+{
+    "id": "simulation",
+    "initial_state": "list_view",
+    "states": {
+        "list_view": {
+            "screen": {
+                "title": "Simulation {page}/{total_pages}",
+                "content": {
+                    "type": "list",
+                    "items": "{sim_type_list}"
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "LEFT": "page:-1",
+                    "RIGHT": "page:1",
+                    "M1": "finish",
+                    "M2": "run:selectType",
+                    "OK": "run:selectType",
+                    "PWR": "finish"
+                },
+                "note": "M1 is not handled in activity _onKeyList — key is silently dropped. LEFT/RIGHT navigate pages. PWR is the primary exit."
+            }
+        },
+        "sim_ui": {
+            "screen": {
+                "title": "Simulation",
+                "content": {
+                    "type": "input_fields",
+                    "fields": "{sim_fields}"
+                },
+                "buttons": {
+                    "left": "Stop",
+                    "right": "Start"
+                },
+                "keys": {
+                    "M1": "run:stopOrBack",
+                    "M2": "run:startSimForData",
+                    "OK": "run:toggleEdit",
+                    "UP": "run:rollUpOrSwitchField",
+                    "DOWN": "run:rollDownOrSwitchField",
+                    "LEFT": "run:cursorLeft",
+                    "RIGHT": "run:cursorRight",
+                    "PWR": "run:showListUI"
+                }
+            }
+        },
+        "simulating": {
+            "screen": {
+                "title": "Simulation",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Simulation in progress...",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Stop",
+                    "right": "Start"
+                },
+                "keys": {
+                    "M1": "run:stopSim",
+                    "PWR": "run:stopSim"
+                }
+            }
+        }
+    }
+}

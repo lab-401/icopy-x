@@ -1,0 +1,93 @@
+{
+    "plugin": true,
+    "name": "Quick LF Clone",
+    "version": "1.0.0",
+    "initial_state": "idle",
+    "states": {
+        "idle": {
+            "screen": {
+                "title": "Quick LF Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Place source tag on reader", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Press OK to scan", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK": "run:do_scan",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "found",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "found": {
+            "screen": {
+                "title": "Quick LF Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Found: {tag_type}", "size": "normal"},
+                        {"text": "ID: {tag_id}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Place blank T55xx, press OK", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Clone"},
+                "keys": {
+                    "OK": "run:do_clone",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "done",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "done": {
+            "screen": {
+                "title": "Quick LF Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Clone successful!", "size": "large", "align": "center"},
+                        {"text": ""},
+                        {"text": "{tag_type}: {tag_id}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Press OK to restart", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Again"},
+                "keys": {
+                    "OK": "set_state:idle",
+                    "M1": "finish"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "Quick LF Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Press OK to retry", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK": "set_state:idle",
+                    "M1": "finish"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "id": "scan_tag",
+    "initial_state": "scanning",
+    "states": {
+        "scanning": {
+            "screen": {
+                "title": "Scan Tag",
+                "content": {
+                    "type": "progress",
+                    "message": "Scanning...",
+                    "value": "{scan_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": null, "right": null}
+            }
+        },
+        "found": {
+            "screen": {
+                "title": "Scan Tag",
+                "content": {
+                    "type": "template",
+                    "header": "{tag_family}",
+                    "subheader": "{tag_type_name}",
+                    "fields": [
+                        {"label": "Frequency", "value": "{frequency}"},
+                        {"label": "UID", "value": "{uid}"},
+                        {"row": [
+                            {"label": "SAK", "value": "{sak}"},
+                            {"label": "ATQA", "value": "{atqa}"}
+                        ]}
+                    ]
+                },
+                "toast": {"text": "Tag Found", "icon": "check", "timeout": 0},
+                "buttons": {"left": "Rescan", "right": "Simulate"}
+            }
+        },
+        "not_found": {
+            "screen": {
+                "title": "Scan Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "No tag found", "icon": "error", "timeout": null},
+                "buttons": {"left": "Rescan", "right": "Rescan"}
+            }
+        },
+        "multi_tags": {
+            "screen": {
+                "title": "Scan Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "Multiple tags detected!", "icon": "error", "timeout": null},
+                "buttons": {"left": "Rescan", "right": "Simulate"}
+            }
+        },
+        "wrong_type": {
+            "screen": {
+                "title": "Scan Tag",
+                "content": {"type": "empty"},
+                "toast": {"text": "No tag found\nOr\nWrong type found!", "icon": "error", "timeout": null},
+                "buttons": {"left": "Rescan", "right": "Rescan"}
+            }
+        }
+    }
+}

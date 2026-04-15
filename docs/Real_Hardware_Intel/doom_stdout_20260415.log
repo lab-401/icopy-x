@@ -1,0 +1,9 @@
+xcb_connection_has_error() returned true
+fluidsynth: error: Unable to open file "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+fluidsynth: error: Couldn't load soundfont file
+fluidsynth: error: Failed to load SoundFont "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+ALSA lib pcm.c:7963:(snd_pcm_recover) underrun occurred
+fluidsynth: error: Unable to open file "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+fluidsynth: error: Couldn't load soundfont file
+fluidsynth: error: Failed to load SoundFont "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+ALSA lib pcm.c:7963:(snd_pcm_recover) underrun occurred

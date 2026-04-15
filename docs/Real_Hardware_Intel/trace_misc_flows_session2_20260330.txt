@@ -1,0 +1,34 @@
+=== MISC FLOW TRACE SESSION 2 ===
+[   0.003] POLL stack=['dict']
+[   0.004] === ALL INSTALLED ===
+[   0.951] PM3-PLAT> sudo rm /dev/ttyACM0
+[   1.107] PM3-PLAT< ret=
+ 
+[   1.252] PM3-CTRL> restart
+[   1.319] PM3-CTRL< ret=True 
+[   1.414] PM3-PLAT> sudo date -s "1970-2-19 1:55:0"
+[   1.417] PM3-PLAT< ret=Thu Feb 19 01:55:00 UTC 1970
+
+ 
+[  65.406] START(DiagnosisActivity, None)
+[  65.922] POLL stack=['dict', 'dict']
+[  68.509] PM3-TASK> hf tune timeout=8888
+[  69.098] PM3-TASK< ret=1 \n[=] Measuring HF antenna, click pm3 button or press Enter to exit\n[|] 37662 mV / 37 V[/] 37636 mV / 37 V[-] 37623 mV / 37 V[\] 37632 mV / 37 V[|] 37632 mV / 37 V[/] 37619 mV / 37 V\n[=] Done.\n
+[  69.506] PM3-TASK> lf tune timeout=8888
+[  70.088] PM3-TASK< ret=1 \n[=] Measuring LF antenna at 125.00 kHz, click pm3 button or press Enter to exit\n[-] 43063 mV /  43 V[\] 43097 mV /  43 V[|] 43089 mV /  43 V[/] 43063 mV /  43 V[-] 43080 mV /  43 V[\] 43097 mV /  43 V[=] Done.\n
+[  70.495] PM3-TASK> hf 14a reader timeout=5888
+[  70.634] PM3-TASK< ret=1 \n[!] iso14443a card select failed\n
+[  70.658] PM3-TASK> lf sea timeout=8888
+[  73.201] PM3-TASK< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[  73.524] PM3-TASK> mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola timeout=5888
+[  73.638] PM3-TASK< ret=1 \n[+] loaded 2 bytes from binary file /tmp/test_pm3_mem.nikola\n[+] Wrote 2 bytes to file test_pm3_mem.nikola\n
+[  73.642] PM3-TASK> mem spiffs wipe timeout=5888
+[  73.713] PM3-TASK< ret=1 \n[=] Wiping all files from SPIFFS FileSystem\n[#] removed test_pm3_mem.nikola\n[=] Done!\n
+[  78.104] FINISH(top=dict d=2)
+[  78.440] POLL stack=['dict']
+[  81.986] START(LUAScriptCMDActivity, None)
+[  82.447] POLL stack=['dict', 'dict']
+[  87.191] PM3-TASK> script run hf_read timeout=-1
+[  87.893] PM3-TASK< ret=1 \n[+] executing lua /mnt/upan/luascripts/hf_read.lua\n[+] args ''\nWORK IN PROGRESS - not expected to be functional yet\nWaiting for card... press Enter to quit\nReading with \n1\nTag info\n    ats : 00\n    uid : 3AF73501\n    data : :5\n    manufacturer : Advanced Film Device Inc. Japan\n    atqa : 0400\n    sak : 8\n    name : NXP MIFARE CLASSIC 1k | Plus 2k\n\n[+] finished hf_read\n\n
+[  94.279] FINISH(top=dict d=2)
+[  94.476] POLL stack=['dict']

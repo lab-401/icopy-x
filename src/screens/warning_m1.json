@@ -1,0 +1,42 @@
+{
+    "id": "warning_m1",
+    "initial_state": "page_0",
+    "states": {
+        "page_0": {
+            "screen": {
+                "title": "Missing keys",
+                "content": {
+                    "type": "text",
+                    "text": "Option 1) Go to reader to sniff keys\n\nOption 2) Enter known keys manually"
+                },
+                "buttons": {"left": "Sniff", "right": "Enter"},
+                "keys": {
+                    "M1": "run:selectOption",
+                    "M2": "run:selectOption",
+                    "OK": "run:selectOption",
+                    "DOWN": "goto:page_1",
+                    "PWR": "finish"
+                }
+            },
+            "note": "M1=Sniff (action: sniff), M2=Enter (action: enter_key). Source: PAGE_M1_LABELS/PAGE_M2_LABELS in activity code."
+        },
+        "page_1": {
+            "screen": {
+                "title": "Missing keys",
+                "content": {
+                    "type": "text",
+                    "text": "Option 3) Force read  to get partial data\n\nOption 4) Go into PC Mode to perform hardnest"
+                },
+                "buttons": {"left": "Force", "right": "PC-M"},
+                "keys": {
+                    "M1": "run:selectOption",
+                    "M2": "run:selectOption",
+                    "OK": "run:selectOption",
+                    "UP": "goto:page_0",
+                    "PWR": "finish"
+                }
+            },
+            "note": "M1=Force (action: force), M2=PC-M (action: pc_mode). PAGE_MAX=1 in activity — this is the last page."
+        }
+    }
+}

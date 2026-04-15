@@ -1,0 +1,158 @@
+=== FULL TRACE (iceman-fw v7 gen1a test) ===
+[   0.010] pm3_compat version=iceman needs_translation=True
+[   0.013] presspm3 hook OK
+[   0.015] POLL stack=['MainActivity', 'FWUpdateActivity'] 
+[   0.015] === ALL INSTALLED ===
+[   0.200] KEY> KEYM1_PRES!
+[   0.201] FINISH(top=FWUpdateActivity d=2)
+[   0.516] POLL stack=['MainActivity'] 
+[   6.147] SERIAL_TX> b'pctbat\r\n'
+[   6.161] SERIAL_TX> b'charge\r\n'
+[  16.184] SERIAL_TX> b'pctbat\r\n'
+[  16.201] SERIAL_TX> b'charge\r\n'
+[  26.217] SERIAL_TX> b'pctbat\r\n'
+[  26.231] SERIAL_TX> b'charge\r\n'
+[  36.252] SERIAL_TX> b'pctbat\r\n'
+[  36.265] SERIAL_TX> b'charge\r\n'
+[  46.282] SERIAL_TX> b'pctbat\r\n'
+[  46.295] SERIAL_TX> b'charge\r\n'
+[  56.312] SERIAL_TX> b'pctbat\r\n'
+[  56.325] SERIAL_TX> b'charge\r\n'
+[  63.158] KEY> KEYDOWN_PRES!
+[  63.363] KEY> KEYDOWN_PRES!
+[  63.922] KEY> KEYOK_PRES!
+[  63.926] START(ScanActivity, None) bundle=None
+[  63.983] PM3> hf 14a info (timeout=5000)
+[  64.103] POLL stack=['MainActivity', 'ScanActivity'] 
+[  64.141] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[  64.169] PM3> lf sea (timeout=10000)
+[  66.342] SERIAL_TX> b'pctbat\r\n'
+[  66.356] SERIAL_TX> b'charge\r\n'
+[  68.767] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  68.779] PM3> hf sea (timeout=10000)
+[  74.528] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[  74.551] PM3> lf t55xx detect (timeout=10000)
+[  76.378] SERIAL_TX> b'pctbat\r\n'
+[  76.391] SERIAL_TX> b'charge\r\n'
+[  77.613] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  77.625] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  77.839] PM3< ret=1 content_len=1 \n
+[  77.842] PM3> hf felica reader (timeout=10000)
+[  78.991] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[  86.408] SERIAL_TX> b'pctbat\r\n'
+[  86.421] SERIAL_TX> b'charge\r\n'
+[  96.437] SERIAL_TX> b'pctbat\r\n'
+[  96.451] SERIAL_TX> b'charge\r\n'
+[ 106.472] SERIAL_TX> b'pctbat\r\n'
+[ 106.486] SERIAL_TX> b'charge\r\n'
+[ 116.502] SERIAL_TX> b'pctbat\r\n'
+[ 116.516] SERIAL_TX> b'charge\r\n'
+[ 126.532] SERIAL_TX> b'pctbat\r\n'
+[ 126.545] SERIAL_TX> b'charge\r\n'
+[ 136.562] SERIAL_TX> b'pctbat\r\n'
+[ 136.576] SERIAL_TX> b'charge\r\n'
+[ 146.592] SERIAL_TX> b'pctbat\r\n'
+[ 146.606] SERIAL_TX> b'charge\r\n'
+[ 156.627] SERIAL_TX> b'pctbat\r\n'
+[ 156.640] SERIAL_TX> b'charge\r\n'
+[ 166.662] SERIAL_TX> b'pctbat\r\n'
+[ 166.675] SERIAL_TX> b'charge\r\n'
+[ 176.692] SERIAL_TX> b'pctbat\r\n'
+[ 176.705] SERIAL_TX> b'charge\r\n'
+[ 186.727] SERIAL_TX> b'pctbat\r\n'
+[ 186.741] SERIAL_TX> b'charge\r\n'
+[ 196.757] SERIAL_TX> b'pctbat\r\n'
+[ 196.771] SERIAL_TX> b'charge\r\n'
+[ 202.197] KEY> KEY_PWR_CAN_PRES!
+[ 202.621] KEY> KEY_PWR_CAN_PRES!
+[ 202.623] FINISH(top=ScanActivity d=2)
+[ 202.793] POLL stack=['MainActivity'] 
+[ 203.610] KEY> KEY_PWR_CAN_PRES!
+[ 204.208] KEY> KEYUP_PRES!
+[ 204.510] KEY> KEYUP_PRES!
+[ 204.680] KEY> KEYUP_PRES!
+[ 205.533] KEY> KEYUP_PRES!
+[ 205.976] KEY> KEYUP_PRES!
+[ 206.787] SERIAL_TX> b'pctbat\r\n'
+[ 206.801] SERIAL_TX> b'charge\r\n'
+[ 207.146] KEY> KEYDOWN_PRES!
+[ 207.429] KEY> KEYOK_PRES!
+[ 207.484] START(PluginsMenuActivity, None) bundle=None
+[ 207.802] POLL stack=['MainActivity', 'PluginsMenuActivity'] 
+[ 209.250] KEY> KEYOK_PRES!
+[ 209.354] START(PluginActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/hf_deep_scan', 'manifest': {'name': 'HF Deep Scan', 'version': '1.0.0', 'author': 'Lab401', 'description': 'Scan all HF tag types with detailed results', 'entry_class': 'HFDeepScanPlugin', 'permissions': ['pm3'], 'order': 20}, 'ui_definition': {'plugin': True, 'name': 'HF Deep Scan', 'version': '1.0.0', 'initial_state': 'idle', 'states': {'idle': {'screen': {'title': 'HF Deep Scan', 'content': {'type': 'text', 'lines': [{'text': 'Place tag on reader', 'size': 'normal'}, {'text': ''}, {'text': 'Press OK to start deep scan', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'OK': 'run:do_scan', 'M1': 'finish'}}, 'transitions': {'on_result.status==done': 'results', 'on_result.status==error': 'error', 'on_error': 'error'}}, 'results': {'screen': {'title': 'HF Deep Scan', 'content': {'type': 'text', 'lines': [{'text': '{scan_results}', 'size': 'normal'}], 'scrollable': True}, 'buttons': {'left': 'Back', 'right': 'Rescan'}, 'keys': {'M1': 'finish', 'M2': 'set_state:idle'}}}, 'error': {'screen': {'title': 'HF Deep Scan', 'content': {'type': 'text', 'lines': [{'text': '{error_msg}', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'M1': 'finish'}}}}}, 'entry_class': <class 'plugins.hf_deep_scan.HFDeepScanPlugin'>, 'plugin_key': 'hf_deep_scan'}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/hf_deep_scan", "manifest": {"name": "HF Deep Scan", "version": "1.0.0", "author": "Lab401", "description": "Scan all HF tag types with detailed results", "entry_class": "HFDeepScanPlugin", "permissions": ["pm3"], "order": 20}, "ui_definition": {"plugin": true, "name": "HF Deep Scan", "version": "1.0.0", "initial_state": "idle", "states": {"idle": {"screen": {"title": "HF Deep Scan", "content": {"type": "text", "lines": [{"text": "Place tag on reader", "size": "normal"}, {"text": ""}, {"text": "Press OK to start deep scan", "size": "normal"}]}, "buttons": {"left": "Back", "right": null}, "keys": {"OK": "run:do_scan", "M1": "finish"}}, "transitions": {"on_result.status==done": "results", "on_result.status==error": "error", "on_error": "error"}}, "results": {"screen": {"title": "HF Deep Scan", "content": {"type": "text", "lines": [{"text": "{scan_results}", "size": "normal"}], "scrollable": true}, "buttons": {"left": "Back", "right": "Rescan"}
+[ 209.847] POLL stack=['MainActivity', 'PluginsMenuActivity', 'PluginActivity'] 
+[ 210.290] KEY> KEYOK_PRES!
+[ 210.294] PM3> hf search (timeout=8000)
+[ 216.060] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 216.063] PM3> hf 14a info (timeout=8000)
+[ 216.237] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 216.240] PM3> hf mfu info (timeout=8000)
+[ 216.389] PM3< ret=1 content_len=1 \n
+[ 216.391] PM3> hf iclass info (timeout=8000)
+[ 216.456] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 28 ms and content ( ok )\n\n
+[ 216.458] PM3> hf 15 info (timeout=8000)
+[ 216.737] PM3< ret=1 content_len=30 Using scan mode\nno tag found\n\n
+[ 216.817] SERIAL_TX> b'pctbat\r\n'
+[ 216.831] SERIAL_TX> b'charge\r\n'
+[ 226.852] SERIAL_TX> b'pctbat\r\n'
+[ 226.866] SERIAL_TX> b'charge\r\n'
+[ 230.860] KEY> KEYM2_PRES!
+[ 233.238] KEY> KEYOK_PRES!
+[ 233.242] PM3> hf search (timeout=8000)
+[ 236.883] SERIAL_TX> b'pctbat\r\n'
+[ 236.896] SERIAL_TX> b'charge\r\n'
+[ 238.979] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 238.981] PM3> hf 14a info (timeout=8000)
+[ 239.156] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 239.158] PM3> hf mfu info (timeout=8000)
+[ 239.310] PM3< ret=1 content_len=1 \n
+[ 239.312] PM3> hf iclass info (timeout=8000)
+[ 239.353] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 33 ms and content ( ok )\n\n
+[ 239.355] PM3> hf 15 info (timeout=8000)
+[ 239.637] PM3< ret=1 content_len=30 Using scan mode\nno tag found\n\n
+[ 246.912] SERIAL_TX> b'pctbat\r\n'
+[ 246.926] SERIAL_TX> b'charge\r\n'
+[ 250.096] KEY> KEYM2_PRES!
+[ 251.421] KEY> KEYOK_PRES!
+[ 251.426] PM3> hf search (timeout=8000)
+[ 256.942] SERIAL_TX> b'pctbat\r\n'
+[ 256.955] SERIAL_TX> b'charge\r\n'
+[ 259.155] PM3< ret=1 content_len=287 \n UID: 74 F2 2F 19  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities: Gen 1a\nMagic capabilities: Gen 4 GDM / USCUID ( ZUID Gen1 Magic Wakeup )\nPrng detection: weak\n\n\n\nValid ISO14443-A tag found\n\n\n
+[ 259.158] PM3> hf 14a info (timeout=8000)
+[ 261.196] PM3< ret=1 content_len=239 \n UID: 74 F2 2F 19  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nMagic capabilities : Gen 4 GDM / USCUID ( ZUID Gen1 Magic Wakeup )\n\n\n\n
+[ 261.198] PM3> hf mfu info (timeout=8000)
+[ 261.339] PM3< ret=1 content_len=1 \n
+[ 261.341] PM3> hf iclass info (timeout=8000)
+[ 261.406] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 33 ms and content ( ok )\n\n
+[ 261.408] PM3> hf 15 info (timeout=8000)
+[ 261.685] PM3< ret=1 content_len=30 Using scan mode\nno tag found\n\n
+[ 266.973] SERIAL_TX> b'pctbat\r\n'
+[ 266.985] SERIAL_TX> b'charge\r\n'
+[ 267.669] KEY> KEYM2_PRES!
+[ 269.711] KEY> KEYOK_PRES!
+[ 269.715] PM3> hf search (timeout=8000)
+[ 274.287] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 274.289] PM3> hf 14a info (timeout=8000)
+[ 274.463] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 274.465] PM3> hf mfu info (timeout=8000)
+[ 274.635] PM3< ret=1 content_len=1 \n
+[ 274.637] PM3> hf iclass info (timeout=8000)
+[ 274.702] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 33 ms and content ( ok )\n\n
+[ 274.704] PM3> hf 15 info (timeout=8000)
+[ 274.983] PM3< ret=1 content_len=30 Using scan mode\nno tag found\n\n
+[ 277.002] SERIAL_TX> b'pctbat\r\n'
+[ 277.016] SERIAL_TX> b'charge\r\n'
+[ 287.032] SERIAL_TX> b'pctbat\r\n'
+[ 287.045] SERIAL_TX> b'charge\r\n'
+[ 297.063] SERIAL_TX> b'pctbat\r\n'
+[ 297.076] SERIAL_TX> b'charge\r\n'
+[ 299.922] KEY> KEYM1_PRES!
+[ 299.925] FINISH(top=PluginActivity d=3)
+[ 299.985] POLL stack=['MainActivity', 'PluginsMenuActivity'] 
+[ 300.626] KEY> KEY_PWR_CAN_PRES!
+[ 300.628] FINISH(top=PluginsMenuActivity d=2)
+[ 300.988] POLL stack=['MainActivity'] 
+[ 301.336] KEY> KEY_PWR_CAN_PRES!
+[ 307.097] SERIAL_TX> b'pctbat\r\n'
+[ 307.111] SERIAL_TX> b'charge\r\n'

@@ -1,0 +1,22 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "ISO14443-A",
+      "ISO/IEC 14443-A",
+      "13.56MHZ",
+      "UID: FFEEDDCC",
+      "SAK: 28"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 40
+  },
+  "toast": "Tag Found"
+}

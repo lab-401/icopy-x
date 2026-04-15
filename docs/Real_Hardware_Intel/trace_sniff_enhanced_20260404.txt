@@ -1,0 +1,18 @@
+=== ENHANCED SNIFF TRACE ===
+[   0.003] [TThread-9] POLL stack=['dict']
+[   0.004] [TThread-1] === ALL INSTALLED ===
+[ 162.932] [TThread-6] START(SniffActivity, None)
+[ 163.297] [TThread-9] POLL stack=['dict', 'dict']
+[ 165.555] [TThread-1] PM3> hf 14a sniff (timeout=8000, listener=None)
+[ 165.573] [TThread-1] PM3< ret=1 listener_calls=0 cache=\n
+[ 214.338] [TThread-1] PM3> hf list mf (timeout=-1, listener=YES(method))
+[ 214.378] [TThread-1] LISTENER[1] [usb|script] pm3 --> hf list mf
+[=] downloading tracelog data from device
+
+[ 214.401] [TThread-1] LISTENER[2] [+] Recorded activity (trace len = 5048 bytes)
+
+[ 214.446] [TThread-1] LISTENER[3] [=] start = start of start frame end = end of frame. src = source of transfer
+[=
+[ 214.510] [TThread-1] LISTENER[4]           0 |        992 | Rdr |52(7)                                           
+[ 214.580] [TThread-1] LISTENER[5]     2092836 |    2095204 | Tag |04  00                                          
+[ 218.280] [TThread-1] PM3< ret=1 listener_calls=47 cache=\n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 5048 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in

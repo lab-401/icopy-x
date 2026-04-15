@@ -1,0 +1,354 @@
+=== TRACE ===
+[   0.005] POLL stack=['dict'] 
+[   0.005] === ALL INSTALLED ===
+[-1775226687.934] START(ScanActivity, None)
+[-1775226687.886] PM3> hf 14a info (timeout=5000)
+[-1775226687.734] PM3< ret=1 \n
+[-1775226687.731] PM3> lf sea (timeout=10000)
+[-1775226687.409] POLL stack=['dict', 'dict'] 
+[-1775226686.525] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] AWID - len: 222 -unknown- (28635) - Wiegand: 7ad377b79fa2dfb6, Raw: 01deb4ddede7e8b7edbdb7e1\n\n[+] Valid AWID ID found!\n\nCouldn't identify a chipset\n
+[-1775226686.406] POLL stack=['dict', 'dict'] type=11 uid=
+[-1775226679.263] FINISH(top=dict d=2)
+[-1775226678.894] POLL stack=['dict'] type=11 uid=
+[-1775226648.699] START(ScanActivity, None)
+[-1775226648.658] PM3> hf 14a info (timeout=5000)
+[-1775226648.493] PM3< ret=1 \n
+[-1775226648.490] PM3> lf sea (timeout=10000)
+[-1775226648.348] POLL stack=['dict', 'dict'] 
+[-1775226647.277] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] AWID - len: 170 -unknown- (17476) - Wiegand: 5a5a4210c2088888, Raw: 01b4b4b48421841111111111\n\n[+] Valid AWID ID found!\n\nCouldn't identify a chipset\n
+[-1775226646.845] POLL stack=['dict', 'dict'] type=11 uid=
+[-1775226643.896] FINISH(top=dict d=2)
+[-1775226643.837] POLL stack=['dict'] type=11 uid=
+[-1775226637.927] START(ScanActivity, None)
+[-1775226637.888] PM3> hf 14a info (timeout=5000)
+[-1775226637.820] POLL stack=['dict', 'dict'] type=11 uid=
+[-1775226637.747] PM3< ret=1 \n
+[-1775226637.743] PM3> lf sea (timeout=10000)
+[-1775226637.318] POLL stack=['dict', 'dict'] 
+[-1775226636.638] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] EM410x pattern found\n\nEM TAG ID      : 1111000000\n\nPossible de-scramble patterns\n\nUnique TAG ID  : 8888000000\nHoneyWell IdentKey {\nDEZ 8          : 00000000\nDEZ 10         : 0285212672\nDEZ 5.5        : 04352.00000\nDEZ 3.5A       : 017.00000\nDEZ 3.5B       : 017.00000\nDEZ 3.5C       : 000.00000\nDEZ 14/IK2     : 00073299656704\nDEZ 15/IK3     : 000586397253632\nDEZ 20/ZK      : 08080808000000000000\n}\nOther          : 00000_000_00000000\nPattern Paxton : 286539264 [0x11143E00]\nPattern 1      : 0 [0x0]\nPattern Sebury : 0 0 0  [0x0 0x0 0x0]\n\n[+] Valid EM410x ID found!\n\nCouldn't identify a chipset\n
+[-1775226636.315] POLL stack=['dict', 'dict'] type=8 uid=
+[-1775226632.531] FINISH(top=dict d=2)
+[-1775226632.308] POLL stack=['dict'] type=8 uid=
+[-1775226626.759] START(ScanActivity, None)
+[-1775226626.718] PM3> hf 14a info (timeout=5000)
+[-1775226626.537] PM3< ret=1 \n
+[-1775226626.534] PM3> lf sea (timeout=10000)
+[-1775226626.294] POLL stack=['dict', 'dict'] 
+[-1775226625.390] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+] Raw                0E F1 11 10 E0 F0 E0 0F \n\n[+] Valid FDX-B ID found!\n\nCouldn't identify a chipset\n
+[-1775226625.292] POLL stack=['dict', 'dict'] type=28 uid=
+[-1775226618.842] FINISH(top=dict d=2)
+[-1775226618.780] POLL stack=['dict'] type=28 uid=
+[-1775226617.473] START(ScanActivity, None)
+[-1775226617.432] PM3> hf 14a info (timeout=5000)
+[-1775226617.283] PM3< ret=1 \n
+[-1775226617.280] PM3> lf sea (timeout=10000)
+[-1775226617.272] POLL stack=['dict', 'dict'] 
+[-1775226614.756] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[-1775226614.753] PM3> hf sea (timeout=10000)
+[-1775226612.902] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Searching for ISO15693 tag...[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for ISO14443-B tag...[/]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226612.897] PM3> hf felica reader (timeout=10000)
+[-1775226610.902] PM3< ret=1 \n[!] card timeout\n
+[-1775226608.968] PM3> hf 14a info (timeout=5000)
+[-1775226608.745] PM3< ret=1 \n
+[-1775226608.743] PM3> lf sea (timeout=10000)
+[-1775226607.601] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\nCouldn't identify a chipset\n
+[-1775226607.254] POLL stack=['dict', 'dict'] type=29 uid=
+[-1775226604.296] FINISH(top=dict d=2)
+[-1775226604.246] POLL stack=['dict'] type=29 uid=
+[-1775226598.574] START(ScanActivity, None)
+[-1775226598.534] PM3> hf 14a info (timeout=5000)
+[-1775226598.380] PM3< ret=1 \n
+[-1775226598.378] PM3> lf sea (timeout=10000)
+[-1775226598.233] POLL stack=['dict', 'dict'] 
+[-1775226597.266] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226597.240] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226597.229] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226597.163] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226596.843] PM3> lf t55xx detect (timeout=10000)
+[-1775226595.811] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1775226595.807] PM3> hf sea (timeout=10000)
+[-1775226595.726] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226593.967] PM3< ret=1 \n[-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO14443-A tag...[|]                                          [/] Searching for ISO15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO14443-B tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226593.966] PM3> hf felica reader (timeout=10000)
+[-1775226591.971] PM3< ret=1 \n[!] card timeout\n
+[-1775226589.829] PM3> hf 14a info (timeout=5000)
+[-1775226589.610] PM3< ret=1 \n
+[-1775226589.604] PM3> lf sea (timeout=10000)
+[-1775226589.214] POLL stack=['dict', 'dict'] 
+[-1775226588.478] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226588.476] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226588.408] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226588.143] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226588.142] PM3> lf t55xx detect (timeout=10000)
+[-1775226587.055] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1775226587.054] PM3> hf sea (timeout=10000)
+[-1775226586.639] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226585.208] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO14443-A tag...[/]                                          [-] Searching for ISO15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO14443-B tag...[\]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226585.207] PM3> hf felica reader (timeout=10000)
+[-1775226583.201] PM3< ret=1 \n[!] card timeout\n
+[-1775226579.794] PM3> hf 14a info (timeout=5000)
+[-1775226579.585] PM3< ret=1 \n
+[-1775226579.583] PM3> lf sea (timeout=10000)
+[-1775226579.126] POLL stack=['dict', 'dict'] 
+[-1775226578.453] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226578.451] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226578.384] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226578.130] PM3> lf t55xx detect (timeout=10000)
+[-1775226578.123] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226577.060] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1775226577.059] PM3> hf sea (timeout=10000)
+[-1775226576.615] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226575.212] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226575.212] PM3> hf felica reader (timeout=10000)
+[-1775226573.227] PM3< ret=1 \n[!] card timeout\n
+[-1775226571.798] FINISH(top=dict d=2)
+[-1775226571.606] POLL stack=['dict'] type=23 uid=
+[-1775226546.645] START(ScanActivity, None)
+[-1775226546.607] PM3> hf 14a info (timeout=5000)
+[-1775226546.567] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226546.387] PM3< ret=1 \n
+[-1775226546.385] PM3> lf sea (timeout=10000)
+[-1775226546.065] POLL stack=['dict', 'dict'] 
+[-1775226545.293] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] HID Prox - 2006222332 (4505) - len: 26 bit - OEM: 000 FC: 17 Card: 4505\n\n[+] Valid HID Prox ID found!\n\nCouldn't identify a chipset\n
+[-1775226545.062] POLL stack=['dict', 'dict'] type=9 uid=
+[-1775226538.072] FINISH(top=dict d=2)
+[-1775226538.039] POLL stack=['dict'] type=9 uid=
+[-1775226537.134] START(ScanActivity, None)
+[-1775226537.095] PM3> hf 14a info (timeout=5000)
+[-1775226537.034] POLL stack=['dict', 'dict'] type=9 uid=
+[-1775226536.941] PM3< ret=1 \n
+[-1775226536.937] PM3> lf sea (timeout=10000)
+[-1775226536.531] POLL stack=['dict', 'dict'] 
+[-1775226535.782] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\n[+] Valid HID Prox ID found!\n\nCouldn't identify a chipset\n
+[-1775226535.529] POLL stack=['dict', 'dict'] type=9 uid=
+[-1775226532.946] FINISH(top=dict d=2)
+[-1775226532.521] POLL stack=['dict'] type=9 uid=
+[-1775226528.861] START(ScanActivity, None)
+[-1775226528.823] PM3> hf 14a info (timeout=5000)
+[-1775226528.675] PM3< ret=1 \n
+[-1775226528.673] PM3> lf sea (timeout=10000)
+[-1775226528.514] POLL stack=['dict', 'dict'] 
+[-1775226527.517] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Indala - len 1888, Raw: a0000000ef00000000000000c0e0f0e620000000ff00000000000000\n\n[+] Valid Indala ID found!\n\nCouldn't identify a chipset\n
+[-1775226527.008] POLL stack=['dict', 'dict'] type=10 uid=
+[-1775226521.404] FINISH(top=dict d=2)
+[-1775226520.998] POLL stack=['dict'] type=10 uid=
+[-1775226520.491] START(ScanActivity, None)
+[-1775226520.453] PM3> hf 14a info (timeout=5000)
+[-1775226520.301] PM3< ret=1 \n
+[-1775226520.298] PM3> lf sea (timeout=10000)
+[-1775226519.995] POLL stack=['dict', 'dict'] 
+[-1775226519.117] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] IO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 (ok)\n\n[+] Valid IO Prox ID found!\n\nCouldn't identify a chipset\n
+[-1775226518.993] POLL stack=['dict', 'dict'] type=12 uid=
+[-1775226516.545] FINISH(top=dict d=2)
+[-1775226516.486] POLL stack=['dict'] type=12 uid=
+[-1775226511.726] START(ScanActivity, None)
+[-1775226511.684] PM3> hf 14a info (timeout=5000)
+[-1775226511.513] PM3< ret=1 \n
+[-1775226511.510] PM3> lf sea (timeout=10000)
+[-1775226511.478] POLL stack=['dict', 'dict'] 
+[-1775226510.338] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\n[+] Valid Jablotron ID found!\n\nCouldn't identify a chipset\n
+[-1775226509.975] POLL stack=['dict', 'dict'] type=30 uid=
+[-1775226507.799] FINISH(top=dict d=2)
+[-1775226507.470] POLL stack=['dict'] type=30 uid=
+[-1775226503.761] START(ScanActivity, None)
+[-1775226503.722] PM3> hf 14a info (timeout=5000)
+[-1775226503.541] PM3< ret=1 \n
+[-1775226503.538] PM3> lf sea (timeout=10000)
+[-1775226503.464] POLL stack=['dict', 'dict'] 
+[-1775226501.812] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Indala - len 670, Raw: 800000000087001616167c556768000f9010a000000800058507efe6\n\n[+] Valid Indala ID found!\n\nCouldn't identify a chipset\n
+[-1775226501.460] POLL stack=['dict', 'dict'] type=10 uid=
+[-1775226499.233] FINISH(top=dict d=2)
+[-1775226498.955] POLL stack=['dict'] type=10 uid=
+[-1775226495.045] START(ScanActivity, None)
+[-1775226495.007] PM3> hf 14a info (timeout=5000)
+[-1775226494.948] POLL stack=['dict', 'dict'] type=10 uid=
+[-1775226494.858] PM3< ret=1 \n
+[-1775226494.856] PM3> lf sea (timeout=10000)
+[-1775226494.445] POLL stack=['dict', 'dict'] 
+[-1775226493.341] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226493.339] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226493.283] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226493.048] PM3> hf sea (timeout=10000)
+[-1775226491.216] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Searching for ISO15693 tag...[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for ISO14443-B tag...[/]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226491.215] PM3> hf felica reader (timeout=10000)
+[-1775226489.232] PM3< ret=1 \n[!] card timeout\n
+[-1775226487.504] PM3> hf 14a info (timeout=5000)
+[-1775226487.270] PM3< ret=1 \n
+[-1775226487.267] PM3> lf sea (timeout=10000)
+[-1775226485.923] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226485.921] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226485.865] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226485.631] PM3> hf sea (timeout=10000)
+[-1775226483.789] PM3< ret=1 \n[-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO14443-A tag...[|]                                          [/] Searching for ISO15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO14443-B tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226483.788] PM3> hf felica reader (timeout=10000)
+[-1775226481.808] PM3< ret=1 \n[!] card timeout\n
+[-1775226480.333] PM3> hf 14a info (timeout=5000)
+[-1775226480.112] PM3< ret=1 \n
+[-1775226480.109] PM3> lf sea (timeout=10000)
+[-1775226478.969] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226478.967] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226478.919] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226478.887] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226478.591] PM3> hf sea (timeout=10000)
+[-1775226478.417] POLL stack=['dict', 'dict'] 
+[-1775226476.758] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO14443-A tag...[/]                                          [-] Searching for ISO15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO14443-B tag...[\]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226476.757] PM3> hf felica reader (timeout=10000)
+[-1775226474.773] PM3< ret=1 \n[!] card timeout\n
+[-1775226472.531] FINISH(top=dict d=2)
+[-1775226472.406] POLL stack=['dict'] 
+[-1775226467.076] START(ScanActivity, None)
+[-1775226467.036] PM3> hf 14a info (timeout=5000)
+[-1775226466.897] POLL stack=['dict', 'dict'] 
+[-1775226466.803] PM3< ret=1 \n
+[-1775226466.801] PM3> lf sea (timeout=10000)
+[-1775226466.175] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+]  UID: ffffffff\n\n[+] Valid Hitag found!\n\n
+[-1775226465.895] POLL stack=['dict', 'dict'] type=38 uid=
+[-1775226460.560] FINISH(top=dict d=2)
+[-1775226460.386] POLL stack=['dict'] type=38 uid=
+[-1775226455.336] START(ScanActivity, None)
+[-1775226455.296] PM3> hf 14a info (timeout=5000)
+[-1775226455.142] PM3< ret=1 \n
+[-1775226455.139] PM3> lf sea (timeout=10000)
+[-1775226454.877] POLL stack=['dict', 'dict'] 
+[-1775226453.877] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\n[+] Valid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n
+[-1775226453.369] POLL stack=['dict', 'dict'] type=34 uid=
+[-1775226449.463] FINISH(top=dict d=2)
+[-1775226449.362] POLL stack=['dict'] type=34 uid=
+[-1775226446.671] START(ScanActivity, None)
+[-1775226446.634] PM3> hf 14a info (timeout=5000)
+[-1775226446.483] PM3< ret=1 \n
+[-1775226446.480] PM3> lf sea (timeout=10000)
+[-1775226446.357] POLL stack=['dict', 'dict'] 
+[-1775226445.345] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[=] Paradox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n[+] Valid Paradox ID found!\n\nCouldn't identify a chipset\n
+[-1775226444.854] POLL stack=['dict', 'dict'] type=35 uid=
+[-1775226443.013] FINISH(top=dict d=2)
+[-1775226442.843] POLL stack=['dict'] type=35 uid=
+[-1775226439.588] START(ScanActivity, None)
+[-1775226439.546] PM3> hf 14a info (timeout=5000)
+[-1775226439.360] PM3< ret=1 \n
+[-1775226439.358] PM3> lf sea (timeout=10000)
+[-1775226439.337] POLL stack=['dict', 'dict'] 
+[-1775226438.230] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n[+] Valid Pyramid ID found!\n\nCouldn't identify a chipset\n
+[-1775226437.834] POLL stack=['dict', 'dict'] type=16 uid=
+[-1775226431.830] FINISH(top=dict d=2)
+[-1775226431.323] POLL stack=['dict'] type=16 uid=
+[-1775226431.166] START(ScanActivity, None)
+[-1775226431.127] PM3> hf 14a info (timeout=5000)
+[-1775226430.973] PM3< ret=1 \n
+[-1775226430.970] PM3> lf sea (timeout=10000)
+[-1775226430.820] POLL stack=['dict', 'dict'] 
+[-1775226429.796] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\n[+] Wiegand: 55559998 parity (ok)\n\n[=] How the FC translates to printed FC is unknown\n\n[=] How the checksum is calculated is unknown\n[=] Help the community identify this format further\n[=]  by sharing your tag on the pm3 forum or with forum members\n\n\n[+] Valid Securakey ID found!\n\nCouldn't identify a chipset\n
+[-1775226429.316] POLL stack=['dict', 'dict'] type=14 uid=
+[-1775226426.725] FINISH(top=dict d=2)
+[-1775226426.311] POLL stack=['dict'] type=14 uid=
+[-1775226422.528] START(ScanActivity, None)
+[-1775226422.485] PM3> hf 14a info (timeout=5000)
+[-1775226422.333] PM3< ret=1 \n
+[-1775226422.331] PM3> lf sea (timeout=10000)
+[-1775226422.304] POLL stack=['dict', 'dict'] 
+[-1775226421.155] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n[+] Valid Viking ID found!\n\nCouldn't identify a chipset\n
+[-1775226420.801] POLL stack=['dict', 'dict'] type=15 uid=
+[-1775226418.553] FINISH(top=dict d=2)
+[-1775226418.295] POLL stack=['dict'] type=15 uid=
+[-1775226354.182] START(ScanActivity, None)
+[-1775226354.143] PM3> hf 14a info (timeout=5000)
+[-1775226353.966] PM3< ret=1 \n
+[-1775226353.963] PM3> lf sea (timeout=10000)
+[-1775226353.706] POLL stack=['dict', 'dict'] 
+[-1775226352.797] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226352.795] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226352.712] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226352.694] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226352.394] PM3> lf t55xx detect (timeout=10000)
+[-1775226351.312] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1775226351.311] PM3> hf sea (timeout=10000)
+[-1775226351.191] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226349.467] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226349.466] PM3> hf felica reader (timeout=10000)
+[-1775226347.478] PM3< ret=1 \n[!] card timeout\n
+[-1775226343.184] PM3> hf 14a info (timeout=5000)
+[-1775226342.966] PM3< ret=1 \n
+[-1775226342.964] PM3> lf sea (timeout=10000)
+[-1775226342.674] POLL stack=['dict', 'dict'] 
+[-1775226341.798] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226341.796] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226341.728] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226341.670] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226341.475] PM3> lf t55xx detect (timeout=10000)
+[-1775226340.443] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1775226340.442] PM3> hf sea (timeout=10000)
+[-1775226340.167] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226338.587] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Searching for ISO15693 tag...[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for ISO14443-B tag...[/]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226338.586] PM3> hf felica reader (timeout=10000)
+[-1775226336.593] PM3< ret=1 \n[!] card timeout\n
+[-1775226315.322] PM3> hf 14a info (timeout=5000)
+[-1775226315.095] PM3< ret=1 \n
+[-1775226315.093] PM3> lf sea (timeout=10000)
+[-1775226314.630] POLL stack=['dict', 'dict'] 
+[-1775226313.927] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226313.925] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226313.848] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226313.571] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226313.571] PM3> lf t55xx detect (timeout=10000)
+[-1775226313.042] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 28\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00088B33\n[=]      Downlink Mode  : long leading reference\n[=]      Password Set   : No\n\n
+[-1775226312.568] POLL stack=['dict', 'dict'] type=23 uid=
+[-1775226309.931] FINISH(top=dict d=2)
+[-1775226309.562] POLL stack=['dict'] type=23 uid=
+[-1775226300.458] START(ScanActivity, None)
+[-1775226300.417] PM3> hf 14a info (timeout=5000)
+[-1775226300.258] PM3< ret=1 \n
+[-1775226300.256] PM3> lf sea (timeout=10000)
+[-1775226300.044] POLL stack=['dict', 'dict'] 
+[-1775226297.734] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[-1775226297.732] PM3> hf sea (timeout=10000)
+[-1775226295.886] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO14443-A tag...[/]                                          [-] Searching for ISO15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO14443-B tag...[\]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226295.885] PM3> hf felica reader (timeout=10000)
+[-1775226293.878] PM3< ret=1 \n[!] card timeout\n
+[-1775226292.977] PM3> hf 14a info (timeout=5000)
+[-1775226292.735] PM3< ret=1 \n
+[-1775226292.732] PM3> lf sea (timeout=10000)
+[-1775226291.604] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[-1775226291.602] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[-1775226291.545] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[-1775226291.517] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226291.310] PM3> hf sea (timeout=10000)
+[-1775226291.015] POLL stack=['dict', 'dict'] 
+[-1775226289.462] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n
+[-1775226289.461] PM3> hf felica reader (timeout=10000)
+[-1775226287.455] PM3< ret=1 \n[!] card timeout\n
+[-1775226279.855] PM3> hf 14a info (timeout=5000)
+[-1775226279.628] PM3< ret=1 \n
+[-1775226279.625] PM3> lf sea (timeout=10000)
+[-1775226278.421] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] HID Prox - 99aabb33000 (104448) - len: 37 bit - OEM: 000 FC: 43707 Card: 104448\n\n[+] Valid HID Prox ID found!\n\nCouldn't identify a chipset\n
+[-1775226277.997] POLL stack=['dict', 'dict'] type=9 uid=
+[-1775226270.721] PM3> hf 14a info (timeout=5000)
+[-1775226270.580] PM3< ret=1 \n
+[-1775226270.577] PM3> lf sea (timeout=10000)
+[-1775226270.485] POLL stack=['dict', 'dict'] 
+[-1775226269.474] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] EM410x XL pattern found\n\nEM TAG ID      : 99AAAAA333930000000000\n\n[+] Valid EM410x ID found!\n\nCouldn't identify a chipset\n
+[-1775226268.981] POLL stack=['dict', 'dict'] type=8 uid=
+[-1775226240.737] FINISH(top=dict d=2)
+[-1775226240.441] POLL stack=['dict'] type=8 uid=
+[-1775226239.625] START(ScanActivity, None)
+[-1775226239.585] PM3> hf 14a info (timeout=5000)
+[-1775226239.438] POLL stack=['dict', 'dict'] type=8 uid=
+[-1775226238.518] PM3< ret=1 \n\n[+]  UID: 04 4D 3A B7 52 02 80 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    NXP Semiconductors Germany\n[+] Possible types:\n[+]    NTAG 20x / 21x / 21x TT / I2C plus\n[+]    MIFARE Ultralight / C / EV1 / Nano\n[=] SAK incorrectly claims that card doesn't support RATS\n[+]  ATS: 85 00 00 A0 00 00 0A 00 00 00 00 00 00 00 00 00 35 89 \n[+]        -  TL : length is 133 bytes\n[+] ATS may be corrupted. Length of ATS (18 bytes incl. 2 Bytes CRC) doesn't match TL\n[+]        -  T0 : TA1 is NOT present, TB1 is NOT present, TC1 is NOT present, FSCI is 0 (FSC = 16)\n[+] Magic capabilities : Gen 3 / APDU\n
+[-1775226238.495] PM3> hf mf cgetblk 0 (timeout=5888)
+[-1775226238.275] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[-1775226238.272] PM3> hf mfu info (timeout=8888)
+[-1775226237.935] POLL stack=['dict', 'dict'] type=? uid=
+[-1775226236.784] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n[+]       TYPE: MIFARE Ultralight (MF0ICU1) \n[+]        UID: 04 4D 3A B7 52 02 80 \n[+]     UID[0]: 04, NXP Semiconductors Germany\n[+]       BCC0: FB (ok)\n[+]       BCC1: 67 (ok)\n[+]   Internal: 48 (default)\n[+]       Lock: 00 00  - 00\n[+] OneTimePad: 00 00 00 00  - 0000\n\n
+[-1775226236.431] POLL stack=['dict', 'dict'] type=2 uid=044D3AB7520280
+[-1775226233.247] FINISH(top=dict d=2)
+[-1775226232.924] POLL stack=['dict'] type=2 uid=044D3AB7520280
+[-1775226230.216] START(ScanActivity, None)
+[-1775226230.179] PM3> hf 14a info (timeout=5000)
+[-1775226229.894] POLL stack=['dict', 'dict'] type=2 uid=044D3AB7520280
+[-1775226229.490] PM3< ret=1 \n\n[+]  UID: 04 4D 3A B7 52 02 80 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    NXP Semiconductors Germany\n[+] Possible types:\n[+]    NTAG 20x / 21x / 21x TT / I2C plus\n[+]    MIFARE Ultralight / C / EV1 / Nano\n[=] SAK incorrectly claims that card doesn't support RATS\n[+]  ATS: 85 00 00 A0 00 00 0A 00 00 00 00 00 00 00 00 00 35 89 \n[+]        -  TL : length is 133 bytes\n[+] ATS may be corrupted. Length of ATS (18 bytes incl. 2 Bytes CRC) doesn't match TL\n[+]        -  T0 : TA1 is NOT present, TB1 is NOT present, TC1 is NOT present, FSCI is 0 (FSC = 16)\n
+[-1775226229.487] PM3> hf mf cgetblk 0 (timeout=5888)
+[-1775226229.255] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[-1775226229.254] PM3> hf mfu info (timeout=8888)
+[-1775226229.022] PM3< ret=1 \n[!] iso14443a card select failed\n
+[-1775226228.891] POLL stack=['dict', 'dict'] 
+[-1775226226.618] FINISH(top=dict d=2)
+[-1775226226.386] POLL stack=['dict'] 

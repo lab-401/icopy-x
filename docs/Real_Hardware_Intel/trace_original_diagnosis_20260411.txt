@@ -1,0 +1,33 @@
+32 /mnt/upan/full_trace.log
+=== TRACE ===
+[   0.004] === ALL INSTALLED ===
+[   0.005] POLL stack=['dict'] 
+[  17.772] KEY> DOWN
+[  17.968] KEY> DOWN
+[  18.140] KEY> DOWN
+[  18.305] KEY> DOWN
+[  18.469] KEY> DOWN
+[  18.832] KEY> DOWN
+[  19.137] KEY> DOWN
+[  19.891] KEY> OK
+[  19.893] START(DiagnosisActivity, None)
+[  20.253] POLL stack=['dict', 'dict'] 
+[  22.111] KEY> OK
+[  23.505] KEY> M2
+[  23.528] PM3> hf tune (timeout=8888)
+[  24.116] PM3< ret=1 \n[=] Measuring HF antenna, click pm3 button or press Enter to exit\n[|] 37726 mV / 37 V[/] 37696 mV / 37 V[-] 37687 mV / 37 V[\] 37683 mV / 37 V[|] 37679 mV / 37 V[/] 37657 mV / 37 V\n[=] Done.\n
+[  24.524] PM3> lf tune (timeout=8888)
+[  25.106] PM3< ret=1 \n[=] Measuring LF antenna at 125.00 kHz, click pm3 button or press Enter to exit\n[-] 43063 mV /  43 V[\] 43089 mV /  43 V[|] 43089 mV /  43 V[/] 43071 mV /  43 V[-] 43071 mV /  43 V[\] 43063 mV /  43 V[=] Done.\n
+[  25.513] PM3> hf 14a reader (timeout=5888)
+[  25.652] PM3< ret=1 \n[!] iso14443a card select failed\n
+[  25.676] PM3> lf sea (timeout=8888)
+[  28.199] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[  28.522] PM3> mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola (timeout=5888)
+[  28.628] PM3< ret=1 \n[+] loaded 2 bytes from binary file /tmp/test_pm3_mem.nikola\n[+] Wrote 2 bytes to file test_pm3_mem.nikola\n
+[  28.632] PM3> mem spiffs wipe (timeout=5888)
+[  28.702] PM3< ret=1 \n[=] Wiping all files from SPIFFS FileSystem\n[#] removed test_pm3_mem.nikola\n[=] Done!\n
+[  35.027] KEY> PWR
+[  35.028] FINISH(top=dict d=2)
+[  35.275] POLL stack=['dict'] 
+[  35.433] KEY> PWR
+[  35.694] KEY> PWR

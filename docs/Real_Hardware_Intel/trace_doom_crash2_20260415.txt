@@ -1,0 +1,17 @@
+=== DOOM STDERR TRACE ===
+[   0.004] POLL stack=['MainActivity']
+[   0.005] === ALL INSTALLED ===
+[   3.308] KEY> KEYUP_PRES!
+[   3.857] KEY> KEYUP_PRES!
+[   6.423] KEY> KEYOK_PRES!
+[   6.431] START(PluginsMenuActivity, None)
+[   6.517] POLL stack=['MainActivity', 'PluginsMenuActivity']
+[   8.565] KEY> KEYUP_PRES!
+[   8.920] KEY> KEYOK_PRES!
+[   8.939] START(CanvasModeActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/doom', 'manifest': {'name': 'DOOM', 'version': '1.0.0', 'author': 'Lab401 / id Software (shareware)', 'description': 'DOOM Episode 1 -- Knee-Deep in the Dead', 'canvas_mode': True, 'entry_class': 'DoomPlugin', 'binary': 'doom', 'args': ['-iwad', 'doom1.wad', '-width', '240', '-height', '240'], 'key_map': {'UP': 'Up', 'DOWN': 'Down', 'LEFT': 'Left', 'RIGHT': 'Right', 'OK': 'Return', 'M1': 'comma', 'M2': 'period', 'ALL': 'Control_L'}, 'min_fw_version': '1.0.0', 'order': 200, 'notes': 'PWR exits unconditionally (kills process). doom1.wad is freely distributable shareware. Binary assets (doom, doom1.wad) must be placed in this directory.'}, 'binary': 'doom', 'args': ['-iwad', 'doom1.wad', '-width', '240', '-height', '240'], 'key_map': {'UP': 'Up', 'DOWN': 'Down', 'LEFT': 'Left', 'RIGHT': 'Right', 'OK': 'Return', 'M1': 'comma', 'M2': 'period', 'ALL': 'Control_L'}})
+[   8.944] DOOM_LAUNCH> ['/home/pi/ipk_app_main/plugins/doom/doom', '-iwad', 'doom1.wad', '-width', '240', '-height', '240']
+[   8.959] DOOM_PID> 16478
+[   9.022] POLL stack=['MainActivity', 'PluginsMenuActivity', 'CanvasModeActivity'] proc_pid=16478 rc=None
+[  23.553] POLL stack=['MainActivity', 'PluginsMenuActivity', 'CanvasModeActivity'] proc_pid=16478 rc=-11
+[  24.025] FINISH(top=CanvasModeActivity d=3)
+[  24.055] POLL stack=['MainActivity', 'PluginsMenuActivity']

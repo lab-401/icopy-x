@@ -1,0 +1,43 @@
+=== TRACE (ORIGINAL FIRMWARE) ===
+[   0.004] POLL stack=['dict'] 
+[   0.004] === ALL INSTALLED ===
+[   1.688] AUDIO.setKeyAudioEnable((True,))
+[ 140.199] START(AutoCopyActivity, None)
+[ 140.379] PM3> hf 14a info (timeout=5000)
+[ 140.481] POLL stack=['dict', 'dict'] 
+[ 140.573] PM3< ret=1 \n
+[ 140.575] PM3> lf sea (timeout=10000)
+[ 141.747] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\nCouldn't identify a chipset\n
+[ 141.984] POLL stack=['dict', 'dict'] type=29 uid=
+[ 142.619] PM3> lf gallagher read (timeout=5000)
+[ 142.882] PM3< ret=1 \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n
+[ 150.891] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[ 151.502] POLL stack=['dict', 'dict', 'dict'] type=29 uid=
+[ 152.216] FINISH(top=dict d=3)
+[ 152.225] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[ 152.355] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 153.243] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[ 153.245] PM3> lf t55xx detect (timeout=10000)
+[ 153.616] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 153.627] PM3> lf gallagher clone b 7FEAA30768D46A35868C35CF (timeout=8000)
+[ 155.103] PM3< ret=1 \n[=] Preparing to clone Gallagher to T55x7 with raw hex\n[+] Blk | Data \n[+] ----+------------\n[+]  00 | 00088060\n[+]  01 | 7FEAA307\n[+]  02 | 68D46A35\n[+]  03 | 868C35CF\n[+] Success writing to tag\n[+] Done\n
+[ 155.106] PM3> lf t55xx detect (timeout=10000)
+[ 155.491] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00088060\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 155.495] PM3> lf t55xx write b 7 d 20206666 (timeout=5000)
+[ 155.631] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[ 155.632] PM3> lf t55xx write b 0 d 00088070 (timeout=5000)
+[ 155.756] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00088070 \n
+[ 155.757] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 157.159] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00088070\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : Yes\n[=]      Password       : 20206666\n\n
+[ 157.166] PM3> lf sea (timeout=10000)
+[ 158.312] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\n[+] Chipset detection: T55xx\n
+[ 158.330] PM3> lf gallagher read (timeout=5000)
+[ 158.604] PM3< ret=1 \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n
+[ 160.274] PM3> lf sea (timeout=10000)
+[ 161.440] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\n[+] Chipset detection: T55xx\n
+[ 161.454] PM3> lf gallagher read (timeout=5000)
+[ 161.733] PM3< ret=1 \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n
+[ 164.038] FINISH(top=dict d=3)
+[ 164.526] POLL stack=['dict', 'dict'] type=29 uid=
+[ 164.630] FINISH(top=dict d=2)
+[ 165.028] POLL stack=['dict'] type=29 uid=

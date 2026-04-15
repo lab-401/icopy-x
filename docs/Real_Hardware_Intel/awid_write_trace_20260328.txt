@@ -1,0 +1,46 @@
+=== TRACE ===
+[   0.006] POLL stack=['dict'] 
+[   0.006] === ALL INSTALLED ===
+[-1770640932.809] START(ReadListActivity, None)
+[-1770640932.131] POLL stack=['dict', 'dict'] 
+[-1770640922.187] PM3> lf awid read
+[-1770640921.874] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (63198) - Wiegand: b4ddede7e8b7edbd, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[-1770640921.609] POLL stack=['dict', 'dict'] type=11 uid=
+[-1770640920.812] PM3> lf awid read
+[-1770640920.532] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (28525) - Wiegand: 6ef6f3f45bf6dedb, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[-1770640915.014] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01deb4ddede7e8b7edbdb7e1'})
+[-1770640914.596] POLL stack=['dict', 'dict', 'dict'] type=11 uid=
+[-1770640913.030] FINISH(top=dict d=3)
+[-1770640913.021] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01deb4ddede7e8b7edbdb7e1'})
+[-1770640912.900] PM3> lf t55xx wipe p 20206666
+[-1770640912.002] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 
+[-1770640912.001] PM3> lf t55xx detect
+[-1770640911.602] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset       
+[-1770640911.587] PM3> lf t55xx write b 1 d 01deb4dd
+[-1770640911.424] PM3< ret=1 \n[=] Writing page 0  block: 01  data: 0x01DEB4DD \n
+[-1770640911.423] PM3> lf t55xx write b 2 d ede7e8b7
+[-1770640911.283] PM3< ret=1 \n[=] Writing page 0  block: 02  data: 0xEDE7E8B7 \n
+[-1770640911.283] PM3> lf t55xx write b 3 d edbdb7e1
+[-1770640911.141] PM3< ret=1 \n[=] Writing page 0  block: 03  data: 0xEDBDB7E1 \n
+[-1770640911.140] PM3> lf t55xx write b 0 d 00107060
+[-1770640911.017] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00107060 \n
+[-1770640911.014] PM3> lf t55xx detect
+[-1770640910.665] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : FSK2a\n[=]      Bit Rate       : 4 - RF/50\n[=]      Inverted       : Yes\n[=]      Offset    
+[-1770640910.661] PM3> lf t55xx write b 7 d 20206666
+[-1770640910.525] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[-1770640910.524] PM3> lf t55xx write b 0 d 00107070
+[-1770640910.399] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00107070 \n
+[-1770640910.398] PM3> lf t55xx detect p 20206666
+[-1770640909.003] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : FSK2a\n[=]      Bit Rate       : 4 - RF/50\n[=]      Inverted       : Yes\n[=]      Offset    
+[-1770640908.995] PM3> lf sea
+[-1770640907.864] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for 
+[-1770640907.836] PM3> lf awid read
+[-1770640907.543] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[-1770640905.629] PM3> lf sea
+[-1770640904.496] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for 
+[-1770640904.487] PM3> lf awid read
+[-1770640904.178] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[-1770640900.732] FINISH(top=dict d=3)
+[-1770640900.569] POLL stack=['dict', 'dict'] type=11 uid=
+[-1770640900.035] FINISH(top=dict d=2)
+[-1770640899.566] POLL stack=['dict'] type=11 uid=

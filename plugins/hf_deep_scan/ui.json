@@ -1,0 +1,63 @@
+{
+    "plugin": true,
+    "name": "HF Deep Scan",
+    "version": "1.0.0",
+    "initial_state": "idle",
+    "states": {
+        "idle": {
+            "screen": {
+                "title": "HF Deep Scan",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Place tag on reader", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Press OK to start deep scan", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK": "run:do_scan",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "results",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "results": {
+            "screen": {
+                "title": "HF Deep Scan",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{scan_results}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Back", "right": "Rescan"},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "set_state:idle"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "HF Deep Scan",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "M1": "finish"
+                }
+            }
+        }
+    }
+}

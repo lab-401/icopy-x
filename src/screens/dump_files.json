@@ -1,0 +1,86 @@
+{
+    "id": "dump_files",
+    "initial_state": "type_list",
+    "states": {
+        "type_list": {
+            "screen": {
+                "title": "Dump Files",
+                "content": {
+                    "type": "list",
+                    "items": "{dump_type_list}"
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "OK": "run:selectType",
+                    "PWR": "finish"
+                }
+            },
+            "note": "All 28 types shown regardless of file presence. No M1/M2 softkeys. Source: HANDOVER.md"
+        },
+        "file_list": {
+            "screen": {
+                "title": "Dump Files",
+                "content": {
+                    "type": "list",
+                    "items": "{dump_file_list}"
+                },
+                "buttons": {
+                    "left": "Details",
+                    "right": "Delete"
+                },
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "M1": "run:toggleDateDisplay",
+                    "M2": "run:enterDeleteConfirm",
+                    "OK": "run:openTagInfo",
+                    "PWR": "run:backToTypeList"
+                }
+            },
+            "note": "M1=Details toggles is_dump_show_date. OK pushes ReadFromHistoryActivity. Source: HANDOVER.md"
+        },
+        "file_list_empty": {
+            "screen": {
+                "title": "Dump Files",
+                "content": {
+                    "type": "text",
+                    "text": "No dump info. \nOnly support:\n.bin .eml .txt"
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "PWR": "run:backToTypeList"
+                }
+            }
+        },
+        "delete_confirm": {
+            "screen": {
+                "title": "Dump Files",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Delete?",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "No",
+                    "right": "Yes"
+                },
+                "keys": {
+                    "M1": "run:cancelDelete",
+                    "M2": "run:confirmDelete",
+                    "PWR": "run:backToTypeList"
+                }
+            },
+            "note": "Source: HANDOVER.md — PWR from delete goes to type list, M1=No goes to file list. Delete confirmation is a toast overlay — original file_list buttons remain visible underneath."
+        }
+    }
+}

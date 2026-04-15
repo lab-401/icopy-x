@@ -1,0 +1,131 @@
+{
+  "screen_id": "diagnosis",
+  "title": "Diagnosis",
+  "title_bg": "#7C829A",
+  "content": {
+    "type": "two_level_menu",
+    "level1": {
+      "widget": "BigTextListView",
+      "items": [
+        {
+          "key": "diagnosis_item1",
+          "text": "User diagnosis"
+        },
+        {
+          "key": "diagnosis_item2",
+          "text": "Factory diagnosis",
+          "note": "Factory diagnosis sub-activities (ScreenTest, ButtonTest, SoundTest, UsbPortTest) are not yet wired into the main DiagnosisActivity flow. User diagnosis runs 5 PM3 tests sequentially."
+        }
+      ]
+    },
+    "level2": {
+      "widget": "CheckedListView",
+      "items_per_page": 4,
+      "items": [
+        {
+          "key": "diagnosis_subitem1",
+          "text": "HF Voltage  ",
+          "test": "_test_hfvoltage",
+          "pm3_cmd": "hf tune"
+        },
+        {
+          "key": "diagnosis_subitem2",
+          "text": "LF Voltage  ",
+          "test": "_test_lfvoltage",
+          "pm3_cmd": "lf tune"
+        },
+        {
+          "key": "diagnosis_subitem3",
+          "text": "HF reader   ",
+          "test": "_test_hfreader",
+          "pm3_cmd": "hf 14a reader"
+        },
+        {
+          "key": "diagnosis_subitem4",
+          "text": "LF reader   ",
+          "test": "_test_lfreader",
+          "pm3_cmd": "lf sea"
+        },
+        {
+          "key": "diagnosis_subitem5",
+          "text": "Flash Memory",
+          "test": "_flash_memtest",
+          "pm3_cmd": "mem spiffs load"
+        },
+        {
+          "key": "diagnosis_subitem6",
+          "text": "USB port    ",
+          "test": "_usb_test",
+          "sub_activity": "UsbPortTestActivity"
+        },
+        {
+          "key": "diagnosis_subitem7",
+          "text": "Buttons     ",
+          "test": "_button_test",
+          "sub_activity": "ButtonTestActivity"
+        },
+        {
+          "key": "diagnosis_subitem8",
+          "text": "Screen      ",
+          "test": "_screen_test",
+          "sub_activity": "ScreenTestActivity"
+        },
+        {
+          "key": "diagnosis_subitem9",
+          "text": "Sound       ",
+          "test": "_sound_test",
+          "sub_activity": "SoundTestActivity"
+        }
+      ]
+    }
+  },
+  "buttons": {
+    "level1": {
+      "M1": {
+        "label": "",
+        "enabled": false
+      },
+      "M2": {
+        "label": "Start",
+        "enabled": true
+      }
+    },
+    "level2": {
+      "M1": {
+        "label": "Cancel",
+        "enabled": true
+      },
+      "M2": {
+        "label": "Start",
+        "enabled": true
+      }
+    }
+  },
+  "key_map": {
+    "level1": {
+      "UP": "scroll_up",
+      "DOWN": "scroll_down",
+      "M2": "select_item",
+      "OK": "select_item",
+      "PWR": "finish"
+    },
+    "level2": {
+      "UP": "scroll_up",
+      "DOWN": "scroll_down",
+      "M2": "start_test",
+      "OK": "start_test",
+      "PWR": "back_to_level1"
+    }
+  },
+  "result_colors": {
+    "note": "Activity uses black text for all results. Pass/fail indicated by checkmark/X characters, not colors.",
+    "pass": "black",
+    "fail": "black",
+    "not_tested": "#EEEEEE"
+  },
+  "pagination": {
+    "items_per_page": 4,
+    "total_items": 9,
+    "pages": 3
+  }
+}

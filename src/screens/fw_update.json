@@ -1,0 +1,102 @@
+{
+    "id": "fw_update",
+    "initial_state": "info",
+    "states": {
+        "info": {
+            "screen": {
+                "title": "FW Update",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "FW Update required. If you skip, the mismatched client/device versions will cause instabilities.", "size": "large"}
+                    ]
+                },
+                "buttons": {
+                    "left": "Skip",
+                    "right": "Install"
+                },
+                "keys": {
+                    "M1": "finish",
+                    "M2": "goto:preflash",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "preflash": {
+            "screen": {
+                "title": "FW Update",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "To perform this flash, your device must be plugged into a power source, and have more than 50% battery.", "size": "large"}
+                    ]
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "DOWN": "goto:preflash_2",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "preflash_2": {
+            "screen": {
+                "title": "FW Update",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "During the flash, do NOT disconnect your device or press any button.", "size": "large"}
+                    ]
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {
+                    "UP": "goto:preflash",
+                    "DOWN": "goto:preflash_3",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "preflash_3": {
+            "screen": {
+                "title": "FW Update",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "When ready, press Start to begin.", "size": "large"}
+                    ]
+                },
+                "buttons": {
+                    "left": "Cancel",
+                    "right": "Start"
+                },
+                "keys": {
+                    "UP": "goto:preflash_2",
+                    "M1": "finish",
+                    "M2": "run:startFlash",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "flashing": {
+            "screen": {
+                "title": "FW Flash",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Installing: Do not unplug your device. Do not press any buttons. Device will restart after.", "size": "large"}
+                    ]
+                },
+                "buttons": {
+                    "left": "",
+                    "right": ""
+                },
+                "keys": {}
+            }
+        }
+    }
+}

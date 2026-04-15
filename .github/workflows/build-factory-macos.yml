@@ -1,0 +1,44 @@
+name: Build Factory PM3 Client (macOS) — One-Time
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-factory-macos:
+    name: Factory PM3 Client (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: brew install readline pkg-config
+
+      - name: Clone factory PM3 fork
+        run: git clone --depth 1 https://github.com/iCopy-X-Community/icopyx-community-pm3.git /tmp/factory_pm3
+
+      - name: Patch for macOS compatibility
+        run: |
+          cd /tmp/factory_pm3
+          # Add missing stdbool.h include for clang
+          echo '#include <stdbool.h>' | cat - client/deps/cliparser/cliparser.h > /tmp/cli_tmp && mv /tmp/cli_tmp client/deps/cliparser/cliparser.h
+
+      - name: Build client
+        run: |
+          cd /tmp/factory_pm3
+          RL_PREFIX=$(brew --prefix readline)
+          ROOT=$(pwd)
+          # Global CFLAGS with all include paths — the sub-Makefiles use
+          # relative paths that break when OBJDIR is overridden
+          export CFLAGS="-w -I${ROOT}/common -I${ROOT}/common/mbedtls -I${ROOT}/include -I${RL_PREFIX}/include"
+          export LDFLAGS="-L${RL_PREFIX}/lib"
+          make -j1 client \
+            SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
+          echo "==="
+          file client/proxmark3
+          ls -la client/proxmark3
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: factory-pm3-macos
+          path: /tmp/factory_pm3/client/proxmark3

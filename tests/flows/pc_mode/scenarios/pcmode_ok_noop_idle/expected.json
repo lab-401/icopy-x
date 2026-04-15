@@ -1,0 +1,10 @@
+{
+  "title": "PC-Mode",
+  "content_contains": [
+    "connect"
+  ],
+  "idle_buttons": {
+    "M1": "Start",
+    "M2": "Start"
+  }
+}

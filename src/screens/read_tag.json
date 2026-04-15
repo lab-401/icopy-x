@@ -1,0 +1,164 @@
+{
+    "id": "read_tag",
+    "initial_state": "scanning",
+    "states": {
+        "idle": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "buttons": {"left": "Back", "right": "Read"},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "run:startScan",
+                    "OK": "run:startScan",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "scanning": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {
+                    "type": "progress",
+                    "message": "Scanning...",
+                    "value": "{scan_progress}",
+                    "max": 100
+                },
+                "buttons": {"left": "Back", "right": "Stop"},
+                "keys": {
+                    "M1": "run:cancelScan",
+                    "M2": "run:cancelScan",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {
+                "result.found==true": "scan_found",
+                "result.hasMulti==true": "idle",
+                "result.return==-4": "idle",
+                "result.found==false": "idle"
+            }
+        },
+        "scan_found": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {
+                    "type": "template",
+                    "fields": [
+                        {"label": "TYPE", "value": "{tag_type_name}"},
+                        {"label": "UID", "value": "{uid}"},
+                        {"label": "SAK", "value": "{sak}"},
+                        {"label": "ATQA", "value": "{atqa}"}
+                    ]
+                },
+                "buttons": {"left": "Rescan", "right": "Read"},
+                "keys": {
+                    "M1": "run:startScan",
+                    "M2": "run:startRead",
+                    "OK": "run:startRead",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "reading": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {
+                    "type": "card_info_with_progress",
+                    "card_info": "{scan_cache}",
+                    "progress_message": "{read_status}",
+                    "progress_value": "{read_progress}",
+                    "progress_max": 100
+                },
+                "buttons": {},
+                "keys": {
+                    "PWR": "run:cancelReadAndExit"
+                }
+            },
+            "transitions": {
+                "read_result==1": "read_success",
+                "read_result==2": "read_partial",
+                "read_result==-2": "warning_keys",
+                "read_result==-1": "read_failed"
+            }
+        },
+        "read_success": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "toast": {
+                    "text": "Read\nSuccessful!\nFile saved",
+                    "icon": "check",
+                    "timeout": 0
+                },
+                "buttons": {"left": "Reread", "right": "Write"},
+                "keys": {
+                    "M1": "run:reread",
+                    "M2": "run:launchWrite",
+                    "OK": "run:launchWrite",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "read_partial": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "toast": {
+                    "text": "Read\nSuccessful!\nPartial data\nsaved",
+                    "icon": "check",
+                    "timeout": 0
+                },
+                "buttons": {"left": "Reread", "right": "Write"},
+                "keys": {
+                    "M1": "run:reread",
+                    "M2": "run:launchWrite",
+                    "OK": "run:launchWrite",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "read_failed": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "toast": {
+                    "text": "Read Failed!",
+                    "icon": "error",
+                    "timeout": 0
+                },
+                "buttons": {"left": "Reread", "right": ""},
+                "keys": {
+                    "M1": "run:reread",
+                    "PWR": "finish"
+                }
+            }
+        },
+        "warning_keys": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "buttons": {},
+                "keys": {}
+            },
+            "note": "Launches WarningM1Activity as child activity"
+        },
+        "error": {
+            "screen": {
+                "title": "Read Tag",
+                "content": {"type": "empty"},
+                "toast": {
+                    "text": "Unknown error.",
+                    "icon": "error",
+                    "timeout": 0
+                },
+                "buttons": {},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "finish",
+                    "OK": "finish",
+                    "PWR": "finish"
+                }
+            }
+        }
+    }
+}

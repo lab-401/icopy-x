@@ -1,0 +1,68 @@
+=== FULL TRACE ===
+[   0.010] DEBUG ver='iceman'
+[   0.012] POLL stack=['MainActivity'] 
+[   0.012] === ALL INSTALLED ===
+[  12.158] KEY> KEYOK_PRES!
+[  13.136] START(AutoCopyActivity, None) bundle=None
+[  13.281] PM3> hf 14a info (timeout=5000)
+[  13.430] PM3< ret=1 len=30 iso14443a card select failed\n\n
+[  13.463] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  13.486] PM3> lf sea (timeout=10000)
+[  16.713] PM3< ret=1 len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[  16.765] PM3> hf sea (timeout=10000)
+[  22.517] PM3< ret=1 len=115 iso14443a card select failed\n\nUID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\n\nValid ISO15693 tag found\n\n\n
+[  22.550] CACHE: {"found": "True", "uid": "'E053011095A9F611'", "type": "19", "progress": "2", "return": "19"}
+[  22.969] PM3> hf 15 dump f /mnt/upan/dump/icode/ICODE_E053011095A9F611_2 (timeout=38000)
+[  22.978] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E053011095A9F611
+[  25.430] PM3< ret=1 len=2003 Using scan mode\nReading memory\n\n blk | data        |lck| ascii\n   0 | 00 00 00 00 | 0 | .: 1 | 00 00 00 00 | 0 | ....\n   2 | 00 00 00 00 | 0 | .: 3 | 00 00 00 00 | 0 | ....\n   4 | 00 00 00 00 | 0 | .: 5 | 00 00 00 00 | 0 | ....\n   6 | 00 00 00 00 | 0 | .: 7 | 00 00 00 00 | 0 | ....\n   8 | 00 00 00 00 | 0 | .: 9 | 00 00 00 00 | 0 | ....\n  10 | 00 00 00 00 | 0 | .: 11 | 00 00 00 00 | 0 | ....\n  12 | 00 00 00 00 | 0 | .: 13 | 00 00 00 00 | 0 | ....\n  14 | 00 00 00 00 | 0 | .: 15 | 00 00 00 00 | 0 | ....\n  16 | 00 00 00 00 | 0 | .: 17 | 00 00 00 00 | 0 | ....\n  18 | 00 00 00 00 | 0 | .: 19 | 00 00 00 00 | 0 | ....\n  20 | 00 00 00 00 | 0 | .: 21 | 00 00 00 00 | 0 | ....\n  22 | 00 00 00 00 | 0 | .: 23 | 00 00 00 00 | 0 | ....\n  24 | 00 00 00 00 | 0 | .: 25 | 00 00 00 00 | 0 | ....\n  26 | 00 00 00 00 | 0 | .: 27 | 00 00 00 00 | 0 | ....\n  28 | 00 00 00 00 | 0 | .: 29 | 00 00 00 00 | 0 | ....\n  30 | 00 00 00 00 | 0 | .: 31 | 00 00 00 00 | 0 | ....\n  32 | 00 00 00 00 | 0 | .: 33 | 00 00 00 00 | 0 | ....\n  34 | 00 00 00 00 | 0 | .: 35 | 00 00 00 00 | 0 | ....\n  36 | 00 00 00 00 | 0 | .: 37 | 00 00 00 00 | 0 | ....\n  38 | 00 00 00 00 | 0 | .: 39 | 00 00 00 00 | 0 | ....\n  40 | 00 00 00 00 | 0 | .: 41 | 00 00 00 00 | 0 | ....\n  42 | 00 00 00 00 | 0 | .: 43 | 00 00 00 00 | 0 | ....\n  44 | 00 00 00 00 | 0 | .: 45 | 00 00 00 00 | 0 | ....\n  46 | 00 00 00 00 | 0 | .: 47 | 00 00 00 00 | 0 | ....\n  48 | 00 00 00 00 | 0 | .: 49 | 00 00 00 00 | 0 | ....\n  50 | 00 00 00 00 | 0 | .: 51 | 00 00 00 00 | 0 | ....\n  52 | 00 00 00 00 | 0 | .: 53 | 00 00 00 00 | 0 | ....\n  54 | 00 00 00 00 | 0 | .: 55 | 00 00 00 00 | 0 | ....\n  56 | 00 00 00 00 | 0 | .: 57 | 00 00 00 00 | 0 | ....\n  58 | 00 00 00 00 | 0 | .: 59 | 00 00 00 00 | 0 | ....\n  60 | 00 00 00 00 | 0 | .: 61 | 00 00 00 00 | 0 | ....\n  62 | 00 00 00 00 | 0 | .: 63 | 00 00 00 00 | 0 | ....\nsaved 2235 bytes to binary file /mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin\nsaved to json file /mnt/upan/du
+[  41.289] KEY> KEYM2_PRES!
+[  41.291] START(WarningWriteActivity, '/mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin') bundle="/mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin"
+[  41.533] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=19 uid=E053011095A9F611
+[  41.685] KEY> KEYM2_PRES!
+[  41.687] FINISH(top=WarningWriteActivity d=3)
+[  41.719] START(WriteActivity, '/mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin') bundle="/mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin"
+[  42.035] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=19 uid=E053011095A9F611
+[  42.094] PM3> hf 15 restore f /mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin (timeout=28888)
+[  44.697] PM3< ret=1 len=147 Using scan mode\nLoaded 2235 bytes from binary file `/mnt/upan/dump/icode/ICODE_E053011095A9F611_2.bin`\nRestoring data blocks\n\nDone!\n\n\nWrite OK\ndone
+[  44.704] PM3> hf 15 csetuid E053011095A9F611 (timeout=5000)
+[  45.627] PM3< ret=1 len=176 Get current tag\n\nUID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\n\nWriting: Verifying: UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\n\nsetting new UID (ok)\n\n\n
+[  47.262] KEY> KEYM1_PRES!
+[  47.577] PM3> hf sea (timeout=10000)
+[  47.765] KEY> KEYM1_PRES!
+[  53.321] PM3< ret=1 len=115 iso14443a card select failed\n\nUID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\n\nValid ISO15693 tag found\n\n\n
+[  76.482] KEY> KEY_PWR_CAN_PRES!
+[  76.930] KEY> KEY_PWR_CAN_PRES!
+[  76.944] FINISH(top=WriteActivity d=3)
+[  77.087] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E053011095A9F611
+[  77.297] KEY> KEY_PWR_CAN_PRES!
+[  77.300] FINISH(top=AutoCopyActivity d=2)
+[  77.589] POLL stack=['MainActivity'] type=19 uid=E053011095A9F611
+[  77.696] KEY> KEY_PWR_CAN_PRES!
+[  81.506] KEY> KEYUP_PRES!
+[  81.943] KEY> KEYUP_PRES!
+[  82.419] KEY> KEYUP_PRES!
+[  82.863] KEY> KEYUP_PRES!
+[  83.094] KEY> KEYUP_PRES!
+[  83.526] KEY> KEYOK_PRES!
+[  83.529] START(WipeTagActivity, None) bundle=None
+[  83.599] POLL stack=['MainActivity', 'WipeTagActivity'] type=19 uid=E053011095A9F611
+[ 123.120] KEY> KEYOK_PRES!
+[ 123.174] PM3> hf 14a info (timeout=5000)
+[ 125.166] PM3< ret=1 len=213 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 1a\nStatic nonce: 01200145\nStatic nonce: yes\n\n\n\n
+[ 125.166] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 125.349] PM3< ret=1 len=57 \ndata: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n\n\n
+[ 125.356] PM3> hf mf cwipe (timeout=28888)
+[ 134.245] PM3< ret=1 len=26 \nCard wiped successfully\n\n
+[ 226.010] KEY> KEY_PWR_CAN_PRES!
+[ 226.578] KEY> KEY_PWR_CAN_PRES!
+[ 226.581] FINISH(top=WipeTagActivity d=2)
+[ 226.821] POLL stack=['MainActivity'] type=19 uid=E053011095A9F611
+[ 227.743] KEY> KEYOK_PRES!
+[ 227.747] START(WipeTagActivity, None) bundle=None
+[ 227.825] POLL stack=['MainActivity', 'WipeTagActivity'] type=19 uid=E053011095A9F611
+[ 228.423] KEY> KEYOK_PRES!
+[ 228.437] PM3> hf 14a info (timeout=5000)
+[ 228.588] PM3< ret=1 len=30 iso14443a card select failed\n\n
+[ 228.589] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 228.768] PM3< ret=1 len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 228.776] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)

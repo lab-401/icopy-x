@@ -1,0 +1,150 @@
+{
+    "id": "time_settings",
+    "initial_state": "display",
+    "states": {
+        "display": {
+            "screen": {
+                "title": "Time Settings",
+                "content": {
+                    "type": "time_editor",
+                    "mode": "display",
+                    "fields": [
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second"
+                    ],
+                    "values": [
+                        2026,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+                    ],
+                    "cursor": -1,
+                    "date_separator": "-",
+                    "time_separator": ":"
+                },
+                "buttons": {
+                    "left": "Edit",
+                    "right": "Edit"
+                },
+                "keys": {
+                    "M1": "set_state:edit",
+                    "M2": "set_state:edit",
+                    "PWR": "finish"
+                }
+            },
+            "on_enter": "run:time_settings.read_time"
+        },
+        "edit": {
+            "screen": {
+                "title": "Time Settings",
+                "content": {
+                    "type": "time_editor",
+                    "mode": "edit",
+                    "fields": [
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second"
+                    ],
+                    "values": [
+                        2026,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+                    ],
+                    "cursor": 0,
+                    "cursor_indicator": "^",
+                    "date_separator": "-",
+                    "time_separator": ":"
+                },
+                "buttons": {
+                    "left": "Cancel",
+                    "right": "Save"
+                },
+                "keys": {
+                    "LEFT": "run:time_settings.cursor_left",
+                    "RIGHT": "run:time_settings.cursor_right",
+                    "UP": "run:time_settings.value_up",
+                    "DOWN": "run:time_settings.value_down",
+                    "M1": "set_state:display",
+                    "M2": "set_state:saving",
+                    "PWR": "set_state:display"
+                }
+            }
+        },
+        "saving": {
+            "screen": {
+                "title": "Time Settings",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Synchronizing system time",
+                    "icon": null,
+                    "timeout": 1500
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "on_enter": "run:time_settings.save_time",
+            "transitions": {
+                "on_result": "saved"
+            }
+        },
+        "saved": {
+            "screen": {
+                "title": "Time Settings",
+                "content": {
+                    "type": "time_editor",
+                    "mode": "display",
+                    "fields": [
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second"
+                    ],
+                    "values": [
+                        2026,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0
+                    ],
+                    "cursor": -1,
+                    "date_separator": "-",
+                    "time_separator": ":"
+                },
+                "toast": {
+                    "text": "Synchronization successful!",
+                    "icon": "check",
+                    "timeout": 2000
+                },
+                "buttons": {
+                    "left": "Edit",
+                    "right": "Edit"
+                },
+                "keys": {
+                    "M1": "set_state:edit",
+                    "M2": "set_state:edit",
+                    "PWR": "finish"
+                }
+            }
+        }
+    }
+}

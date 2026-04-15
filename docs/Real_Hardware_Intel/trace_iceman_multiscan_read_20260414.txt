@@ -1,0 +1,342 @@
+=== FULL TRACE (iceman-fw read flow) ===
+[   0.012] pm3_compat version=iceman needs_translation=True
+[   0.013] presspm3 hook OK
+[   0.015] POLL stack=['MainActivity'] 
+[   0.017] === ALL INSTALLED ===
+[   6.102] SERIAL_TX> b'pctbat\r\n'
+[   6.115] SERIAL_TX> b'charge\r\n'
+[  16.136] SERIAL_TX> b'pctbat\r\n'
+[  16.150] SERIAL_TX> b'charge\r\n'
+[  16.391] KEY> KEYDOWN_PRES!
+[  16.619] KEY> KEYDOWN_PRES!
+[  16.854] KEY> KEYDOWN_PRES!
+[  17.275] KEY> KEYOK_PRES!
+[  17.401] START(ReadListActivity, None) bundle=None
+[  17.541] POLL stack=['MainActivity', 'ReadListActivity'] 
+[  18.290] KEY> KEYOK_PRES!
+[  18.293] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[  18.389] PM3> hf 14a info (timeout=5000)
+[  18.543] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] 
+[  20.144] PM3< ret=1 content_len=605 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\npm3 -->\n
+[  20.174] PM3> hf mf cgetblk 0 (timeout=5000)
+[  20.291] PM3< ret=1 content_len=48 wupC1 error\nCan't read block. error=-1\n\npm3 -->\n
+[  20.302] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  20.548] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=7AF2ECB2
+[  20.817] PM3> hf mf cgetblk 0 (timeout=5888)
+[  20.927] PM3< ret=1 content_len=48 wupC1 error\nCan't read block. error=-1\n\npm3 -->\n
+[  20.931] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  26.166] SERIAL_TX> b'pctbat\r\n'
+[  26.180] SERIAL_TX> b'charge\r\n'
+[  32.751] PM3< ret=1 content_len=1180 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 11.8s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\npm3 -->\n
+[  32.755] PM3> hf mf rdsc 0 A 484558414354 (timeout=15000)
+[  32.898] PM3< ret=1 content_len=227 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  32.901] PM3> hf mf rdsc 0 B A22AE129C013 (timeout=15000)
+[  33.023] PM3< ret=1 content_len=227 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 00 00 00 00 00 00 71 E7 88 00 A2 2A E1 29 C0 13\n\n\npm3 -->\n
+[  33.027] PM3> hf mf rdsc 1 A 484558414354 (timeout=15000)
+[  33.154] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  33.155] PM3> hf mf rdsc 1 B 49FAE4E3849F (timeout=15000)
+[  33.283] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 49 FA E4 E3 84 9F\n\n\npm3 -->\n
+[  33.286] PM3> hf mf rdsc 2 A 484558414354 (timeout=15000)
+[  33.413] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  33.415] PM3> hf mf rdsc 2 B 38FCF33072E0 (timeout=15000)
+[  33.542] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 38 FC F3 30 72 E0\n\n\npm3 -->\n
+[  33.546] PM3> hf mf rdsc 3 A 484558414354 (timeout=15000)
+[  33.673] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  33.674] PM3> hf mf rdsc 3 B 8AD5517B4B18 (timeout=15000)
+[  33.803] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 8A D5 51 7B 4B 18\n\n\npm3 -->\n
+[  33.806] PM3> hf mf rdsc 4 A 484558414354 (timeout=15000)
+[  33.933] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  33.935] PM3> hf mf rdsc 4 B 509359F131B1 (timeout=15000)
+[  34.062] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 50 93 59 F1 31 B1\n\n\npm3 -->\n
+[  34.066] PM3> hf mf rdsc 5 A 484558414354 (timeout=15000)
+[  34.192] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  34.194] PM3> hf mf rdsc 5 B 6C78928E1317 (timeout=15000)
+[  34.322] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 6C 78 92 8E 13 17\n\n\npm3 -->\n
+[  34.326] PM3> hf mf rdsc 6 A 484558414354 (timeout=15000)
+[  34.453] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  34.454] PM3> hf mf rdsc 6 B AA0720018738 (timeout=15000)
+[  34.583] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 AA 07 20 01 87 38\n\n\npm3 -->\n
+[  34.586] PM3> hf mf rdsc 7 A 484558414354 (timeout=15000)
+[  34.713] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  34.715] PM3> hf mf rdsc 7 B A6CAC2886412 (timeout=15000)
+[  34.843] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 A6 CA C2 88 64 12\n\n\npm3 -->\n
+[  34.846] PM3> hf mf rdsc 8 A 484558414354 (timeout=15000)
+[  34.973] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  34.975] PM3> hf mf rdsc 8 B 62D0C424ED8E (timeout=15000)
+[  35.102] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 62 D0 C4 24 ED 8E\n\n\npm3 -->\n
+[  35.106] PM3> hf mf rdsc 9 A 484558414354 (timeout=15000)
+[  35.233] PM3< ret=1 content_len=227 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  35.234] PM3> hf mf rdsc 9 B E64A986A5D94 (timeout=15000)
+[  35.362] PM3< ret=1 content_len=227 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 00 00 00 00 00 00 78 77 88 00 E6 4A 98 6A 5D 94\n\n\npm3 -->\n
+[  35.365] PM3> hf mf rdsc 10 A 484558414354 (timeout=15000)
+[  35.493] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  35.494] PM3> hf mf rdsc 10 B 8FA1D601D0A2 (timeout=15000)
+[  35.622] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 8F A1 D6 01 D0 A2\n\n\npm3 -->\n
+[  35.626] PM3> hf mf rdsc 11 A 484558414354 (timeout=15000)
+[  35.752] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  35.754] PM3> hf mf rdsc 11 B 89347350BD36 (timeout=15000)
+[  35.882] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 89 34 73 50 BD 36\n\n\npm3 -->\n
+[  35.886] PM3> hf mf rdsc 12 A 484558414354 (timeout=15000)
+[  36.013] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  36.015] PM3> hf mf rdsc 12 B 66D2B7DC39EF (timeout=15000)
+[  36.142] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 66 D2 B7 DC 39 EF\n\n\npm3 -->\n
+[  36.146] PM3> hf mf rdsc 13 A 484558414354 (timeout=15000)
+[  36.196] SERIAL_TX> b'pctbat\r\n'
+[  36.210] SERIAL_TX> b'charge\r\n'
+[  36.274] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  36.275] PM3> hf mf rdsc 13 B 6BC1E1AE547D (timeout=15000)
+[  36.403] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 6B C1 E1 AE 54 7D\n\n\npm3 -->\n
+[  36.407] PM3> hf mf rdsc 14 A 484558414354 (timeout=15000)
+[  36.534] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  36.536] PM3> hf mf rdsc 14 B 22729A9BD40F (timeout=15000)
+[  36.663] PM3< ret=1 content_len=227 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 22 72 9A 9B D4 0F\n\n\npm3 -->\n
+[  36.667] PM3> hf mf rdsc 15 A 484558414354 (timeout=15000)
+[  36.793] PM3< ret=1 content_len=227 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00\n\n\npm3 -->\n
+[  36.795] PM3> hf mf rdsc 15 B 484558414354 (timeout=15000)
+[  36.924] PM3< ret=1 content_len=227 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 00 00 00 00 00 00 07 87 8F 00 48 45 58 41 43 54\n\n\npm3 -->\n
+[  46.226] SERIAL_TX> b'pctbat\r\n'
+[  46.240] SERIAL_TX> b'charge\r\n'
+[  50.679] KEY> KEY_PWR_CAN_PRES!
+[  51.515] KEY> KEY_PWR_CAN_PRES!
+[  51.517] FINISH(top=ReadActivity d=3)
+[  51.623] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[  52.768] KEY> KEY_PWR_CAN_PRES!
+[  52.770] FINISH(top=ReadListActivity d=2)
+[  53.127] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  53.847] KEY> KEYUP_PRES!
+[  54.004] KEY> KEYUP_PRES!
+[  54.162] KEY> KEYUP_PRES!
+[  54.321] KEY> KEYUP_PRES!
+[  54.776] KEY> KEYUP_PRES!
+[  55.081] KEY> KEYUP_PRES!
+[  55.263] KEY> KEYUP_PRES!
+[  55.414] KEY> KEYUP_PRES!
+[  55.579] KEY> KEYUP_PRES!
+[  56.007] KEY> KEYOK_PRES!
+[  56.010] START(AboutActivity, None) bundle=None
+[  56.098] SERIAL_TX> b'version\r\n'
+[  56.133] POLL stack=['MainActivity', 'AboutActivity'] type=1 uid=7AF2ECB2
+[  56.256] SERIAL_TX> b'pctbat\r\n'
+[  56.271] SERIAL_TX> b'charge\r\n'
+[  56.420] PM3> hw version (timeout=10000)
+[  56.442] PM3< ret=1 content_len=907 \n [ Proxmark3 ]\n\n [ Client ]\n  Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 5.4.0 20160609\n  Platform: Linux / arm\n  Readline/Linenoise support.absent\n  QT GUI support: absent\n  Native BT support: absent\n  Python script support: absent\n  Python SWIG support: absent\n  Lua script support: present ( 5.4.7 )\n  Lua SWIG support: present\n\n [ Model ]\n  Firmware: PM3 GENERIC\n  External flash: present\n\n [ ARM ]\n  Bootrom: RRG/Iceman/master/release (git)\n  OS: Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 13.2.1 20231009\n\n [ FPGA ]\n fpga_icopyx_hf.ncd image 3s100evq100 12-04-2026 20:29:38\n  FPGA firmware: chip mismatch\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Internal SRAM size: 64K bytes\n  --= Architecture identifier: AT91SAM7Sxx Series\n  --= Embedded flash memory 512K bytes ( 63% used )\n\n\npm3 -->\n
+[  57.047] KEY> KEYDOWN_PRES!
+[  57.825] KEY> KEYDOWN_PRES!
+[  58.337] KEY> KEY_PWR_CAN_PRES!
+[  58.339] FINISH(top=AboutActivity d=2)
+[  58.638] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  59.070] KEY> KEYDOWN_PRES!
+[  59.285] KEY> KEYDOWN_PRES!
+[  59.442] KEY> KEYDOWN_PRES!
+[  59.598] KEY> KEYDOWN_PRES!
+[  60.024] KEY> KEYOK_PRES!
+[  60.050] START(PluginsMenuActivity, None) bundle=None
+[  60.141] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=1 uid=7AF2ECB2
+[  60.584] KEY> KEYDOWN_PRES!
+[  61.132] KEY> KEYDOWN_PRES!
+[  61.517] KEY> KEYOK_PRES!
+[  61.620] START(PluginActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/pm3_raw', 'manifest': {'name': 'PM3 Raw', 'version': '1.0.0', 'author': 'Lab401', 'description': 'Run hw version and display output', 'entry_class': 'PM3RawPlugin', 'permissions': ['pm3'], 'order': 99}, 'ui_definition': {'plugin': True, 'name': 'PM3 Raw', 'version': '1.0.0', 'initial_state': 'idle', 'states': {'idle': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': "Press OK to run 'hw version'", 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'OK': 'run:do_run', 'M1': 'finish'}}, 'transitions': {'on_result.status==done': 'done', 'on_result.status==error': 'error', 'on_error': 'error'}}, 'done': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{output_lines}', 'size': 'normal'}], 'scrollable': True}, 'buttons': {'left': 'Back', 'right': 'Again'}, 'keys': {'M1': 'finish', 'M2': 'set_state:idle'}}}, 'error': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{error_msg}', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'M1': 'finish'}}}}}, 'entry_class': <class 'plugins.pm3_raw.PM3RawPlugin'>, 'plugin_key': 'pm3_raw'}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/pm3_raw", "manifest": {"name": "PM3 Raw", "version": "1.0.0", "author": "Lab401", "description": "Run hw version and display output", "entry_class": "PM3RawPlugin", "permissions": ["pm3"], "order": 99}, "ui_definition": {"plugin": true, "name": "PM3 Raw", "version": "1.0.0", "initial_state": "idle", "states": {"idle": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "Press OK to run 'hw version'", "size": "normal"}]}, "buttons": {"left": "Back", "right": null}, "keys": {"OK": "run:do_run", "M1": "finish"}}, "transitions": {"on_result.status==done": "done", "on_result.status==error": "error", "on_error": "error"}}, "done": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "{output_lines}", "size": "normal"}], "scrollable": true}, "buttons": {"left": "Back", "right": "Again"}, "keys": {"M1": "finish", "M2": "set_state:idle"}}}, "error": {"screen": {"title": "PM3 Raw", "content": {"typ
+[  61.645] POLL stack=['MainActivity', 'PluginsMenuActivity', 'PluginActivity'] type=1 uid=7AF2ECB2
+[  62.771] KEY> KEYOK_PRES!
+[  62.775] PM3> hw version (timeout=5000)
+[  62.803] PM3< ret=1 content_len=907 \n [ Proxmark3 ]\n\n [ Client ]\n  Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 5.4.0 20160609\n  Platform: Linux / arm\n  Readline/Linenoise support.absent\n  QT GUI support: absent\n  Native BT support: absent\n  Python script support: absent\n  Python SWIG support: absent\n  Lua script support: present ( 5.4.7 )\n  Lua SWIG support: present\n\n [ Model ]\n  Firmware: PM3 GENERIC\n  External flash: present\n\n [ ARM ]\n  Bootrom: RRG/Iceman/master/release (git)\n  OS: Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 13.2.1 20231009\n\n [ FPGA ]\n fpga_icopyx_hf.ncd image 3s100evq100 12-04-2026 20:29:38\n  FPGA firmware: chip mismatch\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Internal SRAM size: 64K bytes\n  --= Architecture identifier: AT91SAM7Sxx Series\n  --= Embedded flash memory 512K bytes ( 63% used )\n\n\npm3 -->\n
+[  63.463] KEY> KEY_PWR_CAN_PRES!
+[  63.465] FINISH(top=PluginActivity d=3)
+[  63.650] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=1 uid=7AF2ECB2
+[  63.991] KEY> KEY_PWR_CAN_PRES!
+[  63.993] FINISH(top=PluginsMenuActivity d=2)
+[  64.152] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  65.382] KEY> KEY_PWR_CAN_PRES!
+[  66.286] SERIAL_TX> b'pctbat\r\n'
+[  66.300] SERIAL_TX> b'charge\r\n'
+[  66.328] KEY> KEYDOWN_PRES!
+[  66.566] KEY> KEYDOWN_PRES!
+[  66.901] KEY> KEYDOWN_PRES!
+[  67.084] KEY> KEYDOWN_PRES!
+[  67.544] KEY> KEYDOWN_PRES!
+[  69.124] KEY> KEYOK_PRES!
+[  69.126] START(ReadListActivity, None) bundle=None
+[  69.160] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[  69.798] KEY> KEYOK_PRES!
+[  69.801] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[  69.869] PM3> hf 14a info (timeout=5000)
+[  69.978] PM3< ret=1 content_len=9 \npm3 -->\n
+[  69.982] PM3> lf sea (timeout=10000)
+[  70.163] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=7AF2ECB2
+[  73.242] PM3< ret=1 content_len=114 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\npm3 -->\n
+[  73.294] PM3> hf sea (timeout=10000)
+[  76.316] SERIAL_TX> b'pctbat\r\n'
+[  76.330] SERIAL_TX> b'charge\r\n'
+[  78.843] PM3< ret=1 content_len=49 No known/supported 13.56 MHz tags found\n\npm3 -->\n
+[  78.933] PM3> lf t55xx detect (timeout=10000)
+[  81.921] PM3< ret=1 content_len=99 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\npm3 -->\n
+[  81.951] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  82.150] PM3< ret=1 content_len=9 \npm3 -->\n
+[  82.153] PM3> hf felica reader (timeout=10000)
+[  83.303] PM3< ret=1 content_len=27 card timeout (-4)\n\npm3 -->\n
+[  86.346] SERIAL_TX> b'pctbat\r\n'
+[  86.360] SERIAL_TX> b'charge\r\n'
+[  96.381] SERIAL_TX> b'pctbat\r\n'
+[  96.395] SERIAL_TX> b'charge\r\n'
+[ 106.416] SERIAL_TX> b'pctbat\r\n'
+[ 106.430] SERIAL_TX> b'charge\r\n'
+[ 116.446] SERIAL_TX> b'pctbat\r\n'
+[ 116.460] SERIAL_TX> b'charge\r\n'
+[ 126.476] SERIAL_TX> b'pctbat\r\n'
+[ 126.490] SERIAL_TX> b'charge\r\n'
+[ 136.506] SERIAL_TX> b'pctbat\r\n'
+[ 136.520] SERIAL_TX> b'charge\r\n'
+[ 142.247] KEY> KEY_PWR_CAN_PRES!
+[ 142.742] KEY> KEY_PWR_CAN_PRES!
+[ 142.744] FINISH(top=ReadActivity d=3)
+[ 142.771] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[ 143.317] KEY> KEY_PWR_CAN_PRES!
+[ 143.320] FINISH(top=ReadListActivity d=2)
+[ 143.778] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 144.344] KEY> KEYUP_PRES!
+[ 144.674] KEY> KEYOK_PRES!
+[ 144.677] START(ScanActivity, None) bundle=None
+[ 144.708] PM3> hf 14a info (timeout=5000)
+[ 144.780] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[ 144.812] PM3< ret=1 content_len=9 \npm3 -->\n
+[ 144.815] PM3> lf sea (timeout=10000)
+[ 146.536] SERIAL_TX> b'pctbat\r\n'
+[ 146.549] SERIAL_TX> b'charge\r\n'
+[ 148.052] PM3< ret=1 content_len=114 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\npm3 -->\n
+[ 148.055] PM3> hf sea (timeout=10000)
+[ 153.614] PM3< ret=1 content_len=49 No known/supported 13.56 MHz tags found\n\npm3 -->\n
+[ 153.617] PM3> lf t55xx detect (timeout=10000)
+[ 156.566] SERIAL_TX> b'pctbat\r\n'
+[ 156.580] SERIAL_TX> b'charge\r\n'
+[ 156.634] PM3< ret=1 content_len=99 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\npm3 -->\n
+[ 156.636] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 156.841] PM3< ret=1 content_len=9 \npm3 -->\n
+[ 156.844] PM3> hf felica reader (timeout=10000)
+[ 157.971] PM3< ret=1 content_len=27 card timeout (-4)\n\npm3 -->\n
+[ 166.596] SERIAL_TX> b'pctbat\r\n'
+[ 166.610] SERIAL_TX> b'charge\r\n'
+[ 176.626] SERIAL_TX> b'pctbat\r\n'
+[ 176.640] SERIAL_TX> b'charge\r\n'
+[ 186.656] SERIAL_TX> b'pctbat\r\n'
+[ 186.670] SERIAL_TX> b'charge\r\n'
+[ 196.687] SERIAL_TX> b'pctbat\r\n'
+[ 196.700] SERIAL_TX> b'charge\r\n'
+[ 206.716] SERIAL_TX> b'pctbat\r\n'
+[ 206.730] SERIAL_TX> b'charge\r\n'
+[ 210.342] KEY> KEY_PWR_CAN_PRES!
+[ 210.769] KEY> KEY_PWR_CAN_PRES!
+[ 210.771] FINISH(top=ScanActivity d=2)
+[ 210.877] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 216.751] SERIAL_TX> b'pctbat\r\n'
+[ 216.765] SERIAL_TX> b'charge\r\n'
+[ 226.781] SERIAL_TX> b'pctbat\r\n'
+[ 226.795] SERIAL_TX> b'charge\r\n'
+[ 236.811] SERIAL_TX> b'pctbat\r\n'
+[ 236.824] SERIAL_TX> b'charge\r\n'
+[ 246.846] SERIAL_TX> b'pctbat\r\n'
+[ 246.860] SERIAL_TX> b'charge\r\n'
+[ 256.881] SERIAL_TX> b'pctbat\r\n'
+[ 256.895] SERIAL_TX> b'charge\r\n'
+[ 266.911] SERIAL_TX> b'pctbat\r\n'
+[ 266.925] SERIAL_TX> b'charge\r\n'
+[ 276.941] SERIAL_TX> b'pctbat\r\n'
+[ 276.955] SERIAL_TX> b'charge\r\n'
+[ 286.971] SERIAL_TX> b'pctbat\r\n'
+[ 286.985] SERIAL_TX> b'charge\r\n'
+[ 297.006] SERIAL_TX> b'pctbat\r\n'
+[ 297.020] SERIAL_TX> b'charge\r\n'
+[ 307.036] SERIAL_TX> b'pctbat\r\n'
+[ 307.050] SERIAL_TX> b'charge\r\n'
+[ 317.071] SERIAL_TX> b'pctbat\r\n'
+[ 317.085] SERIAL_TX> b'charge\r\n'
+[ 327.101] SERIAL_TX> b'pctbat\r\n'
+[ 327.115] SERIAL_TX> b'charge\r\n'
+[ 337.131] SERIAL_TX> b'pctbat\r\n'
+[ 337.145] SERIAL_TX> b'charge\r\n'
+[ 347.161] SERIAL_TX> b'pctbat\r\n'
+[ 347.175] SERIAL_TX> b'charge\r\n'
+[ 357.191] SERIAL_TX> b'pctbat\r\n'
+[ 357.205] SERIAL_TX> b'charge\r\n'
+[ 367.226] SERIAL_TX> b'pctbat\r\n'
+[ 367.240] SERIAL_TX> b'charge\r\n'
+[ 377.256] SERIAL_TX> b'pctbat\r\n'
+[ 377.270] SERIAL_TX> b'charge\r\n'
+[ 387.286] SERIAL_TX> b'pctbat\r\n'
+[ 387.300] SERIAL_TX> b'charge\r\n'
+[ 397.316] SERIAL_TX> b'pctbat\r\n'
+[ 397.330] SERIAL_TX> b'charge\r\n'
+[ 407.351] SERIAL_TX> b'pctbat\r\n'
+[ 407.364] SERIAL_TX> b'charge\r\n'
+[ 417.381] SERIAL_TX> b'pctbat\r\n'
+[ 417.395] SERIAL_TX> b'charge\r\n'
+[ 427.416] SERIAL_TX> b'pctbat\r\n'
+[ 427.430] SERIAL_TX> b'charge\r\n'
+[ 437.451] SERIAL_TX> b'pctbat\r\n'
+[ 437.465] SERIAL_TX> b'charge\r\n'
+[ 447.529] SERIAL_TX> b'pctbat\r\n'
+[ 447.545] SERIAL_TX> b'charge\r\n'
+[ 457.568] SERIAL_TX> b'pctbat\r\n'
+[ 457.585] SERIAL_TX> b'charge\r\n'
+[ 467.601] SERIAL_TX> b'pctbat\r\n'
+[ 467.615] SERIAL_TX> b'charge\r\n'
+[ 477.631] SERIAL_TX> b'pctbat\r\n'
+[ 477.645] SERIAL_TX> b'charge\r\n'
+[ 487.661] SERIAL_TX> b'pctbat\r\n'
+[ 487.675] SERIAL_TX> b'charge\r\n'
+[ 497.696] SERIAL_TX> b'pctbat\r\n'
+[ 497.710] SERIAL_TX> b'charge\r\n'
+[ 507.726] SERIAL_TX> b'pctbat\r\n'
+[ 507.740] SERIAL_TX> b'charge\r\n'
+[ 517.756] SERIAL_TX> b'pctbat\r\n'
+[ 517.770] SERIAL_TX> b'charge\r\n'
+[ 527.786] SERIAL_TX> b'pctbat\r\n'
+[ 527.800] SERIAL_TX> b'charge\r\n'
+[ 537.821] SERIAL_TX> b'pctbat\r\n'
+[ 537.835] SERIAL_TX> b'charge\r\n'
+[ 547.851] SERIAL_TX> b'pctbat\r\n'
+[ 547.865] SERIAL_TX> b'charge\r\n'
+[ 557.881] SERIAL_TX> b'pctbat\r\n'
+[ 557.895] SERIAL_TX> b'charge\r\n'
+[ 567.916] SERIAL_TX> b'pctbat\r\n'
+[ 567.930] SERIAL_TX> b'charge\r\n'
+[ 577.951] SERIAL_TX> b'pctbat\r\n'
+[ 577.965] SERIAL_TX> b'charge\r\n'
+[ 587.981] SERIAL_TX> b'pctbat\r\n'
+[ 588.174] SERIAL_TX> b'charge\r\n'
+[ 598.191] SERIAL_TX> b'pctbat\r\n'
+[ 598.205] SERIAL_TX> b'charge\r\n'
+[ 608.227] SERIAL_TX> b'pctbat\r\n'
+[ 608.239] SERIAL_TX> b'charge\r\n'
+[ 618.256] SERIAL_TX> b'pctbat\r\n'
+[ 618.270] SERIAL_TX> b'charge\r\n'
+[ 628.286] SERIAL_TX> b'pctbat\r\n'
+[ 628.300] SERIAL_TX> b'charge\r\n'
+[ 638.316] SERIAL_TX> b'pctbat\r\n'
+[ 638.330] SERIAL_TX> b'charge\r\n'
+[ 648.346] SERIAL_TX> b'pctbat\r\n'
+[ 648.360] SERIAL_TX> b'charge\r\n'
+[ 658.376] SERIAL_TX> b'pctbat\r\n'
+[ 658.390] SERIAL_TX> b'charge\r\n'
+[ 668.411] SERIAL_TX> b'pctbat\r\n'
+[ 668.425] SERIAL_TX> b'charge\r\n'
+[ 678.446] SERIAL_TX> b'pctbat\r\n'
+[ 678.460] SERIAL_TX> b'charge\r\n'
+[ 679.688] KEY> KEYDOWN_PRES!
+[ 679.902] KEY> KEYDOWN_PRES!
+[ 680.061] KEY> KEYDOWN_PRES!
+[ 680.206] KEY> KEYDOWN_PRES!
+[ 680.353] KEY> KEYDOWN_PRES!
+[ 680.504] KEY> KEYDOWN_PRES!
+[ 680.782] KEY> KEYDOWN_PRES!
+[ 681.021] KEY> KEYDOWN_PRES!
+[ 681.671] KEY> KEYOK_PRES!
+[ 681.674] START(AboutActivity, None) bundle=None
+[ 682.045] POLL stack=['MainActivity', 'AboutActivity'] type=1 uid=7AF2ECB2
+[ 682.535] KEY> KEYOK_PRES!
+[ 682.995] KEY> KEYDOWN_PRES!
+[ 683.574] KEY> KEYOK_PRES!
+[ 683.576] START(UpdateActivity, None) bundle=None
+[ 684.049] POLL stack=['MainActivity', 'AboutActivity', 'UpdateActivity'] type=1 uid=7AF2ECB2
+[ 684.142] KEY> KEYM2_PRES!
+[ 688.476] SERIAL_TX> b'pctbat\r\n'
+[ 688.735] SERIAL_TX> b'charge\r\n'

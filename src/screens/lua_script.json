@@ -1,0 +1,51 @@
+{
+    "id": "lua_script",
+    "initial_state": "script_list",
+    "states": {
+        "script_list": {
+            "screen": {
+                "title": "LUA Script",
+                "page": "{page_indicator}",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 5,
+                    "items": []
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "LEFT": "page:-1",
+                    "RIGHT": "page:1",
+                    "OK": "select",
+                    "M2": "select",
+                    "PWR": "finish"
+                }
+            },
+            "on_enter": "run:lua_script.list_scripts"
+        },
+        "running": {
+            "screen": {
+                "title": "LUA Script",
+                "content": {
+                    "type": "console",
+                    "lines": [],
+                    "auto_scroll": true,
+                    "font_size": 14,
+                    "bg_color": "#222222",
+                    "text_color": "#FFFFFF"
+                },
+                "buttons": {"left": "Cancel", "right": ""},
+                "keys": {
+                    "UP": "run:console.font_up",
+                    "DOWN": "run:console.font_down",
+                    "M1": "finish",
+                    "PWR": "set_state:script_list"
+                }
+            },
+            "on_enter": "run:lua_script.execute",
+            "note": "Script execution pushes ConsolePrinterActivity (separate activity, not inline console). ConsolePrinterActivity owns full-screen 240x240 black console with no title/button bars. Keys: UP/DOWN=scroll, M1=zoom out, M2=zoom in, LEFT/RIGHT=h-scroll, PWR=exit."
+        }
+    }
+}

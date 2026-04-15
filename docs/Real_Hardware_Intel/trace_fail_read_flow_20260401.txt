@@ -1,0 +1,101 @@
+=== FAIL READ TRACE ===
+[   0.002] PATCHED hfmfread.readAllSector
+[   0.003] PATCHED hfmfread.cacheFile
+[   0.003] PATCHED hfmfread.callListener
+[   0.004] PATCHED hfmfkeys.fchks
+[   0.005] PATCHED hfmfkeys.keysFromPrintParse
+[   0.005] PATCHED lfread.createRetObj
+[   0.006] PATCHED lfread.read
+[   0.006] PATCHED lfread.readAWID
+[   0.007] PATCHED lfread.readCardIdAndRaw
+[   0.007] PATCHED lfread.readEM410X
+[   0.008] PATCHED lfread.readEM4X05
+[   0.008] PATCHED lfread.readFCCNAndRaw
+[   0.008] PATCHED lfread.readFDX
+[   0.009] PATCHED lfread.readGALLAGHER
+[   0.009] PATCHED lfread.readGProx2
+[   0.010] PATCHED lfread.readHID
+[   0.010] PATCHED lfread.readIndala
+[   0.011] PATCHED lfread.readJablotron
+[   0.011] PATCHED lfread.readKeri
+[   0.011] PATCHED lfread.readNedap
+[   0.012] PATCHED lfread.readNexWatch
+[   0.012] PATCHED lfread.readNoralsy
+[   0.012] PATCHED lfread.readPAC
+[   0.013] PATCHED lfread.readParadox
+[   0.013] PATCHED lfread.readPresco
+[   0.014] PATCHED lfread.readProxIO
+[   0.014] PATCHED lfread.readPyramid
+[   0.014] PATCHED lfread.readSecurakey
+[   0.015] PATCHED lfread.readT55XX
+[   0.015] PATCHED lfread.readViking
+[   0.016] PATCHED lfread.readVisa2000
+[   0.019] POLL stack=['dict'] 
+[   0.019] === ALL INSTALLED ===
+[ 955.239] START(ReadListActivity, None)
+[ 956.293] POLL stack=['dict', 'dict'] 
+[ 970.987] LFREAD.readCardIdAndRaw('lf noralsy read')
+[ 970.989] LFREAD.read('lf noralsy read', '(?:Card|ID|id|CARD|ID|UID|uid|Uid)\\s*:*\\s*([xX0-9a-fA-F ]+)', '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[ 970.995] PM3> lf noralsy read (timeout=5000)
+[ 971.318] PM3< ret=1 \n
+[ 971.324] LFREAD.createRetObj(None, None, -1)
+[ 971.325] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[ 971.325] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[ 971.326] LFREAD.readCardIdAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[ 978.516] LFREAD.readCardIdAndRaw('lf noralsy read')
+[ 978.518] LFREAD.read('lf noralsy read', '(?:Card|ID|id|CARD|ID|UID|uid|Uid)\\s*:*\\s*([xX0-9a-fA-F ]+)', '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[ 978.519] PM3> lf noralsy read (timeout=5000)
+[ 978.745] PM3< ret=1 \n
+[ 978.746] LFREAD.createRetObj(None, None, -1)
+[ 978.746] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[ 978.747] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[ 978.748] LFREAD.readCardIdAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[1005.958] LFREAD.readCardIdAndRaw('lf noralsy read')
+[1005.959] LFREAD.read('lf noralsy read', '(?:Card|ID|id|CARD|ID|UID|uid|Uid)\\s*:*\\s*([xX0-9a-fA-F ]+)', '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[1005.960] PM3> lf noralsy read (timeout=5000)
+[1006.196] PM3< ret=1 \n
+[1006.197] LFREAD.createRetObj(None, None, -1)
+[1006.198] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[1006.198] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[1006.200] LFREAD.readCardIdAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[1009.743] LFREAD.readCardIdAndRaw('lf noralsy read')
+[1009.750] LFREAD.read('lf noralsy read', '(?:Card|ID|id|CARD|ID|UID|uid|Uid)\\s*:*\\s*([xX0-9a-fA-F ]+)', '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[1009.751] PM3> lf noralsy read (timeout=5000)
+[1010.017] PM3< ret=1 \n
+[1010.018] LFREAD.createRetObj(None, None, -1)
+[1010.019] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[1010.020] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[1010.021] LFREAD.readCardIdAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[1021.176] LFREAD.readFCCNAndRaw('lf gallagher read')
+[1021.219] LFREAD.read('lf gallagher read', <cyfunction getFCCN at 0xb2800a50>, '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[1021.221] PM3> lf gallagher read (timeout=5000)
+[1021.454] PM3< ret=1 \n
+[1021.455] LFREAD.createRetObj(None, None, -1)
+[1021.456] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[1021.456] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[1021.457] LFREAD.readFCCNAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[1028.242] LFREAD.readFCCNAndRaw('lf gallagher read')
+[1028.245] LFREAD.read('lf gallagher read', <cyfunction getFCCN at 0xb2800a50>, '.*(?:Raw|Raw|RAW|hex|HEX|Hex)\\s*:*\\s*([xX0-9a-fA-F ]+)', 0, 0)
+[1028.246] PM3> lf gallagher read (timeout=5000)
+[1028.490] PM3< ret=1 \n
+[1028.491] LFREAD.createRetObj(None, None, -1)
+[1028.492] LFREAD.createRetObj returned: {'return': -1, 'data': None, 'raw': None}
+[1028.492] LFREAD.read returned: {'return': -1, 'data': None, 'raw': None}
+[1028.493] LFREAD.readFCCNAndRaw returned: {'return': -1, 'data': None, 'raw': None}
+[1035.711] PM3> lf t55xx detect (timeout=10000)
+[1036.829] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[1036.835] PM3> hf sea (timeout=10000)
+[1036.946] POLL stack=['dict', 'dict'] type=23 uid=
+[1038.712] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS /
+[1038.716] PM3> hf felica reader (timeout=10000)
+[1040.737] PM3< ret=1 \n[!] card timeout\n
+[1041.755] PM3> lf t55xx detect (timeout=10000)
+[1042.866] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[1043.746] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys (timeout=180000)
+[1073.486] PM3< ret=1 \n[+] loaded 107 keys from dictionary file /tmp/.keys/t5577_tmp_keys.dic\n[=] Testing 51243648\n[=] Testing 000D8787\n[=] Testing 19920427\n[=] Testing 65857569\n[=] Testing 05D73B9F\n[=] Testing 89A69E60\n[=] Testing 314159E0\n[=] Testing AA55BBBB\n[=] Testing A5B4C3D2\n[=] Testing 1C0B5848\n[=] Testing 00434343\n[=] Testing 44B44CAE\n[=] Testing 88661858\n[=] Testing 575F4F4B\n[=] Testing 505209
+[1073.489] LFREAD.createRetObj(None, None, -7)
+[1073.489] LFREAD.createRetObj returned: {'return': -7, 'data': None, 'raw': None}
+[1073.544] START(WarningT5XActivity, -7)
+[1074.008] POLL stack=['dict', 'dict', 'dict'] type=23 uid=
+[1076.570] FINISH(top=dict d=3 result=None)
+[1077.013] POLL stack=['dict', 'dict'] type=23 uid=

@@ -1,0 +1,4 @@
+3 /mnt/upan/full_trace.log
+=== TRACE ===
+[   0.085] POLL stack=['MainActivity'] 
+[   0.085] === ALL INSTALLED ===

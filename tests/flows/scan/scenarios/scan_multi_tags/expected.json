@@ -1,0 +1,14 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "toast": "Multiple tags detected!",
+  "result_phase": {
+    "title": "Scan Tag",
+    "content_contains": [],
+    "scan_cache_found": true,
+    "scan_cache_type": -1
+  }
+}

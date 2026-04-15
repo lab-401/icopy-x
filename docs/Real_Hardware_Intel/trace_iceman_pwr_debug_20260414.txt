@@ -1,0 +1,62 @@
+=== FULL TRACE ===
+[   0.011] presspm3 hook OK
+[   0.013] POLL stack=['MainActivity'] 
+[   0.013] === ALL INSTALLED ===
+[  26.223] KEY> KEYOK_PRES!
+[  26.365] START(AutoCopyActivity, None) bundle=None
+[  26.445] PM3> hf 14a info (timeout=5000)
+[  26.552] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  27.747] KEY> KEY_PWR_CAN_PRES!
+[  28.876] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  28.908] PM3> hf mf cgetblk 0 (timeout=5000)
+[  29.074] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  29.084] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  29.467] PM3> hf mf cgetblk 0 (timeout=5888)
+[  29.557] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[  29.618] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  29.624] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  29.973] KEY> KEY_PWR_CAN_PRES!
+[  30.199] KEY> KEY_PWR_CAN_PRES!
+[  30.373] KEY> KEY_PWR_CAN_PRES!
+[  30.624] KEY> KEY_PWR_CAN_PRES!
+[  35.737] KEY> KEY_PWR_CAN_PRES!
+[  35.974] KEY> KEY_PWR_CAN_PRES!
+[  36.128] KEY> KEY_PWR_CAN_PRES!
+[  41.543] PM3< ret=1 content_len=1172 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nTime in checkkeys (fast) 11.9s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[  41.548] PM3> hf mf rdsc 0 A 484558414354 (timeout=15000)
+[  41.739] PM3< ret=1 content_len=219 \ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00\n\n\n
+[  41.744] PM3> hf mf rdsc 1 A 484558414354 (timeout=15000)
+[  41.915] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[  41.918] PM3> hf mf rdsc 2 A 484558414354 (timeout=15000)
+[  42.095] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[  42.098] PM3> hf mf rdsc 3 A 484558414354 (timeout=15000)
+[  42.274] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[  42.278] PM3> hf mf rdsc 4 A 484558414354 (timeout=15000)
+[  42.454] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00\n\n\n
+[  42.458] PM3> hf mf rdsc 5 A 484558414354 (timeout=15000)
+[  42.635] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  42.639] PM3> hf mf rdsc 6 A 484558414354 (timeout=15000)
+[  42.815] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  42.819] PM3> hf mf rdsc 7 A 484558414354 (timeout=15000)
+[  42.995] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  42.998] PM3> hf mf rdsc 8 A 484558414354 (timeout=15000)
+[  43.175] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  43.178] PM3> hf mf rdsc 9 A 484558414354 (timeout=15000)
+[  43.355] PM3< ret=1 content_len=219 \ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  43.358] PM3> hf mf rdsc 10 A 484558414354 (timeout=15000)
+[  43.534] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  43.538] PM3> hf mf rdsc 11 A 484558414354 (timeout=15000)
+[  43.714] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  43.718] PM3> hf mf rdsc 12 A 484558414354 (timeout=15000)
+[  43.895] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  43.898] PM3> hf mf rdsc 13 A 484558414354 (timeout=15000)
+[  44.075] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  44.079] PM3> hf mf rdsc 14 A 484558414354 (timeout=15000)
+[  44.255] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00\n\n\n
+[  44.258] PM3> hf mf rdsc 15 A 484558414354 (timeout=15000)
+[  44.434] PM3< ret=1 content_len=219 \ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00\n\n\n
+[  61.847] KEY> KEY_PWR_CAN_PRES!
+[  62.226] KEY> KEY_PWR_CAN_PRES!
+[  62.229] FINISH(top=AutoCopyActivity d=2)
+[  62.607] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  62.757] KEY> KEY_PWR_CAN_PRES!

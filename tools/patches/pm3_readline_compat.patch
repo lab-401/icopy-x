@@ -1,0 +1,20 @@
+diff --git a/client/src/ui.c b/client/src/ui.c
+index 1a5f81a..2b3c4d5 100644
+--- a/client/src/ui.c
++++ b/client/src/ui.c
+@@ -31,6 +31,15 @@
+ //Load readline after stdio.h
+ #include <readline/readline.h>
+ #endif
++
++// iCopy-X: stub rl_clear_visible_line() for readline < 8.0.
++// Xenial ships readline 6.3 which lacks this function (added in 8.0).
++// The PM3 client runs as a daemon on iCopy-X, not interactively,
++// so the visible-line redraw hack is unnecessary.
++#if defined(HAVE_READLINE) && !defined(rl_clear_visible_line)
++static inline void rl_clear_visible_line(void) {}
++#endif
++
+
+ #include <complex.h>
+ #include "util.h"

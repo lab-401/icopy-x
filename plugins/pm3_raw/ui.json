@@ -1,0 +1,61 @@
+{
+    "plugin": true,
+    "name": "PM3 Raw",
+    "version": "1.0.0",
+    "initial_state": "idle",
+    "states": {
+        "idle": {
+            "screen": {
+                "title": "PM3 Raw",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Press OK to run 'hw version'", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK": "run:do_run",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "done",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "done": {
+            "screen": {
+                "title": "PM3 Raw",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{output_lines}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Back", "right": "Again"},
+                "keys": {
+                    "M1": "finish",
+                    "M2": "set_state:idle"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "PM3 Raw",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "M1": "finish"
+                }
+            }
+        }
+    }
+}

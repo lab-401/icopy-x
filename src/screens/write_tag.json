@@ -1,0 +1,161 @@
+{
+    "id": "write_tag",
+    "initial_state": "idle",
+    "states": {
+        "idle": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "empty"
+                },
+                "buttons": {
+                    "left": "Write",
+                    "right": "Verify"
+                },
+                "keys": {
+                    "M1": "run:startWrite",
+                    "M2": "run:startVerify",
+                    "OK": "run:startWrite",
+                    "PWR": "finish"
+                }
+            },
+            "transitions": {}
+        },
+        "writing": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "progress",
+                    "message": "Writing...",
+                    "value": "{write_progress}",
+                    "max": 100
+                },
+                "buttons": {},
+                "keys": {
+                    "PWR": "finish"
+                },
+                "note": "Button bar completely hidden during write (dismissButton). Tag info template persists underneath progress bar."
+            },
+            "transitions": {
+                "result.write==success": "write_success",
+                "result.write==failed": "write_failed"
+            }
+        },
+        "write_success": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Write successful!",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Verify",
+                    "right": "Rewrite"
+                },
+                "keys": {
+                    "M1": "run:startVerify",
+                    "M2": "run:startWrite",
+                    "OK": "run:startVerify",
+                    "PWR": "finish"
+                },
+                "note": "Post-completion button swap: M1=Verify, M2=Rewrite (opposite of idle state M1=Write, M2=Verify)"
+            },
+            "transitions": {}
+        },
+        "write_failed": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Write failed!",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Verify",
+                    "right": "Rewrite"
+                },
+                "keys": {
+                    "M1": "run:startVerify",
+                    "M2": "run:startWrite",
+                    "OK": "run:startVerify",
+                    "PWR": "finish"
+                },
+                "note": "Post-completion button swap: M1=Verify, M2=Rewrite (opposite of idle state M1=Write, M2=Verify)"
+            },
+            "transitions": {}
+        },
+        "verifying": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "progress",
+                    "message": "Verifying...",
+                    "value": "{verify_progress}",
+                    "max": 100
+                },
+                "buttons": {},
+                "keys": {
+                    "PWR": "finish"
+                },
+                "note": "Button bar completely hidden during verify (dismissButton). Tag info template persists underneath progress bar."
+            },
+            "transitions": {
+                "result.verify==success": "verify_success",
+                "result.verify==failed": "verify_failed"
+            }
+        },
+        "verify_success": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Verification successful!",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Verify",
+                    "right": "Rewrite"
+                },
+                "keys": {
+                    "M1": "run:startVerify",
+                    "M2": "run:startWrite",
+                    "OK": "run:startVerify",
+                    "PWR": "finish"
+                },
+                "note": "Post-completion button swap: M1=Verify, M2=Rewrite"
+            },
+            "transitions": {}
+        },
+        "verify_failed": {
+            "screen": {
+                "title": "Write Tag",
+                "content": {
+                    "type": "empty"
+                },
+                "toast": {
+                    "text": "Verification failed!",
+                    "timeout": 0
+                },
+                "buttons": {
+                    "left": "Verify",
+                    "right": "Rewrite"
+                },
+                "keys": {
+                    "M1": "run:startVerify",
+                    "M2": "run:startWrite",
+                    "OK": "run:startVerify",
+                    "PWR": "finish"
+                },
+                "note": "Post-completion button swap: M1=Verify, M2=Rewrite"
+            },
+            "transitions": {}
+        }
+    }
+}

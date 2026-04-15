@@ -1,0 +1,59 @@
+=== TRACE ===
+[   0.004] POLL stack=['dict'] 
+[   0.004] === ALL INSTALLED ===
+[ 178.076] START(ScanActivity, None)
+[ 178.147] PM3> hf 14a info (timeout=5000)
+[ 178.187] POLL stack=['dict', 'dict'] 
+[ 178.301] PM3< ret=1 \n
+[ 178.312] PM3> lf sea (timeout=10000)
+[ 180.838] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[ 180.842] PM3> hf sea (timeout=10000)
+[ 182.797] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Sear
+[ 182.803] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 183.146] PM3< ret=1 \n
+[ 183.150] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 183.196] POLL stack=['dict', 'dict'] type=? uid=
+[ 183.483] PM3< ret=1 \n
+[ 183.484] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=8888)
+[ 183.841] PM3< ret=1 \n\n[+]  block 01 : 12 FF FF FF 7F 1F FF 3C \n\n
+[ 183.842] PM3> hf iclass info (timeout=8888)
+[ 184.299] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n[+]     CSN: 75 D0 E0 13 FE FF 12 E0   (uid)\n[+]  Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\n[+] E-purse: FA FF FF FF FF FF FF FF   (Card challenge, CC)\n[+]      Kd: 00 
+[ 184.699] POLL stack=['dict', 'dict'] type=17 uid=
+[ 187.272] FINISH(top=dict d=2)
+[ 187.704] POLL stack=['dict'] type=17 uid=
+[ 188.676] START(ScanActivity, None)
+[ 188.714] PM3> hf 14a info (timeout=5000)
+[ 188.927] PM3< ret=1 \n
+[ 188.930] PM3> lf sea (timeout=10000)
+[ 189.208] POLL stack=['dict', 'dict'] 
+[ 191.442] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[ 191.445] PM3> hf sea (timeout=10000)
+[ 193.380] PM3< ret=1 \n[\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO14443-A tag...[/]                                          [-] Sear
+[ 193.381] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 193.713] PM3< ret=1 \n
+[ 193.715] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 193.716] POLL stack=['dict', 'dict'] type=? uid=
+[ 194.048] PM3< ret=1 \n
+[ 194.049] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=8888)
+[ 194.382] PM3< ret=1 \n
+[ 194.383] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=8888)
+[ 194.718] PM3< ret=1 \n
+[ 194.720] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=8888)
+[ 195.060] PM3< ret=1 \n[+] Using elite algo\n\n[+]  block 01 : 12 FF FF FF 7F 1F FF 3C \n\n
+[ 195.061] PM3> hf iclass info (timeout=8888)
+[ 195.475] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n[+]     CSN: 4A 67 8E 15 FE FF 12 E0   (uid)\n[+]  Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\n[+] E-purse: FF FF FF FF F9 FF FF FF   (Card challenge, CC)\n[+]      Kd: 00 
+[ 195.721] POLL stack=['dict', 'dict'] type=18 uid=
+[ 197.783] FINISH(top=dict d=2)
+[ 198.225] POLL stack=['dict'] type=18 uid=
+[ 199.533] START(ScanActivity, None)
+[ 199.576] PM3> hf 14a info (timeout=5000)
+[ 199.729] POLL stack=['dict', 'dict'] type=18 uid=
+[ 199.797] PM3< ret=1 \n
+[ 199.802] PM3> lf sea (timeout=10000)
+[ 200.231] POLL stack=['dict', 'dict'] 
+[ 202.316] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[ 202.318] PM3> hf sea (timeout=10000)
+[ 204.165] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...[\]                                          [|] Sear
+[ 204.238] POLL stack=['dict', 'dict'] type=19 uid=E004013CF943B302
+[ 206.271] FINISH(top=dict d=2)
+[ 206.744] POLL stack=['dict'] type=19 uid=E004013CF943B302

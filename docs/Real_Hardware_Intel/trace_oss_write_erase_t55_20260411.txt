@@ -1,0 +1,551 @@
+549 /mnt/upan/full_trace.log
+---
+=== TRACE ===
+[   0.092] POLL stack=['MainActivity'] 
+[   0.092] === ALL INSTALLED ===
+[  66.788] KEY> KEYOK_PRES!
+[  66.918] START(AutoCopyActivity)
+[  67.055] PM3> hf 14a info (timeout=5000)
+[  67.186] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  68.502] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\n[+]  UID: 5E 5B CE 4C\n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n\nNikola.D: 0\n
+[  68.558] PM3> hf mf cgetblk 0 (timeout=5000)
+[  68.771] PM3< ret=1 [usb|script] pm3 --> hf mf cgetblk 0\n--block number: 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n
+[  68.782] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  69.233] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=5E5BCE4C
+[  69.401] PM3> hf mf cgetblk 0 (timeout=5888)
+[  69.608] PM3< ret=1 [usb|script] pm3 --> hf mf cgetblk 0\n--block number: 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n
+[  69.613] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  70.730] PM3< ret=1 [usb|script] pm3 --> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic\n[+] Loaded 104 keys from /tmp/.keys/mf_tmp_keys.dic\n[=] Running strategy 1\n[=] Chunk: 1.1s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 1.1s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | 4a6352684677   | 1 | 536653644c65   | 1 |\n[+] | 001 | 4a6352684677   | 1 | 536653644c6
+[  70.733] PM3> hf mf rdsc 0 A 4A6352684677 (timeout=15000)
+[  70.960] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 0 A 4A6352684677\n--sector no 0, key A - 4A 63 52 68 46 77\n\nisOk:01\n  0 | 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n  1 | 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\n  2 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  3 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 0  rdAB wrB\n  block 1  rdAB 
+[  70.965] PM3> hf mf rdsc 1 A 4A6352684677 (timeout=15000)
+[  71.193] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 1 A 4A6352684677\n--sector no 1, key A - 4A 63 52 68 46 77\n\nisOk:01\n  4 | 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\n  5 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  6 | 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\n  7 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 4  rdAB wrB\n  block 5  rdAB 
+[  71.197] PM3> hf mf rdsc 2 A 4A6352684677 (timeout=15000)
+[  71.414] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 2 A 4A6352684677\n--sector no 2, key A - 4A 63 52 68 46 77\n\nisOk:01\n  8 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  9 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 10 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 11 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 8  rdAB wrB\n  block 9  rdAB 
+[  71.418] PM3> hf mf rdsc 3 A 4A6352684677 (timeout=15000)
+[  71.646] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 3 A 4A6352684677\n--sector no 3, key A - 4A 63 52 68 46 77\n\nisOk:01\n 12 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 13 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 14 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 15 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 12  rdAB wrB\n  block 13  rdA
+[  71.649] PM3> hf mf rdsc 4 A 4A6352684677 (timeout=15000)
+[  71.870] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 4 A 4A6352684677\n--sector no 4, key A - 4A 63 52 68 46 77\n\nisOk:01\n 16 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 17 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 18 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 19 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 16  rdAB wrB\n  block 17  rdA
+[  71.876] PM3> hf mf rdsc 5 A 4A6352684677 (timeout=15000)
+[  72.105] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 5 A 4A6352684677\n--sector no 5, key A - 4A 63 52 68 46 77\n\nisOk:01\n 20 | 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\n 21 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 22 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 23 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 20  rdAB wrB\n  block 21  rdA
+[  72.109] PM3> hf mf rdsc 6 A FFFFFFFFFFFF (timeout=15000)
+[  72.349] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 6 A FFFFFFFFFFFF\n--sector no 6, key A - FF FF FF FF FF FF\n\nisOk:01\n 24 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 25 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 26 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 27 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 24  rdAB wrAB incAB dectrAB\n
+[  72.353] PM3> hf mf rdsc 7 A FFFFFFFFFFFF (timeout=15000)
+[  72.572] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 7 A FFFFFFFFFFFF\n--sector no 7, key A - FF FF FF FF FF FF\n\nisOk:01\n 28 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 29 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 30 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 31 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 28  rdAB wrAB incAB dectrAB\n
+[  72.576] PM3> hf mf rdsc 8 A FFFFFFFFFFFF (timeout=15000)
+[  72.806] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 8 A FFFFFFFFFFFF\n--sector no 8, key A - FF FF FF FF FF FF\n\nisOk:01\n 32 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 33 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 34 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 35 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 32  rdAB wrAB incAB dectrAB\n
+[  72.810] PM3> hf mf rdsc 9 A FFFFFFFFFFFF (timeout=15000)
+[  73.029] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 9 A FFFFFFFFFFFF\n--sector no 9, key A - FF FF FF FF FF FF\n\nisOk:01\n 36 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 37 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 38 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 39 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 36  rdAB wrAB incAB dectrAB\n
+[  73.033] PM3> hf mf rdsc 10 A FFFFFFFFFFFF (timeout=15000)
+[  73.262] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 10 A FFFFFFFFFFFF\n--sector no 10, key A - FF FF FF FF FF FF\n\nisOk:01\n 40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 41 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 42 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 43 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 40  rdAB wrAB incAB dectrAB
+[  73.267] PM3> hf mf rdsc 11 A FFFFFFFFFFFF (timeout=15000)
+[  73.486] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 11 A FFFFFFFFFFFF\n--sector no 11, key A - FF FF FF FF FF FF\n\nisOk:01\n 44 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 45 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 46 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 47 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 44  rdAB wrAB incAB dectrAB
+[  73.490] PM3> hf mf rdsc 12 A FFFFFFFFFFFF (timeout=15000)
+[  73.720] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 12 A FFFFFFFFFFFF\n--sector no 12, key A - FF FF FF FF FF FF\n\nisOk:01\n 48 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 49 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 50 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 51 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 48  rdAB wrAB incAB dectrAB
+[  73.723] PM3> hf mf rdsc 13 A FFFFFFFFFFFF (timeout=15000)
+[  73.943] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 13 A FFFFFFFFFFFF\n--sector no 13, key A - FF FF FF FF FF FF\n\nisOk:01\n 52 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 53 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 54 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 55 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 52  rdAB wrAB incAB dectrAB
+[  73.946] PM3> hf mf rdsc 14 A FFFFFFFFFFFF (timeout=15000)
+[  74.174] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 14 A FFFFFFFFFFFF\n--sector no 14, key A - FF FF FF FF FF FF\n\nisOk:01\n 56 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 57 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 58 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 59 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 56  rdAB wrAB incAB dectrAB
+[  74.178] PM3> hf mf rdsc 15 A FFFFFFFFFFFF (timeout=15000)
+[  74.396] PM3< ret=1 [usb|script] pm3 --> hf mf rdsc 15 A FFFFFFFFFFFF\n--sector no 15, key A - FF FF FF FF FF FF\n\nisOk:01\n 60 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 61 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 62 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 63 | 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      FFFFFFFFFFFF\nAccess rights\n  block 60  rdAB wrAB incAB dectrAB
+[  79.241] KEY> KEY_PWR_CAN_PRES!
+[  80.150] KEY> KEYM2_PRES!
+[  80.153] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin')
+[  80.254] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=1 uid=5E5BCE4C
+[  81.862] KEY> KEYM2_PRES!
+[  81.864] FINISH(top=WarningWriteActivity d=3)
+[  81.874] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin')
+[  82.275] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=1 uid=5E5BCE4C
+[  82.278] PM3> hf 14a info (timeout=10000)
+[  83.797] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\n[+]  UID: 5E 5B CE 4C\n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n\nNikola.D: 0\n
+[  83.797] PM3> hf mf cgetblk 0 (timeout=10000)
+[  84.026] PM3< ret=1 [usb|script] pm3 --> hf mf cgetblk 0\n--block number: 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n
+[  84.035] PM3> hf mf wrbl 60 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  84.251] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 60 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 60, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  84.255] PM3> hf mf wrbl 61 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  84.472] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 61 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 61, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  84.474] PM3> hf mf wrbl 62 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  84.691] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 62 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 62, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  84.694] PM3> hf mf wrbl 56 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  84.921] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 56 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 56, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  84.923] PM3> hf mf wrbl 57 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  85.140] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 57 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 57, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  85.142] PM3> hf mf wrbl 58 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  85.359] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 58 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 58, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  85.362] PM3> hf mf wrbl 52 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  85.579] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 52 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 52, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  85.581] PM3> hf mf wrbl 53 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  85.808] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 53 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 53, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  85.810] PM3> hf mf wrbl 54 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  86.028] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 54 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 54, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  86.030] PM3> hf mf wrbl 48 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  86.247] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 48 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 48, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  86.249] PM3> hf mf wrbl 49 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  86.466] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 49 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 49, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  86.469] PM3> hf mf wrbl 50 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  86.696] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 50 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 50, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  86.698] PM3> hf mf wrbl 44 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  86.915] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 44 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 44, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  86.918] PM3> hf mf wrbl 45 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  87.135] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 45 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 45, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  87.137] PM3> hf mf wrbl 46 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  87.355] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 46 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 46, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  87.357] PM3> hf mf wrbl 40 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  87.584] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 40 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 40, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  87.587] PM3> hf mf wrbl 41 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  87.804] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 41 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 41, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  87.806] PM3> hf mf wrbl 42 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  88.023] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 42 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 42, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  88.025] PM3> hf mf wrbl 36 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  88.242] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 36 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 36, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  88.245] PM3> hf mf wrbl 37 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  88.472] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 37 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 37, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  88.475] PM3> hf mf wrbl 38 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  88.692] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 38 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 38, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  88.695] PM3> hf mf wrbl 32 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  88.912] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 32 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 32, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  88.915] PM3> hf mf wrbl 33 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  89.132] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 33 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 33, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  89.134] PM3> hf mf wrbl 34 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  89.362] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 34 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 34, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  89.364] PM3> hf mf wrbl 28 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  89.581] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 28 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 28, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  89.583] PM3> hf mf wrbl 29 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  89.801] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 29 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 29, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  89.803] PM3> hf mf wrbl 30 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  90.020] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 30 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 30, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  90.023] PM3> hf mf wrbl 24 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  90.250] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 24 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 24, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  90.252] PM3> hf mf wrbl 25 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  90.469] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 25 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 25, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  90.472] PM3> hf mf wrbl 26 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[  90.689] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 26 A FFFFFFFFFFFF 00000000000000000000000000000000\n--block no 26, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[  90.691] PM3> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000 (timeout=10000)
+[  90.898] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000\n--block no 20, key A - 4A 63 52 68 46 77\n--data: 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  90.899] PM3> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000 (timeout=10000)
+[  91.105] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000\n--block no 20, key A - 4A 63 52 68 46 77\n--data: 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  91.106] PM3> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000 (timeout=10000)
+[  91.311] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 20 A 4A6352684677 00042022070403415000000000000000\n--block no 20, key A - 4A 63 52 68 46 77\n--data: 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  91.312] PM3> hf mf wrbl 20 B 536653644C65 00042022070403415000000000000000 (timeout=10000)
+[  91.508] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 20 B 536653644C65 00042022070403415000000000000000\n--block no 20, key B - 53 66 53 64 4C 65\n--data: 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  91.510] PM3> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  91.717] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000\n--block no 21, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  91.717] PM3> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  91.923] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000\n--block no 21, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  91.924] PM3> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  92.130] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 21 A 4A6352684677 00000000000000000000000000000000\n--block no 21, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  92.131] PM3> hf mf wrbl 21 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  92.337] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 21 B 536653644C65 00000000000000000000000000000000\n--block no 21, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  92.339] PM3> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  92.546] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000\n--block no 22, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  92.547] PM3> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  92.753] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000\n--block no 22, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  92.754] PM3> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  92.949] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 22 A 4A6352684677 00000000000000000000000000000000\n--block no 22, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  92.950] PM3> hf mf wrbl 22 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  93.156] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 22 B 536653644C65 00000000000000000000000000000000\n--block no 22, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  93.158] PM3> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  93.365] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000\n--block no 16, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  93.366] PM3> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  93.572] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000\n--block no 16, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  93.572] PM3> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  93.778] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 16 A 4A6352684677 00000000000000000000000000000000\n--block no 16, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  93.779] PM3> hf mf wrbl 16 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  93.985] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 16 B 536653644C65 00000000000000000000000000000000\n--block no 16, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  93.987] PM3> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  94.194] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000\n--block no 17, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  94.195] PM3> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  94.401] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000\n--block no 17, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  94.402] PM3> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  94.597] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 17 A 4A6352684677 00000000000000000000000000000000\n--block no 17, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  94.598] PM3> hf mf wrbl 17 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  94.804] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 17 B 536653644C65 00000000000000000000000000000000\n--block no 17, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  94.806] PM3> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  95.013] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000\n--block no 18, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  95.014] PM3> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  95.220] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000\n--block no 18, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  95.221] PM3> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  95.427] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 18 A 4A6352684677 00000000000000000000000000000000\n--block no 18, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  95.427] PM3> hf mf wrbl 18 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  95.633] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 18 B 536653644C65 00000000000000000000000000000000\n--block no 18, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  95.636] PM3> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  95.842] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000\n--block no 12, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  95.843] PM3> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  96.049] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000\n--block no 12, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  96.050] PM3> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  96.246] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 12 A 4A6352684677 00000000000000000000000000000000\n--block no 12, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  96.247] PM3> hf mf wrbl 12 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  96.453] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 12 B 536653644C65 00000000000000000000000000000000\n--block no 12, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  96.455] PM3> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  96.662] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000\n--block no 13, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  96.663] PM3> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  96.868] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000\n--block no 13, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  96.869] PM3> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  97.075] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 13 A 4A6352684677 00000000000000000000000000000000\n--block no 13, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  97.076] PM3> hf mf wrbl 13 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  97.281] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 13 B 536653644C65 00000000000000000000000000000000\n--block no 13, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  97.284] PM3> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  97.484] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000\n--block no 14, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  97.485] PM3> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  97.691] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000\n--block no 14, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  97.692] PM3> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  97.897] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 14 A 4A6352684677 00000000000000000000000000000000\n--block no 14, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  97.898] PM3> hf mf wrbl 14 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  98.104] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 14 B 536653644C65 00000000000000000000000000000000\n--block no 14, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  98.108] PM3> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  98.315] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000\n--block no 8, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  98.316] PM3> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  98.511] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000\n--block no 8, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  98.512] PM3> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  98.718] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 8 A 4A6352684677 00000000000000000000000000000000\n--block no 8, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  98.719] PM3> hf mf wrbl 8 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  98.925] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 8 B 536653644C65 00000000000000000000000000000000\n--block no 8, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  98.927] PM3> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  99.134] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000\n--block no 9, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  99.135] PM3> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  99.341] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000\n--block no 9, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  99.342] PM3> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  99.548] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 9 A 4A6352684677 00000000000000000000000000000000\n--block no 9, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  99.548] PM3> hf mf wrbl 9 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[  99.744] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 9 B 536653644C65 00000000000000000000000000000000\n--block no 9, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  99.746] PM3> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[  99.955] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000\n--block no 10, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[  99.956] PM3> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 100.162] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000\n--block no 10, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 100.163] PM3> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 100.369] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 10 A 4A6352684677 00000000000000000000000000000000\n--block no 10, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 100.370] PM3> hf mf wrbl 10 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[ 100.575] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 10 B 536653644C65 00000000000000000000000000000000\n--block no 10, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 100.578] PM3> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000 (timeout=10000)
+[ 100.774] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000\n--block no 4, key A - 4A 63 52 68 46 77\n--data: 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 100.775] PM3> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000 (timeout=10000)
+[ 100.981] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000\n--block no 4, key A - 4A 63 52 68 46 77\n--data: 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 100.982] PM3> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000 (timeout=10000)
+[ 101.187] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 4 A 4A6352684677 5A0B65A4754F57000000000000000000\n--block no 4, key A - 4A 63 52 68 46 77\n--data: 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 101.188] PM3> hf mf wrbl 4 B 536653644C65 5A0B65A4754F57000000000000000000 (timeout=10000)
+[ 101.394] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 4 B 536653644C65 5A0B65A4754F57000000000000000000\n--block no 4, key B - 53 66 53 64 4C 65\n--data: 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 101.396] PM3> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 101.604] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000\n--block no 5, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 101.605] PM3> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 101.812] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000\n--block no 5, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 101.813] PM3> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 102.019] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 5 A 4A6352684677 00000000000000000000000000000000\n--block no 5, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 102.020] PM3> hf mf wrbl 5 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[ 102.215] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 5 B 536653644C65 00000000000000000000000000000000\n--block no 5, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 102.218] PM3> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005 (timeout=10000)
+[ 102.424] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005\n--block no 6, key A - 4A 63 52 68 46 77\n--data: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 102.425] PM3> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005 (timeout=10000)
+[ 102.631] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005\n--block no 6, key A - 4A 63 52 68 46 77\n--data: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 102.632] PM3> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005 (timeout=10000)
+[ 102.838] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 6 A 4A6352684677 05000000000000000000000000000005\n--block no 6, key A - 4A 63 52 68 46 77\n--data: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 102.839] PM3> hf mf wrbl 6 B 536653644C65 05000000000000000000000000000005 (timeout=10000)
+[ 103.044] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 6 B 536653644C65 05000000000000000000000000000005\n--block no 6, key B - 53 66 53 64 4C 65\n--data: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 103.047] PM3> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D (timeout=10000)
+[ 103.254] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D\n--block no 0, key A - 4A 63 52 68 46 77\n--data: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 103.255] PM3> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D (timeout=10000)
+[ 103.461] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D\n--block no 0, key A - 4A 63 52 68 46 77\n--data: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 103.462] PM3> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D (timeout=10000)
+[ 103.657] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 0 A 4A6352684677 5E5BCE4C87080400031344920BAAB51D\n--block no 0, key A - 4A 63 52 68 46 77\n--data: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 103.658] PM3> hf mf wrbl 0 B 536653644C65 5E5BCE4C87080400031344920BAAB51D (timeout=10000)
+[ 103.864] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 0 B 536653644C65 5E5BCE4C87080400031344920BAAB51D\n--block no 0, key B - 53 66 53 64 4C 65\n--data: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 103.866] PM3> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000 (timeout=10000)
+[ 104.073] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000\n--block no 1, key A - 4A 63 52 68 46 77\n--data: 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 104.074] PM3> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000 (timeout=10000)
+[ 104.280] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000\n--block no 1, key A - 4A 63 52 68 46 77\n--data: 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 104.281] PM3> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000 (timeout=10000)
+[ 104.486] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 1 A 4A6352684677 00008049000000000000000000000000\n--block no 1, key A - 4A 63 52 68 46 77\n--data: 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 104.487] PM3> hf mf wrbl 1 B 536653644C65 00008049000000000000000000000000 (timeout=10000)
+[ 104.693] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 1 B 536653644C65 00008049000000000000000000000000\n--block no 1, key B - 53 66 53 64 4C 65\n--data: 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 104.695] PM3> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 104.902] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000\n--block no 2, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 104.903] PM3> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 105.109] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000\n--block no 2, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 105.110] PM3> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000 (timeout=10000)
+[ 105.305] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 2 A 4A6352684677 00000000000000000000000000000000\n--block no 2, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 105.306] PM3> hf mf wrbl 2 B 536653644C65 00000000000000000000000000000000 (timeout=10000)
+[ 105.512] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 2 B 536653644C65 00000000000000000000000000000000\n--block no 2, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 105.514] PM3> hf mf wrbl 63 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 105.741] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 63 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 63, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 105.744] PM3> hf mf wrbl 59 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 105.961] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 59 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 59, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 105.963] PM3> hf mf wrbl 55 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 106.180] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 55 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 55, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 106.183] PM3> hf mf wrbl 51 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 106.403] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 51 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 51, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 106.406] PM3> hf mf wrbl 47 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 106.623] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 47 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 47, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 106.625] PM3> hf mf wrbl 43 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 106.842] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 43 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 43, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 106.845] PM3> hf mf wrbl 39 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 107.072] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 39 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 39, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 107.075] PM3> hf mf wrbl 35 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 107.292] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 35 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 35, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 107.294] PM3> hf mf wrbl 31 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 107.511] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 31 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 31, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 107.514] PM3> hf mf wrbl 27 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF (timeout=10000)
+[ 107.731] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 27 A FFFFFFFFFFFF 000000000000FF078069FFFFFFFFFFFF\n--block no 27, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 107.733] PM3> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 107.940] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000\n--block no 23, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 107.941] PM3> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 108.146] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000\n--block no 23, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 108.147] PM3> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 108.353] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 23 A 4A6352684677 00000000000078778800000000000000\n--block no 23, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 108.354] PM3> hf mf wrbl 23 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 108.560] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 23 B 536653644C65 00000000000078778800000000000000\n--block no 23, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 108.562] PM3> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 108.759] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000\n--block no 19, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 108.760] PM3> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 108.966] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000\n--block no 19, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 108.967] PM3> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 109.172] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 19 A 4A6352684677 00000000000078778800000000000000\n--block no 19, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 109.173] PM3> hf mf wrbl 19 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 109.379] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 19 B 536653644C65 00000000000078778800000000000000\n--block no 19, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 109.381] PM3> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 109.588] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000\n--block no 15, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 109.589] PM3> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 109.785] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000\n--block no 15, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 109.786] PM3> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 109.991] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 15 A 4A6352684677 00000000000078778800000000000000\n--block no 15, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 109.992] PM3> hf mf wrbl 15 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 110.198] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 15 B 536653644C65 00000000000078778800000000000000\n--block no 15, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 110.201] PM3> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 110.407] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000\n--block no 11, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 110.408] PM3> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 110.614] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000\n--block no 11, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 110.615] PM3> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 110.820] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 11 A 4A6352684677 00000000000078778800000000000000\n--block no 11, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 110.821] PM3> hf mf wrbl 11 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 111.027] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 11 B 536653644C65 00000000000078778800000000000000\n--block no 11, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 111.029] PM3> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 111.226] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000\n--block no 7, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 111.227] PM3> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 111.433] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000\n--block no 7, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 111.434] PM3> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 111.640] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 7 A 4A6352684677 00000000000078778800000000000000\n--block no 7, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 111.641] PM3> hf mf wrbl 7 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 111.846] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 7 B 536653644C65 00000000000078778800000000000000\n--block no 7, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 111.849] PM3> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 112.056] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000\n--block no 3, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 112.057] PM3> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 112.263] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000\n--block no 3, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 112.263] PM3> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000 (timeout=10000)
+[ 112.469] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 3 A 4A6352684677 00000000000078778800000000000000\n--block no 3, key A - 4A 63 52 68 46 77\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 112.470] PM3> hf mf wrbl 3 B 536653644C65 00000000000078778800000000000000 (timeout=10000)
+[ 112.676] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 3 B 536653644C65 00000000000078778800000000000000\n--block no 3, key B - 53 66 53 64 4C 65\n--data: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n[#] Auth error\nisOk:00\n\nNikola.D: 0\n
+[ 112.678] PM3> hf 14a info (timeout=10000)
+[ 114.188] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\n[+]  UID: 5E 5B CE 4C\n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n\nNikola.D: 0\n
+[ 114.188] PM3> hf mf cgetblk 0 (timeout=10000)
+[ 114.414] PM3< ret=1 [usb|script] pm3 --> hf mf cgetblk 0\n--block number: 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n
+[ 117.047] KEY> KEY_PWR_CAN_PRES!
+[ 117.868] KEY> KEY_PWR_CAN_PRES!
+[ 117.870] FINISH(top=WriteActivity d=3)
+[ 118.337] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=5E5BCE4C
+[ 118.605] KEY> KEY_PWR_CAN_PRES!
+[ 118.607] FINISH(top=AutoCopyActivity d=2)
+[ 118.839] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[ 120.888] KEY> KEYDOWN_PRES!
+[ 121.261] KEY> KEYDOWN_PRES!
+[ 121.462] KEY> KEYDOWN_PRES!
+[ 121.783] KEY> KEYDOWN_PRES!
+[ 121.988] KEY> KEYDOWN_PRES!
+[ 122.576] KEY> KEYDOWN_PRES!
+[ 123.134] KEY> KEYDOWN_PRES!
+[ 123.403] KEY> KEYDOWN_PRES!
+[ 123.601] KEY> KEYDOWN_PRES!
+[ 123.911] KEY> KEYDOWN_PRES!
+[ 124.681] KEY> KEYDOWN_PRES!
+[ 125.222] KEY> KEYOK_PRES!
+[ 125.225] START(WipeTagActivity)
+[ 125.350] POLL stack=['MainActivity', 'WipeTagActivity'] type=1 uid=5E5BCE4C
+[ 126.273] KEY> KEYOK_PRES!
+[ 126.323] PM3> hf 14a info (timeout=5000)
+[ 127.832] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\n[+]  UID: 5E 5B CE 4C\n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n\nNikola.D: 0\n
+[ 127.833] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 128.059] PM3< ret=1 [usb|script] pm3 --> hf mf cgetblk 0\n--block number: 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n
+[ 128.074] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 128.528] PM3< ret=1 [usb|script] pm3 --> hf mf fchk 1 /tmp/.keys/mf_tmp_keys\n[+] Loaded 104 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 001 | ffffffffffff   | 1 | ffffffffffff   | 1 
+[ 128.562] PM3> hf mf wrbl 60 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 128.788] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 60 A 000000000000 00000000000000000000000000000000\n--block no 60, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 128.810] PM3> hf mf wrbl 61 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 129.026] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 61 A 000000000000 00000000000000000000000000000000\n--block no 61, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 129.049] PM3> hf mf wrbl 62 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 129.276] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 62 A 000000000000 00000000000000000000000000000000\n--block no 62, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 129.299] PM3> hf mf wrbl 56 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 129.520] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 56 A 000000000000 00000000000000000000000000000000\n--block no 56, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 129.543] PM3> hf mf wrbl 57 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 129.761] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 57 A 000000000000 00000000000000000000000000000000\n--block no 57, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 129.782] PM3> hf mf wrbl 58 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 129.999] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 58 A 000000000000 00000000000000000000000000000000\n--block no 58, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 130.027] PM3> hf mf wrbl 52 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 130.243] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 52 A 000000000000 00000000000000000000000000000000\n--block no 52, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 130.265] PM3> hf mf wrbl 53 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 130.486] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 53 A 000000000000 00000000000000000000000000000000\n--block no 53, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 130.509] PM3> hf mf wrbl 54 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 130.725] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 54 A 000000000000 00000000000000000000000000000000\n--block no 54, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 130.752] PM3> hf mf wrbl 48 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 130.968] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 48 A 000000000000 00000000000000000000000000000000\n--block no 48, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 130.990] PM3> hf mf wrbl 49 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 131.207] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 49 A 000000000000 00000000000000000000000000000000\n--block no 49, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 131.230] PM3> hf mf wrbl 50 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 131.449] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 50 A 000000000000 00000000000000000000000000000000\n--block no 50, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 131.471] PM3> hf mf wrbl 44 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 131.698] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 44 A 000000000000 00000000000000000000000000000000\n--block no 44, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 131.721] PM3> hf mf wrbl 45 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 131.951] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 45 A 000000000000 00000000000000000000000000000000\n--block no 45, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 131.973] PM3> hf mf wrbl 46 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 132.200] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 46 A 000000000000 00000000000000000000000000000000\n--block no 46, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 132.223] PM3> hf mf wrbl 40 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 132.440] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 40 A 000000000000 00000000000000000000000000000000\n--block no 40, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 132.467] PM3> hf mf wrbl 41 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 132.685] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 41 A 000000000000 00000000000000000000000000000000\n--block no 41, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 132.707] PM3> hf mf wrbl 42 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 132.924] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 42 A 000000000000 00000000000000000000000000000000\n--block no 42, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 132.952] PM3> hf mf wrbl 36 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 133.168] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 36 A 000000000000 00000000000000000000000000000000\n--block no 36, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 133.190] PM3> hf mf wrbl 37 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 133.407] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 37 A 000000000000 00000000000000000000000000000000\n--block no 37, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 133.429] PM3> hf mf wrbl 38 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 133.649] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 38 A 000000000000 00000000000000000000000000000000\n--block no 38, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 133.671] PM3> hf mf wrbl 32 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 133.890] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 32 A 000000000000 00000000000000000000000000000000\n--block no 32, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 133.913] PM3> hf mf wrbl 33 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 134.131] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 33 A 000000000000 00000000000000000000000000000000\n--block no 33, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 134.152] PM3> hf mf wrbl 34 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 134.379] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 34 A 000000000000 00000000000000000000000000000000\n--block no 34, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 134.401] PM3> hf mf wrbl 28 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 134.618] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 28 A 000000000000 00000000000000000000000000000000\n--block no 28, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 134.641] PM3> hf mf wrbl 29 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 134.858] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 29 A 000000000000 00000000000000000000000000000000\n--block no 29, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 134.879] PM3> hf mf wrbl 30 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 135.099] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 30 A 000000000000 00000000000000000000000000000000\n--block no 30, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 135.125] PM3> hf mf wrbl 24 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 135.342] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 24 A 000000000000 00000000000000000000000000000000\n--block no 24, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 135.364] PM3> hf mf wrbl 25 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 135.580] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 25 A 000000000000 00000000000000000000000000000000\n--block no 25, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 135.603] PM3> hf mf wrbl 26 A 000000000000 00000000000000000000000000000000 (timeout=5888)
+[ 135.831] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 26 A 000000000000 00000000000000000000000000000000\n--block no 26, key A - 00 00 00 00 00 00\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 135.852] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.070] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000\n--block no 20, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 136.097] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.315] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000\n--block no 21, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 136.343] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.580] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000\n--block no 22, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 136.605] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 136.812] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000\n--block no 16, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 136.834] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.055] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000\n--block no 17, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 137.080] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.297] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000\n--block no 18, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 137.320] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.547] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000\n--block no 12, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 137.569] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 137.786] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000\n--block no 13, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 137.809] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.026] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000\n--block no 14, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 138.047] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.269] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000\n--block no 8, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 138.296] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.515] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000\n--block no 9, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 138.537] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.756] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000\n--block no 10, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 138.778] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 138.995] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000\n--block no 4, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 139.018] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.234] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000\n--block no 5, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 139.256] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.483] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000\n--block no 6, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 139.508] PM3> hf mf wrbl 0 A ffffffffffff 5E5BCE4C87080400016F016D4568F81D (timeout=5888)
+[ 139.736] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 0 A ffffffffffff 5E5BCE4C87080400016F016D4568F81D\n--block no 0, key A - FF FF FF FF FF FF\n--data: 5E 5B CE 4C 87 08 04 00 01 6F 01 6D 45 68 F8 1D\nisOk:01\n\nNikola.D: 0\n
+[ 139.758] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 139.985] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000\n--block no 1, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 140.011] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 140.228] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000\n--block no 2, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\nNikola.D: 0\n
+[ 140.251] PM3> hf mf wrbl 63 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 140.468] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 63 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 63, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 140.490] PM3> hf mf wrbl 59 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 140.707] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 59 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 59, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 140.730] PM3> hf mf wrbl 55 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 140.952] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 55 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 55, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 140.974] PM3> hf mf wrbl 51 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 141.190] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 51 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 51, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 141.218] PM3> hf mf wrbl 47 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 141.435] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 47 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 47, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 141.461] PM3> hf mf wrbl 43 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 141.678] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 43 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 43, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 141.705] PM3> hf mf wrbl 39 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 141.922] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 39 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 39, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 141.943] PM3> hf mf wrbl 35 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 142.160] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 35 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 35, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 142.187] PM3> hf mf wrbl 31 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 142.404] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 31 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 31, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 142.431] PM3> hf mf wrbl 27 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 142.648] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 27 A 000000000000 FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 27, key A - 00 00 00 00 00 00\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 142.670] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 142.887] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 23, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 142.911] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 143.131] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 19, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 143.153] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 143.369] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 15, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 143.396] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 143.613] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 11, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 143.639] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 143.856] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 7, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 143.878] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 144.096] PM3< ret=1 [usb|script] pm3 --> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF\n--block no 3, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nisOk:01\n\nNikola.D: 0\n
+[ 145.492] KEY> KEY_PWR_CAN_PRES!
+[ 146.119] KEY> KEY_PWR_CAN_PRES!
+[ 146.121] FINISH(top=WipeTagActivity d=2)
+[ 146.389] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[ 159.530] KEY> KEYDOWN_PRES!
+[ 159.762] KEY> KEYDOWN_PRES!
+[ 159.962] KEY> KEYDOWN_PRES!
+[ 169.780] KEY> KEYOK_PRES!
+[ 169.782] START(AutoCopyActivity)
+[ 169.839] PM3> hf 14a info (timeout=5000)
+[ 169.922] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=5E5BCE4C
+[ 170.056] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 170.062] PM3> lf sea (timeout=10000)
+[ 171.223] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\n
+[ 171.325] CACHE: {"data": "'FC,CN: 64725,719622'", "fc": "'64725'", "cn": "'719622'", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 171.426] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 171.783] PM3> lf gallagher read (timeout=10000)
+[ 171.987] PM3< ret=1 [usb|script] pm3 --> lf gallagher read\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\nNikola.D: 0\n
+[ 177.232] KEY> KEYM2_PRES!
+[ 177.235] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[ 177.437] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=29 uid=
+[ 178.108] KEY> KEYM2_PRES!
+[ 178.110] FINISH(top=WarningWriteActivity d=3)
+[ 178.120] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[ 178.439] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=29 uid=
+[ 178.510] PM3> lf t55xx wipe p 20206666 (timeout=10000)
+[ 179.374] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe p 20206666\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  bl
+[ 179.375] PM3> lf t55xx detect (timeout=10000)
+[ 179.641] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n\nNikola.D: 0\n
+[ 179.661] PM3> lf gallagher clone b 7FEAA30768D46A35868C35CF (timeout=10000)
+[ 181.103] PM3< ret=1 [usb|script] pm3 --> lf gallagher clone b 7FEAA30768D46A35868C35CF\n[=] Preparing to clone Gallagher to T55x7 with raw hex\n[+] Blk | Data\n[+] ----+------------\n[+]  00 | 00088060\n[+]  01 | 7FEAA307\n[+]  02 | 68D46A35\n[+]  03 | 868C35CF\n[+] Success writing to tag\n[+] Done\n\nNikola.D: 0\n
+[ 181.104] PM3> lf sea (timeout=10000)
+[ 182.247] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\n
+[ 182.248] PM3> lf gallagher read (timeout=10000)
+[ 182.453] PM3< ret=1 [usb|script] pm3 --> lf gallagher read\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\nNikola.D: 0\n
+[ 188.390] KEY> KEY_PWR_CAN_PRES!
+[ 188.857] KEY> KEY_PWR_CAN_PRES!
+[ 188.859] FINISH(top=WriteActivity d=3)
+[ 188.956] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 189.399] KEY> KEY_PWR_CAN_PRES!
+[ 189.401] FINISH(top=AutoCopyActivity d=2)
+[ 189.458] POLL stack=['MainActivity'] type=29 uid=
+[ 190.426] KEY> KEYDOWN_PRES!
+[ 190.693] KEY> KEYDOWN_PRES!
+[ 191.369] KEY> KEYOK_PRES!
+[ 191.372] START(ScanActivity)
+[ 191.396] PM3> hf 14a info (timeout=5000)
+[ 191.462] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 191.533] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 191.536] PM3> lf sea (timeout=10000)
+[ 192.694] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3\n[=]  After :  0A CD 60 65 3F 3F 3F 56\n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\n
+[ 192.701] CACHE: {"data": "'FC,CN: 64725,719622'", "fc": "'64725'", "cn": "'719622'", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 192.909] CACHE: {"data": "'FC,CN: 64725,719622'", "fc": "'64725'", "cn": "'719622'", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 194.517] KEY> KEY_PWR_CAN_PRES!
+[ 195.614] KEY> KEY_PWR_CAN_PRES!
+[ 195.616] FINISH(top=ScanActivity d=2)
+[ 195.971] POLL stack=['MainActivity'] type=29 uid=

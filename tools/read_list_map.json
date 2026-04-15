@@ -1,0 +1,327 @@
+{
+  "_description": "Real device Read Tag list \u2014 40 items, 8 pages (7\u00d75 + 1\u00d75). From real iCopy-X v1.0.90 hardware.",
+  "_source": "Verified on real device by user, 2026-03-25",
+  "_navigation": "page_advances = page-1 (each = DOWN\u00d75), item_downs = down value",
+  "items": [
+    {
+      "pos": 1,
+      "page": 1,
+      "down": 0,
+      "name": "M1 S50 1K 4B",
+      "scan": "mf_classic_1k_4b",
+      "type": 1
+    },
+    {
+      "pos": 2,
+      "page": 1,
+      "down": 1,
+      "name": "M1 S50 1K 7B",
+      "scan": "mf_classic_1k_7b",
+      "type": 42
+    },
+    {
+      "pos": 3,
+      "page": 1,
+      "down": 2,
+      "name": "M1 S70 4K 4B",
+      "scan": "mf_classic_4k_4b",
+      "type": 0
+    },
+    {
+      "pos": 4,
+      "page": 1,
+      "down": 3,
+      "name": "M1 S70 4K 7B",
+      "scan": "mf_classic_4k_7b",
+      "type": 41
+    },
+    {
+      "pos": 5,
+      "page": 1,
+      "down": 4,
+      "name": "M1 Mini",
+      "scan": "mf_mini",
+      "type": 25
+    },
+    {
+      "pos": 6,
+      "page": 2,
+      "down": 0,
+      "name": "M1 Plus 2K",
+      "scan": "mf_classic_1k_4b",
+      "type": 26
+    },
+    {
+      "pos": 7,
+      "page": 2,
+      "down": 1,
+      "name": "Ultralight",
+      "scan": "mf_ultralight",
+      "type": 2
+    },
+    {
+      "pos": 8,
+      "page": 2,
+      "down": 2,
+      "name": "Ultralight C",
+      "scan": "mf_ultralight_c",
+      "type": 3
+    },
+    {
+      "pos": 9,
+      "page": 2,
+      "down": 3,
+      "name": "Ultralight EV1",
+      "scan": "mf_ultralight_ev1",
+      "type": 4
+    },
+    {
+      "pos": 10,
+      "page": 2,
+      "down": 4,
+      "name": "NTAG213 144b",
+      "scan": "ntag213",
+      "type": 5
+    },
+    {
+      "pos": 11,
+      "page": 3,
+      "down": 0,
+      "name": "NTAG215 504b",
+      "scan": "ntag215",
+      "type": 6
+    },
+    {
+      "pos": 12,
+      "page": 3,
+      "down": 1,
+      "name": "NTAG216 888b",
+      "scan": "ntag216",
+      "type": 7
+    },
+    {
+      "pos": 13,
+      "page": 3,
+      "down": 2,
+      "name": "ISO15693 ICODE",
+      "scan": "iso15693_icode",
+      "type": 19
+    },
+    {
+      "pos": 14,
+      "page": 3,
+      "down": 3,
+      "name": "ISO15693 ST SA",
+      "scan": "iso15693_st",
+      "type": 46
+    },
+    {
+      "pos": 15,
+      "page": 3,
+      "down": 4,
+      "name": "Legic MIM256",
+      "scan": "legic",
+      "type": 20
+    },
+    {
+      "pos": 16,
+      "page": 4,
+      "down": 0,
+      "name": "Felica",
+      "scan": "felica",
+      "type": 21
+    },
+    {
+      "pos": 17,
+      "page": 4,
+      "down": 1,
+      "name": "iClass Legacy",
+      "scan": "iclass",
+      "type": 17
+    },
+    {
+      "pos": 18,
+      "page": 4,
+      "down": 2,
+      "name": "iClass Elite",
+      "scan": "iclass_elite",
+      "type": 18
+    },
+    {
+      "pos": 19,
+      "page": 4,
+      "down": 3,
+      "name": "EM410x ID",
+      "scan": "em410x",
+      "type": 8
+    },
+    {
+      "pos": 20,
+      "page": 4,
+      "down": 4,
+      "name": "HID Prox ID",
+      "scan": "hid_prox",
+      "type": 9
+    },
+    {
+      "pos": 21,
+      "page": 5,
+      "down": 0,
+      "name": "Indala ID",
+      "scan": "indala",
+      "type": 10
+    },
+    {
+      "pos": 22,
+      "page": 5,
+      "down": 1,
+      "name": "AWID ID",
+      "scan": "awid",
+      "type": 11
+    },
+    {
+      "pos": 23,
+      "page": 5,
+      "down": 2,
+      "name": "IO Prox ID",
+      "scan": "ioprx",
+      "type": 12
+    },
+    {
+      "pos": 24,
+      "page": 5,
+      "down": 3,
+      "name": "GProx II ID",
+      "scan": "gprox",
+      "type": 13
+    },
+    {
+      "pos": 25,
+      "page": 5,
+      "down": 4,
+      "name": "Securakey ID",
+      "scan": "securakey",
+      "type": 14
+    },
+    {
+      "pos": 26,
+      "page": 6,
+      "down": 0,
+      "name": "Viking ID",
+      "scan": "viking",
+      "type": 15
+    },
+    {
+      "pos": 27,
+      "page": 6,
+      "down": 1,
+      "name": "Pyramid ID",
+      "scan": "pyramid",
+      "type": 16
+    },
+    {
+      "pos": 28,
+      "page": 6,
+      "down": 2,
+      "name": "FDXB ID",
+      "scan": "fdxb",
+      "type": 28
+    },
+    {
+      "pos": 29,
+      "page": 6,
+      "down": 3,
+      "name": "GALLAGHER ID",
+      "scan": "gallagher",
+      "type": 29
+    },
+    {
+      "pos": 30,
+      "page": 6,
+      "down": 4,
+      "name": "Jablotron ID",
+      "scan": "jablotron",
+      "type": 30
+    },
+    {
+      "pos": 31,
+      "page": 7,
+      "down": 0,
+      "name": "KERI ID",
+      "scan": "keri",
+      "type": 31
+    },
+    {
+      "pos": 32,
+      "page": 7,
+      "down": 1,
+      "name": "NEDAP ID",
+      "scan": "nedap",
+      "type": 32
+    },
+    {
+      "pos": 33,
+      "page": 7,
+      "down": 2,
+      "name": "Noralsy ID",
+      "scan": "noralsy",
+      "type": 33
+    },
+    {
+      "pos": 34,
+      "page": 7,
+      "down": 3,
+      "name": "PAC ID",
+      "scan": "pac",
+      "type": 34
+    },
+    {
+      "pos": 35,
+      "page": 7,
+      "down": 4,
+      "name": "Paradox ID",
+      "scan": "paradox",
+      "type": 35
+    },
+    {
+      "pos": 36,
+      "page": 8,
+      "down": 0,
+      "name": "Presco ID",
+      "scan": "presco",
+      "type": 36
+    },
+    {
+      "pos": 37,
+      "page": 8,
+      "down": 1,
+      "name": "Visa2000 ID",
+      "scan": "visa2000",
+      "type": 37
+    },
+    {
+      "pos": 38,
+      "page": 8,
+      "down": 2,
+      "name": "NexWatch ID",
+      "scan": "nexwatch",
+      "type": 45
+    },
+    {
+      "pos": 39,
+      "page": 8,
+      "down": 3,
+      "name": "T5577",
+      "scan": "t55xx_blank",
+      "type": 23
+    },
+    {
+      "pos": 40,
+      "page": 8,
+      "down": 4,
+      "name": "EM4305",
+      "scan": "em4305",
+      "type": 24
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+=== SIMULATE FLOW TRACE (ORIGINAL FW) ===
+[   0.004] POLL stack=['dict'] 
+[   0.005] === ALL INSTALLED ===
+[  45.613] KEY> DOWN
+[  45.804] KEY> DOWN
+[  46.128] KEY> DOWN
+[  46.375] KEY> DOWN
+[  46.702] KEY> DOWN
+[  47.621] KEY> OK
+[  47.623] START(SimulationActivity, None) bundle=None
+[  47.812] POLL stack=['dict', 'dict'] 
+[  49.468] KEY> OK
+[  54.187] KEY> OK
+[  54.645] KEY> UP
+[  55.321] KEY> UP
+[  56.479] KEY> OK
+[  61.812] KEY> M2
+[  62.020] PM3> hf 14a sim t 1 u 32345678  (timeout=-1)
+[  96.102] KEY> M1
+[  96.202] PM3< ret=1 content_len=163 \n[+] Emulating ISO/IEC 14443 type A tag with 4 byte UID (32 34 56 78 )\n[=] Press pm3-button to abort simulation\n[#] Emulator stopped. Trace length: 3404 \n[=] Done\n
+[  96.585] START(SimulationTraceActivity, None) bundle=None
+[  96.643] PM3> hf 14a list (timeout=18888)
+[  96.927] POLL stack=['dict', 'dict', 'dict'] 
+[  99.622] PM3< ret=1 content_len=31486 \n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 3404 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       2228 |       4596 | Tag |04  00                                                                   |     | \n    1885056 |    1886048 | Rdr |52(7)                                                                    |     | WUPA\n    1887284 |    1889652 | Tag |04  00                                                                   |     | \n    1894348 |    1896812 | Rdr |93  20                                                                   |     | ANTICOLL\n    1897984 |    1903808 | Tag |32  34  56  78  28                                                       |     | \n    1908630 |    1919158 | Rdr |93  70  32  34  56  78  28  af  e3                                       |  ok | SELECT_UID\n    1920330 |    1923850 | Tag |08  b6  dd                                                               |     | \n    3812544 |    3813536 | Rdr |52(7)                                                                    |     | WUPA\n    3814836 |    3817204 | Tag |04  00                                                                   |     | \n    3821882 |    3824346 | Rdr |93  20                                                                   |     | ANTICOLL\n    3825518 |    3831342 | Tag |32  34  56  78  28                                                       |     | \n  191334000 |  191335056 | Rdr |26(7)                                                 
+[ 101.604] KEY> M2
+[ 106.501] KEY> M1
+[ 106.503] FINISH(top=dict d=3) result="<activity_main.SimulationTraceActivity object at 0xb3a98190>"
+[ 106.986] POLL stack=['dict', 'dict'] 
+[ 107.470] KEY> PWR
+[ 107.472] FINISH(top=dict d=2) result="<activity_main.SimulationActivity object at 0xb3a986e8>"
+[ 107.507] POLL stack=['dict'] 
+[ 110.518] KEY> DOWN
+[ 111.349] KEY> DOWN
+[ 111.688] KEY> DOWN
+[ 113.226] KEY> UP
+[ 113.518] KEY> UP
+[ 113.766] KEY> UP
+[ 114.015] KEY> UP
+[ 114.427] KEY> UP
+[ 114.821] KEY> UP
+[ 115.100] KEY> UP
+[ 115.486] KEY> OK
+[ 115.488] START(CardWalletActivity, None) bundle=None
+[ 116.021] POLL stack=['dict', 'dict'] 
+[ 116.174] KEY> OK
+[ 119.001] KEY> OK
+[ 119.002] START(ReadFromHistoryActivity, '/mnt/upan/dump/mf1/M1-1K-4B_DAEFB416_1.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_DAEFB416_1.bin"
+[ 119.556] POLL stack=['dict', 'dict', 'dict'] 
+[ 121.179] KEY> M1
+[ 121.181] START(SimulationActivity, {'uid': 'DAEFB416', 'len': 4, 'sak': '08', 'atqa': '0004', 'found': True, 'type': 1}) bundle={"uid": "DAEFB416", "len": 4, "sak": "08", "atqa": "0004", "found": true, "type": 1}
+[ 121.560] POLL stack=['dict', 'dict', 'dict', 'dict'] 
+[ 121.631] PM3> hf 14a sim t 1 u DAEFB416  (timeout=-1)
+[ 162.989] KEY> M1
+[ 163.088] PM3< ret=1 content_len=163 \n[+] Emulating ISO/IEC 14443 type A tag with 4 byte UID (DA EF B4 16 )\n[=] Press pm3-button to abort simulation\n[#] Emulator stopped. Trace length: 1279 \n[=] Done\n
+[ 163.467] START(SimulationTraceActivity, None) bundle=None
+[ 163.556] PM3> hf 14a list (timeout=18888)
+[ 163.628] POLL stack=['dict', 'dict', 'dict', 'dict', 'dict'] 
+[ 164.943] PM3< ret=1 content_len=12342 \n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 1279 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |       1056 | Rdr |26(7)                                                                    |     | REQA\n       2228 |       4596 | Tag |04  00                                                                   |     | \n   66722342 |   66723398 | Rdr |26(7)                                                                    |     | REQA\n   66724570 |   66726938 | Tag |04  00                                                                   |     | \n   66734042 |   66738810 | Rdr |50  00  57  cd                                                           |  ok | HALT\n   66762698 |   66763690 | Rdr |52(7)                                                                    |     | WUPA\n   66764926 |   66767294 | Tag |04  00                                                                   |     | \n   66774402 |   66776866 | Rdr |93  20                                                                   |     | ANTICOLL\n   66778038 |   66783926 | Tag |da  ef  b4  16  97                                                       |     | \n   66790970 |   66801498 | Rdr |93  70  da  ef  b4  16  97  24  a4                                       |  ok | SELECT_UID\n   66802670 |   66806190 | Tag |08  b6  dd                                                               |     | \n   66956282 |   66961050 | Rdr |50  00  57  cd                                                           |  ok | HALT\n   90007298 |   90008354 | Rdr |26(7)                                                 
+[ 167.213] KEY> M2
+[ 172.951] KEY> PWR
+[ 173.687] KEY> PWR
+[ 173.688] FINISH(top=dict d=5) result="<activity_main.SimulationTraceActivity object at 0xb3aa45f8>"
+[ 174.161] POLL stack=['dict', 'dict', 'dict', 'dict'] 
+[ 174.289] KEY> PWR
+[ 174.290] FINISH(top=dict d=4) result="<activity_main.SimulationActivity object at 0xb3aa4028>"
+[ 174.663] POLL stack=['dict', 'dict', 'dict'] 
+[ 174.811] KEY> PWR
+[ 174.812] FINISH(top=dict d=3) result="<activity_main.ReadFromHistoryActivity object at 0xb3aa1d48>"
+[ 175.165] POLL stack=['dict', 'dict'] 
+[ 175.446] KEY> PWR
+[ 175.978] KEY> PWR
+[ 175.981] FINISH(top=dict d=2) result="<activity_main.CardWalletActivity object at 0xb3aa1400>"
+[ 176.168] POLL stack=['dict'] 
+[ 177.205] KEY> DOWN
+[ 178.032] KEY> OK
+[ 178.033] START(ScanActivity, None) bundle=None
+[ 178.081] PM3> hf 14a info (timeout=5000)
+[ 178.174] POLL stack=['dict', 'dict'] 
+[ 179.624] PM3< ret=1 content_len=287 \n\n[+]  UID: 5E 5B CE 4C \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 179.649] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 179.880] PM3< ret=1 content_len=68 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 180.178] POLL stack=['dict', 'dict'] type=1 uid=5E5BCE4C
+[ 182.786] KEY> M2
+[ 182.791] START(SimulationActivity, {'found': True, 'uid': '5E5BCE4C', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcErr': False, 'static': False, 'gen1a': False, 'type': 1}) bundle={"found": true, "uid": "5E5BCE4C", "len": 4, "sak": "08", "atqa": "0004", "bbcErr": false, "static": false, "gen1a": false, "type": 1}
+[ 183.111] PM3> hf 14a sim t 1 u 5E5BCE4C  (timeout=-1)
+[ 183.184] POLL stack=['dict', 'dict', 'dict'] type=1 uid=5E5BCE4C
+[ 194.844] KEY> M1
+[ 194.935] PM3< ret=1 content_len=162 \n[+] Emulating ISO/IEC 14443 type A tag with 4 byte UID (5E 5B CE 4C )\n[=] Press pm3-button to abort simulation\n[#] Emulator stopped. Trace length: 870 \n[=] Done\n
+[ 195.322] START(SimulationTraceActivity, None) bundle=None
+[ 195.383] PM3> hf 14a list (timeout=18888)
+[ 195.731] POLL stack=['dict', 'dict', 'dict', 'dict'] type=1 uid=5E5BCE4C
+[ 196.388] PM3< ret=1 content_len=9249 \n[=] downloading tracelog data from device\n[+] Recorded activity (trace len = 870 bytes)\n[=] start = start of start frame end = end of frame. src = source of transfer\n[=] ISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       2228 |       4596 | Tag |04  00                                                                   |     | \n       9326 |      11790 | Rdr |93  20                                                                   |     | ANTICOLL\n      12962 |      18786 | Tag |5e  5b  ce  4c  87                                                       |     | \n      23678 |      34142 | Rdr |93  70  5e  5b  ce  4c  87  b5  dd                                       |  ok | SELECT_UID\n      35378 |      38898 | Tag |08  b6  dd                                                               |     | \n   10258658 |   10259650 | Rdr |52(7)                                                                    |     | WUPA\n   10260950 |   10263318 | Tag |04  00                                                                   |     | \n   10267980 |   10270444 | Rdr |93  20                                                                   |     | ANTICOLL\n   10271616 |   10277440 | Tag |5e  5b  ce  4c  87                                                       |     | \n   10282210 |   10292674 | Rdr |93  70  5e  5b  ce  4c  87  b5  dd                                       |  ok | SELECT_UID\n   10293974 |   10297494 | Tag |08  b6  dd                                                               |     | \n   10302208 |   10306976 | Rdr |e0  80  31  73                                   
+[ 197.608] KEY> M2
+[ 201.874] KEY> PWR
+[ 202.292] KEY> PWR
+[ 202.294] FINISH(top=dict d=4) result="<activity_main.SimulationTraceActivity object at 0xb3ab23b8>"
+[ 202.756] POLL stack=['dict', 'dict', 'dict'] type=1 uid=5E5BCE4C
+[ 202.843] KEY> PWR
+[ 202.845] FINISH(top=dict d=3) result="<activity_main.SimulationActivity object at 0xb3aacc58>"
+[ 203.259] POLL stack=['dict', 'dict'] type=1 uid=5E5BCE4C
+[ 203.533] KEY> PWR
+[ 204.144] KEY> PWR
+[ 204.145] FINISH(top=dict d=2) result="<activity_main.ScanActivity object at 0xb3aac4d8>"
+[ 204.262] POLL stack=['dict'] type=1 uid=5E5BCE4C
+[ 204.595] KEY> PWR

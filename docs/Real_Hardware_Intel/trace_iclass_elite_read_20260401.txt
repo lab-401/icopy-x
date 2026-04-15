@@ -1,0 +1,54 @@
+=== FAIL READ TRACE ===
+[   0.005] PATCHED hfmfread.readAllSector
+[   0.005] PATCHED hfmfread.cacheFile
+[   0.005] PATCHED hfmfread.callListener
+[   0.006] PATCHED hfmfkeys.fchks
+[   0.006] PATCHED hfmfkeys.keysFromPrintParse
+[   0.007] PATCHED lfread.createRetObj
+[   0.007] PATCHED lfread.read
+[   0.007] PATCHED lfread.readAWID
+[   0.008] PATCHED lfread.readCardIdAndRaw
+[   0.008] PATCHED lfread.readEM410X
+[   0.008] PATCHED lfread.readEM4X05
+[   0.009] PATCHED lfread.readFCCNAndRaw
+[   0.009] PATCHED lfread.readFDX
+[   0.009] PATCHED lfread.readGALLAGHER
+[   0.010] PATCHED lfread.readGProx2
+[   0.010] PATCHED lfread.readHID
+[   0.010] PATCHED lfread.readIndala
+[   0.011] PATCHED lfread.readJablotron
+[   0.011] PATCHED lfread.readKeri
+[   0.011] PATCHED lfread.readNedap
+[   0.012] PATCHED lfread.readNexWatch
+[   0.012] PATCHED lfread.readNoralsy
+[   0.012] PATCHED lfread.readPAC
+[   0.013] PATCHED lfread.readParadox
+[   0.013] PATCHED lfread.readPresco
+[   0.013] PATCHED lfread.readProxIO
+[   0.013] PATCHED lfread.readPyramid
+[   0.014] PATCHED lfread.readSecurakey
+[   0.014] PATCHED lfread.readT55XX
+[   0.014] PATCHED lfread.readViking
+[   0.015] PATCHED lfread.readVisa2000
+[   0.017] POLL stack=['dict'] 
+[   0.018] === ALL INSTALLED ===
+[ 252.369] START(ReadListActivity, None)
+[ 252.859] POLL stack=['dict', 'dict'] 
+[ 259.347] PM3> hf sea (timeout=10000)
+[ 261.369] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS /
+[ 261.376] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 261.387] POLL stack=['dict', 'dict'] type=? uid=
+[ 261.750] PM3< ret=1 \n
+[ 261.754] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=8888)
+[ 262.126] PM3< ret=1 \n
+[ 262.127] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=8888)
+[ 262.476] PM3< ret=1 \n
+[ 262.477] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=8888)
+[ 262.827] PM3< ret=1 \n
+[ 262.828] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=8888)
+[ 263.212] PM3< ret=1 \n[+] Using elite algo\n\n[+]  block 01 : 12 FF FF FF 7F 1F FF 3C \n\n
+[ 263.213] PM3> hf iclass info (timeout=8888)
+[ 263.872] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n[+]     CSN: 4A 67 8E 15 FE FF 12 E0   (uid)\n[+]  Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\n[+] E-purse: FF FF FF FF F9 FF FF FF   (Card challenge, CC)\n[+]      Kd: 00 00 00 00 00 00 00 00   (Debit key, hidden)\n[+]      Kc: 00 00 00 00 00 00 00 00   (Credit ke
+[ 263.892] POLL stack=['dict', 'dict'] type=18 uid=
+[ 265.198] PM3> hf iclass dump k 2020666666668888 f /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1 e (timeout=8888)
+[ 266.199] PM3< ret=1 \n[+] Using elite algo\n[=] Card has atleast 2 application areas. AA1 limit 18 (0x12) AA2 limit 31 (0x1F)\n.\n\n[=] ------+----+-------------------------+----------\n[=]  CSN  |0x00| 4A 67 8E 15 FE FF 12 E0 |\n[=] ------+----+-------------------------+----------\n[=]       |0x01| 12 FF FF FF 7F 1F FF 3C | ...<\n[=]       |0x02| FF FF FF FF F9 FF FF FF | [=]       |0x03| B7 AF 2C 06 F3 7A 3E 83 | ,

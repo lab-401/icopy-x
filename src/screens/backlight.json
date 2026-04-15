@@ -1,0 +1,27 @@
+{
+    "id": "backlight",
+    "screen": {
+        "title": "Backlight",
+        "content": {
+            "type": "checked_list",
+            "style": "radio",
+            "items": [
+                {"label": "Low", "resource_key": "blline1"},
+                {"label": "Middle", "resource_key": "blline2"},
+                {"label": "High", "resource_key": "blline3"}
+            ],
+            "selected": "{current_level}"
+        },
+        "buttons": {
+            "left": "",
+            "right": ""
+        },
+        "keys": {
+            "UP": "scroll:-1",
+            "DOWN": "scroll:1",
+            "M2": "save",
+            "OK": "save",
+            "PWR": "cancel"
+        }
+    }
+}

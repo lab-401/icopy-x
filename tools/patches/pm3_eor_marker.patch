@@ -1,0 +1,21 @@
+diff --git a/client/src/proxmark3.c b/client/src/proxmark3.c
+index 854a5c7..0b7fee0 100644
+--- a/client/src/proxmark3.c
++++ b/client/src/proxmark3.c
+@@ -560,6 +560,16 @@ check_script:
+                 g_pendingPrompt = false;
+                 mainret = CommandReceived(cmd);
+ 
++                // iCopy-X: emit end-of-response marker in piped stdin mode.
++                // The iCopy-X middleware (rftask.py) needs a delimiter to detect
++                // when a command output is complete.  The Lab401 firmware used
++                // "Nikola.D: N" markers; for upstream RRG builds we emit the
++                // standard prompt as an EOR marker with explicit fflush.
++                if (stdinOnPipe) {
++                    printf("\npm3 -->\n");
++                    fflush(stdout);
++                }
++
+                 // exit or quit
+                 if (mainret == PM3_EFATAL) {
+                     break;

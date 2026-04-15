@@ -1,0 +1,191 @@
+=== FULL TRACE (iceman-fw v3) ===
+[   0.114] pm3_compat version=iceman needs_translation=True
+[   0.117] presspm3 hook OK
+[   0.120] POLL stack=['MainActivity'] 
+[   0.120] === ALL INSTALLED ===
+[   5.954] SERIAL_TX> b'pctbat\r\n'
+[   5.969] SERIAL_TX> b'charge\r\n'
+[  15.985] SERIAL_TX> b'pctbat\r\n'
+[  15.998] SERIAL_TX> b'charge\r\n'
+[  16.665] KEY> KEYDOWN_PRES!
+[  16.866] KEY> KEYDOWN_PRES!
+[  17.332] KEY> KEYOK_PRES!
+[  18.273] START(ScanActivity, None) bundle=None
+[  18.500] PM3> hf 14a info (timeout=5000)
+[  18.586] POLL stack=['MainActivity', 'ScanActivity'] 
+[  19.932] PM3< ret=1 content_len=164 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\n
+[  19.968] PM3> hf mf cgetblk 0 (timeout=5000)
+[  20.082] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  20.089] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  20.274] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  20.590] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  21.948] KEY> KEY_PWR_CAN_PRES!
+[  22.308] KEY> KEY_PWR_CAN_PRES!
+[  22.310] FINISH(top=ScanActivity d=2)
+[  22.594] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[  26.015] SERIAL_TX> b'pctbat\r\n'
+[  26.029] SERIAL_TX> b'charge\r\n'
+[  26.912] KEY> KEYOK_PRES!
+[  26.915] START(ScanActivity, None) bundle=None
+[  26.976] PM3> hf 14a info (timeout=5000)
+[  27.101] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  28.247] PM3< ret=1 content_len=143 \n UID: 00 00 00 00  \nATQA: 00 02\n SAK: 18 [2]\nPossible types:\n   MIFARE Classic 4K\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  28.249] PM3> hf mf cgetblk 0 (timeout=5000)
+[  28.377] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  28.379] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'18'", "atqa": "'0002'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "0", "progress": "0", "return": "0"}
+[  28.587] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'18'", "atqa": "'0002'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "0", "progress": "0", "return": "0"}
+[  28.605] POLL stack=['MainActivity', 'ScanActivity'] type=0 uid=00000000
+[  30.203] KEY> KEY_PWR_CAN_PRES!
+[  30.965] KEY> KEY_PWR_CAN_PRES!
+[  30.967] FINISH(top=ScanActivity d=2)
+[  31.109] POLL stack=['MainActivity'] type=0 uid=00000000
+[  34.923] KEY> KEYOK_PRES!
+[  34.925] START(ScanActivity, None) bundle=None
+[  34.981] PM3> hf 14a info (timeout=5000)
+[  35.116] POLL stack=['MainActivity', 'ScanActivity'] type=0 uid=00000000
+[  36.045] SERIAL_TX> b'pctbat\r\n'
+[  36.059] SERIAL_TX> b'charge\r\n'
+[  36.701] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  36.703] PM3> hf mf cgetblk 0 (timeout=5000)
+[  36.829] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  36.830] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  37.013] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  37.120] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  38.778] KEY> KEY_PWR_CAN_PRES!
+[  39.072] KEY> KEY_PWR_CAN_PRES!
+[  39.074] FINISH(top=ScanActivity d=2)
+[  39.124] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  41.721] KEY> KEYOK_PRES!
+[  41.724] START(ScanActivity, None) bundle=None
+[  41.754] PM3> hf 14a info (timeout=5000)
+[  41.862] PM3< ret=1 content_len=1 \n
+[  41.865] PM3> lf sea (timeout=10000)
+[  42.129] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  45.126] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[  45.176] PM3> hf sea (timeout=10000)
+[  46.075] SERIAL_TX> b'pctbat\r\n'
+[  46.088] SERIAL_TX> b'charge\r\n'
+[  50.709] PM3< ret=1 content_len=122 \nUID: E0 04 01 3C F9 43 B3 02\nTYPE MATCH NXP (Philips); IC NTP53x2/NTP5210/NTA5332 ( NTAG 5 )\n\nValid ISO15693 tag found\n\n\n
+[  50.742] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[  51.019] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[  51.143] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E004013CF943B302
+[  53.005] KEY> KEYDOWN_PRES!
+[  53.772] KEY> KEY_PWR_CAN_PRES!
+[  53.775] FINISH(top=ScanActivity d=2)
+[  54.148] POLL stack=['MainActivity'] type=19 uid=E004013CF943B302
+[  54.223] KEY> KEY_PWR_CAN_PRES!
+[  56.105] SERIAL_TX> b'pctbat\r\n'
+[  56.119] SERIAL_TX> b'charge\r\n'
+[  60.569] KEY> KEYOK_PRES!
+[  60.572] START(ScanActivity, None) bundle=None
+[  60.613] PM3> hf 14a info (timeout=5000)
+[  60.659] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E004013CF943B302
+[  60.724] PM3< ret=1 content_len=1 \n
+[  60.727] PM3> lf sea (timeout=10000)
+[  65.348] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  65.351] PM3> hf sea (timeout=10000)
+[  66.140] SERIAL_TX> b'pctbat\r\n'
+[  66.154] SERIAL_TX> b'charge\r\n'
+[  70.914] PM3< ret=1 content_len=89 \niCLASS / Picopass CSN: 4A 67 8E 15 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[  70.946] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[  70.963] PM3< ret=1 content_len=129 hf iclass rdbl: invalid option "-b"\nhf iclass rdbl: unexpected argument "01"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  70.968] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[  70.974] PM3< ret=1 content_len=129 hf iclass rdbl: invalid option "-b"\nhf iclass rdbl: unexpected argument "01"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  70.975] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=5000)
+[  70.981] PM3< ret=1 content_len=129 hf iclass rdbl: invalid option "-b"\nhf iclass rdbl: unexpected argument "01"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  70.982] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 e (timeout=5000)
+[  70.987] PM3< ret=1 content_len=268 hf iclass rdbl: unexpected argument "b"\nhf iclass rdbl: unexpected argument "01"\nhf iclass rdbl: unexpected argument "k"\nhf iclass rdbl: unexpected argument "AFA785A7DAB33378"\nhf iclass rdbl: unexpected argument "e"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  70.988] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=5000)
+[  70.994] PM3< ret=1 content_len=268 hf iclass rdbl: unexpected argument "b"\nhf iclass rdbl: unexpected argument "01"\nhf iclass rdbl: unexpected argument "k"\nhf iclass rdbl: unexpected argument "2020666666668888"\nhf iclass rdbl: unexpected argument "e"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  70.995] PM3> hf iclass rdbl b 01 k 6666202066668888 e (timeout=5000)
+[  71.001] PM3< ret=1 content_len=268 hf iclass rdbl: unexpected argument "b"\nhf iclass rdbl: unexpected argument "01"\nhf iclass rdbl: unexpected argument "k"\nhf iclass rdbl: unexpected argument "6666202066668888"\nhf iclass rdbl: unexpected argument "e"\nTry 'hf iclass rdbl --help' for more information.\n\n\n
+[  71.002] PM3> hf iclass chk (timeout=30000)
+[  71.010] PM3< ret=1 content_len=845 \nCheckkeys loads a dictionary text file with 8 byte hex keys to test authenticating against a iCLASS tag\n\nusage:\n    hf iclass chk [-h] [-f <fn>] [--credit] [--elite] [--raw] [--shallow] [--vb6kdf]\n\noptions:\n    -h, --help                     This help\n    -f, --file <fn>                Dictionary file with default iclass keys\n    --credit                       key is assumed to be the credit key\n    --elite                        elite computations applied to key\n    --raw                          no computations applied to key (raw)\n    --shallow                      use shallow (ASK) reader modulation instead of OOK\n    --vb6kdf                       use the VB6 elite KDF instead of a file\n\nexamples/notes:\n    hf iclass chk -f iclass_default_keys.dic\n    hf iclass chk -f iclass_elite_keys.dic --elite\n    hf iclass chk --vb6kdf\n\n\n\n
+[  71.011] PM3> hf iclass info (timeout=5000)
+[  76.019] REWORK> reworkPM3All()
+[  76.019] SERIAL_TX> b'restartpm3\r\n'
+[  76.171] SERIAL_TX> b'pctbat\r\n'
+[  76.185] SERIAL_TX> b'charge\r\n'
+[  79.038] CONNECT> connect2PM3()
+[  79.042] CONNECT< socket=True
+[  79.043] REWORK< socket=True
+[  84.051] REWORK> reworkPM3All()
+[  84.052] SERIAL_TX> b'restartpm3\r\n'
+[  86.200] SERIAL_TX> b'pctbat\r\n'
+[  86.213] SERIAL_TX> b'charge\r\n'
+[  87.073] CONNECT> connect2PM3()
+[  87.077] CONNECT< socket=True
+[  87.078] REWORK< socket=True
+[  92.083] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[  92.085] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "progress": "2", "return": "18"}
+[  92.212] POLL stack=['MainActivity', 'ScanActivity'] type=18 uid=
+[  92.338] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "progress": "2", "return": "18", "chip": "'Elite'"}
+[  96.235] SERIAL_TX> b'pctbat\r\n'
+[  96.248] SERIAL_TX> b'charge\r\n'
+[ 102.534] KEY> KEY_PWR_CAN_PRES!
+[ 102.536] FINISH(top=ScanActivity d=2)
+[ 102.729] POLL stack=['MainActivity'] type=18 uid=
+[ 104.041] KEY> KEYOK_PRES!
+[ 104.044] START(ScanActivity, None) bundle=None
+[ 104.100] PM3> hf 14a info (timeout=5000)
+[ 104.232] POLL stack=['MainActivity', 'ScanActivity'] type=18 uid=
+[ 106.265] SERIAL_TX> b'pctbat\r\n'
+[ 106.279] SERIAL_TX> b'charge\r\n'
+[ 109.108] REWORK> reworkPM3All()
+[ 109.109] SERIAL_TX> b'restartpm3\r\n'
+[ 112.127] CONNECT> connect2PM3()
+[ 112.129] CONNECT< socket=True
+[ 112.130] REWORK< socket=True
+[ 116.295] SERIAL_TX> b'pctbat\r\n'
+[ 116.308] SERIAL_TX> b'charge\r\n'
+[ 117.137] REWORK> reworkPM3All()
+[ 117.138] SERIAL_TX> b'restartpm3\r\n'
+[ 120.158] CONNECT> connect2PM3()
+[ 120.164] CONNECT< socket=True
+[ 120.165] REWORK< socket=True
+[ 125.173] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 126.326] SERIAL_TX> b'pctbat\r\n'
+[ 126.339] SERIAL_TX> b'charge\r\n'
+[ 129.303] KEY> KEY_PWR_CAN_PRES!
+[ 129.775] KEY> KEY_PWR_CAN_PRES!
+[ 129.777] FINISH(top=ScanActivity d=2)
+[ 130.278] POLL stack=['MainActivity'] type=18 uid=
+[ 130.906] KEY> KEYUP_PRES!
+[ 131.069] KEY> KEYUP_PRES!
+[ 131.208] KEY> KEYUP_PRES!
+[ 131.350] KEY> KEYUP_PRES!
+[ 131.972] KEY> KEYUP_PRES!
+[ 133.067] KEY> KEYDOWN_PRES!
+[ 133.435] KEY> KEYOK_PRES!
+[ 133.461] START(PluginsMenuActivity, None) bundle=None
+[ 133.784] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=18 uid=
+[ 134.011] KEY> KEYDOWN_PRES!
+[ 134.268] KEY> KEYDOWN_PRES!
+[ 134.640] KEY> KEYOK_PRES!
+[ 134.743] START(PluginActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/pm3_raw', 'manifest': {'name': 'PM3 Raw', 'version': '1.0.0', 'author': 'Lab401', 'description': 'Run hw version and display output', 'entry_class': 'PM3RawPlugin', 'permissions': ['pm3'], 'order': 99}, 'ui_definition': {'plugin': True, 'name': 'PM3 Raw', 'version': '1.0.0', 'initial_state': 'idle', 'states': {'idle': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': "Press OK to run 'hw version'", 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'OK': 'run:do_run', 'M1': 'finish'}}, 'transitions': {'on_result.status==done': 'done', 'on_result.status==error': 'error', 'on_error': 'error'}}, 'done': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{output_lines}', 'size': 'normal'}], 'scrollable': True}, 'buttons': {'left': 'Back', 'right': 'Again'}, 'keys': {'M1': 'finish', 'M2': 'set_state:idle'}}}, 'error': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{error_msg}', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'M1': 'finish'}}}}}, 'entry_class': <class 'plugins.pm3_raw.PM3RawPlugin'>, 'plugin_key': 'pm3_raw'}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/pm3_raw", "manifest": {"name": "PM3 Raw", "version": "1.0.0", "author": "Lab401", "description": "Run hw version and display output", "entry_class": "PM3RawPlugin", "permissions": ["pm3"], "order": 99}, "ui_definition": {"plugin": true, "name": "PM3 Raw", "version": "1.0.0", "initial_state": "idle", "states": {"idle": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "Press OK to run 'hw version'", "size": "normal"}]}, "buttons": {"left": "Back", "right": null}, "keys": {"OK": "run:do_run", "M1": "finish"}}, "transitions": {"on_result.status==done": "done", "on_result.status==error": "error", "on_error": "error"}}, "done": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "{output_lines}", "size": "normal"}], "scrollable": true}, "buttons": {"left": "Back", "right": "Again"}, "keys": {"M1": "finish", "M2": "set_state:idle"}}}, "error": {"screen": {"title": "PM3 Raw", "content": {"typ
+[ 134.787] POLL stack=['MainActivity', 'PluginsMenuActivity', 'PluginActivity'] type=18 uid=
+[ 135.780] KEY> KEYOK_PRES!
+[ 135.783] PM3> hw version (timeout=5000)
+[ 136.355] SERIAL_TX> b'pctbat\r\n'
+[ 136.368] SERIAL_TX> b'charge\r\n'
+[ 140.791] REWORK> reworkPM3All()
+[ 140.791] SERIAL_TX> b'restartpm3\r\n'
+[ 143.808] CONNECT> connect2PM3()
+[ 143.813] CONNECT< socket=True
+[ 143.814] REWORK< socket=True
+[ 146.385] SERIAL_TX> b'pctbat\r\n'
+[ 146.398] SERIAL_TX> b'charge\r\n'
+[ 148.824] REWORK> reworkPM3All()
+[ 148.824] SERIAL_TX> b'restartpm3\r\n'
+[ 151.842] CONNECT> connect2PM3()
+[ 151.845] CONNECT< socket=True
+[ 151.854] REWORK< socket=True
+[ 156.415] SERIAL_TX> b'pctbat\r\n'
+[ 156.429] SERIAL_TX> b'charge\r\n'
+[ 156.862] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 166.445] SERIAL_TX> b'pctbat\r\n'
+[ 166.458] SERIAL_TX> b'charge\r\n'
+[ 176.475] SERIAL_TX> b'pctbat\r\n'
+[ 176.488] SERIAL_TX> b'charge\r\n'
+[ 186.505] SERIAL_TX> b'pctbat\r\n'
+[ 186.523] SERIAL_TX> b'charge\r\n'

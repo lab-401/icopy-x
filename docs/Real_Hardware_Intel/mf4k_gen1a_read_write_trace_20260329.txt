@@ -1,0 +1,567 @@
+=== TRACE ===
+[   0.003] POLL stack=['dict'] 
+[   0.004] === ALL INSTALLED ===
+[  65.893] START(AutoCopyActivity, None)
+[  66.073] PM3> hf 14a info
+[  66.186] POLL stack=['dict', 'dict'] 
+[  66.229] PM3< ret=1 \n
+[  66.232] PM3> lf sea
+[  68.777] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[|]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n
+[  68.781] PM3> hf sea
+[  71.997] PM3< ret=1 \n[/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO14443-A tag...\n[+]  UID: DE AD BE EF \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]
+[  72.012] PM3> hf 14a info
+[  72.195] POLL stack=['dict', 'dict'] type=? uid=
+[  73.558] PM3< ret=1 \n\n[+]  UID: DE AD BE EF \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[+]    MIFARE Plus 2K / Plus CL2 2K\n[+]    MIFARE Classic 4K / Classic 4K CL2\n[=] proprietary non is
+[  73.583] PM3> hf mf cgetblk 0
+[  73.827] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[  74.201] POLL stack=['dict', 'dict'] type=0 uid=DEADBEEF
+[  75.178] PM3> hf mf fchk 4 /tmp/.keys/mf_tmp_keys
+[  76.282] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.6s | found 80/80 keys (85)\n[=] time in checkkeys (fast) 0.6s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|
+[  98.912] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-4K-4B_DEADBEEF_2.bin')
+[  99.252] POLL stack=['dict', 'dict', 'dict'] type=0 uid=DEADBEEF
+[ 101.059] FINISH(top=dict d=3)
+[ 101.068] START(WriteActivity, '/mnt/upan/dump/mf1/M1-4K-4B_DEADBEEF_2.bin')
+[ 101.116] PM3> hf 14a info
+[ 101.364] PM3< ret=1 \n
+[ 101.758] POLL stack=['dict', 'dict', 'dict'] 
+[ 104.104] PM3> hf 14a info
+[ 105.690] PM3< ret=1 \n\n[+]  UID: DE AD BE EF \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[+]    MIFARE Plus 2K / Plus CL2 2K\n[+]    MIFARE Classic 4K / Classic 4K CL2\n[=] proprietary non is
+[ 105.692] PM3> hf mf cgetblk 0
+[ 105.954] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 106.267] POLL stack=['dict', 'dict', 'dict'] type=0 uid=DEADBEEF
+[ 106.831] PM3> hf mf fchk 4 /tmp/.keys/mf_tmp_keys
+[ 108.113] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.6s | found 80/80 keys (85)\n[=] time in checkkeys (fast) 0.6s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|
+[ 108.631] PM3> hf mf wrbl 240 A ffffffffffff 00000000000000000000000000000000
+[ 108.898] PM3< ret=1 \n--block no 240, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 108.900] PM3> hf mf wrbl 241 A ffffffffffff 00000000000000000000000000000000
+[ 109.149] PM3< ret=1 \n--block no 241, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.150] PM3> hf mf wrbl 242 A ffffffffffff 00000000000000000000000000000000
+[ 109.416] PM3< ret=1 \n--block no 242, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.417] PM3> hf mf wrbl 243 A ffffffffffff 00000000000000000000000000000000
+[ 109.667] PM3< ret=1 \n--block no 243, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.667] PM3> hf mf wrbl 244 A ffffffffffff 00000000000000000000000000000000
+[ 109.934] PM3< ret=1 \n--block no 244, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 109.935] PM3> hf mf wrbl 245 A ffffffffffff 00000000000000000000000000000000
+[ 110.185] PM3< ret=1 \n--block no 245, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.186] PM3> hf mf wrbl 246 A ffffffffffff 00000000000000000000000000000000
+[ 110.452] PM3< ret=1 \n--block no 246, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.453] PM3> hf mf wrbl 247 A ffffffffffff 00000000000000000000000000000000
+[ 110.703] PM3< ret=1 \n--block no 247, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.704] PM3> hf mf wrbl 248 A ffffffffffff 00000000000000000000000000000000
+[ 110.970] PM3< ret=1 \n--block no 248, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 110.971] PM3> hf mf wrbl 249 A ffffffffffff 00000000000000000000000000000000
+[ 111.221] PM3< ret=1 \n--block no 249, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.221] PM3> hf mf wrbl 250 A ffffffffffff 00000000000000000000000000000000
+[ 111.481] PM3< ret=1 \n--block no 250, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.482] PM3> hf mf wrbl 251 A ffffffffffff 00000000000000000000000000000000
+[ 111.741] PM3< ret=1 \n--block no 251, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 111.742] PM3> hf mf wrbl 252 A ffffffffffff 00000000000000000000000000000000
+[ 112.001] PM3< ret=1 \n--block no 252, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.002] PM3> hf mf wrbl 253 A ffffffffffff 00000000000000000000000000000000
+[ 112.262] PM3< ret=1 \n--block no 253, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.263] PM3> hf mf wrbl 254 A ffffffffffff 00000000000000000000000000000000
+[ 112.514] PM3< ret=1 \n--block no 254, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.515] PM3> hf mf wrbl 224 A ffffffffffff 00000000000000000000000000000000
+[ 112.782] PM3< ret=1 \n--block no 224, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 112.783] PM3> hf mf wrbl 225 A ffffffffffff 00000000000000000000000000000000
+[ 113.033] PM3< ret=1 \n--block no 225, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.034] PM3> hf mf wrbl 226 A ffffffffffff 00000000000000000000000000000000
+[ 113.302] PM3< ret=1 \n--block no 226, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.303] PM3> hf mf wrbl 227 A ffffffffffff 00000000000000000000000000000000
+[ 113.553] PM3< ret=1 \n--block no 227, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.554] PM3> hf mf wrbl 228 A ffffffffffff 00000000000000000000000000000000
+[ 113.814] PM3< ret=1 \n--block no 228, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 113.815] PM3> hf mf wrbl 229 A ffffffffffff 00000000000000000000000000000000
+[ 114.084] PM3< ret=1 \n--block no 229, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.085] PM3> hf mf wrbl 230 A ffffffffffff 00000000000000000000000000000000
+[ 114.332] PM3< ret=1 \n--block no 230, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.333] PM3> hf mf wrbl 231 A ffffffffffff 00000000000000000000000000000000
+[ 114.593] PM3< ret=1 \n--block no 231, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.594] PM3> hf mf wrbl 232 A ffffffffffff 00000000000000000000000000000000
+[ 114.844] PM3< ret=1 \n--block no 232, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 114.845] PM3> hf mf wrbl 233 A ffffffffffff 00000000000000000000000000000000
+[ 115.086] PM3< ret=1 \n--block no 233, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.086] PM3> hf mf wrbl 234 A ffffffffffff 00000000000000000000000000000000
+[ 115.353] PM3< ret=1 \n--block no 234, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.354] PM3> hf mf wrbl 235 A ffffffffffff 00000000000000000000000000000000
+[ 115.604] PM3< ret=1 \n--block no 235, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.604] PM3> hf mf wrbl 236 A ffffffffffff 00000000000000000000000000000000
+[ 115.865] PM3< ret=1 \n--block no 236, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 115.866] PM3> hf mf wrbl 237 A ffffffffffff 00000000000000000000000000000000
+[ 116.127] PM3< ret=1 \n--block no 237, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.128] PM3> hf mf wrbl 238 A ffffffffffff 00000000000000000000000000000000
+[ 116.389] PM3< ret=1 \n--block no 238, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.391] PM3> hf mf wrbl 208 A ffffffffffff 00000000000000000000000000000000
+[ 116.647] PM3< ret=1 \n--block no 208, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.648] PM3> hf mf wrbl 209 A ffffffffffff 00000000000000000000000000000000
+[ 116.900] PM3< ret=1 \n--block no 209, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 116.900] PM3> hf mf wrbl 210 A ffffffffffff 00000000000000000000000000000000
+[ 117.161] PM3< ret=1 \n--block no 210, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.162] PM3> hf mf wrbl 211 A ffffffffffff 00000000000000000000000000000000
+[ 117.423] PM3< ret=1 \n--block no 211, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.424] PM3> hf mf wrbl 212 A ffffffffffff 00000000000000000000000000000000
+[ 117.674] PM3< ret=1 \n--block no 212, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.675] PM3> hf mf wrbl 213 A ffffffffffff 00000000000000000000000000000000
+[ 117.916] PM3< ret=1 \n--block no 213, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 117.916] PM3> hf mf wrbl 214 A ffffffffffff 00000000000000000000000000000000
+[ 118.177] PM3< ret=1 \n--block no 214, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.178] PM3> hf mf wrbl 215 A ffffffffffff 00000000000000000000000000000000
+[ 118.440] PM3< ret=1 \n--block no 215, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.441] PM3> hf mf wrbl 216 A ffffffffffff 00000000000000000000000000000000
+[ 118.692] PM3< ret=1 \n--block no 216, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.692] PM3> hf mf wrbl 217 A ffffffffffff 00000000000000000000000000000000
+[ 118.960] PM3< ret=1 \n--block no 217, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 118.961] PM3> hf mf wrbl 218 A ffffffffffff 00000000000000000000000000000000
+[ 119.217] PM3< ret=1 \n--block no 218, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.218] PM3> hf mf wrbl 219 A ffffffffffff 00000000000000000000000000000000
+[ 119.470] PM3< ret=1 \n--block no 219, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.470] PM3> hf mf wrbl 220 A ffffffffffff 00000000000000000000000000000000
+[ 119.733] PM3< ret=1 \n--block no 220, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.734] PM3> hf mf wrbl 221 A ffffffffffff 00000000000000000000000000000000
+[ 119.996] PM3< ret=1 \n--block no 221, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 119.997] PM3> hf mf wrbl 222 A ffffffffffff 00000000000000000000000000000000
+[ 120.248] PM3< ret=1 \n--block no 222, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.250] PM3> hf mf wrbl 192 A ffffffffffff 00000000000000000000000000000000
+[ 120.518] PM3< ret=1 \n--block no 192, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.519] PM3> hf mf wrbl 193 A ffffffffffff 00000000000000000000000000000000
+[ 120.771] PM3< ret=1 \n--block no 193, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 120.772] PM3> hf mf wrbl 194 A ffffffffffff 00000000000000000000000000000000
+[ 121.023] PM3< ret=1 \n--block no 194, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.024] PM3> hf mf wrbl 195 A ffffffffffff 00000000000000000000000000000000
+[ 121.286] PM3< ret=1 \n--block no 195, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.287] PM3> hf mf wrbl 196 A ffffffffffff 00000000000000000000000000000000
+[ 121.550] PM3< ret=1 \n--block no 196, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.551] PM3> hf mf wrbl 197 A ffffffffffff 00000000000000000000000000000000
+[ 121.802] PM3< ret=1 \n--block no 197, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 121.803] PM3> hf mf wrbl 198 A ffffffffffff 00000000000000000000000000000000
+[ 122.065] PM3< ret=1 \n--block no 198, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.066] PM3> hf mf wrbl 199 A ffffffffffff 00000000000000000000000000000000
+[ 122.319] PM3< ret=1 \n--block no 199, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.319] PM3> hf mf wrbl 200 A ffffffffffff 00000000000000000000000000000000
+[ 122.580] PM3< ret=1 \n--block no 200, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.581] PM3> hf mf wrbl 201 A ffffffffffff 00000000000000000000000000000000
+[ 122.850] PM3< ret=1 \n--block no 201, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 122.851] PM3> hf mf wrbl 202 A ffffffffffff 00000000000000000000000000000000
+[ 123.104] PM3< ret=1 \n--block no 202, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.105] PM3> hf mf wrbl 203 A ffffffffffff 00000000000000000000000000000000
+[ 123.357] PM3< ret=1 \n--block no 203, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.358] PM3> hf mf wrbl 204 A ffffffffffff 00000000000000000000000000000000
+[ 123.621] PM3< ret=1 \n--block no 204, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.622] PM3> hf mf wrbl 205 A ffffffffffff 00000000000000000000000000000000
+[ 123.885] PM3< ret=1 \n--block no 205, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 123.885] PM3> hf mf wrbl 206 A ffffffffffff 00000000000000000000000000000000
+[ 124.139] PM3< ret=1 \n--block no 206, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.141] PM3> hf mf wrbl 176 A ffffffffffff 00000000000000000000000000000000
+[ 124.406] PM3< ret=1 \n--block no 176, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.407] PM3> hf mf wrbl 177 A ffffffffffff 00000000000000000000000000000000
+[ 124.660] PM3< ret=1 \n--block no 177, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.661] PM3> hf mf wrbl 178 A ffffffffffff 00000000000000000000000000000000
+[ 124.914] PM3< ret=1 \n--block no 178, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 124.915] PM3> hf mf wrbl 179 A ffffffffffff 00000000000000000000000000000000
+[ 125.178] PM3< ret=1 \n--block no 179, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.179] PM3> hf mf wrbl 180 A ffffffffffff 00000000000000000000000000000000
+[ 125.431] PM3< ret=1 \n--block no 180, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.432] PM3> hf mf wrbl 181 A ffffffffffff 00000000000000000000000000000000
+[ 125.696] PM3< ret=1 \n--block no 181, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.697] PM3> hf mf wrbl 182 A ffffffffffff 00000000000000000000000000000000
+[ 125.950] PM3< ret=1 \n--block no 182, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 125.951] PM3> hf mf wrbl 183 A ffffffffffff 00000000000000000000000000000000
+[ 126.216] PM3< ret=1 \n--block no 183, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.217] PM3> hf mf wrbl 184 A ffffffffffff 00000000000000000000000000000000
+[ 126.470] PM3< ret=1 \n--block no 184, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.471] PM3> hf mf wrbl 185 A ffffffffffff 00000000000000000000000000000000
+[ 126.735] PM3< ret=1 \n--block no 185, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.736] PM3> hf mf wrbl 186 A ffffffffffff 00000000000000000000000000000000
+[ 126.990] PM3< ret=1 \n--block no 186, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 126.991] PM3> hf mf wrbl 187 A ffffffffffff 00000000000000000000000000000000
+[ 127.255] PM3< ret=1 \n--block no 187, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.256] PM3> hf mf wrbl 188 A ffffffffffff 00000000000000000000000000000000
+[ 127.510] PM3< ret=1 \n--block no 188, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.511] PM3> hf mf wrbl 189 A ffffffffffff 00000000000000000000000000000000
+[ 127.776] PM3< ret=1 \n--block no 189, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 127.776] PM3> hf mf wrbl 190 A ffffffffffff 00000000000000000000000000000000
+[ 128.032] PM3< ret=1 \n--block no 190, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.034] PM3> hf mf wrbl 160 A ffffffffffff 00000000000000000000000000000000
+[ 128.288] PM3< ret=1 \n--block no 160, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.289] PM3> hf mf wrbl 161 A ffffffffffff 00000000000000000000000000000000
+[ 128.544] PM3< ret=1 \n--block no 161, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.545] PM3> hf mf wrbl 162 A ffffffffffff 00000000000000000000000000000000
+[ 128.809] PM3< ret=1 \n--block no 162, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 128.810] PM3> hf mf wrbl 163 A ffffffffffff 00000000000000000000000000000000
+[ 129.065] PM3< ret=1 \n--block no 163, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.066] PM3> hf mf wrbl 164 A ffffffffffff 00000000000000000000000000000000
+[ 129.330] PM3< ret=1 \n--block no 164, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.331] PM3> hf mf wrbl 165 A ffffffffffff 00000000000000000000000000000000
+[ 129.584] PM3< ret=1 \n--block no 165, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.585] PM3> hf mf wrbl 166 A ffffffffffff 00000000000000000000000000000000
+[ 129.841] PM3< ret=1 \n--block no 166, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 129.841] PM3> hf mf wrbl 167 A ffffffffffff 00000000000000000000000000000000
+[ 130.106] PM3< ret=1 \n--block no 167, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.107] PM3> hf mf wrbl 168 A ffffffffffff 00000000000000000000000000000000
+[ 130.363] PM3< ret=1 \n--block no 168, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.364] PM3> hf mf wrbl 169 A ffffffffffff 00000000000000000000000000000000
+[ 130.619] PM3< ret=1 \n--block no 169, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.620] PM3> hf mf wrbl 170 A ffffffffffff 00000000000000000000000000000000
+[ 130.886] PM3< ret=1 \n--block no 170, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 130.887] PM3> hf mf wrbl 171 A ffffffffffff 00000000000000000000000000000000
+[ 131.148] PM3< ret=1 \n--block no 171, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.149] PM3> hf mf wrbl 172 A ffffffffffff 00000000000000000000000000000000
+[ 131.402] PM3< ret=1 \n--block no 172, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.403] PM3> hf mf wrbl 173 A ffffffffffff 00000000000000000000000000000000
+[ 131.664] PM3< ret=1 \n--block no 173, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.665] PM3> hf mf wrbl 174 A ffffffffffff 00000000000000000000000000000000
+[ 131.918] PM3< ret=1 \n--block no 174, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 131.920] PM3> hf mf wrbl 144 A ffffffffffff 00000000000000000000000000000000
+[ 132.179] PM3< ret=1 \n--block no 144, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.180] PM3> hf mf wrbl 145 A ffffffffffff 00000000000000000000000000000000
+[ 132.435] PM3< ret=1 \n--block no 145, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.436] PM3> hf mf wrbl 146 A ffffffffffff 00000000000000000000000000000000
+[ 132.702] PM3< ret=1 \n--block no 146, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.703] PM3> hf mf wrbl 147 A ffffffffffff 00000000000000000000000000000000
+[ 132.960] PM3< ret=1 \n--block no 147, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 132.961] PM3> hf mf wrbl 148 A ffffffffffff 00000000000000000000000000000000
+[ 133.217] PM3< ret=1 \n--block no 148, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.218] PM3> hf mf wrbl 149 A ffffffffffff 00000000000000000000000000000000
+[ 133.474] PM3< ret=1 \n--block no 149, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.474] PM3> hf mf wrbl 150 A ffffffffffff 00000000000000000000000000000000
+[ 133.730] PM3< ret=1 \n--block no 150, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.731] PM3> hf mf wrbl 151 A ffffffffffff 00000000000000000000000000000000
+[ 133.998] PM3< ret=1 \n--block no 151, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 133.999] PM3> hf mf wrbl 152 A ffffffffffff 00000000000000000000000000000000
+[ 134.255] PM3< ret=1 \n--block no 152, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.256] PM3> hf mf wrbl 153 A ffffffffffff 00000000000000000000000000000000
+[ 134.513] PM3< ret=1 \n--block no 153, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.514] PM3> hf mf wrbl 154 A ffffffffffff 00000000000000000000000000000000
+[ 134.769] PM3< ret=1 \n--block no 154, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 134.770] PM3> hf mf wrbl 155 A ffffffffffff 00000000000000000000000000000000
+[ 135.028] PM3< ret=1 \n--block no 155, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.029] PM3> hf mf wrbl 156 A ffffffffffff 00000000000000000000000000000000
+[ 135.297] PM3< ret=1 \n--block no 156, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.297] PM3> hf mf wrbl 157 A ffffffffffff 00000000000000000000000000000000
+[ 135.555] PM3< ret=1 \n--block no 157, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.556] PM3> hf mf wrbl 158 A ffffffffffff 00000000000000000000000000000000
+[ 135.818] PM3< ret=1 \n--block no 158, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 135.820] PM3> hf mf wrbl 128 A ffffffffffff 00000000000000000000000000000000
+[ 136.066] PM3< ret=1 \n--block no 128, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.067] PM3> hf mf wrbl 129 A ffffffffffff 00000000000000000000000000000000
+[ 136.324] PM3< ret=1 \n--block no 129, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.325] PM3> hf mf wrbl 130 A ffffffffffff 00000000000000000000000000000000
+[ 136.593] PM3< ret=1 \n--block no 130, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.594] PM3> hf mf wrbl 131 A ffffffffffff 00000000000000000000000000000000
+[ 136.852] PM3< ret=1 \n--block no 131, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 136.853] PM3> hf mf wrbl 132 A ffffffffffff 00000000000000000000000000000000
+[ 137.110] PM3< ret=1 \n--block no 132, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.110] PM3> hf mf wrbl 133 A ffffffffffff 00000000000000000000000000000000
+[ 137.368] PM3< ret=1 \n--block no 133, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.369] PM3> hf mf wrbl 134 A ffffffffffff 00000000000000000000000000000000
+[ 137.627] PM3< ret=1 \n--block no 134, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.628] PM3> hf mf wrbl 135 A ffffffffffff 00000000000000000000000000000000
+[ 137.885] PM3< ret=1 \n--block no 135, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 137.886] PM3> hf mf wrbl 136 A ffffffffffff 00000000000000000000000000000000
+[ 138.144] PM3< ret=1 \n--block no 136, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.145] PM3> hf mf wrbl 137 A ffffffffffff 00000000000000000000000000000000
+[ 138.403] PM3< ret=1 \n--block no 137, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.404] PM3> hf mf wrbl 138 A ffffffffffff 00000000000000000000000000000000
+[ 138.662] PM3< ret=1 \n--block no 138, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.663] PM3> hf mf wrbl 139 A ffffffffffff 00000000000000000000000000000000
+[ 138.921] PM3< ret=1 \n--block no 139, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 138.922] PM3> hf mf wrbl 140 A ffffffffffff 00000000000000000000000000000000
+[ 139.179] PM3< ret=1 \n--block no 140, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.180] PM3> hf mf wrbl 141 A ffffffffffff 00000000000000000000000000000000
+[ 139.439] PM3< ret=1 \n--block no 141, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.440] PM3> hf mf wrbl 142 A ffffffffffff 00000000000000000000000000000000
+[ 139.698] PM3< ret=1 \n--block no 142, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.700] PM3> hf mf wrbl 124 A ffffffffffff 00000000000000000000000000000000
+[ 139.958] PM3< ret=1 \n--block no 124, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 139.959] PM3> hf mf wrbl 125 A ffffffffffff 00000000000000000000000000000000
+[ 140.218] PM3< ret=1 \n--block no 125, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.219] PM3> hf mf wrbl 126 A ffffffffffff 00000000000000000000000000000000
+[ 140.477] PM3< ret=1 \n--block no 126, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.479] PM3> hf mf wrbl 120 A ffffffffffff 00000000000000000000000000000000
+[ 140.731] PM3< ret=1 \n--block no 120, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.731] PM3> hf mf wrbl 121 A ffffffffffff 00000000000000000000000000000000
+[ 140.991] PM3< ret=1 \n--block no 121, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 140.992] PM3> hf mf wrbl 122 A ffffffffffff 00000000000000000000000000000000
+[ 141.251] PM3< ret=1 \n--block no 122, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.253] PM3> hf mf wrbl 116 A ffffffffffff 00000000000000000000000000000000
+[ 141.516] PM3< ret=1 \n--block no 116, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.517] PM3> hf mf wrbl 117 A ffffffffffff 00000000000000000000000000000000
+[ 141.764] PM3< ret=1 \n--block no 117, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 141.765] PM3> hf mf wrbl 118 A ffffffffffff 00000000000000000000000000000000
+[ 142.034] PM3< ret=1 \n--block no 118, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.036] PM3> hf mf wrbl 112 A ffffffffffff 00000000000000000000000000000000
+[ 142.288] PM3< ret=1 \n--block no 112, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.289] PM3> hf mf wrbl 113 A ffffffffffff 00000000000000000000000000000000
+[ 142.549] PM3< ret=1 \n--block no 113, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.550] PM3> hf mf wrbl 114 A ffffffffffff 00000000000000000000000000000000
+[ 142.809] PM3< ret=1 \n--block no 114, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 142.811] PM3> hf mf wrbl 108 A ffffffffffff 00000000000000000000000000000000
+[ 143.070] PM3< ret=1 \n--block no 108, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.071] PM3> hf mf wrbl 109 A ffffffffffff 00000000000000000000000000000000
+[ 143.331] PM3< ret=1 \n--block no 109, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.332] PM3> hf mf wrbl 110 A ffffffffffff 00000000000000000000000000000000
+[ 143.583] PM3< ret=1 \n--block no 110, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.585] PM3> hf mf wrbl 104 A ffffffffffff 00000000000000000000000000000000
+[ 143.848] PM3< ret=1 \n--block no 104, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 143.849] PM3> hf mf wrbl 105 A ffffffffffff 00000000000000000000000000000000
+[ 144.101] PM3< ret=1 \n--block no 105, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.101] PM3> hf mf wrbl 106 A ffffffffffff 00000000000000000000000000000000
+[ 144.363] PM3< ret=1 \n--block no 106, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.365] PM3> hf mf wrbl 100 A ffffffffffff 00000000000000000000000000000000
+[ 144.628] PM3< ret=1 \n--block no 100, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.629] PM3> hf mf wrbl 101 A ffffffffffff 00000000000000000000000000000000
+[ 144.899] PM3< ret=1 \n--block no 101, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 144.900] PM3> hf mf wrbl 102 A ffffffffffff 00000000000000000000000000000000
+[ 145.160] PM3< ret=1 \n--block no 102, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.162] PM3> hf mf wrbl 96 A ffffffffffff 00000000000000000000000000000000
+[ 145.424] PM3< ret=1 \n--block no 96, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.424] PM3> hf mf wrbl 97 A ffffffffffff 00000000000000000000000000000000
+[ 145.674] PM3< ret=1 \n--block no 97, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.675] PM3> hf mf wrbl 98 A ffffffffffff 00000000000000000000000000000000
+[ 145.936] PM3< ret=1 \n--block no 98, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 145.937] PM3> hf mf wrbl 92 A ffffffffffff 00000000000000000000000000000000
+[ 146.196] PM3< ret=1 \n--block no 92, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.197] PM3> hf mf wrbl 93 A ffffffffffff 00000000000000000000000000000000
+[ 146.459] PM3< ret=1 \n--block no 93, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.460] PM3> hf mf wrbl 94 A ffffffffffff 00000000000000000000000000000000
+[ 146.721] PM3< ret=1 \n--block no 94, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.723] PM3> hf mf wrbl 88 A ffffffffffff 00000000000000000000000000000000
+[ 146.998] PM3< ret=1 \n--block no 88, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 146.999] PM3> hf mf wrbl 89 A ffffffffffff 00000000000000000000000000000000
+[ 147.260] PM3< ret=1 \n--block no 89, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.261] PM3> hf mf wrbl 90 A ffffffffffff 00000000000000000000000000000000
+[ 147.512] PM3< ret=1 \n--block no 90, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.514] PM3> hf mf wrbl 84 A ffffffffffff 00000000000000000000000000000000
+[ 147.771] PM3< ret=1 \n--block no 84, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 147.772] PM3> hf mf wrbl 85 A ffffffffffff 00000000000000000000000000000000
+[ 148.033] PM3< ret=1 \n--block no 85, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.034] PM3> hf mf wrbl 86 A ffffffffffff 00000000000000000000000000000000
+[ 148.295] PM3< ret=1 \n--block no 86, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.297] PM3> hf mf wrbl 80 A ffffffffffff 00000000000000000000000000000000
+[ 148.545] PM3< ret=1 \n--block no 80, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.546] PM3> hf mf wrbl 81 A ffffffffffff 00000000000000000000000000000000
+[ 148.803] PM3< ret=1 \n--block no 81, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 148.804] PM3> hf mf wrbl 82 A ffffffffffff 00000000000000000000000000000000
+[ 149.066] PM3< ret=1 \n--block no 82, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.068] PM3> hf mf wrbl 76 A ffffffffffff 00000000000000000000000000000000
+[ 149.329] PM3< ret=1 \n--block no 76, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.330] PM3> hf mf wrbl 77 A ffffffffffff 00000000000000000000000000000000
+[ 149.592] PM3< ret=1 \n--block no 77, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.593] PM3> hf mf wrbl 78 A ffffffffffff 00000000000000000000000000000000
+[ 149.844] PM3< ret=1 \n--block no 78, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 149.846] PM3> hf mf wrbl 72 A ffffffffffff 00000000000000000000000000000000
+[ 150.104] PM3< ret=1 \n--block no 72, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.105] PM3> hf mf wrbl 73 A ffffffffffff 00000000000000000000000000000000
+[ 150.367] PM3< ret=1 \n--block no 73, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.368] PM3> hf mf wrbl 74 A ffffffffffff 00000000000000000000000000000000
+[ 150.620] PM3< ret=1 \n--block no 74, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.622] PM3> hf mf wrbl 68 A ffffffffffff 00000000000000000000000000000000
+[ 150.887] PM3< ret=1 \n--block no 68, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 150.888] PM3> hf mf wrbl 69 A ffffffffffff 00000000000000000000000000000000
+[ 151.141] PM3< ret=1 \n--block no 69, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 151.142] PM3> hf mf wrbl 70 A ffffffffffff 00000000000000000000000000000000
+[ 151.405] PM3< ret=1 \n--block no 70, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 151.407] PM3> hf mf wrbl 64 A ffffffffffff 00000000000000000000000000000000
+[ 151.676] PM3< ret=1 \n--block no 64, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 151.676] PM3> hf mf wrbl 65 A ffffffffffff 00000000000000000000000000000000
+[ 151.940] PM3< ret=1 \n--block no 65, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 151.941] PM3> hf mf wrbl 66 A ffffffffffff 00000000000000000000000000000000
+[ 152.204] PM3< ret=1 \n--block no 66, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 152.206] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000
+[ 152.475] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 152.476] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000
+[ 152.737] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 152.738] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000
+[ 153.001] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 153.003] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000
+[ 153.270] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 153.271] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000
+[ 153.533] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 153.534] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000
+[ 153.797] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 153.799] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000
+[ 154.055] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 154.056] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000
+[ 154.320] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 154.321] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000
+[ 154.595] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 154.597] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000
+[ 154.847] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 154.848] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000
+[ 155.114] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 155.114] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000
+[ 155.369] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 155.371] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000
+[ 155.628] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 155.629] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000
+[ 155.893] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 155.894] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000
+[ 156.171] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 156.172] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000
+[ 156.421] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 156.422] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000
+[ 156.686] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 156.687] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000
+[ 156.951] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 156.953] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000
+[ 157.222] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 157.223] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000
+[ 157.489] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 157.489] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000
+[ 157.745] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 157.746] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000
+[ 158.009] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 158.010] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000
+[ 158.286] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 158.287] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000
+[ 158.541] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 158.543] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000
+[ 158.802] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 158.803] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000
+[ 159.069] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 159.070] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000
+[ 159.346] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 159.348] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000
+[ 159.616] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 159.617] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000
+[ 159.884] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 159.885] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000
+[ 160.142] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 160.144] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000
+[ 160.395] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 160.396] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000
+[ 160.663] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 160.664] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000
+[ 160.940] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 160.942] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000
+[ 161.195] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 161.196] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000
+[ 161.462] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 161.463] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000
+[ 161.740] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 161.742] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000
+[ 162.021] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 162.022] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000
+[ 162.291] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 162.292] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000
+[ 162.559] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 162.561] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000
+[ 162.830] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 162.831] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000
+[ 163.090] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 163.091] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000
+[ 163.360] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 163.361] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000
+[ 163.630] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 163.631] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000
+[ 163.898] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 163.899] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000
+[ 164.176] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 164.178] PM3> hf mf wrbl 0 A ffffffffffff DEADBEEF221802000000000000000000
+[ 164.436] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 164.436] PM3> hf mf wrbl 0 A ffffffffffff DEADBEEF221802000000000000000000
+[ 164.713] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 164.714] PM3> hf mf wrbl 0 A ffffffffffff DEADBEEF221802000000000000000000
+[ 165.000] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 165.001] PM3> hf mf wrbl 0 B ffffffffffff DEADBEEF221802000000000000000000
+[ 165.287] PM3< ret=1 \n--block no 0, key B - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 165.288] PM3> hf mf wrbl 0 B ffffffffffff DEADBEEF221802000000000000000000
+[ 165.564] PM3< ret=1 \n--block no 0, key B - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 165.565] PM3> hf mf wrbl 0 B ffffffffffff DEADBEEF221802000000000000000000
+[ 165.842] PM3< ret=1 \n--block no 0, key B - FF FF FF FF FF FF \n--data: DE AD BE EF 22 18 02 00 00 00 00 00 00 00 00 00 \n[#] Cmd Error: 04\n[#] Write block error\nisOk:00\n
+[ 165.843] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000
+[ 166.121] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 166.122] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000
+[ 166.400] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 166.401] PM3> hf mf wrbl 255 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 166.672] PM3< ret=1 \n--block no 255, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 166.674] PM3> hf mf wrbl 239 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 166.935] PM3< ret=1 \n--block no 239, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 166.937] PM3> hf mf wrbl 223 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 167.188] PM3< ret=1 \n--block no 223, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 167.190] PM3> hf mf wrbl 207 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 167.453] PM3< ret=1 \n--block no 207, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 167.455] PM3> hf mf wrbl 191 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 167.706] PM3< ret=1 \n--block no 191, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 167.708] PM3> hf mf wrbl 175 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 167.969] PM3< ret=1 \n--block no 175, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 167.970] PM3> hf mf wrbl 159 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 168.232] PM3< ret=1 \n--block no 159, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 168.233] PM3> hf mf wrbl 143 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 168.485] PM3< ret=1 \n--block no 143, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 168.486] PM3> hf mf wrbl 127 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 168.747] PM3< ret=1 \n--block no 127, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 168.749] PM3> hf mf wrbl 123 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 169.010] PM3< ret=1 \n--block no 123, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 169.012] PM3> hf mf wrbl 119 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 169.265] PM3< ret=1 \n--block no 119, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 169.267] PM3> hf mf wrbl 115 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 169.529] PM3< ret=1 \n--block no 115, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 169.531] PM3> hf mf wrbl 111 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 169.804] PM3< ret=1 \n--block no 111, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 169.806] PM3> hf mf wrbl 107 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 170.068] PM3< ret=1 \n--block no 107, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 170.070] PM3> hf mf wrbl 103 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 170.343] PM3< ret=1 \n--block no 103, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 170.345] PM3> hf mf wrbl 99 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 170.606] PM3< ret=1 \n--block no 99, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 170.608] PM3> hf mf wrbl 95 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 170.862] PM3< ret=1 \n--block no 95, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 170.864] PM3> hf mf wrbl 91 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 171.125] PM3< ret=1 \n--block no 91, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 171.127] PM3> hf mf wrbl 87 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 171.380] PM3< ret=1 \n--block no 87, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 171.382] PM3> hf mf wrbl 83 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 171.644] PM3< ret=1 \n--block no 83, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 171.646] PM3> hf mf wrbl 79 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 171.899] PM3< ret=1 \n--block no 79, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 171.901] PM3> hf mf wrbl 75 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 172.163] PM3< ret=1 \n--block no 75, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 172.165] PM3> hf mf wrbl 71 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 172.417] PM3< ret=1 \n--block no 71, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 172.419] PM3> hf mf wrbl 67 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 172.685] PM3< ret=1 \n--block no 67, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 172.687] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 172.963] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 172.965] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 173.240] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 173.242] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 173.494] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 173.496] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 173.760] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 173.762] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 174.035] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 174.037] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 174.301] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 174.303] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 174.575] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 174.577] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 174.840] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 174.842] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 175.114] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 175.116] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 175.382] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 175.384] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 175.656] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 175.658] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 175.913] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 175.915] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 176.181] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 176.184] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 176.456] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 176.458] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 176.714] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 176.715] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFF00000069FFFFFFFFFFFF
+[ 176.980] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF 00 00 00 69 FF FF FF FF FF FF \nisOk:01\n
+[ 177.184] PM3> hf 14a info
+[ 178.748] PM3< ret=1 \n\n[+]  UID: DE AD BE EF \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[+]    MIFARE Plus 2K / Plus CL2 2K\n[+]    MIFARE Classic 4K / Classic 4K CL2\n[=] proprietary non is
+[ 178.750] PM3> hf mf cgetblk 0
+[ 179.020] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 183.602] PM3> hf 14a info
+[ 183.872] PM3< ret=1 \n
+[ 183.920] POLL stack=['dict', 'dict', 'dict'] 
+[ 186.005] PM3> hf 14a info
+[ 187.589] PM3< ret=1 \n\n[+]  UID: DE AD BE EF \n[+] ATQA: 00 02\n[+]  SAK: 18 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[+]    MIFARE Plus 2K / Plus CL2 2K\n[+]    MIFARE Classic 4K / Classic 4K CL2\n[=] proprietary non is
+[ 187.591] PM3> hf mf cgetblk 0
+[ 187.852] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 187.930] POLL stack=['dict', 'dict', 'dict'] type=0 uid=DEADBEEF

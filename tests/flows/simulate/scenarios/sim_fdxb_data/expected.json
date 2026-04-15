@@ -1,0 +1,9 @@
+{
+  "title": "Simulation",
+  "content_contains": [
+    "FDX-B Data"
+  ],
+  "sim_buttons": {
+    "M2": "Start"
+  }
+}

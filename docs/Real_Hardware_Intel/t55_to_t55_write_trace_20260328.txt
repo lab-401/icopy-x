@@ -1,0 +1,58 @@
+=== TRACE ===
+[   0.004] POLL stack=['dict'] 
+[   0.004] === ALL INSTALLED ===
+[  45.759] START(ReadListActivity, None)
+[  46.164] POLL stack=['dict', 'dict'] 
+[  47.427] PM3> lf t55xx detect
+[  47.810] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 5 - RF/64\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00148040\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[  48.168] POLL stack=['dict', 'dict'] type=23 uid=
+[  48.813] PM3> lf t55xx detect
+[  49.153] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 5 - RF/64\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00148040\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[  49.158] PM3> lf t55xx read b 0 
+[  49.448] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 00148040 | 00000000000101001000000001000000 | ..@\n
+[  49.452] PM3> lf t55xx read b 1 
+[  49.736] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  01 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  49.737] PM3> lf t55xx read b 2 
+[  50.022] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  02 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  50.249] PM3> lf t55xx dump f /mnt/upan/dump/t55xx/T55xx_00148040_00000000_00000000_2
+[  53.301] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 00148040 | 00000000000101001000000001000000 | ..@\n[+]  01 | 00000000 | 00000000000000000000000000000000 | ....\n[+]  02 | 00000000 | 000000000000
+[  56.941] START(WarningWriteActivity, {'return': 1, 'data': None, 'raw': None, 'file': '/mnt/upan/dump/t55xx/T55xx_001)
+[  57.184] POLL stack=['dict', 'dict', 'dict'] type=23 uid=
+[  58.102] FINISH(top=dict d=3)
+[  58.111] START(WriteActivity, {'return': 1, 'data': None, 'raw': None, 'file': '/mnt/upan/dump/t55xx/T55xx_001)
+[  58.235] POLL stack=['dict', 'dict'] type=23 uid=
+[  58.245] PM3> lf t55xx wipe p 20206666
+[  58.740] POLL stack=['dict', 'dict', 'dict'] type=23 uid=
+[  59.125] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[  59.126] PM3> lf t55xx detect
+[  59.479] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[  59.482] PM3> lf t55xx detect
+[  59.824] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[  59.825] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_00148040_00000000_00000000_2.bin
+[  61.014] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_00148040_00000000_00000000_2.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[  61.021] PM3> lf t55xx detect
+[  61.388] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 5 - RF/64\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x00148040\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[  61.389] PM3> lf t55xx read b 0 
+[  61.675] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 00148040 | 00000000000101001000000001000000 | ..@\n
+[  61.676] PM3> lf t55xx read b 1 
+[  61.955] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  01 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  61.956] PM3> lf t55xx read b 2 
+[  62.244] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  02 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  62.245] PM3> lf t55xx read b 3 
+[  62.533] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  03 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  62.534] PM3> lf t55xx read b 4 
+[  62.820] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  04 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  62.821] PM3> lf t55xx read b 5 
+[  63.107] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  05 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  63.108] PM3> lf t55xx read b 6 
+[  63.394] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  06 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  63.395] PM3> lf t55xx read b 7 
+[  63.681] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  07 | 00000000 | 00000000000000000000000000000000 | ....\n
+[  63.682] PM3> lf t55xx read b 0 1
+[  63.962] PM3< ret=1 \n[+] Reading Page 1:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 00148040 | 00000000000101001000000001000000 | ..@\n
+[  63.963] PM3> lf t55xx read b 1 1
+[  64.253] PM3< ret=1 \n[+] Reading Page 1:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  01 | E01500D0 | 11100000000101010000000011010000 | ..\n
+[  64.254] PM3> lf t55xx read b 2 1
+[  64.545] PM3< ret=1 \n[+] Reading Page 1:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  02 | CEAC345B | 11001110101011000011010001011011 | ά4[\n
+[  64.546] PM3> lf t55xx read b 3 1
+[  64.826] PM3< ret=1 \n[+] Reading Page 1:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  03 | 00000000 | 00000000000000000000000000000000 | ....\n

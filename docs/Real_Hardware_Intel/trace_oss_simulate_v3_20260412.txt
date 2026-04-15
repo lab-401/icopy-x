@@ -1,0 +1,232 @@
+[   0.035] sitecustomize loaded pid=10709
+[   0.004] sitecustomize loaded pid=10830
+[   5.755] application found at poll 10
+[  10.758] installing hooks
+[  10.770] imports OK
+[  10.771] pm3_compat version=iceman needs_translation=True
+[  10.773] POLL stack=['MainActivity']
+[  10.778] === ALL INSTALLED ===
+[  29.326] START(ScanActivity, None)
+[  29.655] PM3> hf 14a info (timeout=5000)
+[  29.827] POLL stack=['MainActivity', 'ScanActivity']
+[  32.218] PM3< ret=1 len=46 [usb|script] pm3 --> hf 14a info
+
+Nikola.D: 0
+
+[  32.302] PM3> lf sea (timeout=10000)
+[  34.321] PM3< ret=1 len=154 [usb|script] pm3 --> lf sea
+[!] command execution time out
+[!!] failed to get current device config
+[-] Data in Graphbuffer was too small.
+
+Nikola.D: -10
+
+[  34.460] PM3> hf sea (timeout=10000)
+[  44.468] REWORK> reworkPM3All()
+[  47.488] REWORK< done
+[  57.498] REWORK> reworkPM3All()
+[  60.139] not app process, exit
+[  60.518] REWORK< done
+[  70.528] PM3< ret=-1 len=31 timeout while waiting for reply
+[  70.623] PM3> lf t55xx detect (timeout=10000)
+[   4.544] application found at poll 8
+[   9.551] installing hooks
+[   9.563] imports OK
+[   9.564] pm3_compat version=iceman needs_translation=True
+[   9.566] POLL stack=['MainActivity']
+[   9.566] === ALL INSTALLED ===
+[  68.131] not app process, exit
+[   4.563] application found at poll 8
+[   9.571] installing hooks
+[   9.584] imports OK
+[   9.585] pm3_compat version=iceman needs_translation=True
+[   9.587] POLL stack=['MainActivity']
+[   9.587] === ALL INSTALLED ===
+[  77.515] not app process, exit
+[   0.004] sitecustomize loaded pid=6922
+[   0.004] sitecustomize loaded pid=15843
+[ 836.503] START(PluginsMenuActivity, None)
+[ 836.835] POLL stack=['MainActivity', 'PluginsMenuActivity']
+[ 907.952] FINISH(top=PluginsMenuActivity d=2)
+[ 907.966] POLL stack=['MainActivity']
+[   4.596] application found at poll 8
+[   9.605] installing hooks
+[   9.616] imports OK
+[   9.617] pm3_compat version=iceman needs_translation=True
+[   9.619] POLL stack=['MainActivity']
+[   9.619] === ALL INSTALLED ===
+[320826837.430] not app process, exit
+[   4.605] application found at poll 8
+[   9.613] installing hooks
+[   9.624] imports OK
+[   9.625] pm3_compat version=iceman needs_translation=True
+[   9.627] POLL stack=['MainActivity']
+[   9.627] === ALL INSTALLED ===
+[320826838.836] not app process, exit
+[   0.005] sitecustomize loaded pid=10874
+[   0.016] sitecustomize loaded pid=10971
+[   4.016] application found at poll 8
+[   9.022] installing hooks
+[   9.041] imports OK
+[   9.042] pm3_compat version=None needs_translation=False
+[   9.044] POLL stack=['MainActivity']
+[   9.044] === ALL INSTALLED ===
+[  59.672] not app process, exit
+[   0.032] sitecustomize loaded pid=12499
+[   0.005] sitecustomize loaded pid=12763
+[   4.469] application found at poll 8
+[   9.477] installing hooks
+[   9.489] imports OK
+[   9.489] pm3_compat version=iceman needs_translation=True
+[   9.492] POLL stack=['MainActivity']
+[   9.492] === ALL INSTALLED ===
+[   0.016] sitecustomize loaded pid=3655
+[  65.366] not app process, exit
+[ 123.890] START(ScanActivity, None)
+[ 123.938] PM3> hf 14a info (timeout=5000)
+[ 123.957] POLL stack=['MainActivity', 'ScanActivity']
+[ 125.360] PM3< ret=1 len=317 [usb|script] pm3 --> hf 14a info
+
+[=] ---------- ISO14443-A Information ----------
+[+]  UID: 5E 5B CE 4C   ( ONUID, re-used )
+[+] ATQA: 00 04
+[+]  SAK: 08 [2]
+[+] Possible types:
+[+]    MIFARE Classic 1K
+[=]
+[=] Proprietary non iso14443-4 card found
+[=] RATS not supported
+[+] Prng detection..... weak
+
+
+
+Nikola.D: 0
+
+[ 125.399] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 125.512] PM3< ret=1 len=106 [usb|script] pm3 --> hf mf cgetblk --blk 0
+[#] wupC1 error
+[!!] Can't read block. error=-1
+
+Nikola.D: -10
+
+[   4.612] application found at poll 8
+[   9.620] installing hooks
+[   9.632] imports OK
+[   9.632] pm3_compat version=iceman needs_translation=True
+[   9.634] POLL stack=['MainActivity']
+[   9.635] === ALL INSTALLED ===
+[  60.102] not app process, exit
+[   0.017] sitecustomize loaded pid=3406
+[ 153.993] START(ReadListActivity, None)
+[ 154.323] POLL stack=['MainActivity', 'ReadListActivity']
+[ 155.119] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'})
+[ 155.211] PM3> hf 14a info (timeout=5000)
+[ 155.332] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity']
+[ 156.656] PM3< ret=1 len=317 [usb|script] pm3 --> hf 14a info
+
+[=] ---------- ISO14443-A Information ----------
+[+]  UID: 5E 5B CE 4C   ( ONUID, re-used )
+[+] ATQA: 00 04
+[+]  SAK: 08 [2]
+[+] Possible types:
+[+]    MIFARE Classic 1K
+[=]
+[=] Proprietary non iso14443-4 card found
+[=] RATS not supported
+[+] Prng detection..... weak
+
+
+
+Nikola.D: 0
+
+[ 156.693] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 156.824] PM3< ret=1 len=106 [usb|script] pm3 --> hf mf cgetblk --blk 0
+[#] wupC1 error
+[!!] Can't read block. error=-1
+
+Nikola.D: -10
+
+[ 157.426] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 157.551] PM3< ret=1 len=106 [usb|script] pm3 --> hf mf cgetblk --blk 0
+[#] wupC1 error
+[!!] Can't read block. error=-1
+
+Nikola.D: -10
+
+[ 157.557] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 173.124] PM3< ret=1 len=1495 [usb|script] pm3 --> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic
+[+] loaded 61 hardcoded keys
+[+] Loaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`
+[=] Running strategy 1
+[/]Testing     0/  165 ( 0.0 % )[-]Testing    85/  165 ( 51.5 % )[\]Testing   165/  165 ( 100 % )
+[=] Running strategy 2
+[|]Testing     0/  165 ( 0.0 % )
+[=] Time in checkkeys (fast) 15.6s
+
+
+[+] -----+-----+--------------+---+--------------+----
+[+]  Sec | Blk | key A        |res| key B        |res
+[+] -----+-----+--------------+---+--------------+----
+[+]  000 | 003 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  001 | 007 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  002 | 011 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  003 | 015 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  004 | 019 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  005 | 023 | 4A6352684677 | 1 | 536653644C65 | 1
+[+]  006 | 027 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  007 | 031 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  008 | 035 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  009 | 039 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  010 | 043 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  011 | 047 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  012 | 051 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  013 | 055 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  014 | 059 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+]  015 | 063 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1
+[+] -----+-----+--------------+---+--------------+----
+[+] ( 0:Failed / 1:Success )
+
+
+
+Nikola.D: 0
+
+[ 176.053] FINISH(top=ReadActivity d=3)
+[ 176.375] POLL stack=['MainActivity', 'ReadListActivity']
+[ 177.088] FINISH(top=ReadListActivity d=2)
+[ 177.378] POLL stack=['MainActivity']
+[ 186.265] START(ScanActivity, None)
+[ 186.299] PM3> hf 14a info (timeout=5000)
+[ 186.394] POLL stack=['MainActivity', 'ScanActivity']
+[ 187.705] PM3< ret=1 len=317 [usb|script] pm3 --> hf 14a info
+
+[=] ---------- ISO14443-A Information ----------
+[+]  UID: 5E 5B CE 4C   ( ONUID, re-used )
+[+] ATQA: 00 04
+[+]  SAK: 08 [2]
+[+] Possible types:
+[+]    MIFARE Classic 1K
+[=]
+[=] Proprietary non iso14443-4 card found
+[=] RATS not supported
+[+] Prng detection..... weak
+
+
+
+Nikola.D: 0
+
+[ 187.707] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 187.836] PM3< ret=1 len=106 [usb|script] pm3 --> hf mf cgetblk --blk 0
+[#] wupC1 error
+[!!] Can't read block. error=-1
+
+Nikola.D: -10
+
+[ 239.860] FINISH(top=ScanActivity d=2)
+[ 239.988] POLL stack=['MainActivity']
+[   4.120] application found at poll 8
+[   9.126] installing hooks
+[   9.137] imports OK
+[   9.138] pm3_compat version=iceman needs_translation=True
+[   9.141] POLL stack=['MainActivity']
+[   9.143] === ALL INSTALLED ===
+[  78.649] not app process, exit

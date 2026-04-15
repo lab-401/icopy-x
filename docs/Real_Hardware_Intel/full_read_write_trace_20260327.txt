@@ -1,0 +1,210 @@
+=== Real Device Full Trace v12 — Read + Write Flow (2026-03-27) ===
+Card: MIFARE Classic 1K 4B, UID B7785E50, all default keys
+Instrumentation: module-level patches on actstack.start/finish_activity, executor.startPM3Task, scan.setScanCache + passive _ACTIVITY_STACK poller
+
+KEY FINDINGS:
+
+1. READ FLOW: There is NO separate ReadActivity pushed. The scan + fchk all happen
+   within ReadListActivity (stack stays at depth 2). The "read" is invisible at the
+   activity level — it's all internal to ReadListActivity.
+
+2. After fchk completes (found 32/32 keys), NO hf mf rdsc commands appear!
+   The read completes without explicit rdsc in this trace (fchk returned all keys,
+   read may have happened inline or the trace didn't capture it).
+
+3. WRITE FLOW: After read success, the user presses M2→Write, which pushes:
+   - WarningWriteActivity (bundle = dump file path)
+   - Then WarningWriteActivity finishes → WriteActivity pushed (same bundle)
+
+4. WriteActivity does its OWN scan: hf 14a info + hf mf cgetblk (re-scan target card)
+   Then hf mf fchk (find keys on target), then wrbl × 64 blocks.
+
+5. Write block order: data blocks 60→0 (reverse), then trailers 63,59,55,...,3 (reverse)
+   Block 0 written near end with UID: B7785E50C10804006263646566676869
+
+6. After write: verify phase — hf 14a info + cgetblk × 2 rounds
+
+7. ACTIVITY STACK TRANSITIONS:
+   [55.5s]  START(ReadListActivity, None)           → stack depth 2
+   [72.0s]  START(WarningWriteActivity, dump_path)  → stack depth 3
+   [74.6s]  FINISH(WarningWriteActivity)            → stack depth 2
+   [74.6s]  START(WriteActivity, dump_path)         → stack depth 3 again
+   [103.6s] FINISH(WriteActivity)                   → stack depth 2
+   [104.2s] FINISH(ReadListActivity)                → stack depth 1
+
+--- RAW TRACE ---
+
+=== TRACE v12 ===
+[   0.003] POLL stack=['dict'] 
+[   0.004] === ALL INSTALLED ===
+[  55.535] START(ReadListActivity, None)
+[  55.985] POLL stack=['dict', 'dict'] 
+[  56.944] PM3> hf 14a info
+[  58.457] PM3< ret=1 \n\n[+]  UID: B7 78 5E 50 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus E
+[  58.482] PM3> hf mf cgetblk 0
+[  58.747] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[  58.997] POLL stack=['dict', 'dict'] type=1 uid=B7785E50
+[  60.657] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys
+[  61.273] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+
+[  72.068] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_B7785E50_7.bin')
+[  72.532] POLL stack=['dict', 'dict', 'dict'] type=1 uid=B7785E50
+[  74.591] FINISH(top=dict d=3)
+[  74.601] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_B7785E50_7.bin')
+[  74.650] PM3> hf 14a info
+[  76.207] PM3< ret=1 \n\n[+]  UID: B7 78 5E 50 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus E
+[  76.210] PM3> hf mf cgetblk 0
+[  76.465] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[  77.339] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys
+[  78.063] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+
+[  78.558] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000
+[  78.805] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  78.807] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000
+[  79.064] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  79.065] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000
+[  79.312] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  79.314] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000
+[  79.574] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  79.575] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000
+[  79.831] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  79.832] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000
+[  80.078] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  80.080] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000
+[  80.335] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  80.336] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000
+[  80.583] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  80.584] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000
+[  80.841] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  80.843] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000
+[  81.105] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  81.106] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000
+[  81.359] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  81.360] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000
+[  81.607] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  81.609] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000
+[  81.864] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  81.865] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000
+[  82.114] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  82.114] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000
+[  82.379] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  82.381] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000
+[  82.648] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  82.649] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000
+[  82.901] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  82.902] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000
+[  83.164] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  83.166] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000
+[  83.432] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  83.433] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000
+[  83.685] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  83.686] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000
+[  83.948] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  83.950] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000
+[  84.215] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  84.216] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000
+[  84.464] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  84.465] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000
+[  84.714] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  84.716] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000
+[  84.972] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  84.973] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000
+[  85.219] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  85.219] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000
+[  85.476] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  85.478] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000
+[  85.739] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  85.740] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000
+[  86.000] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  86.001] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000
+[  86.251] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  86.253] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000
+[  86.504] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  86.505] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000
+[  86.765] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  86.766] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000
+[  87.027] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  87.029] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000
+[  87.293] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  87.294] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000
+[  87.554] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  87.555] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000
+[  87.816] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  87.818] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000
+[  88.074] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  88.075] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000
+[  88.325] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  88.326] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000
+[  88.587] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  88.589] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000
+[  88.846] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  88.847] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000
+[  89.108] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  89.109] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000
+[  89.370] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  89.372] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000
+[  89.636] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  89.636] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000
+[  89.898] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  89.898] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000
+[  90.157] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  90.159] PM3> hf mf wrbl 0 A ffffffffffff B7785E50C10804006263646566676869
+[  90.419] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: B7 78 5E 50 C1 08 04 00 62 63 64 65 66 67 68 69 \nisOk:01\n
+[  90.420] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000
+[  90.681] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  90.682] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000
+[  90.944] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[  90.946] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  91.207] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  91.209] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  91.473] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  91.475] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  91.723] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  91.725] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  91.983] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  91.985] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  92.234] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  92.236] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  92.495] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  92.497] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  92.760] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  92.761] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  93.018] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  93.020] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  93.282] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  93.284] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  93.541] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  93.543] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  93.801] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  93.802] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  94.061] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  94.063] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  94.321] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  94.323] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  94.582] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  94.584] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  94.841] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  94.843] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF
+[  95.098] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[  95.302] PM3> hf 14a info
+[  96.858] PM3< ret=1 \n\n[+]  UID: B7 78 5E 50 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus E
+[  96.860] PM3> hf mf cgetblk 0
+[  97.121] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[  99.221] PM3> hf 14a info
+[ 100.820] PM3< ret=1 \n\n[+]  UID: B7 78 5E 50 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus E
+[ 100.822] PM3> hf mf cgetblk 0
+[ 101.066] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 103.570] FINISH(top=dict d=3)
+[ 103.622] POLL stack=['dict', 'dict'] type=1 uid=B7785E50
+[ 104.223] FINISH(top=dict d=2)
+[ 104.625] POLL stack=['dict'] type=1 uid=B7785E50
+[ 120.839] START(BacklightActivity, None)
+[ 121.150] POLL stack=['dict', 'dict'] type=1 uid=B7785E50
+[ 122.642] FINISH(top=dict d=2)
+[ 122.666] POLL stack=['dict'] type=1 uid=B7785E50
+[ 124.279] START(BacklightActivity, None)
+[ 124.670] POLL stack=['dict', 'dict'] type=1 uid=B7785E50
+[ 126.609] FINISH(top=dict d=2)
+[ 126.675] POLL stack=['dict'] type=1 uid=B7785E50
+[ 127.765] START(BacklightActivity, None)
+[ 128.178] POLL stack=['dict', 'dict'] type=1 uid=B7785E50
+[ 129.724] FINISH(top=dict d=2)
+[ 130.183] POLL stack=['dict'] type=1 uid=B7785E50

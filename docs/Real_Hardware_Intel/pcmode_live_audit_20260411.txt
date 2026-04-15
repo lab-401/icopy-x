@@ -1,0 +1,114 @@
+PC Mode Live Audit — Real Device Ground Truth
+===============================================
+Date: 2026-04-11
+Device: iCopy-X running original firmware (.so binaries)
+Method: SSH inspection during active PC Mode + application tracer
+
+1. SYSTEM STATE DURING ACTIVE PC MODE
+======================================
+
+Kernel module loaded:
+  g_acm_ms  16384  0
+
+Module parameters (from /sys/module/g_acm_ms/parameters/):
+  bcdDevice = 0
+  cdrom =
+  file = /dev/mmcblk0p4
+  idProduct = 0
+  idVendor = 0
+  iManufacturer = (null)
+  iProduct = (null)
+  iSerialNumber = (null)
+  luns = 0
+  nofua =
+  removable = Y
+  ro =
+  stall = N
+
+TTY devices:
+  crw-rw---- 1 root dialout 166, 0 /dev/ttyACM0   (PM3 hardware serial)
+  crw-rw---- 1 root dialout 245, 0 /dev/ttyGS0    (USB gadget serial)
+
+Socat process tree:
+  3306 /bin/sh -c sudo socat /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0
+  3307 sudo socat /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0
+  3311 socat /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0
+
+Socat file descriptors (pid 3311):
+  fd 5 -> /dev/ttyGS0
+  fd 6 -> /dev/ttyACM0
+
+PM3 subprocess: NOT RUNNING (killed/gone during PC Mode)
+RTM (port 8888): STILL LISTENING (python3 pid=2608 fd=4)
+/mnt/upan: NOT MOUNTED (unmounted for mass storage)
+App: python3 /home/pi/ipk_app_main/app.py (pid 2608)
+
+2. CONFIRMED MODPROBE COMMAND
+=============================
+
+Ground truth from module parameters:
+  sudo modprobe g_acm_ms file=/dev/mmcblk0p4 removable=1 stall=0
+
+Evidence:
+  - file = /dev/mmcblk0p4 (from /sys/module/g_acm_ms/parameters/file)
+  - removable = Y (from /sys/module/g_acm_ms/parameters/removable)
+  - stall = N (from /sys/module/g_acm_ms/parameters/stall)
+
+3. CONFIRMED SOCAT COMMAND
+==========================
+
+Ground truth from running process:
+  sudo socat /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0
+
+Evidence:
+  - Process args (pgrep -fa socat)
+  - File descriptors: fd5=ttyGS0, fd6=ttyACM0
+  - Popen uses shell=True (process tree: python3 -> sh -c -> sudo -> socat)
+
+4. DMESG USB TIMELINE
+=====================
+
+During PC Mode start:
+  [1462] PM3 USB device connected (ttyACM0) — initial connection
+  [1484] PM3 USB disconnect
+  [1488] PM3 USB reconnect (new device number, ttyACM0 recreated)
+  [1491] Mass Storage Function loaded
+  [1491] g_acm_ms gadget: Composite Gadget (ACM + MS) ready
+
+During PC Mode stop:
+  [1891] g_serial gadget: g_serial ready (loaded during cleanup)
+  [1891] PM3 USB disconnect
+  [1895] PM3 USB reconnect (ttyACM0 recreated)
+
+5. POST-STOP STATE
+==================
+
+Kernel module: g_serial (NOT g_acm_ms)
+/mnt/upan: MOUNTED (remounted by kill_all_module auto_remount)
+PM3: RUNNING (sudo -s proxmark3 /dev/ttyACM0 -w --flush)
+RTM: LISTENING on 8888
+Socat: NOT RUNNING
+
+6. APPLICATION TRACE (partial — /mnt/upan unmounted during PC Mode)
+===================================================================
+
+KEY> DOWN (x6)              — navigate to PC-Mode menu item
+KEY> OK                     — enter PCModeActivity
+START(PCModeActivity, None) — activity pushed
+KEY> M2                     — start PC Mode
+REWORK> reworkPM3All()      — during stop sequence
+KEY> M1                     — stop PC Mode
+KEY> PWR                    — exit activity
+
+7. ARCHITECTURE CONFIRMED
+=========================
+
+Host PC ←USB gadget→ /dev/ttyGS0 ←socat→ /dev/ttyACM0 ←USB host→ PM3 Hardware
+                     (ACM serial)          (direct bridge)         (proxmark3)
+
+Host PC ←USB gadget→ /dev/mmcblk0p4 (mass storage, file= parameter)
+                     (removable disk)
+
+The g_acm_ms composite gadget exposes BOTH functions simultaneously:
+  1. USB ACM serial (for direct PM3 access from host PC)
+  2. USB Mass Storage (for file access to /mnt/upan partition)

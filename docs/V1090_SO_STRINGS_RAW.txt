@@ -1,0 +1,3550 @@
+=== EXTRACTING REGEX/COMPARISON STRINGS FROM ALL .SO MODULES ===
+
+=== actbase.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== activity_main.so (634 matching strings) ===
+.debug_info
+AWID ID
+AWID_ID
+AboutActivity.init_info
+Card wiped successfully
+CardWalletActivity.parseInfoByT55xxInfoFileName
+ChkDIC
+ConsolePrinterActivity.updatefontinfo
+DIR_NAME_AWID
+DIR_NAME_EM410x
+DIR_NAME_FDX
+DIR_NAME_KERI
+DIR_NAME_LEGIC
+DIR_NAME_NEDAP
+DIR_NAME_PAC
+DIR_NAME_T55XX
+EM410X_ID
+FDX-B ID Animal
+FDX-B ID Data
+FDXB_ID
+FILE_PREFIX_AWID
+FILE_PREFIX_EM410X
+FILE_PREFIX_FDX
+FILE_PREFIX_KERI
+FILE_PREFIX_NEDAP
+FILE_PREFIX_PAC
+FILE_PREFIX_T55XX
+FORCE_READ_T55XX
+GNU C11 7.5.0 -march=armv7-a -mtune=cortex-a9 -mfloat-abi=hard -mfpu=vfpv3-d16 -mthumb -mtls-dialect=gnu -g -g -g -O2 -O2 -O2 -fbuilding-libgcc -fno-stack-protector -fPIC -fno-inline -fexceptions -fvisibility=hidden
+HID Prox ID
+ISO15693_ICODE
+ISO15693_ST_SA
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Jablotron ID
+KERI_ID
+NEDAP_ID
+NTAG213_144B
+NTAG215_504B
+NTAG216_888B
+PAC_ID
+PREFIX_NAME_NTAG213
+PREFIX_NAME_NTAG215
+PREFIX_NAME_NTAG216
+Pyramid ID
+ReadActivity.FORCE_READ_T55XX
+ReadActivity.onReading
+ReadFromHistoryActivity.get_info
+ReadFromHistoryActivity.sim_for_info
+ReadFromHistoryActivity.write_lf_dump
+ScanActivity.onScanning
+ScanActivity.playScanning
+SimulationActivity.parserPyramid
+SniffActivity.showT5577Result
+SniffForT5XReadActivity.showT5577Result
+T55X7_ID
+T55xx/Unknown
+UID:
+Ultralight
+Viking ID
+WipeTagActivity.call_on_wipe_t55xx
+WipeTagActivity.start_wipe
+WipeTagActivity.wipe_m1
+WipeTagActivity.wipe_magic_m1
+WipeTagActivity.wipe_std_m1
+WipeTagActivity.wipe_t5577
+WriteActivity.playVerifying
+WriteActivity.playWriting
+\[.\]wipe block ([0-9]+)
+__pyx_k_AWID_ID
+__pyx_k_AWID_ID_2
+__pyx_k_AboutActivity_init_info
+__pyx_k_Card_wiped_successfully
+__pyx_k_ChkDIC
+__pyx_k_DIR_NAME_AWID
+__pyx_k_DIR_NAME_EM410x
+__pyx_k_DIR_NAME_FDX
+__pyx_k_DIR_NAME_KERI
+__pyx_k_DIR_NAME_LEGIC
+__pyx_k_DIR_NAME_NEDAP
+__pyx_k_DIR_NAME_PAC
+__pyx_k_DIR_NAME_T55XX
+__pyx_k_EM410X_ID
+__pyx_k_FDXB_ID
+__pyx_k_FDX_B_ID_Animal
+__pyx_k_FDX_B_ID_Data
+__pyx_k_FILE_PREFIX_AWID
+__pyx_k_FILE_PREFIX_EM410X
+__pyx_k_FILE_PREFIX_FDX
+__pyx_k_FILE_PREFIX_KERI
+__pyx_k_FILE_PREFIX_NEDAP
+__pyx_k_FILE_PREFIX_PAC
+__pyx_k_FILE_PREFIX_T55XX
+__pyx_k_FORCE_READ_T55XX
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ST_SA
+__pyx_k_Jablotron_ID
+__pyx_k_KERI_ID
+__pyx_k_NEDAP_ID
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG216_888B
+__pyx_k_PAC_ID
+__pyx_k_PREFIX_NAME_NTAG213
+__pyx_k_PREFIX_NAME_NTAG215
+__pyx_k_PREFIX_NAME_NTAG216
+__pyx_k_Pyramid_ID
+__pyx_k_ReadActivity_FORCE_READ_T55XX
+__pyx_k_ReadActivity_onReading
+__pyx_k_ReadFromHistoryActivity_get_info
+__pyx_k_ScanActivity_onScanning
+__pyx_k_ScanActivity_playScanning
+__pyx_k_SimulationActivity_parserPyramid
+__pyx_k_SniffActivity_showT5577Result
+__pyx_k_SniffForT5XReadActivity_showT557
+__pyx_k_T55X7_ID
+__pyx_k_T55xx_Unknown
+__pyx_k_Ultralight
+__pyx_k_Viking_ID
+__pyx_k_WipeTagActivity_call_on_wipe_t55
+__pyx_k_WipeTagActivity_start_wipe
+__pyx_k_WipeTagActivity_wipe_m1
+__pyx_k_WipeTagActivity_wipe_magic_m1
+__pyx_k_WipeTagActivity_wipe_std_m1
+__pyx_k_WipeTagActivity_wipe_t5577
+__pyx_k_WriteActivity_playVerifying
+__pyx_k_WriteActivity_playWriting
+__pyx_k_bcc_fix_failed
+__pyx_k_call_on_wipe_t55xx
+__pyx_k_dump_file
+__pyx_k_dump_files
+__pyx_k_dump_list
+__pyx_k_dump_selection
+__pyx_k_fchks
+__pyx_k_file_infos
+__pyx_k_get_info
+__pyx_k_hf_mf_cwipe
+__pyx_k_info
+__pyx_k_info_dict
+__pyx_k_info_ret
+__pyx_k_infos
+__pyx_k_init_info
+__pyx_k_install_failed
+__pyx_k_is_dump_del_mode
+__pyx_k_is_dump_list_empty
+__pyx_k_is_dump_show_date
+__pyx_k_key_info
+__pyx_k_keys_check_failed
+__pyx_k_lf_FDX_sim_c_n_e
+__pyx_k_lf_FDX_sim_c_n_s
+__pyx_k_lf_Jablotron_sim
+__pyx_k_lf_Pyramid_sim
+__pyx_k_lf_Viking_sim
+__pyx_k_list_dump
+__pyx_k_new_info
+__pyx_k_next_wipe
+__pyx_k_onReading
+__pyx_k_onScanning
+__pyx_k_parseInfoByT55xxInfoFileName
+__pyx_k_parserKeysForT5577
+__pyx_k_parserPyramid
+__pyx_k_parserT5577LeadingKeyForLine
+__pyx_k_parserT5577OkKeyForLine
+__pyx_k_parserT5577WriteKeyForLine
+__pyx_k_path_dump
+__pyx_k_playReadingKeys
+__pyx_k_playScanning
+__pyx_k_playVerifying
+__pyx_k_playWriting
+__pyx_k_read_failed
+__pyx_k_reader
+__pyx_k_scan_infos
+__pyx_k_search
+__pyx_k_search_se_dev_reader
+__pyx_k_search_se_tag_reader
+__pyx_k_showT5577Result
+__pyx_k_sim_for_info
+__pyx_k_sniff
+__pyx_k_sniff14AStart
+__pyx_k_sniff14BStart
+__pyx_k_sniffIClassAStart
+__pyx_k_sniffT5577Start
+__pyx_k_sniffTopazStart
+__pyx_k_sniff_decode
+__pyx_k_sniff_item1
+__pyx_k_sniff_item2
+__pyx_k_sniff_item3
+__pyx_k_sniff_item4
+__pyx_k_sniff_item5
+__pyx_k_sniff_notag
+__pyx_k_sniff_tag
+__pyx_k_sniff_trace
+__pyx_k_sniffing
+__pyx_k_sniffline1
+__pyx_k_sniffline2
+__pyx_k_sniffline3
+__pyx_k_sniffline4
+__pyx_k_sniffline_t5577
+__pyx_k_start_clone_uid
+__pyx_k_start_wipe
+__pyx_k_t5577_sniff_finished
+__pyx_k_tag_info
+__pyx_k_text_bcc_fix_failed
+__pyx_k_text_install_failed
+__pyx_k_text_keys_check_failed
+__pyx_k_text_read_failed
+__pyx_k_text_sniff
+__pyx_k_text_sniff_decode
+__pyx_k_text_sniff_notag
+__pyx_k_text_sniff_tag
+__pyx_k_text_sniff_trace
+__pyx_k_text_sniffing
+__pyx_k_text_sniffline_t5577
+__pyx_k_text_start_clone_uid
+__pyx_k_text_t5577_sniff_finished
+__pyx_k_text_tag_info
+__pyx_k_text_verify_failed
+__pyx_k_text_wipe
+__pyx_k_text_wipe_block
+__pyx_k_text_wipe_failed
+__pyx_k_text_wipe_m1
+__pyx_k_text_wipe_no_valid_keys
+__pyx_k_text_wipe_success
+__pyx_k_text_wipe_t55xx
+__pyx_k_text_wipe_tag
+__pyx_k_text_write_failed
+__pyx_k_updatefontinfo
+__pyx_k_verify_failed
+__pyx_k_wipe
+__pyx_k_wipe1
+__pyx_k_wipe_block
+__pyx_k_wipe_block_0_9
+__pyx_k_wipe_failed
+__pyx_k_wipe_m1
+__pyx_k_wipe_magic_m1
+__pyx_k_wipe_no_valid_keys
+__pyx_k_wipe_ret
+__pyx_k_wipe_std_m1
+__pyx_k_wipe_success
+__pyx_k_wipe_t5577
+__pyx_k_wipe_t55xx
+__pyx_k_wipe_tag
+__pyx_k_write_failed
+__pyx_k_write_lf_dump
+__pyx_kp_u_AWID_ID
+__pyx_kp_u_Card_wiped_successfully
+__pyx_kp_u_FDX_B_ID_Animal
+__pyx_kp_u_FDX_B_ID_Data
+__pyx_kp_u_Jablotron_ID
+__pyx_kp_u_Pyramid_ID
+__pyx_kp_u_ReadActivity_FORCE_READ_T55XX
+__pyx_kp_u_T55xx_Unknown
+__pyx_kp_u_Viking_ID
+__pyx_kp_u_hf_mf_cwipe
+__pyx_kp_u_lf_FDX_sim_c_n_e
+__pyx_kp_u_lf_FDX_sim_c_n_s
+__pyx_kp_u_lf_Jablotron_sim
+__pyx_kp_u_lf_Pyramid_sim
+__pyx_kp_u_lf_Viking_sim
+__pyx_kp_u_wipe_block_0_9
+__pyx_mdef_13activity_main_12ReadActivity_17onReading
+__pyx_mdef_13activity_main_12ScanActivity_15playScanning
+__pyx_mdef_13activity_main_12ScanActivity_5onScanning
+__pyx_mdef_13activity_main_13AboutActivity_11init_info
+__pyx_mdef_13activity_main_13SniffActivity_25showT5577Result
+__pyx_mdef_13activity_main_13WriteActivity_11playVerifying
+__pyx_mdef_13activity_main_13WriteActivity_9playWriting
+__pyx_mdef_13activity_main_15WipeTagActivity_11wipe_magic_m1
+__pyx_mdef_13activity_main_15WipeTagActivity_13wipe_std_m1
+__pyx_mdef_13activity_main_15WipeTagActivity_15wipe_m1
+__pyx_mdef_13activity_main_15WipeTagActivity_17wipe_t5577
+__pyx_mdef_13activity_main_15WipeTagActivity_19start_wipe
+__pyx_mdef_13activity_main_15WipeTagActivity_9call_on_wipe_t55xx
+__pyx_mdef_13activity_main_18CardWalletActivity_15parseInfoByT55xxInfoFileName
+__pyx_mdef_13activity_main_18SimulationActivity_19parserPyramid
+__pyx_mdef_13activity_main_22ConsolePrinterActivity_9updatefontinfo
+__pyx_mdef_13activity_main_23ReadFromHistoryActivity_13get_info
+__pyx_mdef_13activity_main_23ReadFromHistoryActivity_3sim_for_info
+__pyx_mdef_13activity_main_23ReadFromHistoryActivity_9write_lf_dump
+__pyx_mdef_13activity_main_23SniffForT5XReadActivity_1showT5577Result
+__pyx_n_s_AWID_ID_2
+__pyx_n_s_AboutActivity_init_info
+__pyx_n_s_DIR_NAME_AWID
+__pyx_n_s_DIR_NAME_EM410x
+__pyx_n_s_DIR_NAME_FDX
+__pyx_n_s_DIR_NAME_KERI
+__pyx_n_s_DIR_NAME_LEGIC
+__pyx_n_s_DIR_NAME_NEDAP
+__pyx_n_s_DIR_NAME_PAC
+__pyx_n_s_DIR_NAME_T55XX
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_FILE_PREFIX_AWID
+__pyx_n_s_FILE_PREFIX_EM410X
+__pyx_n_s_FILE_PREFIX_FDX
+__pyx_n_s_FILE_PREFIX_KERI
+__pyx_n_s_FILE_PREFIX_NEDAP
+__pyx_n_s_FILE_PREFIX_PAC
+__pyx_n_s_FILE_PREFIX_T55XX
+__pyx_n_s_FORCE_READ_T55XX
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA
+__pyx_n_s_KERI_ID
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_PAC_ID
+__pyx_n_s_PREFIX_NAME_NTAG213
+__pyx_n_s_PREFIX_NAME_NTAG215
+__pyx_n_s_PREFIX_NAME_NTAG216
+__pyx_n_s_ReadActivity_onReading
+__pyx_n_s_ReadFromHistoryActivity_get_info
+__pyx_n_s_ScanActivity_onScanning
+__pyx_n_s_ScanActivity_playScanning
+__pyx_n_s_SimulationActivity_parserPyramid
+__pyx_n_s_SniffActivity_showT5577Result
+__pyx_n_s_SniffForT5XReadActivity_showT557
+__pyx_n_s_T55X7_ID
+__pyx_n_s_WipeTagActivity_call_on_wipe_t55
+__pyx_n_s_WipeTagActivity_start_wipe
+__pyx_n_s_WipeTagActivity_wipe_m1
+__pyx_n_s_WipeTagActivity_wipe_magic_m1
+__pyx_n_s_WipeTagActivity_wipe_std_m1
+__pyx_n_s_WipeTagActivity_wipe_t5577
+__pyx_n_s_WriteActivity_playVerifying
+__pyx_n_s_WriteActivity_playWriting
+__pyx_n_s_call_on_wipe_t55xx
+__pyx_n_s_dump_file
+__pyx_n_s_dump_files
+__pyx_n_s_dump_list
+__pyx_n_s_dump_selection
+__pyx_n_s_fchks
+__pyx_n_s_file_infos
+__pyx_n_s_get_info
+__pyx_n_s_info
+__pyx_n_s_info_dict
+__pyx_n_s_info_ret
+__pyx_n_s_infos
+__pyx_n_s_init_info
+__pyx_n_s_is_dump_del_mode
+__pyx_n_s_is_dump_list_empty
+__pyx_n_s_is_dump_show_date
+__pyx_n_s_key_info
+__pyx_n_s_list_dump
+__pyx_n_s_next_wipe
+__pyx_n_s_onReading
+__pyx_n_s_onScanning
+__pyx_n_s_parseInfoByT55xxInfoFileName
+__pyx_n_s_parserKeysForT5577
+__pyx_n_s_parserPyramid
+__pyx_n_s_parserT5577LeadingKeyForLine
+__pyx_n_s_parserT5577OkKeyForLine
+__pyx_n_s_parserT5577WriteKeyForLine
+__pyx_n_s_path_dump
+__pyx_n_s_playReadingKeys
+__pyx_n_s_playScanning
+__pyx_n_s_playVerifying
+__pyx_n_s_playWriting
+__pyx_n_s_reader
+__pyx_n_s_scan_infos
+__pyx_n_s_search
+__pyx_n_s_search_se_dev_reader
+__pyx_n_s_search_se_tag_reader
+__pyx_n_s_showT5577Result
+__pyx_n_s_sim_for_info
+__pyx_n_s_sniff
+__pyx_n_s_sniff14AStart
+__pyx_n_s_sniff14BStart
+__pyx_n_s_sniffIClassAStart
+__pyx_n_s_sniffT5577Start
+__pyx_n_s_sniffTopazStart
+__pyx_n_s_sniffing
+__pyx_n_s_start_wipe
+__pyx_n_s_tag_info
+__pyx_n_s_text_bcc_fix_failed
+__pyx_n_s_text_install_failed
+__pyx_n_s_text_keys_check_failed
+__pyx_n_s_text_read_failed
+__pyx_n_s_text_sniff
+__pyx_n_s_text_sniff_decode
+__pyx_n_s_text_sniff_notag
+__pyx_n_s_text_sniff_tag
+__pyx_n_s_text_sniff_trace
+__pyx_n_s_text_sniffing
+__pyx_n_s_text_sniffline_t5577
+__pyx_n_s_text_start_clone_uid
+__pyx_n_s_text_t5577_sniff_finished
+__pyx_n_s_text_tag_info
+__pyx_n_s_text_verify_failed
+__pyx_n_s_text_wipe
+__pyx_n_s_text_wipe_block
+__pyx_n_s_text_wipe_failed
+__pyx_n_s_text_wipe_m1
+__pyx_n_s_text_wipe_no_valid_keys
+__pyx_n_s_text_wipe_success
+__pyx_n_s_text_wipe_t55xx
+__pyx_n_s_text_wipe_tag
+__pyx_n_s_text_write_failed
+__pyx_n_s_updatefontinfo
+__pyx_n_s_wipe1
+__pyx_n_s_wipe_m1
+__pyx_n_s_wipe_magic_m1
+__pyx_n_s_wipe_ret
+__pyx_n_s_wipe_std_m1
+__pyx_n_s_wipe_t5577
+__pyx_n_s_write_lf_dump
+__pyx_n_u_ChkDIC
+__pyx_n_u_Ultralight
+__pyx_n_u_bcc_fix_failed
+__pyx_n_u_infos
+__pyx_n_u_install_failed
+__pyx_n_u_keys_check_failed
+__pyx_n_u_new_info
+__pyx_n_u_read_failed
+__pyx_n_u_sniff
+__pyx_n_u_sniff_decode
+__pyx_n_u_sniff_item1
+__pyx_n_u_sniff_item2
+__pyx_n_u_sniff_item3
+__pyx_n_u_sniff_item4
+__pyx_n_u_sniff_item5
+__pyx_n_u_sniff_notag
+__pyx_n_u_sniff_tag
+__pyx_n_u_sniff_trace
+__pyx_n_u_sniffing
+__pyx_n_u_sniffline1
+__pyx_n_u_sniffline2
+__pyx_n_u_sniffline3
+__pyx_n_u_sniffline4
+__pyx_n_u_sniffline_t5577
+__pyx_n_u_start_clone_uid
+__pyx_n_u_t5577_sniff_finished
+__pyx_n_u_tag_info
+__pyx_n_u_verify_failed
+__pyx_n_u_wipe
+__pyx_n_u_wipe_block
+__pyx_n_u_wipe_failed
+__pyx_n_u_wipe_m1
+__pyx_n_u_wipe_no_valid_keys
+__pyx_n_u_wipe_success
+__pyx_n_u_wipe_t55xx
+__pyx_n_u_wipe_tag
+__pyx_n_u_write_failed
+__pyx_pf_13activity_main_12ReadActivity_16onReading
+__pyx_pf_13activity_main_13AboutActivity_10init_info
+__pyx_pf_13activity_main_13SniffActivity_24showT5577Result
+__pyx_pf_13activity_main_15WipeTagActivity_10wipe_magic_m1
+__pyx_pf_13activity_main_15WipeTagActivity_12wipe_std_m1
+__pyx_pf_13activity_main_15WipeTagActivity_14wipe_m1
+__pyx_pf_13activity_main_15WipeTagActivity_16wipe_t5577
+__pyx_pf_13activity_main_18CardWalletActivity_14parseInfoByT55xxInfoFileName
+__pyx_pf_13activity_main_22ConsolePrinterActivity_8updatefontinfo
+__pyx_pf_13activity_main_23ReadFromHistoryActivity_12get_info
+__pyx_pf_13activity_main_23ReadFromHistoryActivity_2sim_for_info
+__pyx_pf_13activity_main_23ReadFromHistoryActivity_8write_lf_dump
+__pyx_pf_13activity_main_23SniffForT5XReadActivity_showT5577Result
+__pyx_pw_13activity_main_12ReadActivity_17onReading
+__pyx_pw_13activity_main_12ScanActivity_15playScanning
+__pyx_pw_13activity_main_12ScanActivity_5onScanning
+__pyx_pw_13activity_main_13AboutActivity_11init_info
+__pyx_pw_13activity_main_13SniffActivity_25showT5577Result
+__pyx_pw_13activity_main_13WriteActivity_11playVerifying
+__pyx_pw_13activity_main_13WriteActivity_9playWriting
+__pyx_pw_13activity_main_15WipeTagActivity_11wipe_magic_m1
+__pyx_pw_13activity_main_15WipeTagActivity_13wipe_std_m1
+__pyx_pw_13activity_main_15WipeTagActivity_15wipe_m1
+__pyx_pw_13activity_main_15WipeTagActivity_17wipe_t5577
+__pyx_pw_13activity_main_15WipeTagActivity_19start_wipe
+__pyx_pw_13activity_main_15WipeTagActivity_9call_on_wipe_t55xx
+__pyx_pw_13activity_main_18CardWalletActivity_15parseInfoByT55xxInfoFileName
+__pyx_pw_13activity_main_18SimulationActivity_19parserPyramid
+__pyx_pw_13activity_main_22ConsolePrinterActivity_9updatefontinfo
+__pyx_pw_13activity_main_23ReadFromHistoryActivity_13get_info
+__pyx_pw_13activity_main_23ReadFromHistoryActivity_3sim_for_info
+__pyx_pw_13activity_main_23ReadFromHistoryActivity_9write_lf_dump
+__pyx_pw_13activity_main_23SniffForT5XReadActivity_1showT5577Result
+activity_main.AboutActivity.init_info
+activity_main.CardWalletActivity.parseInfoByT55xxInfoFileName
+activity_main.ConsolePrinterActivity.updatefontinfo
+activity_main.ReadActivity.onReading
+activity_main.ReadFromHistoryActivity.get_info
+activity_main.ReadFromHistoryActivity.sim_for_info
+activity_main.ReadFromHistoryActivity.write_lf_dump
+activity_main.ScanActivity.onScanning
+activity_main.ScanActivity.playScanning
+activity_main.SimulationActivity.parserPyramid
+activity_main.SniffActivity.showT5577Result
+activity_main.SniffForT5XReadActivity.showT5577Result
+activity_main.WipeTagActivity.call_on_wipe_t55xx
+activity_main.WipeTagActivity.start_wipe
+activity_main.WipeTagActivity.wipe_m1
+activity_main.WipeTagActivity.wipe_magic_m1
+activity_main.WipeTagActivity.wipe_std_m1
+activity_main.WipeTagActivity.wipe_t5577
+activity_main.WriteActivity.playVerifying
+activity_main.WriteActivity.playWriting
+arm_tune
+arm_tune_cortex_a9
+arm_tune_strongarm
+arm_tune_wbuf
+arm_tune_xscale
+bcc_fix_failed
+call_on_wipe_t55xx
+deregister_tm_clones
+dump_file
+dump_files
+dump_list
+dump_selection
+fchks
+file_infos
+get_info
+hf 14a sim t 1 u {} 
+hf 14a sim t 2 u {}
+hf 14a sim t 7 u {}
+hf 14a sim t 8 u {} 
+hf 14a sim t 9 u {}
+hf mf cwipe
+info
+info_dict
+info_ret
+infos
+init_info
+install_failed
+is_dump_del_mode
+is_dump_list_empty
+is_dump_show_date
+isa_tune_co_proc
+isa_tune_ldsched
+isa_tune_strong
+isa_tune_wbuf
+key_info
+keys_check_failed
+lf FDX sim c {} n {} e {}
+lf FDX sim c {} n {} s
+lf Jablotron sim {}
+lf Pyramid sim {} {}
+lf Viking sim {}
+lf awid sim {} {} {}
+lf em 410x_sim {}
+lf gproxii sim {} {} {}
+lf hid sim {}
+lf io sim {} {} {}
+lf nedap sim s {} c {} i {}
+list_dump
+new_info
+next_wipe
+onReading
+onScanning
+parseInfoByT55xxInfoFileName
+parserKeysForT5577
+parserPyramid
+parserT5577LeadingKeyForLine
+parserT5577OkKeyForLine
+parserT5577WriteKeyForLine
+path_dump
+playReadingKeys
+playScanning
+playVerifying
+playWriting
+read_failed
+reader
+scan_infos
+search
+search_se_dev_reader
+search_se_tag_reader
+showT5577Result
+sim_for_info
+sniff
+sniff14AStart
+sniff14BStart
+sniffIClassAStart
+sniffT5577Start
+sniffTopazStart
+sniff_decode
+sniff_item1
+sniff_item2
+sniff_item3
+sniff_item4
+sniff_item5
+sniff_notag
+sniff_tag
+sniff_trace
+sniffing
+sniffline1
+sniffline2
+sniffline3
+sniffline4
+sniffline_t5577
+start_clone_uid
+start_wipe
+submodule_search_locations
+t5577_sniff_finished
+tag_info
+text_bcc_fix_failed
+text_install_failed
+text_keys_check_failed
+text_read_failed
+text_sniff
+text_sniff_decode
+text_sniff_notag
+text_sniff_tag
+text_sniff_trace
+text_sniffing
+text_sniffline_t5577
+text_start_clone_uid
+text_t5577_sniff_finished
+text_tag_info
+text_verify_failed
+text_wipe
+text_wipe_block
+text_wipe_failed
+text_wipe_m1
+text_wipe_no_valid_keys
+text_wipe_success
+text_wipe_t55xx
+text_wipe_tag
+text_write_failed
+updatefontinfo
+verify_failed
+wipe
+wipe1
+wipe_block
+wipe_failed
+wipe_m1
+wipe_magic_m1
+wipe_no_valid_keys
+wipe_ret
+wipe_std_m1
+wipe_success
+wipe_t5577
+wipe_t55xx
+wipe_tag
+write_failed
+write_lf_dump
+
+=== activity_tools.so (77 matching strings) ===
+.debug_info
+DiagnosisActivity._test_hf_reader_factory
+DiagnosisActivity._test_hfreader
+DiagnosisActivity._test_lf_reader_factory
+DiagnosisActivity._test_lfreader
+DiagnosisActivity._test_reader
+EM TAG ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_DiagnosisActivity__test_hfreader
+__pyx_k_DiagnosisActivity__test_lfreader
+__pyx_k_DiagnosisActivity__test_reader
+__pyx_k_hf_14a_reader
+__pyx_k_hf_tune
+__pyx_k_infos
+__pyx_k_lf_tune
+__pyx_k_mem_spiffs_wipe
+__pyx_k_search
+__pyx_k_test_hf_reader_factory
+__pyx_k_test_hf_reader_tips
+__pyx_k_test_hfreader
+__pyx_k_test_lf_reader_factory
+__pyx_k_test_lf_reader_tips
+__pyx_k_test_lfreader
+__pyx_k_test_reader
+__pyx_k_text_test_hf_reader_tips
+__pyx_k_text_test_lf_reader_tips
+__pyx_kp_u_hf_14a_reader
+__pyx_kp_u_hf_tune
+__pyx_kp_u_lf_tune
+__pyx_kp_u_mem_spiffs_wipe
+__pyx_mdef_14activity_tools_17DiagnosisActivity_13_test_hfreader
+__pyx_mdef_14activity_tools_17DiagnosisActivity_15_test_lfreader
+__pyx_mdef_14activity_tools_17DiagnosisActivity_29_test_hf_reader_factory
+__pyx_mdef_14activity_tools_17DiagnosisActivity_31_test_lf_reader_factory
+__pyx_mdef_14activity_tools_17DiagnosisActivity_7_test_reader
+__pyx_n_s_DiagnosisActivity__test_hfreader
+__pyx_n_s_DiagnosisActivity__test_lfreader
+__pyx_n_s_DiagnosisActivity__test_reader
+__pyx_n_s_search
+__pyx_n_s_test_hf_reader_factory
+__pyx_n_s_test_hfreader
+__pyx_n_s_test_lf_reader_factory
+__pyx_n_s_test_lfreader
+__pyx_n_s_test_reader
+__pyx_n_s_text_test_hf_reader_tips
+__pyx_n_s_text_test_lf_reader_tips
+__pyx_n_u_infos
+__pyx_n_u_test_hf_reader_tips
+__pyx_n_u_test_lf_reader_tips
+__pyx_pf_14activity_tools_17DiagnosisActivity_6_test_reader
+__pyx_pw_14activity_tools_17DiagnosisActivity_13_test_hfreader
+__pyx_pw_14activity_tools_17DiagnosisActivity_15_test_lfreader
+__pyx_pw_14activity_tools_17DiagnosisActivity_29_test_hf_reader_factory
+__pyx_pw_14activity_tools_17DiagnosisActivity_31_test_lf_reader_factory
+__pyx_pw_14activity_tools_17DiagnosisActivity_7_test_reader
+_test_hf_reader_factory
+_test_hfreader
+_test_lf_reader_factory
+_test_lfreader
+_test_reader
+activity_tools.DiagnosisActivity._test_hf_reader_factory
+activity_tools.DiagnosisActivity._test_hfreader
+activity_tools.DiagnosisActivity._test_lf_reader_factory
+activity_tools.DiagnosisActivity._test_lfreader
+activity_tools.DiagnosisActivity._test_reader
+deregister_tm_clones
+hf 14a reader
+hf tune
+infos
+lf tune
+mem spiffs wipe
+search
+submodule_search_locations
+test_hf_reader_tips
+test_lf_reader_tips
+text_test_hf_reader_tips
+text_test_lf_reader_tips
+
+=== activity_update.so (26 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+UpdateActivity.search
+__pyx_k_UpdateActivity_search
+__pyx_k_infolist
+__pyx_k_install_failed
+__pyx_k_search
+__pyx_k_text_install_failed
+__pyx_k_ver_info_file
+__pyx_mdef_15activity_update_14UpdateActivity_3search
+__pyx_n_s_UpdateActivity_search
+__pyx_n_s_infolist
+__pyx_n_s_search
+__pyx_n_s_text_install_failed
+__pyx_n_s_ver_info_file
+__pyx_n_u_install_failed
+__pyx_pf_15activity_update_14UpdateActivity_2search
+__pyx_pw_15activity_update_14UpdateActivity_3search
+activity_update.UpdateActivity.search
+deregister_tm_clones
+infolist
+install_failed
+search
+submodule_search_locations
+text_install_failed
+ver_info_file
+
+=== actmain.so (39 matching strings) ===
+.debug_info
+/proc/cpuinfo
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+MainActivity.get_activity_info
+MainActivity.read_nanopi_info
+__pyx_k_MainActivity_get_activity_info
+__pyx_k_MainActivity_read_nanopi_info
+__pyx_k_get_activity_info
+__pyx_k_info
+__pyx_k_infos
+__pyx_k_proc_cpuinfo
+__pyx_k_read_nanopi_info
+__pyx_k_temp_index_infos_end
+__pyx_k_temp_index_infos_map
+__pyx_kp_u_proc_cpuinfo
+__pyx_mdef_7actmain_12MainActivity_17get_activity_info
+__pyx_mdef_7actmain_12MainActivity_31read_nanopi_info
+__pyx_n_s_MainActivity_get_activity_info
+__pyx_n_s_MainActivity_read_nanopi_info
+__pyx_n_s_get_activity_info
+__pyx_n_s_info
+__pyx_n_s_infos
+__pyx_n_s_read_nanopi_info
+__pyx_n_s_temp_index_infos_end
+__pyx_n_s_temp_index_infos_map
+__pyx_n_u_infos
+__pyx_pf_7actmain_12MainActivity_16get_activity_info
+__pyx_pw_7actmain_12MainActivity_17get_activity_info
+__pyx_pw_7actmain_12MainActivity_31read_nanopi_info
+actmain.MainActivity.get_activity_info
+actmain.MainActivity.read_nanopi_info
+deregister_tm_clones
+get_activity_info
+info
+infos
+read_nanopi_info
+submodule_search_locations
+temp_index_infos_end
+temp_index_infos_map
+
+=== actstack.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== appfiles.so (241 matching strings) ===
+.debug_info
+AWID ID
+AWID-ID
+AWID_ID
+Animal ID(FDX)
+DIR_NAME_AWID
+DIR_NAME_EM410x
+DIR_NAME_FDX
+DIR_NAME_KERI
+DIR_NAME_LEGIC
+DIR_NAME_NEDAP
+DIR_NAME_PAC
+DIR_NAME_T55XX
+EM410X_ID
+EM410x ID
+EM410x-ID
+FDX-ID
+FDXB_ID
+FILE_PREFIX_AWID
+FILE_PREFIX_EM410X
+FILE_PREFIX_FDX
+FILE_PREFIX_KERI
+FILE_PREFIX_LEGIC
+FILE_PREFIX_NEDAP
+FILE_PREFIX_PAC
+FILE_PREFIX_T55XX
+FeliCa
+HID Prox ID
+Indala ID
+Indala-ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Jablotron ID
+Jablotron-ID
+KERI ID
+KERI-ID
+KERI_ID
+NEDAP ID
+NEDAP-ID
+NEDAP_ID
+NTAG213
+NTAG215
+NTAG216
+NexWatch ID
+NexWatch-ID
+Noralsy ID
+Noralsy-ID
+PAC ID
+PAC-ID
+PAC_ID
+PATH_DUMP_AWID
+PATH_DUMP_EM410x
+PATH_DUMP_FDX
+PATH_DUMP_KERI
+PATH_DUMP_LEGIC
+PATH_DUMP_NEDAP
+PATH_DUMP_PAC
+PATH_DUMP_T55XX
+PATH_KEYS_T5577
+PREFIX_NAME_NTAG213
+PREFIX_NAME_NTAG215
+PREFIX_NAME_NTAG216
+Paradox ID
+Paradox-ID
+Presco ID
+Presco-ID
+Pyramid ID
+Pyramid-ID
+Securakey ID
+Securakey-ID
+T5577 ID
+T55xx
+Ultralight & NTAG
+Viking ID
+Visa2000 ID
+Visa2000-ID
+__pyx_k_AWID_ID
+__pyx_k_AWID_ID_2
+__pyx_k_AWID_ID_3
+__pyx_k_Animal_ID_FDX
+__pyx_k_DIR_NAME_AWID
+__pyx_k_DIR_NAME_EM410x
+__pyx_k_DIR_NAME_FDX
+__pyx_k_DIR_NAME_KERI
+__pyx_k_DIR_NAME_LEGIC
+__pyx_k_DIR_NAME_NEDAP
+__pyx_k_DIR_NAME_PAC
+__pyx_k_DIR_NAME_T55XX
+__pyx_k_EM410X_ID
+__pyx_k_EM410x_ID
+__pyx_k_EM410x_ID_2
+__pyx_k_FDXB_ID
+__pyx_k_FDX_ID
+__pyx_k_FILE_PREFIX_AWID
+__pyx_k_FILE_PREFIX_EM410X
+__pyx_k_FILE_PREFIX_FDX
+__pyx_k_FILE_PREFIX_KERI
+__pyx_k_FILE_PREFIX_LEGIC
+__pyx_k_FILE_PREFIX_NEDAP
+__pyx_k_FILE_PREFIX_PAC
+__pyx_k_FILE_PREFIX_T55XX
+__pyx_k_FeliCa
+__pyx_k_Indala_ID
+__pyx_k_Indala_ID_2
+__pyx_k_Jablotron_ID
+__pyx_k_Jablotron_ID_2
+__pyx_k_KERI_ID
+__pyx_k_KERI_ID_2
+__pyx_k_KERI_ID_3
+__pyx_k_NEDAP_ID
+__pyx_k_NEDAP_ID_2
+__pyx_k_NEDAP_ID_3
+__pyx_k_NTAG213
+__pyx_k_NTAG215
+__pyx_k_NTAG216
+__pyx_k_NexWatch_ID
+__pyx_k_NexWatch_ID_2
+__pyx_k_Noralsy_ID
+__pyx_k_Noralsy_ID_2
+__pyx_k_PAC_ID
+__pyx_k_PAC_ID_2
+__pyx_k_PAC_ID_3
+__pyx_k_PATH_DUMP_AWID
+__pyx_k_PATH_DUMP_EM410x
+__pyx_k_PATH_DUMP_FDX
+__pyx_k_PATH_DUMP_KERI
+__pyx_k_PATH_DUMP_LEGIC
+__pyx_k_PATH_DUMP_NEDAP
+__pyx_k_PATH_DUMP_PAC
+__pyx_k_PATH_DUMP_T55XX
+__pyx_k_PATH_KEYS_T5577
+__pyx_k_PREFIX_NAME_NTAG213
+__pyx_k_PREFIX_NAME_NTAG215
+__pyx_k_PREFIX_NAME_NTAG216
+__pyx_k_Paradox_ID
+__pyx_k_Paradox_ID_2
+__pyx_k_Presco_ID
+__pyx_k_Presco_ID_2
+__pyx_k_Pyramid_ID
+__pyx_k_Pyramid_ID_2
+__pyx_k_Securakey_ID
+__pyx_k_Securakey_ID_2
+__pyx_k_T5577_ID
+__pyx_k_T55xx
+__pyx_k_Ultralight_NTAG
+__pyx_k_Viking_ID
+__pyx_k_Visa2000_ID
+__pyx_k_Visa2000_ID_2
+__pyx_k_dump
+__pyx_k_search
+__pyx_k_search_mf1_dump
+__pyx_k_search_mf1_keys
+__pyx_kp_u_AWID_ID
+__pyx_kp_u_AWID_ID_2
+__pyx_kp_u_Animal_ID_FDX
+__pyx_kp_u_EM410x_ID
+__pyx_kp_u_EM410x_ID_2
+__pyx_kp_u_FDX_ID
+__pyx_kp_u_Indala_ID
+__pyx_kp_u_Indala_ID_2
+__pyx_kp_u_Jablotron_ID
+__pyx_kp_u_Jablotron_ID_2
+__pyx_kp_u_KERI_ID
+__pyx_kp_u_KERI_ID_2
+__pyx_kp_u_NEDAP_ID
+__pyx_kp_u_NEDAP_ID_2
+__pyx_kp_u_NexWatch_ID
+__pyx_kp_u_NexWatch_ID_2
+__pyx_kp_u_Noralsy_ID
+__pyx_kp_u_Noralsy_ID_2
+__pyx_kp_u_PAC_ID
+__pyx_kp_u_PAC_ID_2
+__pyx_kp_u_Paradox_ID
+__pyx_kp_u_Paradox_ID_2
+__pyx_kp_u_Presco_ID
+__pyx_kp_u_Presco_ID_2
+__pyx_kp_u_Pyramid_ID
+__pyx_kp_u_Pyramid_ID_2
+__pyx_kp_u_Securakey_ID
+__pyx_kp_u_Securakey_ID_2
+__pyx_kp_u_T5577_ID
+__pyx_kp_u_Ultralight_NTAG
+__pyx_kp_u_Viking_ID
+__pyx_kp_u_Visa2000_ID
+__pyx_kp_u_Visa2000_ID_2
+__pyx_mdef_8appfiles_91search_mf1_dump
+__pyx_mdef_8appfiles_95search_mf1_keys
+__pyx_n_s_AWID_ID_3
+__pyx_n_s_DIR_NAME_AWID
+__pyx_n_s_DIR_NAME_EM410x
+__pyx_n_s_DIR_NAME_FDX
+__pyx_n_s_DIR_NAME_KERI
+__pyx_n_s_DIR_NAME_LEGIC
+__pyx_n_s_DIR_NAME_NEDAP
+__pyx_n_s_DIR_NAME_PAC
+__pyx_n_s_DIR_NAME_T55XX
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_FILE_PREFIX_AWID
+__pyx_n_s_FILE_PREFIX_EM410X
+__pyx_n_s_FILE_PREFIX_FDX
+__pyx_n_s_FILE_PREFIX_KERI
+__pyx_n_s_FILE_PREFIX_LEGIC
+__pyx_n_s_FILE_PREFIX_NEDAP
+__pyx_n_s_FILE_PREFIX_PAC
+__pyx_n_s_FILE_PREFIX_T55XX
+__pyx_n_s_KERI_ID_3
+__pyx_n_s_NEDAP_ID_3
+__pyx_n_s_PAC_ID_3
+__pyx_n_s_PATH_DUMP_AWID
+__pyx_n_s_PATH_DUMP_EM410x
+__pyx_n_s_PATH_DUMP_FDX
+__pyx_n_s_PATH_DUMP_KERI
+__pyx_n_s_PATH_DUMP_LEGIC
+__pyx_n_s_PATH_DUMP_NEDAP
+__pyx_n_s_PATH_DUMP_PAC
+__pyx_n_s_PATH_DUMP_T55XX
+__pyx_n_s_PATH_KEYS_T5577
+__pyx_n_s_PREFIX_NAME_NTAG213
+__pyx_n_s_PREFIX_NAME_NTAG215
+__pyx_n_s_PREFIX_NAME_NTAG216
+__pyx_n_s_search
+__pyx_n_s_search_mf1_dump
+__pyx_n_s_search_mf1_keys
+__pyx_n_u_FeliCa
+__pyx_n_u_NTAG213
+__pyx_n_u_NTAG215
+__pyx_n_u_NTAG216
+__pyx_n_u_T55xx
+__pyx_n_u_dump
+__pyx_pf_8appfiles_90search_mf1_dump
+__pyx_pf_8appfiles_94search_mf1_keys
+__pyx_pw_8appfiles_91search_mf1_dump
+__pyx_pw_8appfiles_95search_mf1_keys
+appfiles.search_mf1_dump
+appfiles.search_mf1_keys
+deregister_tm_clones
+dump
+search
+search_mf1_dump
+search_mf1_keys
+submodule_search_locations
+
+=== application.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== audio.so (46 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_playProcessing
+__pyx_k_playReading1p32
+__pyx_k_playReadingKeys
+__pyx_k_playScanning
+__pyx_k_playVerifying
+__pyx_k_playWriting
+__pyx_k_search
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_mdef_5audio_71playProcessing
+__pyx_mdef_5audio_73playScanning
+__pyx_mdef_5audio_75playReading1p32
+__pyx_mdef_5audio_77playReadingKeys
+__pyx_mdef_5audio_79playWriting
+__pyx_mdef_5audio_81playVerifying
+__pyx_n_s_playProcessing
+__pyx_n_s_playReading1p32
+__pyx_n_s_playReadingKeys
+__pyx_n_s_playScanning
+__pyx_n_s_playVerifying
+__pyx_n_s_playWriting
+__pyx_n_s_search
+__pyx_pw_5audio_71playProcessing
+__pyx_pw_5audio_73playScanning
+__pyx_pw_5audio_75playReading1p32
+__pyx_pw_5audio_77playReadingKeys
+__pyx_pw_5audio_79playWriting
+__pyx_pw_5audio_81playVerifying
+audio.playProcessing
+audio.playReading1p32
+audio.playReadingKeys
+audio.playScanning
+audio.playVerifying
+audio.playWriting
+cat /proc/cpuinfo
+deregister_tm_clones
+playProcessing
+playReading1p32
+playReadingKeys
+playScanning
+playVerifying
+playWriting
+search
+submodule_search_locations
+
+=== audio_copy.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_infos
+__pyx_n_s_infos
+deregister_tm_clones
+infos
+submodule_search_locations
+
+=== batteryui.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== bytestr.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== commons.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_mem_info
+__pyx_kp_u_mem_info
+deregister_tm_clones
+mem info
+submodule_search_locations
+
+=== config.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== container.so (79 matching strings) ===
+.debug_info
+AWID_ID
+EM410X_ID
+FDXB_ID
+ISO14443B
+ISO15693 ST SA
+ISO15693_ICODE
+ISO15693_ST_SA
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+KERI_ID
+LEGIC_MIM256
+MIFARE_DESFIRE
+NEDAP_ID
+NTAG213/5/6
+NTAG213_144B
+NTAG215_504B
+NTAG216_888B
+PAC_ID
+T5577
+T55X7_ID
+Ultralight C-Gen2
+Ultralight Ev1-Gen2
+Ultralight-Gen2
+__pyx_k_AWID_ID
+__pyx_k_EM410X_ID
+__pyx_k_FDXB_ID
+__pyx_k_ISO14443B
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ST_SA
+__pyx_k_ISO15693_ST_SA_2
+__pyx_k_KERI_ID
+__pyx_k_LEGIC_MIM256
+__pyx_k_MIFARE_DESFIRE
+__pyx_k_NEDAP_ID
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG213_5_6
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG216_888B
+__pyx_k_PAC_ID
+__pyx_k_T5577
+__pyx_k_T55X7_ID
+__pyx_k_Ultralight_C_Gen2
+__pyx_k_Ultralight_Ev1_Gen2
+__pyx_k_Ultralight_Gen2
+__pyx_k_iCLASS_Elite
+__pyx_k_iCLASS_Legacy
+__pyx_k_iCLASS_SE
+__pyx_k_infos
+__pyx_kp_u_ISO15693_ST_SA
+__pyx_kp_u_NTAG213_5_6
+__pyx_kp_u_Ultralight_C_Gen2
+__pyx_kp_u_Ultralight_Ev1_Gen2
+__pyx_kp_u_Ultralight_Gen2
+__pyx_kp_u_iCLASS_Elite
+__pyx_kp_u_iCLASS_Legacy
+__pyx_kp_u_iCLASS_SE
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_ISO14443B
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA_2
+__pyx_n_s_KERI_ID
+__pyx_n_s_LEGIC_MIM256
+__pyx_n_s_MIFARE_DESFIRE
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_PAC_ID
+__pyx_n_s_T55X7_ID
+__pyx_n_s_infos
+__pyx_n_u_T5577
+deregister_tm_clones
+iCLASS Elite
+iCLASS Legacy
+iCLASS SE
+infos
+submodule_search_locations
+
+=== debug.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== executor.so (25 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Nikola.D.CMD = {}
+Nikola.D.CTL = {}
+Nikola.D.OFFLINE
+Nikola.D.PLT
+Nikola.D:
+__pyx_k_Nikola_D
+__pyx_k_Nikola_D_CMD
+__pyx_k_Nikola_D_CTL
+__pyx_k_Nikola_D_OFFLINE
+__pyx_k_Nikola_D_PLT
+__pyx_k_hf_14a_info
+__pyx_k_search
+__pyx_kp_u_Nikola_D
+__pyx_kp_u_Nikola_D_CMD
+__pyx_kp_u_Nikola_D_CTL
+__pyx_kp_u_Nikola_D_OFFLINE
+__pyx_kp_u_Nikola_D_PLT
+__pyx_kp_u_hf_14a_info
+__pyx_n_s_search
+deregister_tm_clones
+hf 14a info
+search
+submodule_search_locations
+
+=== felicaread.so (10 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_hf_felica_litedump
+__pyx_k_infos
+__pyx_kp_u_hf_felica_litedump
+__pyx_n_s_infos
+deregister_tm_clones
+hf felica litedump
+infos
+submodule_search_locations
+
+=== gadget_linux.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== games.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== hf14ainfo.so (88 matching strings) ===
+.*ATQA:(.*)\n
+.*ATS:(.*)
+.*Prng detection: (.*)\n
+.*SAK:(.*)\[.*\n
+.*UID:(.*)\n
+.debug_info
+BCC0 incorrect
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpy86vqcj5\hf14ainfo.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpy86vqcj5\hf14ainfo.py
+Card doesn't support standard iso14443-3 anticollision
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+MIFARE Classic
+MIFARE Classic 1K
+MIFARE Classic 4K
+MIFARE DESFire
+MIFARE Mini
+MIFARE Plus
+MIFARE Plus 4K
+MIFARE Ultralight
+MIFARE_DESFIRE
+Magic capabilities : Gen 1a
+Magic capabilities : Gen 2 / CUID
+Module 'hf14ainfo' has already been imported. Re-initialisation is not supported.
+Multiple tags detected
+NTAG
+Prng detection
+PyInit_hf14ainfo
+Static nonce: yes
+__pyx_k_BCC0_incorrect
+__pyx_k_MIFARE_Classic
+__pyx_k_MIFARE_Classic_1K
+__pyx_k_MIFARE_Classic_4K
+__pyx_k_MIFARE_DESFIRE
+__pyx_k_MIFARE_DESFire
+__pyx_k_MIFARE_Mini
+__pyx_k_MIFARE_Plus
+__pyx_k_MIFARE_Plus_4K
+__pyx_k_MIFARE_Ultralight
+__pyx_k_Multiple_tags_detected
+__pyx_k_NTAG
+__pyx_k_Prng_detection
+__pyx_k_Prng_detection_n
+__pyx_k_hf14ainfo
+__pyx_k_hf_14a_info
+__pyx_k_hf_mf_cgetblk_0
+__pyx_k_infos_cache
+__pyx_kp_u_BCC0_incorrect
+__pyx_kp_u_MIFARE_Classic
+__pyx_kp_u_MIFARE_Classic_1K
+__pyx_kp_u_MIFARE_Classic_4K
+__pyx_kp_u_MIFARE_DESFire
+__pyx_kp_u_MIFARE_Mini
+__pyx_kp_u_MIFARE_Plus
+__pyx_kp_u_MIFARE_Plus_4K
+__pyx_kp_u_MIFARE_Ultralight
+__pyx_kp_u_Multiple_tags_detected
+__pyx_kp_u_Prng_detection
+__pyx_kp_u_Prng_detection_n
+__pyx_kp_u_hf_14a_info
+__pyx_kp_u_hf_mf_cgetblk_0
+__pyx_mdef_9hf14ainfo_1has_static_nonce
+__pyx_mdef_9hf14ainfo_3has_prng_level
+__pyx_mdef_9hf14ainfo_5is_gen1a_magic
+__pyx_mdef_9hf14ainfo_7parser
+__pyx_module_is_main_hf14ainfo
+__pyx_n_s_MIFARE_DESFIRE
+__pyx_n_s_hf14ainfo
+__pyx_n_s_infos_cache
+__pyx_n_u_NTAG
+__pyx_pf_9hf14ainfo_4is_gen1a_magic
+__pyx_pw_9hf14ainfo_1has_static_nonce
+__pyx_pw_9hf14ainfo_3has_prng_level
+__pyx_pw_9hf14ainfo_5is_gen1a_magic
+__pyx_pw_9hf14ainfo_7parser
+__pyx_pymod_exec_hf14ainfo
+deregister_tm_clones
+hf 14a info
+hf mf cgetblk 0
+hf14ainfo
+hf14ainfo.c
+hf14ainfo.has_prng_level
+hf14ainfo.has_static_nonce
+hf14ainfo.is_gen1a_magic
+hf14ainfo.parser
+hf14ainfo.py
+infos_cache
+init hf14ainfo
+submodule_search_locations
+
+=== hf14aread.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_infos
+__pyx_n_s_infos
+deregister_tm_clones
+infos
+submodule_search_locations
+
+=== hf15read.so (10 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_hf_15_dump
+__pyx_k_infos
+__pyx_kp_u_hf_15_dump
+__pyx_n_s_infos
+deregister_tm_clones
+hf 15 dump
+infos
+submodule_search_locations
+
+=== hf15write.so (23 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Write OK
+__pyx_k_hf_15_csetuid
+__pyx_k_hf_15_restore_f_bin
+__pyx_k_infos
+__pyx_k_infos_new
+__pyx_k_restore_failed
+__pyx_k_set_infos_cache
+__pyx_kp_u_hf_15_csetuid
+__pyx_kp_u_hf_15_restore_f_bin
+__pyx_kp_u_restore_failed
+__pyx_n_s_infos
+__pyx_n_s_infos_new
+__pyx_n_s_set_infos_cache
+deregister_tm_clones
+hf 15 csetuid {}
+hf 15 restore f {}.bin
+infos
+infos_new
+restore failed
+set_infos_cache
+submodule_search_locations
+
+=== hffelica.so (13 matching strings) ===
+.debug_info
+CRC check failed
+FeliCa tag info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_CRC_check_failed
+__pyx_k_FeliCa_tag_info
+__pyx_k_hf_felica_reader
+__pyx_kp_u_CRC_check_failed
+__pyx_kp_u_FeliCa_tag_info
+__pyx_kp_u_hf_felica_reader
+deregister_tm_clones
+hf felica reader
+submodule_search_locations
+
+=== hficlass.so (33 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_hf_iclass_info
+__pyx_k_hf_iclass_rdbl_b_k
+__pyx_k_infos
+__pyx_k_search
+__pyx_k_search_se_dev_reader
+__pyx_k_search_se_tag_reader
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_kp_u_hf_iclass_info
+__pyx_kp_u_hf_iclass_rdbl_b_k
+__pyx_mdef_8hficlass_1search_se_dev_reader
+__pyx_mdef_8hficlass_3search_se_tag_reader
+__pyx_n_s_infos
+__pyx_n_s_search
+__pyx_n_s_search_se_dev_reader
+__pyx_n_s_search_se_tag_reader
+__pyx_pf_8hficlass_2search_se_tag_reader
+__pyx_pf_8hficlass_search_se_dev_reader
+__pyx_pw_8hficlass_1search_se_dev_reader
+__pyx_pw_8hficlass_3search_se_tag_reader
+cat /proc/cpuinfo
+deregister_tm_clones
+hf iclass info
+hf iclass rdbl b {} k {}
+hficlass.search_se_dev_reader
+hficlass.search_se_tag_reader
+infos
+search
+search_se_dev_reader
+search_se_tag_reader
+submodule_search_locations
+
+=== hfmfkeys.so (137 matching strings) ===
+.debug_info
+ChkDIC
+Darkside
+Fast staticnested decrypt
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Nested
+STnested
+Tag isn't vulnerable to Nested Attack
+Try use `hf mf nested`
+Try use `hf mf staticnested`
+__pyx_freecount_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_freelist_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_k_ChkDIC
+__pyx_k_Darkside
+__pyx_k_Fast_staticnested_decrypt
+__pyx_k_Nested
+__pyx_k_STnested
+__pyx_k_Tag_isn_t_vulnerable_to_Nested_A
+__pyx_k_Try_use_hf_mf_nested
+__pyx_k_Try_use_hf_mf_staticnested
+__pyx_k_call_nested_progress
+__pyx_k_darkside
+__pyx_k_darksideOneKey
+__pyx_k_fchks
+__pyx_k_hf_mf_darkside
+__pyx_k_hf_mf_fchk
+__pyx_k_hf_mf_nested_o_knownBlock_knownT
+__pyx_k_infos
+__pyx_k_nested
+__pyx_k_nestedAllKeys
+__pyx_k_nestedAllKeys_locals_call_nested
+__pyx_k_nestedAllKeys_locals_rA
+__pyx_k_nestedAllKeys_locals_rB
+__pyx_k_nestedOneKey
+__pyx_k_onNestedCall
+__pyx_k_ret_nested
+__pyx_k_search
+__pyx_k_search_mf1_keys
+__pyx_k_staticnested
+__pyx_kp_u_Fast_staticnested_decrypt
+__pyx_kp_u_Tag_isn_t_vulnerable_to_Nested_A
+__pyx_kp_u_Try_use_hf_mf_nested
+__pyx_kp_u_Try_use_hf_mf_staticnested
+__pyx_kp_u_hf_mf_darkside
+__pyx_kp_u_hf_mf_fchk
+__pyx_kp_u_hf_mf_nested_o_knownBlock_knownT
+__pyx_mdef_8hfmfkeys_13nestedAllKeys_1call_nested_progress
+__pyx_mdef_8hfmfkeys_13nestedAllKeys_3rA
+__pyx_mdef_8hfmfkeys_13nestedAllKeys_5rB
+__pyx_mdef_8hfmfkeys_41onNestedCall
+__pyx_mdef_8hfmfkeys_43darksideOneKey
+__pyx_mdef_8hfmfkeys_45nestedAllKeys
+__pyx_mdef_8hfmfkeys_47nestedOneKey
+__pyx_mdef_8hfmfkeys_59fchks
+__pyx_mdef_8hfmfkeys_61nested
+__pyx_mdef_8hfmfkeys_63darkside
+__pyx_n_s_call_nested_progress
+__pyx_n_s_darkside
+__pyx_n_s_darksideOneKey
+__pyx_n_s_fchks
+__pyx_n_s_infos
+__pyx_n_s_nested
+__pyx_n_s_nestedAllKeys
+__pyx_n_s_nestedAllKeys_locals_call_nested
+__pyx_n_s_nestedAllKeys_locals_rA
+__pyx_n_s_nestedAllKeys_locals_rB
+__pyx_n_s_nestedOneKey
+__pyx_n_s_onNestedCall
+__pyx_n_s_ret_nested
+__pyx_n_s_search
+__pyx_n_s_search_mf1_keys
+__pyx_n_u_ChkDIC
+__pyx_n_u_Darkside
+__pyx_n_u_Nested
+__pyx_n_u_STnested
+__pyx_n_u_nested
+__pyx_n_u_staticnested
+__pyx_pf_8hfmfkeys_13nestedAllKeys_2rA
+__pyx_pf_8hfmfkeys_13nestedAllKeys_4rB
+__pyx_pf_8hfmfkeys_13nestedAllKeys_call_nested_progress.isra.50
+__pyx_pf_8hfmfkeys_40onNestedCall
+__pyx_pf_8hfmfkeys_42darksideOneKey
+__pyx_pf_8hfmfkeys_44nestedAllKeys
+__pyx_pf_8hfmfkeys_46nestedOneKey
+__pyx_pf_8hfmfkeys_58fchks
+__pyx_pf_8hfmfkeys_60nested
+__pyx_pf_8hfmfkeys_62darkside
+__pyx_ptype_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_pw_8hfmfkeys_13nestedAllKeys_1call_nested_progress
+__pyx_pw_8hfmfkeys_13nestedAllKeys_3rA
+__pyx_pw_8hfmfkeys_13nestedAllKeys_5rB
+__pyx_pw_8hfmfkeys_41onNestedCall
+__pyx_pw_8hfmfkeys_43darksideOneKey
+__pyx_pw_8hfmfkeys_45nestedAllKeys
+__pyx_pw_8hfmfkeys_47nestedOneKey
+__pyx_pw_8hfmfkeys_59fchks
+__pyx_pw_8hfmfkeys_61nested
+__pyx_pw_8hfmfkeys_63darkside
+__pyx_tp_clear_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_tp_dealloc_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_tp_new_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_tp_traverse_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+__pyx_type_8hfmfkeys___pyx_scope_struct__nestedAllKeys
+call_nested_progress
+darkside
+darksideOneKey
+deregister_tm_clones
+fchks
+found valid key
+found valid key.*([a-zA-Z0-9]{12}).*
+hf mf darkside
+hf mf fchk {} {}
+hf mf nested o {knownBlock} {knownType} {knownKey} {targetBlock} {targetType}
+hfmfkeys.__pyx_scope_struct__nestedAllKeys
+hfmfkeys.darkside
+hfmfkeys.darksideOneKey
+hfmfkeys.fchks
+hfmfkeys.nested
+hfmfkeys.nestedAllKeys
+hfmfkeys.nestedAllKeys.call_nested_progress
+hfmfkeys.nestedAllKeys.rA
+hfmfkeys.nestedAllKeys.rB
+hfmfkeys.nestedOneKey
+hfmfkeys.onNestedCall
+infos
+nested
+nestedAllKeys
+nestedAllKeys.<locals>.call_nested_progress
+nestedAllKeys.<locals>.rA
+nestedAllKeys.<locals>.rB
+nestedOneKey
+onNestedCall
+ret_nested
+search
+search_mf1_keys
+staticnested
+submodule_search_locations
+
+=== hfmfread.so (16 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_hf_mf_rdbl
+__pyx_k_hf_mf_rdsc
+__pyx_k_info
+__pyx_k_infos
+__pyx_kp_u_hf_mf_rdbl
+__pyx_kp_u_hf_mf_rdsc
+__pyx_n_s_info
+__pyx_n_s_infos
+deregister_tm_clones
+hf mf rdbl {} {} {}
+hf mf rdsc {} {} {}
+info
+infos
+submodule_search_locations
+
+=== hfmfuinfo.so (45 matching strings) ===
+.*UID:(.*)\n
+.debug_info
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpyjneftc1\hfmfuinfo.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmpyjneftc1\hfmfuinfo.py
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Module 'hfmfuinfo' has already been imported. Re-initialisation is not supported.
+NTAG 213
+NTAG 215
+NTAG 216
+NTAG213_144B
+NTAG215_504B
+NTAG216_888B
+PyInit_hfmfuinfo
+UID:
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG216_888B
+__pyx_k_NTAG_213
+__pyx_k_NTAG_215
+__pyx_k_NTAG_216
+__pyx_k_hf_mfu_info
+__pyx_k_hfmfuinfo
+__pyx_kp_u_NTAG_213
+__pyx_kp_u_NTAG_215
+__pyx_kp_u_NTAG_216
+__pyx_kp_u_hf_mfu_info
+__pyx_mdef_9hfmfuinfo_1getUID
+__pyx_mdef_9hfmfuinfo_3parser
+__pyx_module_is_main_hfmfuinfo
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_hfmfuinfo
+__pyx_pw_9hfmfuinfo_1getUID
+__pyx_pw_9hfmfuinfo_3parser
+__pyx_pymod_exec_hfmfuinfo
+deregister_tm_clones
+hf mfu info
+hfmfuinfo
+hfmfuinfo.c
+hfmfuinfo.getUID
+hfmfuinfo.parser
+hfmfuinfo.py
+init hfmfuinfo
+submodule_search_locations
+
+=== hfmfuread.so (34 matching strings) ===
+ hf mfu dump f 
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+NTAG213_144B
+NTAG215_504B
+NTAG216_888B
+PREFIX_NAME_NTAG213
+PREFIX_NAME_NTAG215
+PREFIX_NAME_NTAG216
+Partial dump created
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG216_888B
+__pyx_k_PREFIX_NAME_NTAG213
+__pyx_k_PREFIX_NAME_NTAG215
+__pyx_k_PREFIX_NAME_NTAG216
+__pyx_k_Partial_dump_created
+__pyx_k_hf_mfu_dump_f
+__pyx_k_infos
+__pyx_k_iso14443a_card_select_failed
+__pyx_kp_u_Partial_dump_created
+__pyx_kp_u_hf_mfu_dump_f
+__pyx_kp_u_iso14443a_card_select_failed
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_PREFIX_NAME_NTAG213
+__pyx_n_s_PREFIX_NAME_NTAG215
+__pyx_n_s_PREFIX_NAME_NTAG216
+__pyx_n_s_infos
+deregister_tm_clones
+infos
+iso14443a card select failed
+submodule_search_locations
+
+=== hfmfuwrite.so (25 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+NTAG213_144B
+NTAG215_504B
+NTAG216_888B
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG216_888B
+__pyx_k_failed_to_write_block
+__pyx_k_hf_mfu_restore_s_e_f
+__pyx_k_infos
+__pyx_k_new_infos
+__pyx_kp_u_failed_to_write_block
+__pyx_kp_u_hf_mfu_restore_s_e_f
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_infos
+__pyx_n_s_new_infos
+deregister_tm_clones
+failed to write block
+hf mfu restore s e f {}
+infos
+new_infos
+submodule_search_locations
+
+=== hfmfwrite.so (39 matching strings) ===
+.debug_info
+Card loaded \d+ blocks from file
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_fchks
+__pyx_k_hf_mf_cload_b
+__pyx_k_hf_mf_csetuid_w
+__pyx_k_hf_mf_wrbl
+__pyx_k_infos
+__pyx_k_isOk_01
+__pyx_k_newinfos
+__pyx_k_search
+__pyx_k_start_wrbl_cmd
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_kp_u_hf_mf_cload_b
+__pyx_kp_u_hf_mf_csetuid_w
+__pyx_kp_u_hf_mf_wrbl
+__pyx_kp_u_isOk_01
+__pyx_mdef_9hfmfwrite_11start_wrbl_cmd
+__pyx_n_s_fchks
+__pyx_n_s_infos
+__pyx_n_s_newinfos
+__pyx_n_s_search
+__pyx_n_s_start_wrbl_cmd
+__pyx_pf_9hfmfwrite_10start_wrbl_cmd
+__pyx_pw_9hfmfwrite_11start_wrbl_cmd
+cat /proc/cpuinfo
+deregister_tm_clones
+fchks
+hf mf cload b {}
+hf mf csetuid {} {} {} w
+hf mf wrbl {} {} {} {}
+hfmfwrite.start_wrbl_cmd
+infos
+isOk:01
+newinfos
+search
+start_wrbl_cmd
+submodule_search_locations
+
+=== hfsearch.so (42 matching strings) ===
+.*UID:\s(.*)
+.debug_info
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmprriqzsry\hfsearch.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmprriqzsry\hfsearch.py
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+MIFARE
+Module 'hfsearch' has already been imported. Re-initialisation is not supported.
+No known/supported 13.56 MHz tags found
+PyInit_hfsearch
+Valid ISO14443-B
+Valid ISO15693
+Valid ISO18092 / FeliCa
+Valid LEGIC Prime
+Valid Topaz
+Valid iCLASS tag
+__pyx_k_MIFARE
+__pyx_k_Valid_ISO14443_B
+__pyx_k_Valid_ISO15693
+__pyx_k_Valid_ISO18092_FeliCa
+__pyx_k_Valid_LEGIC_Prime
+__pyx_k_Valid_Topaz
+__pyx_k_Valid_iCLASS_tag
+__pyx_k_hfsearch
+__pyx_kp_u_Valid_ISO14443_B
+__pyx_kp_u_Valid_ISO15693
+__pyx_kp_u_Valid_ISO18092_FeliCa
+__pyx_kp_u_Valid_LEGIC_Prime
+__pyx_kp_u_Valid_Topaz
+__pyx_kp_u_Valid_iCLASS_tag
+__pyx_mdef_8hfsearch_1parser
+__pyx_module_is_main_hfsearch
+__pyx_n_s_hfsearch
+__pyx_n_u_MIFARE
+__pyx_pw_8hfsearch_1parser
+__pyx_pymod_exec_hfsearch
+deregister_tm_clones
+hfsearch
+hfsearch.c
+hfsearch.parser
+hfsearch.py
+init hfsearch
+submodule_search_locations
+
+=== hmi_driver.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== iclassread.so (13 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_hf_iclass_dump_k
+__pyx_k_infos
+__pyx_k_saving_dump_file_19_blocks_read
+__pyx_kp_u_hf_iclass_dump_k
+__pyx_kp_u_saving_dump_file_19_blocks_read
+__pyx_n_s_infos
+deregister_tm_clones
+hf iclass dump k 
+infos
+saving dump file - 19 blocks read
+submodule_search_locations
+
+=== iclasswrite.so (18 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Writing failed
+Xor div key :
+Xor div key : ([0-9A-Fa-f ]+)
+__pyx_k_Writing_failed
+__pyx_k_failed_tag_select
+__pyx_k_hf_iclass_wrbl_b_d_k
+__pyx_k_infos
+__pyx_kp_u_Writing_failed
+__pyx_kp_u_failed_tag_select
+__pyx_kp_u_hf_iclass_wrbl_b_d_k
+__pyx_n_s_infos
+deregister_tm_clones
+failed tag-select
+hf iclass wrbl -b {} -d {} -k {}
+infos
+submodule_search_locations
+
+=== images.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== keymap.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== legicread.so (13 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_hf_legic_dump
+__pyx_k_hf_legic_dump_h
+__pyx_k_infos
+__pyx_kp_u_hf_legic_dump
+__pyx_kp_u_hf_legic_dump_h
+__pyx_n_s_infos
+deregister_tm_clones
+hf legic dump
+hf legic dump h
+infos
+submodule_search_locations
+
+=== lfem4x05.so (39 matching strings) ===
+.*Chip Type.*\|(.*)
+.debug_info
+Chip Type
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_dump4X05
+__pyx_k_info4X05
+__pyx_k_infoAndDumpEM4x05ByKey
+__pyx_k_infos
+__pyx_k_lf_em_4x05_dump
+__pyx_k_lf_em_4x05_info
+__pyx_k_lf_em_4x05_info_FFFFFFFF
+__pyx_kp_u_lf_em_4x05_dump
+__pyx_kp_u_lf_em_4x05_info
+__pyx_kp_u_lf_em_4x05_info_FFFFFFFF
+__pyx_mdef_8lfem4x05_15infoAndDumpEM4x05ByKey
+__pyx_mdef_8lfem4x05_3info4X05
+__pyx_mdef_8lfem4x05_7dump4X05
+__pyx_n_s_dump4X05
+__pyx_n_s_info4X05
+__pyx_n_s_infoAndDumpEM4x05ByKey
+__pyx_n_s_infos
+__pyx_pf_8lfem4x05_14infoAndDumpEM4x05ByKey
+__pyx_pf_8lfem4x05_2info4X05
+__pyx_pf_8lfem4x05_6dump4X05
+__pyx_pw_8lfem4x05_15infoAndDumpEM4x05ByKey
+__pyx_pw_8lfem4x05_3info4X05
+__pyx_pw_8lfem4x05_7dump4X05
+deregister_tm_clones
+dump4X05
+info4X05
+infoAndDumpEM4x05ByKey
+infos
+lf em 4x05_dump
+lf em 4x05_info
+lf em 4x05_info FFFFFFFF
+lfem4x05.dump4X05
+lfem4x05.info4X05
+lfem4x05.infoAndDumpEM4x05ByKey
+submodule_search_locations
+
+=== lfread.so (139 matching strings) ===
+.debug_info
+AWID_ID
+EM410X_ID
+FDXB_ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+KERI_ID
+NEDAP_ID
+PAC_ID
+REGEX_EM410X
+T55X7_ID
+__pyx_k_AWID_ID
+__pyx_k_EM410X_ID
+__pyx_k_FDXB_ID
+__pyx_k_KERI_ID
+__pyx_k_NEDAP_ID
+__pyx_k_PAC_ID
+__pyx_k_REGEX_EM410X
+__pyx_k_T55X7_ID
+__pyx_k_chkAndDumpT55xx
+__pyx_k_detectT55XX
+__pyx_k_dumpT55XX
+__pyx_k_infoAndDumpEM4x05ByKey
+__pyx_k_infos
+__pyx_k_lfsearch
+__pyx_k_readAWID
+__pyx_k_readEM410X
+__pyx_k_readFDX
+__pyx_k_readIndala
+__pyx_k_readJablotron
+__pyx_k_readNexWatch
+__pyx_k_readNoralsy
+__pyx_k_readPAC
+__pyx_k_readParadox
+__pyx_k_readPresco
+__pyx_k_readPyramid
+__pyx_k_readSecurakey
+__pyx_k_readT55XX
+__pyx_k_readViking
+__pyx_k_readVisa2000
+__pyx_mdef_6lfread_13readIndala
+__pyx_mdef_6lfread_15readAWID
+__pyx_mdef_6lfread_21readSecurakey
+__pyx_mdef_6lfread_23readViking
+__pyx_mdef_6lfread_25readPyramid
+__pyx_mdef_6lfread_27readFDX
+__pyx_mdef_6lfread_31readJablotron
+__pyx_mdef_6lfread_37readNoralsy
+__pyx_mdef_6lfread_39readPAC
+__pyx_mdef_6lfread_41readParadox
+__pyx_mdef_6lfread_43readPresco
+__pyx_mdef_6lfread_45readVisa2000
+__pyx_mdef_6lfread_47readT55XX
+__pyx_mdef_6lfread_51readNexWatch
+__pyx_mdef_6lfread_9readEM410X
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_KERI_ID
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_PAC_ID
+__pyx_n_s_REGEX_EM410X
+__pyx_n_s_T55X7_ID
+__pyx_n_s_chkAndDumpT55xx
+__pyx_n_s_detectT55XX
+__pyx_n_s_dumpT55XX
+__pyx_n_s_infoAndDumpEM4x05ByKey
+__pyx_n_s_infos
+__pyx_n_s_lfsearch
+__pyx_n_s_readAWID
+__pyx_n_s_readEM410X
+__pyx_n_s_readFDX
+__pyx_n_s_readIndala
+__pyx_n_s_readJablotron
+__pyx_n_s_readNexWatch
+__pyx_n_s_readNoralsy
+__pyx_n_s_readPAC
+__pyx_n_s_readParadox
+__pyx_n_s_readPresco
+__pyx_n_s_readPyramid
+__pyx_n_s_readSecurakey
+__pyx_n_s_readT55XX
+__pyx_n_s_readViking
+__pyx_n_s_readVisa2000
+__pyx_pf_6lfread_26readFDX
+__pyx_pf_6lfread_46readT55XX
+__pyx_pf_6lfread_8readEM410X
+__pyx_pw_6lfread_13readIndala
+__pyx_pw_6lfread_15readAWID
+__pyx_pw_6lfread_21readSecurakey
+__pyx_pw_6lfread_23readViking
+__pyx_pw_6lfread_25readPyramid
+__pyx_pw_6lfread_27readFDX
+__pyx_pw_6lfread_31readJablotron
+__pyx_pw_6lfread_37readNoralsy
+__pyx_pw_6lfread_39readPAC
+__pyx_pw_6lfread_41readParadox
+__pyx_pw_6lfread_43readPresco
+__pyx_pw_6lfread_45readVisa2000
+__pyx_pw_6lfread_47readT55XX
+__pyx_pw_6lfread_51readNexWatch
+__pyx_pw_6lfread_9readEM410X
+chkAndDumpT55xx
+deregister_tm_clones
+detectT55XX
+dumpT55XX
+infoAndDumpEM4x05ByKey
+infos
+lfread.readAWID
+lfread.readEM410X
+lfread.readFDX
+lfread.readIndala
+lfread.readJablotron
+lfread.readNexWatch
+lfread.readNoralsy
+lfread.readPAC
+lfread.readParadox
+lfread.readPresco
+lfread.readPyramid
+lfread.readSecurakey
+lfread.readT55XX
+lfread.readViking
+lfread.readVisa2000
+lfsearch
+readAWID
+readEM410X
+readFDX
+readIndala
+readJablotron
+readNexWatch
+readNoralsy
+readPAC
+readParadox
+readPresco
+readPyramid
+readSecurakey
+readT55XX
+readViking
+readVisa2000
+submodule_search_locations
+
+=== lfsearch.so (165 matching strings) ===
+.debug_info
+AWID_ID
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp4kayvu84\lfsearch.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp4kayvu84\lfsearch.py
+Chipset detection
+Chipset detection: EM4x05 / EM4x69
+Chipset detection:\s(.*)
+EM TAG ID\s+:[\s]+([xX0-9a-fA-F]+)
+EM410X_ID
+FC,CN: {},{}
+FDXB_ID
+HID Prox - ([xX0-9a-fA-F]+)
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+KERI_ID
+Module 'lfsearch' has already been imported. Re-initialisation is not supported.
+NEDAP_ID
+No data found!
+No known 125/134 kHz tags found!
+PAC_ID
+PyInit_lfsearch
+REGEX_EM410X
+T5577
+Valid AWID ID
+Valid EM410x ID
+Valid FDX-B ID
+Valid GALLAGHER ID
+Valid Guardall G-Prox II ID
+Valid HID Prox ID
+Valid Hitag
+Valid IO Prox ID
+Valid Indala ID
+Valid Jablotron ID
+Valid KERI ID
+Valid NEDAP ID
+Valid NexWatch ID
+Valid Noralsy ID
+Valid PAC/Stanley ID
+Valid Paradox ID
+Valid Presco ID
+Valid Pyramid ID
+Valid Securakey ID
+Valid Viking ID
+Valid Visa2000 ID
+__pyx_k_AWID_ID
+__pyx_k_Chipset_detection
+__pyx_k_Chipset_detection_EM4x05_EM4x69
+__pyx_k_Chipset_detection_s
+__pyx_k_EM410X_ID
+__pyx_k_FDXB_ID
+__pyx_k_KERI_ID
+__pyx_k_NEDAP_ID
+__pyx_k_PAC_ID
+__pyx_k_REGEX_EM410X
+__pyx_k_T5577
+__pyx_k_Valid_AWID_ID
+__pyx_k_Valid_EM410x_ID
+__pyx_k_Valid_FDX_B_ID
+__pyx_k_Valid_Hitag
+__pyx_k_Valid_Indala_ID
+__pyx_k_Valid_Jablotron_ID
+__pyx_k_Valid_KERI_ID
+__pyx_k_Valid_NEDAP_ID
+__pyx_k_Valid_NexWatch_ID
+__pyx_k_Valid_Noralsy_ID
+__pyx_k_Valid_PAC_Stanley_ID
+__pyx_k_Valid_Paradox_ID
+__pyx_k_Valid_Presco_ID
+__pyx_k_Valid_Pyramid_ID
+__pyx_k_Valid_Securakey_ID
+__pyx_k_Valid_Viking_ID
+__pyx_k_Valid_Visa2000_ID
+__pyx_k_isT55XX
+__pyx_k_lfsearch
+__pyx_k_search
+__pyx_kp_u_Chipset_detection
+__pyx_kp_u_Chipset_detection_EM4x05_EM4x69
+__pyx_kp_u_Chipset_detection_s
+__pyx_kp_u_Valid_AWID_ID
+__pyx_kp_u_Valid_EM410x_ID
+__pyx_kp_u_Valid_FDX_B_ID
+__pyx_kp_u_Valid_Hitag
+__pyx_kp_u_Valid_Indala_ID
+__pyx_kp_u_Valid_Jablotron_ID
+__pyx_kp_u_Valid_KERI_ID
+__pyx_kp_u_Valid_NEDAP_ID
+__pyx_kp_u_Valid_NexWatch_ID
+__pyx_kp_u_Valid_Noralsy_ID
+__pyx_kp_u_Valid_PAC_Stanley_ID
+__pyx_kp_u_Valid_Paradox_ID
+__pyx_kp_u_Valid_Presco_ID
+__pyx_kp_u_Valid_Pyramid_ID
+__pyx_kp_u_Valid_Securakey_ID
+__pyx_kp_u_Valid_Viking_ID
+__pyx_kp_u_Valid_Visa2000_ID
+__pyx_mdef_8lfsearch_11setRAWForRegex
+__pyx_mdef_8lfsearch_13setRAW
+__pyx_mdef_8lfsearch_15parseFC
+__pyx_mdef_8lfsearch_17parseCN
+__pyx_mdef_8lfsearch_19parseLen
+__pyx_mdef_8lfsearch_1cleanHexStr
+__pyx_mdef_8lfsearch_21hasFCCN
+__pyx_mdef_8lfsearch_23getFCCN
+__pyx_mdef_8lfsearch_25getXsf
+__pyx_mdef_8lfsearch_27parser
+__pyx_mdef_8lfsearch_3cleanAndSetRaw
+__pyx_mdef_8lfsearch_5setUID
+__pyx_mdef_8lfsearch_7setUID2FCCN
+__pyx_mdef_8lfsearch_9setUID2Raw
+__pyx_module_is_main_lfsearch
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_KERI_ID
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_PAC_ID
+__pyx_n_s_REGEX_EM410X
+__pyx_n_s_lfsearch
+__pyx_n_s_search
+__pyx_n_u_T5577
+__pyx_n_u_isT55XX
+__pyx_pf_8lfsearch_10setRAWForRegex
+__pyx_pf_8lfsearch_12setRAW
+__pyx_pf_8lfsearch_22getFCCN
+__pyx_pf_8lfsearch_24getXsf
+__pyx_pf_8lfsearch_26parser
+__pyx_pf_8lfsearch_28__defaults__
+__pyx_pf_8lfsearch_cleanHexStr
+__pyx_pw_8lfsearch_11setRAWForRegex
+__pyx_pw_8lfsearch_13setRAW
+__pyx_pw_8lfsearch_15parseFC
+__pyx_pw_8lfsearch_17parseCN
+__pyx_pw_8lfsearch_19parseLen
+__pyx_pw_8lfsearch_1cleanHexStr
+__pyx_pw_8lfsearch_21hasFCCN
+__pyx_pw_8lfsearch_23getFCCN
+__pyx_pw_8lfsearch_25getXsf
+__pyx_pw_8lfsearch_27parser
+__pyx_pw_8lfsearch_3cleanAndSetRaw
+__pyx_pw_8lfsearch_5setUID
+__pyx_pw_8lfsearch_7setUID2FCCN
+__pyx_pw_8lfsearch_9setUID2Raw
+__pyx_pymod_exec_lfsearch
+deregister_tm_clones
+init lfsearch
+isT55XX
+lfsearch
+lfsearch.__defaults__
+lfsearch.c
+lfsearch.cleanAndSetRaw
+lfsearch.cleanHexStr
+lfsearch.getFCCN
+lfsearch.getXsf
+lfsearch.hasFCCN
+lfsearch.parseCN
+lfsearch.parseFC
+lfsearch.parseLen
+lfsearch.parser
+lfsearch.py
+lfsearch.setRAW
+lfsearch.setRAWForRegex
+lfsearch.setUID
+lfsearch.setUID2FCCN
+lfsearch.setUID2Raw
+search
+submodule_search_locations
+
+=== lft55xx.so (154 matching strings) ===
+# known cloners
+.*Block0.*:(.*)
+.*Chip Type.*:(.*)
+.*Modulation.*:(.*)
+.debug_info
+65857569 //chinese "handheld RFID writer" blue cloner from circa 2013 (also sold by xfpga.com)
+Block0
+Block0         : 0x([A-Fa-f0-9]+)
+Check pwd failed
+Could not detect modulation automatically
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+T55X7_ID
+T55xx/Unknown
+__pyx_freecount_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_freelist_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_k_Block0
+__pyx_k_Block0_0x_A_Fa_f0_9
+__pyx_k_Block0_2
+__pyx_k_Check_pwd_failed
+__pyx_k_Could_not_detect_modulation_auto
+__pyx_k_Modulation
+__pyx_k_T55X7_ID
+__pyx_k_T55xx_Unknown
+__pyx_k_base_detect_cmd
+__pyx_k_base_dump_cmd
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_check_detect
+__pyx_k_chkAndDumpT55xx
+__pyx_k_chkT55xx
+__pyx_k_chkT55xx_locals_lineInternal
+__pyx_k_detectAndDumpT55xxByKey
+__pyx_k_detectT55XX
+__pyx_k_detect_ret
+__pyx_k_dumpT55XX
+__pyx_k_dumpT55XX_Text
+__pyx_k_failed
+__pyx_k_from_detect
+__pyx_k_known_cloners_ref_http_www_prox
+__pyx_k_lf_t55xx_detect
+__pyx_k_lf_t55xx_dump
+__pyx_k_lf_t55xx_wipe
+__pyx_k_new_info
+__pyx_k_search
+__pyx_k_wipe
+__pyx_k_wipe0
+__pyx_k_wipe1
+__pyx_k_wipe_t
+__pyx_kp_u_Block0
+__pyx_kp_u_Block0_0x_A_Fa_f0_9
+__pyx_kp_u_Check_pwd_failed
+__pyx_kp_u_Could_not_detect_modulation_auto
+__pyx_kp_u_Modulation
+__pyx_kp_u_T55xx_Unknown
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_kp_u_known_cloners_ref_http_www_prox
+__pyx_kp_u_lf_t55xx_detect
+__pyx_kp_u_lf_t55xx_dump
+__pyx_kp_u_lf_t55xx_wipe
+__pyx_mdef_7lft55xx_17chkT55xx
+__pyx_mdef_7lft55xx_21chkAndDumpT55xx
+__pyx_mdef_7lft55xx_23detectAndDumpT55xxByKey
+__pyx_mdef_7lft55xx_25detectT55XX
+__pyx_mdef_7lft55xx_29dumpT55XX
+__pyx_mdef_7lft55xx_31dumpT55XX_Text
+__pyx_mdef_7lft55xx_41wipe_t
+__pyx_mdef_7lft55xx_43wipe1
+__pyx_mdef_7lft55xx_45wipe0
+__pyx_mdef_7lft55xx_47wipe
+__pyx_mdef_7lft55xx_8chkT55xx_1lineInternal
+__pyx_n_s_T55X7_ID
+__pyx_n_s_base_detect_cmd
+__pyx_n_s_base_dump_cmd
+__pyx_n_s_check_detect
+__pyx_n_s_chkAndDumpT55xx
+__pyx_n_s_chkT55xx
+__pyx_n_s_chkT55xx_locals_lineInternal
+__pyx_n_s_detectAndDumpT55xxByKey
+__pyx_n_s_detectT55XX
+__pyx_n_s_detect_ret
+__pyx_n_s_dumpT55XX
+__pyx_n_s_dumpT55XX_Text
+__pyx_n_s_failed
+__pyx_n_s_from_detect
+__pyx_n_s_search
+__pyx_n_s_wipe
+__pyx_n_s_wipe0
+__pyx_n_s_wipe1
+__pyx_n_s_wipe_t
+__pyx_n_u_Block0_2
+__pyx_n_u_new_info
+__pyx_pf_7lft55xx_16chkT55xx
+__pyx_pf_7lft55xx_20chkAndDumpT55xx
+__pyx_pf_7lft55xx_22detectAndDumpT55xxByKey
+__pyx_pf_7lft55xx_24detectT55XX
+__pyx_pf_7lft55xx_28dumpT55XX
+__pyx_pf_7lft55xx_30dumpT55XX_Text
+__pyx_pf_7lft55xx_40wipe_t
+__pyx_pf_7lft55xx_42wipe1
+__pyx_pf_7lft55xx_46wipe
+__pyx_pf_7lft55xx_8chkT55xx_lineInternal
+__pyx_ptype_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_pw_7lft55xx_17chkT55xx
+__pyx_pw_7lft55xx_21chkAndDumpT55xx
+__pyx_pw_7lft55xx_23detectAndDumpT55xxByKey
+__pyx_pw_7lft55xx_25detectT55XX
+__pyx_pw_7lft55xx_29dumpT55XX
+__pyx_pw_7lft55xx_31dumpT55XX_Text
+__pyx_pw_7lft55xx_41wipe_t
+__pyx_pw_7lft55xx_43wipe1
+__pyx_pw_7lft55xx_45wipe0
+__pyx_pw_7lft55xx_47wipe
+__pyx_pw_7lft55xx_8chkT55xx_1lineInternal
+__pyx_tp_clear_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_tp_dealloc_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_tp_new_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_tp_traverse_7lft55xx___pyx_scope_struct__chkT55xx
+__pyx_type_7lft55xx___pyx_scope_struct__chkT55xx
+base_detect_cmd
+base_dump_cmd
+cat /proc/cpuinfo
+check_detect
+chkAndDumpT55xx
+chkT55xx
+chkT55xx.<locals>.lineInternal
+deregister_tm_clones
+detectAndDumpT55xxByKey
+detectT55XX
+detect_ret
+dumpT55XX
+dumpT55XX_Text
+failed
+from_detect
+lf t55xx detect
+lf t55xx dump
+lf t55xx wipe
+lft55xx.__pyx_scope_struct__chkT55xx
+lft55xx.chkAndDumpT55xx
+lft55xx.chkT55xx
+lft55xx.chkT55xx.lineInternal
+lft55xx.detectAndDumpT55xxByKey
+lft55xx.detectT55XX
+lft55xx.dumpT55XX
+lft55xx.dumpT55XX_Text
+lft55xx.wipe
+lft55xx.wipe0
+lft55xx.wipe1
+lft55xx.wipe_t
+new_info
+search
+submodule_search_locations
+wipe
+wipe0
+wipe1
+wipe_t
+
+=== lfverify.so (25 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+T55X7_ID
+__pyx_k_T55X7_ID
+__pyx_k_detectT55XX
+__pyx_k_detect_ret
+__pyx_k_dumpT55XX_Text
+__pyx_k_dump_text
+__pyx_k_infos
+__pyx_k_set_infos_cache
+__pyx_n_s_T55X7_ID
+__pyx_n_s_detectT55XX
+__pyx_n_s_detect_ret
+__pyx_n_s_dumpT55XX_Text
+__pyx_n_s_dump_text
+__pyx_n_s_infos
+__pyx_n_s_set_infos_cache
+deregister_tm_clones
+detectT55XX
+detect_ret
+dumpT55XX_Text
+dump_text
+infos
+set_infos_cache
+submodule_search_locations
+
+=== lfwrite.so (95 matching strings) ===
+.debug_info
+AWID_ID
+EM410X_ID
+EM4x05
+FDXB_ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+KERI_ID
+NEDAP_ID
+PAC_ID
+T55X7_ID
+__pyx_k_AWID_ID
+__pyx_k_EM410X_ID
+__pyx_k_EM4x05
+__pyx_k_FDXB_ID
+__pyx_k_KERI_ID
+__pyx_k_NEDAP_ID
+__pyx_k_PAC_ID
+__pyx_k_T55X7_ID
+__pyx_k_check_detect
+__pyx_k_detectT55XX
+__pyx_k_detect_ret
+__pyx_k_failed
+__pyx_k_infos
+__pyx_k_lf_fdx_clone_c_n
+__pyx_k_lf_gallagher_clone_b
+__pyx_k_lf_hid_clone
+__pyx_k_lf_indala_clone_r
+__pyx_k_lf_nexwatch_clone_r
+__pyx_k_lf_pac_clone_b
+__pyx_k_lf_paradox_clone_b
+__pyx_k_lf_securakey_clone_b
+__pyx_k_lf_t55xx_restore_f
+__pyx_k_wipe
+__pyx_k_write_dump_em4x05
+__pyx_k_write_dump_t55xx
+__pyx_k_write_raw_clone
+__pyx_kp_u_lf_fdx_clone_c_n
+__pyx_kp_u_lf_gallagher_clone_b
+__pyx_kp_u_lf_hid_clone
+__pyx_kp_u_lf_indala_clone_r
+__pyx_kp_u_lf_nexwatch_clone_r
+__pyx_kp_u_lf_pac_clone_b
+__pyx_kp_u_lf_paradox_clone_b
+__pyx_kp_u_lf_securakey_clone_b
+__pyx_kp_u_lf_t55xx_restore_f
+__pyx_mdef_7lfwrite_13write_raw_clone
+__pyx_mdef_7lfwrite_19write_dump_t55xx
+__pyx_mdef_7lfwrite_23write_dump_em4x05
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_KERI_ID
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_PAC_ID
+__pyx_n_s_T55X7_ID
+__pyx_n_s_check_detect
+__pyx_n_s_detectT55XX
+__pyx_n_s_detect_ret
+__pyx_n_s_failed
+__pyx_n_s_infos
+__pyx_n_s_wipe
+__pyx_n_s_write_dump_em4x05
+__pyx_n_s_write_dump_t55xx
+__pyx_n_s_write_raw_clone
+__pyx_n_u_EM4x05
+__pyx_pf_7lfwrite_12write_raw_clone
+__pyx_pf_7lfwrite_18write_dump_t55xx
+__pyx_pf_7lfwrite_22write_dump_em4x05
+__pyx_pf_7lfwrite_22write_dump_em4x05.isra.28
+__pyx_pw_7lfwrite_13write_raw_clone
+__pyx_pw_7lfwrite_19write_dump_t55xx
+__pyx_pw_7lfwrite_23write_dump_em4x05
+check_detect
+deregister_tm_clones
+detectT55XX
+detect_ret
+failed
+infos
+lf fdx clone c {} n {}
+lf gallagher clone b {}
+lf hid clone
+lf indala clone {} -r {}
+lf nexwatch clone r {}
+lf pac clone b {}
+lf paradox clone b {}
+lf securakey clone b {}
+lf t55xx restore f 
+lfwrite.write_dump_em4x05
+lfwrite.write_dump_t55xx
+lfwrite.write_raw_clone
+submodule_search_locations
+wipe
+write_dump_em4x05
+write_dump_t55xx
+write_raw_clone
+
+=== mifare.so (14 matching strings) ===
+.debug_info
+GNU C11 7.5.0 -march=armv7-a -mtune=cortex-a9 -mfloat-abi=hard -mfpu=vfpv3-d16 -mthumb -mtls-dialect=gnu -g -g -g -O2 -O2 -O2 -fbuilding-libgcc -fno-stack-protector -fPIC -fno-inline -fexceptions -fvisibility=hidden
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+arm_tune
+arm_tune_cortex_a9
+arm_tune_strongarm
+arm_tune_wbuf
+arm_tune_xscale
+deregister_tm_clones
+isa_tune_co_proc
+isa_tune_ldsched
+isa_tune_strong
+isa_tune_wbuf
+submodule_search_locations
+
+=== read.so (118 matching strings) ===
+.debug_info
+ISO1443AReader
+ISO1443AReader.isSupport
+ISO1443AReader.start
+ISO15693Reader
+ISO15693Reader.isSupport
+ISO15693Reader.start
+ISO15693_ICODE
+ISO15693_ST_SA
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+LEGIC_MIM256
+MifareUltralightReader
+MifareUltralightReader.isSupport
+MifareUltralightReader.start
+Reader.find_reader
+Reader.find_readers
+Reader.is_reader_class
+T55X7_ID
+__pyx_k_ISO1443AReader
+__pyx_k_ISO1443AReader_isSupport
+__pyx_k_ISO1443AReader_start
+__pyx_k_ISO15693Reader
+__pyx_k_ISO15693Reader_isSupport
+__pyx_k_ISO15693Reader_start
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ST_SA
+__pyx_k_LEGIC_MIM256
+__pyx_k_MifareUltralightReader
+__pyx_k_MifareUltralightReader_isSupport
+__pyx_k_MifareUltralightReader_start
+__pyx_k_Reader_find_reader
+__pyx_k_Reader_find_readers
+__pyx_k_Reader_is_reader_class
+__pyx_k_T55X7_ID
+__pyx_k_default_reader
+__pyx_k_fchks
+__pyx_k_find_reader
+__pyx_k_find_readers
+__pyx_k_infos
+__pyx_k_is_reader_class
+__pyx_k_reader
+__pyx_k_reader_2
+__pyx_k_reader_clz
+__pyx_k_readers
+__pyx_k_tag_info
+__pyx_mdef_4read_14ISO1443AReader_1isSupport
+__pyx_mdef_4read_14ISO1443AReader_3start
+__pyx_mdef_4read_14ISO15693Reader_1isSupport
+__pyx_mdef_4read_14ISO15693Reader_3start
+__pyx_mdef_4read_22MifareUltralightReader_1isSupport
+__pyx_mdef_4read_22MifareUltralightReader_3start
+__pyx_mdef_4read_6Reader_13is_reader_class
+__pyx_mdef_4read_6Reader_15find_readers
+__pyx_mdef_4read_6Reader_17find_reader
+__pyx_n_s_ISO1443AReader
+__pyx_n_s_ISO1443AReader_isSupport
+__pyx_n_s_ISO1443AReader_start
+__pyx_n_s_ISO15693Reader
+__pyx_n_s_ISO15693Reader_isSupport
+__pyx_n_s_ISO15693Reader_start
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA
+__pyx_n_s_LEGIC_MIM256
+__pyx_n_s_MifareUltralightReader
+__pyx_n_s_MifareUltralightReader_isSupport
+__pyx_n_s_MifareUltralightReader_start
+__pyx_n_s_Reader_find_reader
+__pyx_n_s_Reader_find_readers
+__pyx_n_s_Reader_is_reader_class
+__pyx_n_s_T55X7_ID
+__pyx_n_s_default_reader
+__pyx_n_s_fchks
+__pyx_n_s_find_reader
+__pyx_n_s_find_readers
+__pyx_n_s_infos
+__pyx_n_s_is_reader_class
+__pyx_n_s_reader
+__pyx_n_s_reader_2
+__pyx_n_s_reader_clz
+__pyx_n_s_readers
+__pyx_n_u_infos
+__pyx_n_u_tag_info
+__pyx_pf_4read_14ISO1443AReader_2start
+__pyx_pf_4read_14ISO15693Reader_2start
+__pyx_pf_4read_22MifareUltralightReader_2start
+__pyx_pf_4read_6Reader_14find_readers
+__pyx_pf_4read_6Reader_16find_reader
+__pyx_pw_4read_14ISO1443AReader_1isSupport
+__pyx_pw_4read_14ISO1443AReader_3start
+__pyx_pw_4read_14ISO15693Reader_1isSupport
+__pyx_pw_4read_14ISO15693Reader_3start
+__pyx_pw_4read_22MifareUltralightReader_1isSupport
+__pyx_pw_4read_22MifareUltralightReader_3start
+__pyx_pw_4read_6Reader_13is_reader_class
+__pyx_pw_4read_6Reader_15find_readers
+__pyx_pw_4read_6Reader_17find_reader
+_reader
+_readers
+default_reader
+deregister_tm_clones
+fchks
+find_reader
+find_readers
+infos
+is_reader_class
+read.ISO1443AReader.isSupport
+read.ISO1443AReader.start
+read.ISO15693Reader.isSupport
+read.ISO15693Reader.start
+read.MifareUltralightReader.isSupport
+read.MifareUltralightReader.start
+read.Reader.find_reader
+read.Reader.find_readers
+read.Reader.is_reader_class
+reader
+reader_clz
+submodule_search_locations
+tag_info
+
+=== resources.so (234 matching strings) ===
+.debug_info
+4. Topaz
+4. Topaz Sniff
+5. T5577
+5. T5577 Sniff
+BCC repair failed
+ChkDIC
+Darkside
+Erase T5577
+Erase failed
+Erasing
+Erasing...
+HF reader   
+Install failed, code = {}
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+LF reader   
+Multiple tags detected!
+Nested
+No dump info. 
+Option 1) Go to reader to sniff keys
+Option 1) Go to reader to sniff keys.
+Processing...
+Reading...
+Reading...{}/{}Keys
+Remaining: {}s
+STnested
+Scanning...
+Swipe tag on iCopy 
+T5577
+T5577 Sniff Finished
+T5577 or EM4305
+T55xx Reading...
+T55xx keys checking...
+UID write failed. Make sure the tag is placed on the antenna.
+UID: 
+Verification failed!
+Verifying...
+Write failed!
+Writing...
+__pyx_k_4_Topaz
+__pyx_k_4_Topaz_Sniff
+__pyx_k_5_T5577
+__pyx_k_5_T5577_Sniff
+__pyx_k_BCC_repair_failed
+__pyx_k_ChkDIC
+__pyx_k_Click_start_then_swipe_iCopy_on
+__pyx_k_Darkside
+__pyx_k_Enter_a_known_key_for_T5577_or_E
+__pyx_k_Erase_T5577
+__pyx_k_Erase_failed
+__pyx_k_Erasing
+__pyx_k_Erasing_2
+__pyx_k_HF_reader
+__pyx_k_Install_failed_code
+__pyx_k_LF_reader
+__pyx_k_Multiple_tags_detected
+__pyx_k_Nested
+__pyx_k_No_dump_info_Only_support_bin_em
+__pyx_k_Option_1_Go_to_reader_to_sniff_k
+__pyx_k_Option_1_Go_to_reader_to_sniff_k_2
+__pyx_k_Processing
+__pyx_k_Reading
+__pyx_k_Reading_Keys
+__pyx_k_Remaining_s
+__pyx_k_STnested
+__pyx_k_Scanning
+__pyx_k_Step_1_Prepare_client_s_reader_a
+__pyx_k_Step_3_Swipe_tag_on_iCopy_to_ens
+__pyx_k_T5577
+__pyx_k_T5577_EM4305
+__pyx_k_T5577_Sniff_Finished
+__pyx_k_T55xx_Reading
+__pyx_k_T55xx_keys_checking
+__pyx_k_UID_write_failed_Make_sure_the_t
+__pyx_k_Verification_failed
+__pyx_k_Verifying
+__pyx_k_Write_failed
+__pyx_k_Writing
+__pyx_k_bcc_fix_failed
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_install_failed
+__pyx_k_keys_check_failed
+__pyx_k_read_failed
+__pyx_k_search
+__pyx_k_sniff
+__pyx_k_sniff_decode
+__pyx_k_sniff_item1
+__pyx_k_sniff_item2
+__pyx_k_sniff_item3
+__pyx_k_sniff_item4
+__pyx_k_sniff_item5
+__pyx_k_sniff_notag
+__pyx_k_sniff_tag
+__pyx_k_sniff_trace
+__pyx_k_sniffing
+__pyx_k_sniffline1
+__pyx_k_sniffline2
+__pyx_k_sniffline3
+__pyx_k_sniffline4
+__pyx_k_sniffline_t5577
+__pyx_k_start_clone_uid
+__pyx_k_t5577_sniff_finished
+__pyx_k_tag_info
+__pyx_k_test_hf_reader_tips
+__pyx_k_test_lf_reader_tips
+__pyx_k_verify_failed
+__pyx_k_wipe
+__pyx_k_wipe_block
+__pyx_k_wipe_failed
+__pyx_k_wipe_m1
+__pyx_k_wipe_no_valid_keys
+__pyx_k_wipe_success
+__pyx_k_wipe_t55xx
+__pyx_k_wipe_tag
+__pyx_k_write_failed
+__pyx_kp_u_4_Topaz
+__pyx_kp_u_4_Topaz_Sniff
+__pyx_kp_u_5_T5577
+__pyx_kp_u_5_T5577_Sniff
+__pyx_kp_u_BCC_repair_failed
+__pyx_kp_u_Click_start_then_swipe_iCopy_on
+__pyx_kp_u_Enter_a_known_key_for_T5577_or_E
+__pyx_kp_u_Erase_T5577
+__pyx_kp_u_Erase_failed
+__pyx_kp_u_Erasing_2
+__pyx_kp_u_HF_reader
+__pyx_kp_u_Install_failed_code
+__pyx_kp_u_LF_reader
+__pyx_kp_u_Multiple_tags_detected
+__pyx_kp_u_No_dump_info_Only_support_bin_em
+__pyx_kp_u_Option_1_Go_to_reader_to_sniff_k
+__pyx_kp_u_Option_1_Go_to_reader_to_sniff_k_2
+__pyx_kp_u_Processing
+__pyx_kp_u_Reading
+__pyx_kp_u_Reading_Keys
+__pyx_kp_u_Remaining_s
+__pyx_kp_u_Scanning
+__pyx_kp_u_Step_1_Prepare_client_s_reader_a
+__pyx_kp_u_Step_3_Swipe_tag_on_iCopy_to_ens
+__pyx_kp_u_T5577_EM4305
+__pyx_kp_u_T5577_Sniff_Finished
+__pyx_kp_u_T55xx_Reading
+__pyx_kp_u_T55xx_keys_checking
+__pyx_kp_u_UID_write_failed_Make_sure_the_t
+__pyx_kp_u_Verification_failed
+__pyx_kp_u_Verifying
+__pyx_kp_u_Write_failed
+__pyx_kp_u_Writing
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_n_s_search
+__pyx_n_u_ChkDIC
+__pyx_n_u_Darkside
+__pyx_n_u_Erasing
+__pyx_n_u_Nested
+__pyx_n_u_STnested
+__pyx_n_u_T5577
+__pyx_n_u_bcc_fix_failed
+__pyx_n_u_install_failed
+__pyx_n_u_keys_check_failed
+__pyx_n_u_read_failed
+__pyx_n_u_sniff
+__pyx_n_u_sniff_decode
+__pyx_n_u_sniff_item1
+__pyx_n_u_sniff_item2
+__pyx_n_u_sniff_item3
+__pyx_n_u_sniff_item4
+__pyx_n_u_sniff_item5
+__pyx_n_u_sniff_notag
+__pyx_n_u_sniff_tag
+__pyx_n_u_sniff_trace
+__pyx_n_u_sniffing
+__pyx_n_u_sniffline1
+__pyx_n_u_sniffline2
+__pyx_n_u_sniffline3
+__pyx_n_u_sniffline4
+__pyx_n_u_sniffline_t5577
+__pyx_n_u_start_clone_uid
+__pyx_n_u_t5577_sniff_finished
+__pyx_n_u_tag_info
+__pyx_n_u_test_hf_reader_tips
+__pyx_n_u_test_lf_reader_tips
+__pyx_n_u_verify_failed
+__pyx_n_u_wipe
+__pyx_n_u_wipe_block
+__pyx_n_u_wipe_failed
+__pyx_n_u_wipe_m1
+__pyx_n_u_wipe_no_valid_keys
+__pyx_n_u_wipe_success
+__pyx_n_u_wipe_t55xx
+__pyx_n_u_wipe_tag
+__pyx_n_u_write_failed
+bcc_fix_failed
+cat /proc/cpuinfo
+deregister_tm_clones
+iCopy on reader.
+install_failed
+keys_check_failed
+read_failed
+reader and tag, 
+search
+sniff
+sniff_decode
+sniff_item1
+sniff_item2
+sniff_item3
+sniff_item4
+sniff_item5
+sniff_notag
+sniff_tag
+sniff_trace
+sniffing
+sniffline1
+sniffline2
+sniffline3
+sniffline4
+sniffline_t5577
+start_clone_uid
+submodule_search_locations
+swipe iCopy on reader.
+t5577_sniff_finished
+tag_info
+test_hf_reader_tips
+test_lf_reader_tips
+to ensure reader 
+verify_failed
+wipe
+wipe_block
+wipe_failed
+wipe_m1
+wipe_no_valid_keys
+wipe_success
+wipe_t55xx
+wipe_tag
+write_failed
+
+=== scan.so (34 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+T55X7_ID
+__pyx_k_T55X7_ID
+__pyx_k_hf14ainfo
+__pyx_k_hfmfuinfo
+__pyx_k_hfsearch
+__pyx_k_infos
+__pyx_k_isT55XX
+__pyx_k_lf_em_4x05_info
+__pyx_k_lfsearch
+__pyx_k_set_infos_cache
+__pyx_kp_u_lf_em_4x05_info
+__pyx_mdef_4scan_23set_infos_cache
+__pyx_n_s_T55X7_ID
+__pyx_n_s_hf14ainfo
+__pyx_n_s_hfmfuinfo
+__pyx_n_s_hfsearch
+__pyx_n_s_infos
+__pyx_n_s_lfsearch
+__pyx_n_s_set_infos_cache
+__pyx_n_u_isT55XX
+__pyx_pw_4scan_23set_infos_cache
+deregister_tm_clones
+hf14ainfo
+hfmfuinfo
+hfsearch
+infos
+isT55XX
+lf em 4x05_info 
+lfsearch
+scan.set_infos_cache
+set_infos_cache
+submodule_search_locations
+
+=== sermain.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== serpool.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== server_iclassse.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_search_se_dev_reader
+__pyx_n_s_search_se_dev_reader
+deregister_tm_clones
+search_se_dev_reader
+submodule_search_locations
+
+=== settings.so (4 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+deregister_tm_clones
+submodule_search_locations
+
+=== sniff.so (135 matching strings) ===
+.debug_info
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp7uuhr2hb\sniff.c
+C:\Users\ADMINI~1\AppData\Local\Temp\1\tmp7uuhr2hb\sniff.py
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Module 'sniff' has already been imported. Re-initialisation is not supported.
+PyInit_sniff
+Reading (\d+) bytes from device memory
+__pyx_k_Reading_d_bytes_from_device_memo
+__pyx_k_hf_14a_sniff
+__pyx_k_hf_14b_sniff
+__pyx_k_hf_iclass_sniff
+__pyx_k_hf_topaz_sniff
+__pyx_k_lf_sniff
+__pyx_k_lf_t55xx_sniff
+__pyx_k_parserKeysForT5577
+__pyx_k_parserT5577LeadingKeyForLine
+__pyx_k_parserT5577OkKeyForLine
+__pyx_k_parserT5577WriteKeyForLine
+__pyx_k_search
+__pyx_k_sniff
+__pyx_k_sniff125KStart
+__pyx_k_sniff14AStart
+__pyx_k_sniff14BStart
+__pyx_k_sniffIClassAStart
+__pyx_k_sniffT5577Start
+__pyx_k_sniffTopazStart
+__pyx_kp_u_Reading_d_bytes_from_device_memo
+__pyx_kp_u_hf_14a_sniff
+__pyx_kp_u_hf_14b_sniff
+__pyx_kp_u_hf_iclass_sniff
+__pyx_kp_u_hf_topaz_sniff
+__pyx_kp_u_lf_sniff
+__pyx_kp_u_lf_t55xx_sniff
+__pyx_mdef_5sniff_11sniffT5577Start
+__pyx_mdef_5sniff_13parserLfTraceLen
+__pyx_mdef_5sniff_15parserKeyForLine
+__pyx_mdef_5sniff_17parserT5577OkKeyForLine
+__pyx_mdef_5sniff_19parserT5577LeadingKeyForLine
+__pyx_mdef_5sniff_1sniff14AStart
+__pyx_mdef_5sniff_21parserT5577WriteKeyForLine
+__pyx_mdef_5sniff_23parserKeysForT5577
+__pyx_mdef_5sniff_25parserHfTraceLen
+__pyx_mdef_5sniff_27parserM1KeyForLine
+__pyx_mdef_5sniff_29parserDataForSCA
+__pyx_mdef_5sniff_31parserUidForData
+__pyx_mdef_5sniff_33parserUidForKeyIndex
+__pyx_mdef_5sniff_35parserKeyForM1
+__pyx_mdef_5sniff_3sniff14BStart
+__pyx_mdef_5sniff_5sniffIClassAStart
+__pyx_mdef_5sniff_7sniffTopazStart
+__pyx_mdef_5sniff_9sniff125KStart
+__pyx_module_is_main_sniff
+__pyx_n_s_parserKeysForT5577
+__pyx_n_s_parserT5577LeadingKeyForLine
+__pyx_n_s_parserT5577OkKeyForLine
+__pyx_n_s_parserT5577WriteKeyForLine
+__pyx_n_s_search
+__pyx_n_s_sniff
+__pyx_n_s_sniff125KStart
+__pyx_n_s_sniff14AStart
+__pyx_n_s_sniff14BStart
+__pyx_n_s_sniffIClassAStart
+__pyx_n_s_sniffT5577Start
+__pyx_n_s_sniffTopazStart
+__pyx_pf_5sniff_12parserLfTraceLen
+__pyx_pf_5sniff_14parserKeyForLine
+__pyx_pf_5sniff_16parserT5577OkKeyForLine
+__pyx_pf_5sniff_18parserT5577LeadingKeyForLine
+__pyx_pf_5sniff_20parserT5577WriteKeyForLine
+__pyx_pf_5sniff_22parserKeysForT5577
+__pyx_pf_5sniff_24parserHfTraceLen
+__pyx_pf_5sniff_26parserM1KeyForLine
+__pyx_pf_5sniff_28parserDataForSCA
+__pyx_pf_5sniff_32parserUidForKeyIndex
+__pyx_pf_5sniff_34parserKeyForM1
+__pyx_pw_5sniff_11sniffT5577Start
+__pyx_pw_5sniff_13parserLfTraceLen
+__pyx_pw_5sniff_15parserKeyForLine
+__pyx_pw_5sniff_17parserT5577OkKeyForLine
+__pyx_pw_5sniff_19parserT5577LeadingKeyForLine
+__pyx_pw_5sniff_1sniff14AStart
+__pyx_pw_5sniff_21parserT5577WriteKeyForLine
+__pyx_pw_5sniff_23parserKeysForT5577
+__pyx_pw_5sniff_25parserHfTraceLen
+__pyx_pw_5sniff_27parserM1KeyForLine
+__pyx_pw_5sniff_29parserDataForSCA
+__pyx_pw_5sniff_31parserUidForData
+__pyx_pw_5sniff_33parserUidForKeyIndex
+__pyx_pw_5sniff_35parserKeyForM1
+__pyx_pw_5sniff_3sniff14BStart
+__pyx_pw_5sniff_5sniffIClassAStart
+__pyx_pw_5sniff_7sniffTopazStart
+__pyx_pw_5sniff_9sniff125KStart
+__pyx_pymod_exec_sniff
+deregister_tm_clones
+hf 14a sniff
+hf 14b sniff
+hf iclass sniff
+hf topaz sniff
+init sniff
+lf sniff
+lf t55xx sniff
+parserKeysForT5577
+parserT5577LeadingKeyForLine
+parserT5577OkKeyForLine
+parserT5577WriteKeyForLine
+search
+sniff
+sniff.c
+sniff.parserDataForSCA
+sniff.parserHfTraceLen
+sniff.parserKeyForLine
+sniff.parserKeyForM1
+sniff.parserKeysForT5577
+sniff.parserLfTraceLen
+sniff.parserM1KeyForLine
+sniff.parserT5577LeadingKeyForLine
+sniff.parserT5577OkKeyForLine
+sniff.parserT5577WriteKeyForLine
+sniff.parserUidForData
+sniff.parserUidForKeyIndex
+sniff.py
+sniff.sniff125KStart
+sniff.sniff14AStart
+sniff.sniff14BStart
+sniff.sniffIClassAStart
+sniff.sniffT5577Start
+sniff.sniffTopazStart
+sniff125KStart
+sniff14AStart
+sniff14BStart
+sniffIClassAStart
+sniffT5577Start
+sniffTopazStart
+submodule_search_locations
+
+=== tagtypes.so (150 matching strings) ===
+.debug_info
+AWID ID
+AWID_ID
+EM410X_ID
+EM410x ID
+FDXB ID
+FDXB_ID
+HID Prox ID
+Hitag2 ID
+ISO14443B
+ISO15693 ICODE
+ISO15693 ST SA
+ISO15693_ICODE
+ISO15693_ST_SA
+Indala ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Jablotron ID
+KERI ID
+KERI_ID
+LEGIC_MIM256
+MIFARE DESFire
+MIFARE_DESFIRE
+NEDAP ID
+NEDAP_ID
+NTAG213 144b
+NTAG213_144B
+NTAG215 504b
+NTAG215_504B
+NTAG216 888b
+NTAG216_888B
+NexWatch ID
+Noralsy ID
+PAC ID
+PAC_ID
+Paradox ID
+Presco ID
+Pyramid ID
+Securakey ID
+T5577
+T55X7_ID
+T55x7_ID
+Topaz
+Ultralight
+Ultralight C
+Ultralight EV1
+Viking ID
+Visa2000 ID
+__pyx_k_AWID_ID
+__pyx_k_AWID_ID_2
+__pyx_k_EM410X_ID
+__pyx_k_EM410x_ID
+__pyx_k_FDXB_ID
+__pyx_k_FDXB_ID_2
+__pyx_k_Hitag2_ID
+__pyx_k_ISO14443B
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ICODE_2
+__pyx_k_ISO15693_ST_SA
+__pyx_k_ISO15693_ST_SA_2
+__pyx_k_Indala_ID
+__pyx_k_Jablotron_ID
+__pyx_k_KERI_ID
+__pyx_k_KERI_ID_2
+__pyx_k_LEGIC_MIM256
+__pyx_k_MIFARE_DESFIRE
+__pyx_k_MIFARE_DESFire
+__pyx_k_NEDAP_ID
+__pyx_k_NEDAP_ID_2
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG213_144b
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG215_504b
+__pyx_k_NTAG216_888B
+__pyx_k_NTAG216_888b
+__pyx_k_NexWatch_ID
+__pyx_k_Noralsy_ID
+__pyx_k_PAC_ID
+__pyx_k_PAC_ID_2
+__pyx_k_Paradox_ID
+__pyx_k_Presco_ID
+__pyx_k_Pyramid_ID
+__pyx_k_Securakey_ID
+__pyx_k_T5577
+__pyx_k_T55X7_ID
+__pyx_k_T55x7_ID
+__pyx_k_Topaz
+__pyx_k_Ultralight
+__pyx_k_Ultralight_C
+__pyx_k_Ultralight_EV1
+__pyx_k_Viking_ID
+__pyx_k_Visa2000_ID
+__pyx_k_cat_proc_cpuinfo
+__pyx_k_infos
+__pyx_k_lf_can_dump
+__pyx_k_search
+__pyx_kp_u_AWID_ID_2
+__pyx_kp_u_EM410x_ID
+__pyx_kp_u_FDXB_ID_2
+__pyx_kp_u_Hitag2_ID
+__pyx_kp_u_ISO15693_ICODE_2
+__pyx_kp_u_ISO15693_ST_SA_2
+__pyx_kp_u_Indala_ID
+__pyx_kp_u_Jablotron_ID
+__pyx_kp_u_KERI_ID_2
+__pyx_kp_u_MIFARE_DESFire
+__pyx_kp_u_NEDAP_ID_2
+__pyx_kp_u_NTAG213_144b
+__pyx_kp_u_NTAG215_504b
+__pyx_kp_u_NTAG216_888b
+__pyx_kp_u_NexWatch_ID
+__pyx_kp_u_Noralsy_ID
+__pyx_kp_u_PAC_ID_2
+__pyx_kp_u_Paradox_ID
+__pyx_kp_u_Presco_ID
+__pyx_kp_u_Pyramid_ID
+__pyx_kp_u_Securakey_ID
+__pyx_kp_u_Ultralight_C
+__pyx_kp_u_Ultralight_EV1
+__pyx_kp_u_Viking_ID
+__pyx_kp_u_Visa2000_ID
+__pyx_kp_u_cat_proc_cpuinfo
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_ISO14443B
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA
+__pyx_n_s_KERI_ID
+__pyx_n_s_LEGIC_MIM256
+__pyx_n_s_MIFARE_DESFIRE
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_PAC_ID
+__pyx_n_s_T55X7_ID
+__pyx_n_s_infos
+__pyx_n_s_lf_can_dump
+__pyx_n_s_search
+__pyx_n_u_ISO14443B
+__pyx_n_u_T5577
+__pyx_n_u_T55x7_ID
+__pyx_n_u_Topaz
+__pyx_n_u_Ultralight
+cat /proc/cpuinfo
+deregister_tm_clones
+infos
+lf_can_dump
+search
+submodule_search_locations
+
+=== template.so (222 matching strings) ===
+.debug_info
+ATQA: {}
+AWID
+AWID ID
+AWID_ID
+DESFire
+EM410X_ID
+EM410x ID
+FC,CN: {},{}
+FDX-B
+FDXB_ID
+Gallagher
+HID Indala
+HID Prox
+HID Prox ID
+Hitag
+ISO14443-A
+ISO14443-B
+ISO14443B
+ISO15693
+ISO15693 ICODE
+ISO15693 ST SA
+ISO15693_ICODE
+ISO15693_ST_SA
+Indala ID
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Jablotron
+Jablotron ID
+KERI ID
+KERI_ID
+LEGIC_MIM256
+MIFARE
+MIFARE_DESFIRE
+NEDAP ID
+NEDAP_ID
+NTAG213 144b
+NTAG213_144B
+NTAG215 504b
+NTAG215_504B
+NTAG216 888b
+NTAG216_888B
+NexWatch
+NexWatch ID
+Noralsy
+Noralsy ID
+PAC/Stanley
+PAC/Stanley ID
+PAC_ID
+Paradox
+Paradox ID
+Presco
+Presco ID
+Pyramid
+Pyramid ID
+SAK: {}  {}: {}
+SAK: {} {}: {}
+Securakey ID
+T5577
+T55X7_ID
+Topaz
+UID: {}
+Ultralight
+Ultralight C
+Ultralight EV1
+Viking
+Viking ID
+Visa2000
+Visa2000 ID
+__drawEM4x05
+__drawLEGIC_MIM256
+__drawT55xx
+__drawTopaz
+__pyx_k_AWID
+__pyx_k_AWID_ID
+__pyx_k_AWID_ID_2
+__pyx_k_DESFire
+__pyx_k_EM410X_ID
+__pyx_k_EM410x_ID
+__pyx_k_FDXB_ID
+__pyx_k_FDX_B
+__pyx_k_Gallagher
+__pyx_k_HID_Indala
+__pyx_k_Hitag
+__pyx_k_ISO14443B
+__pyx_k_ISO14443_A
+__pyx_k_ISO14443_B
+__pyx_k_ISO15693
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ICODE_2
+__pyx_k_ISO15693_ST_SA
+__pyx_k_ISO15693_ST_SA_2
+__pyx_k_Indala_ID
+__pyx_k_Jablotron
+__pyx_k_Jablotron_ID
+__pyx_k_KERI_ID
+__pyx_k_KERI_ID_2
+__pyx_k_LEGIC_MIM256
+__pyx_k_MIFARE
+__pyx_k_MIFARE_DESFIRE
+__pyx_k_NEDAP_ID
+__pyx_k_NEDAP_ID_2
+__pyx_k_NTAG213_144B
+__pyx_k_NTAG213_144b
+__pyx_k_NTAG215_504B
+__pyx_k_NTAG215_504b
+__pyx_k_NTAG216_888B
+__pyx_k_NTAG216_888b
+__pyx_k_NexWatch
+__pyx_k_NexWatch_ID
+__pyx_k_Noralsy
+__pyx_k_Noralsy_ID
+__pyx_k_PAC_ID
+__pyx_k_PAC_Stanley
+__pyx_k_PAC_Stanley_ID
+__pyx_k_Paradox
+__pyx_k_Paradox_ID
+__pyx_k_Presco
+__pyx_k_Presco_ID
+__pyx_k_Pyramid
+__pyx_k_Pyramid_ID
+__pyx_k_Securakey_ID
+__pyx_k_T5577
+__pyx_k_T55X7_ID
+__pyx_k_Topaz
+__pyx_k_Ultralight
+__pyx_k_Ultralight_C
+__pyx_k_Ultralight_EV1
+__pyx_k_Viking
+__pyx_k_Viking_ID
+__pyx_k_Visa2000
+__pyx_k_Visa2000_ID
+__pyx_k_drawEM4x05
+__pyx_k_drawLEGIC_MIM256
+__pyx_k_drawT55xx
+__pyx_k_drawTopaz
+__pyx_k_iCLASS
+__pyx_k_iCLASS_SE
+__pyx_kp_u_AWID_ID_2
+__pyx_kp_u_EM410x_ID
+__pyx_kp_u_FDX_B
+__pyx_kp_u_HID_Indala
+__pyx_kp_u_ISO14443_A
+__pyx_kp_u_ISO14443_B
+__pyx_kp_u_ISO15693_ICODE_2
+__pyx_kp_u_ISO15693_ST_SA_2
+__pyx_kp_u_Indala_ID
+__pyx_kp_u_Jablotron_ID
+__pyx_kp_u_KERI_ID_2
+__pyx_kp_u_NEDAP_ID_2
+__pyx_kp_u_NTAG213_144b
+__pyx_kp_u_NTAG215_504b
+__pyx_kp_u_NTAG216_888b
+__pyx_kp_u_NexWatch_ID
+__pyx_kp_u_Noralsy_ID
+__pyx_kp_u_PAC_Stanley
+__pyx_kp_u_PAC_Stanley_ID
+__pyx_kp_u_Paradox_ID
+__pyx_kp_u_Presco_ID
+__pyx_kp_u_Pyramid_ID
+__pyx_kp_u_Securakey_ID
+__pyx_kp_u_Ultralight_C
+__pyx_kp_u_Ultralight_EV1
+__pyx_kp_u_Viking_ID
+__pyx_kp_u_Visa2000_ID
+__pyx_kp_u_iCLASS_SE
+__pyx_mdef_8template_15__drawEM4x05
+__pyx_mdef_8template_17__drawT55xx
+__pyx_mdef_8template_19__drawLEGIC_MIM256
+__pyx_mdef_8template_25__drawTopaz
+__pyx_n_s_AWID_ID
+__pyx_n_s_EM410X_ID
+__pyx_n_s_FDXB_ID
+__pyx_n_s_ISO14443B
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA
+__pyx_n_s_KERI_ID
+__pyx_n_s_LEGIC_MIM256
+__pyx_n_s_MIFARE_DESFIRE
+__pyx_n_s_NEDAP_ID
+__pyx_n_s_NTAG213_144B
+__pyx_n_s_NTAG215_504B
+__pyx_n_s_NTAG216_888B
+__pyx_n_s_PAC_ID
+__pyx_n_s_T55X7_ID
+__pyx_n_s_drawEM4x05
+__pyx_n_s_drawLEGIC_MIM256
+__pyx_n_s_drawT55xx
+__pyx_n_s_drawTopaz
+__pyx_n_u_AWID
+__pyx_n_u_DESFire
+__pyx_n_u_Gallagher
+__pyx_n_u_Hitag
+__pyx_n_u_ISO15693
+__pyx_n_u_Jablotron
+__pyx_n_u_MIFARE
+__pyx_n_u_NexWatch
+__pyx_n_u_Noralsy
+__pyx_n_u_Paradox
+__pyx_n_u_Presco
+__pyx_n_u_Pyramid
+__pyx_n_u_T5577
+__pyx_n_u_Topaz
+__pyx_n_u_Ultralight
+__pyx_n_u_Viking
+__pyx_n_u_Visa2000
+__pyx_n_u_iCLASS
+__pyx_pf_8template_14__drawEM4x05
+__pyx_pf_8template_16__drawT55xx
+__pyx_pf_8template_18__drawLEGIC_MIM256
+__pyx_pf_8template_24__drawTopaz
+__pyx_pw_8template_15__drawEM4x05
+__pyx_pw_8template_17__drawT55xx
+__pyx_pw_8template_19__drawLEGIC_MIM256
+__pyx_pw_8template_25__drawTopaz
+deregister_tm_clones
+iCLASS
+iCLASS SE
+submodule_search_locations
+template.__drawEM4x05
+template.__drawLEGIC_MIM256
+template.__drawT55xx
+template.__drawTopaz
+
+=== update.so (25 matching strings) ===
+.debug_info
+Cython module failed to patch module with custom type
+Cython module failed to register with collections.abc module
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+Verification failed
+__pyx_k_Verification_failed
+__pyx_k_info
+__pyx_k_infolist
+__pyx_k_nib_info
+__pyx_k_parser_nib_info
+__pyx_kp_u_Verification_failed
+__pyx_mdef_6update_13parser_nib_info
+__pyx_n_s_info
+__pyx_n_s_infolist
+__pyx_n_s_nib_info
+__pyx_n_s_parser_nib_info
+__pyx_pf_6update_12parser_nib_info
+__pyx_pw_6update_13parser_nib_info
+deregister_tm_clones
+info
+infolist
+nib_info
+parser_nib_info
+submodule_search_locations
+update.parser_nib_info
+
+=== version.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_search
+__pyx_n_s_search
+deregister_tm_clones
+search
+submodule_search_locations
+
+=== vsp_tools.so (11 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_searchSerial
+__pyx_mdef_9vsp_tools_1searchSerial
+__pyx_n_s_searchSerial
+__pyx_pf_9vsp_tools_searchSerial
+__pyx_pw_9vsp_tools_1searchSerial
+deregister_tm_clones
+searchSerial
+submodule_search_locations
+vsp_tools.searchSerial
+
+=== widget.so (7 matching strings) ===
+.debug_info
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_infont
+__pyx_n_s_infont
+deregister_tm_clones
+infont
+submodule_search_locations
+
+=== write.so (13 matching strings) ===
+.debug_info
+ISO15693_ICODE
+ISO15693_ST_SA
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+__pyx_k_ISO15693_ICODE
+__pyx_k_ISO15693_ST_SA
+__pyx_k_infos
+__pyx_n_s_ISO15693_ICODE
+__pyx_n_s_ISO15693_ST_SA
+__pyx_n_s_infos
+deregister_tm_clones
+infos
+submodule_search_locations
+
+=== ymodem.so (23 matching strings) ===
+.debug_info
+FIRST_PACKET_RECEIVED
+GNU C11 7.5.0 -march=armv7-a -mtune=cortex-a9 -mfloat-abi=hard -mfpu=vfpv3-d16 -mthumb -mtls-dialect=gnu -g -g -g -O2 -O2 -O2 -fbuilding-libgcc -fno-stack-protector -fPIC -fno-inline -fexceptions -fvisibility=hidden
+IS_FIRST_PACKET
+Interpreter change detected - this module can only be loaded into one interpreter per process.
+WAIT_FOR_END_PACKET
+__pyx_k_FIRST_PACKET_RECEIVED
+__pyx_k_IS_FIRST_PACKET
+__pyx_k_WAIT_FOR_END_PACKET
+__pyx_n_s_FIRST_PACKET_RECEIVED
+__pyx_n_s_IS_FIRST_PACKET
+__pyx_n_s_WAIT_FOR_END_PACKET
+arm_tune
+arm_tune_cortex_a9
+arm_tune_strongarm
+arm_tune_wbuf
+arm_tune_xscale
+deregister_tm_clones
+isa_tune_co_proc
+isa_tune_ldsched
+isa_tune_strong
+isa_tune_wbuf
+submodule_search_locations
+

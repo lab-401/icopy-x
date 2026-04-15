@@ -1,0 +1,51 @@
+=== FULL TRACE (iceman-fw v7 gen1a test) ===
+[   0.010] pm3_compat version=iceman needs_translation=True
+[   0.013] presspm3 hook OK
+[   0.015] POLL stack=['MainActivity', 'FWUpdateActivity'] 
+[   0.015] === ALL INSTALLED ===
+[   0.200] KEY> KEYM1_PRES!
+[   0.201] FINISH(top=FWUpdateActivity d=2)
+[   0.516] POLL stack=['MainActivity'] 
+[   6.147] SERIAL_TX> b'pctbat\r\n'
+[   6.161] SERIAL_TX> b'charge\r\n'
+[  16.184] SERIAL_TX> b'pctbat\r\n'
+[  16.201] SERIAL_TX> b'charge\r\n'
+[  26.217] SERIAL_TX> b'pctbat\r\n'
+[  26.231] SERIAL_TX> b'charge\r\n'
+[  36.252] SERIAL_TX> b'pctbat\r\n'
+[  36.265] SERIAL_TX> b'charge\r\n'
+[  46.282] SERIAL_TX> b'pctbat\r\n'
+[  46.295] SERIAL_TX> b'charge\r\n'
+[  56.312] SERIAL_TX> b'pctbat\r\n'
+[  56.325] SERIAL_TX> b'charge\r\n'
+[  63.158] KEY> KEYDOWN_PRES!
+[  63.363] KEY> KEYDOWN_PRES!
+[  63.922] KEY> KEYOK_PRES!
+[  63.926] START(ScanActivity, None) bundle=None
+[  63.983] PM3> hf 14a info (timeout=5000)
+[  64.103] POLL stack=['MainActivity', 'ScanActivity'] 
+[  64.141] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[  64.169] PM3> lf sea (timeout=10000)
+[  66.342] SERIAL_TX> b'pctbat\r\n'
+[  66.356] SERIAL_TX> b'charge\r\n'
+[  68.767] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  68.779] PM3> hf sea (timeout=10000)
+[  74.528] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[  74.551] PM3> lf t55xx detect (timeout=10000)
+[  76.378] SERIAL_TX> b'pctbat\r\n'
+[  76.391] SERIAL_TX> b'charge\r\n'
+[  77.613] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  77.625] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  77.839] PM3< ret=1 content_len=1 \n
+[  77.842] PM3> hf felica reader (timeout=10000)
+[  78.991] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[  86.408] SERIAL_TX> b'pctbat\r\n'
+[  86.421] SERIAL_TX> b'charge\r\n'
+[  96.437] SERIAL_TX> b'pctbat\r\n'
+[  96.451] SERIAL_TX> b'charge\r\n'
+[ 106.472] SERIAL_TX> b'pctbat\r\n'
+[ 106.486] SERIAL_TX> b'charge\r\n'
+[ 116.502] SERIAL_TX> b'pctbat\r\n'
+[ 116.516] SERIAL_TX> b'charge\r\n'
+[ 126.532] SERIAL_TX> b'pctbat\r\n'
+[ 126.545] SERIAL_TX> b'charge\r\n'

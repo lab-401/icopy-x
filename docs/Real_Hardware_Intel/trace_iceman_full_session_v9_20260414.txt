@@ -1,0 +1,1358 @@
+=== FULL TRACE (iceman-fw v9 full audit) ===
+[   0.083] pm3_compat version=iceman needs_translation=True
+[   0.085] presspm3 hook OK
+[   0.087] POLL stack=['MainActivity'] 
+[   0.088] === ALL INSTALLED ===
+[   6.632] SERIAL_TX> b'pctbat\r\n'
+[   6.646] SERIAL_TX> b'charge\r\n'
+[  16.662] SERIAL_TX> b'pctbat\r\n'
+[  16.676] SERIAL_TX> b'charge\r\n'
+[  26.692] SERIAL_TX> b'pctbat\r\n'
+[  26.706] SERIAL_TX> b'charge\r\n'
+[  36.722] SERIAL_TX> b'pctbat\r\n'
+[  36.736] SERIAL_TX> b'charge\r\n'
+[  44.745] KEY> KEYDOWN_PRES!
+[  45.092] KEY> KEYDOWN_PRES!
+[  46.728] KEY> KEYOK_PRES!
+[  47.501] SERIAL_TX> b'pctbat\r\n'
+[  47.516] SERIAL_TX> b'charge\r\n'
+[  47.680] START(ScanActivity, None) bundle=None
+[  47.829] PM3> hf 14a info (timeout=5000)
+[  47.984] POLL stack=['MainActivity', 'ScanActivity'] 
+[  50.283] PM3< ret=1 content_len=597 \n UID: 0A D0 7A B8  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 5B25E26F51609852E757E3907C718267\n                             : DAB685DF63209AE3EA9DDBCF23B33B26\n       Signature verification: successful\n\n\n\n
+[  50.340] PM3> hf mf cgetblk 0 (timeout=5000)
+[  50.501] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  50.512] CACHE: {"found": "True", "uid": "'0AD07AB8'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  50.767] CACHE: {"found": "True", "uid": "'0AD07AB8'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  50.989] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=0AD07AB8
+[  57.827] SERIAL_TX> b'pctbat\r\n'
+[  57.841] SERIAL_TX> b'charge\r\n'
+[  58.162] KEY> KEYM2_PRES!
+[  58.166] START(SimulationActivity, {'found': True, 'uid': '0AD07AB8', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcErr': False, 'static': False, 'gen1a': False, 'type': 1, 'progress': 0, 'return': 1}) bundle={"found": true, "uid": "0AD07AB8", "len": 4, "sak": "08", "atqa": "0004", "bbcErr": false, "static": false, "gen1a": false, "type": 1, "progress": 0, "return": 1}
+[  58.270] PM3> hf 14a sim t 1 u 0AD07AB8 (timeout=-1)
+[  58.501] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=1 uid=0AD07AB8
+[  67.857] SERIAL_TX> b'pctbat\r\n'
+[  67.871] SERIAL_TX> b'charge\r\n'
+[  77.887] SERIAL_TX> b'pctbat\r\n'
+[  77.901] SERIAL_TX> b'charge\r\n'
+[  87.917] SERIAL_TX> b'pctbat\r\n'
+[  87.931] SERIAL_TX> b'charge\r\n'
+[  89.499] KEY> KEYM1_PRES!
+[  89.558] PRESSPM3> called
+[  89.559] SERIAL_TX> b'presspm3\r\n'
+[  89.576] PRESSPM3< done
+[  89.580] PM3< ret=1 content_len=147 Emulating ISO/IEC 14443 type A tag with 4 byte UID (0A D0 7A B8 )\nPress pm3 button to abort simulation\nEmulator stopped. Trace length: 2397\nDone!\n\n
+[  89.580] PM3_STOP> stopPM3Task()
+[  89.581] PM3_STOP< ret=None
+[  89.583] START(SimulationTraceActivity, {'trace_data': None, 'trace_len': 0, 'loading': True}) bundle={"trace_data": null, "trace_len": 0, "loading": true}
+[  89.696] PM3> hf 14a list (timeout=18888)
+[  90.013] PM3< ret=1 content_len=24387 Recorded activity ( 2397 bytes )\nstart = start of start frame. end = end of frame. src = source of transfer.\nISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       2228 |       4596 | Tag |04  00                                                                   |     |\n    1965860 |    1966852 | Rdr |52(7)                                                                    |     | WUPA\n    1968088 |    1970456 | Tag |04  00                                                                   |     |\n    1975082 |    1977546 | Rdr |93  20                                                                   |     | ANTICOLL\n    1978718 |    1984542 | Tag |0A  D0  7A  B8  18                                                       |     |\n    1989342 |    1999806 | Rdr |93  70  0A  D0  7A  B8  18 [89  F6]                                      |  ok | SELECT_UID\n    2001042 |    2004562 | Tag |08 [B6  DD]                                                              |  ok |\n    4056158 |    4057150 | Rdr |52(7)                                                                    |     | WUPA\n    4058386 |    4060754 | Tag |04  00                                                                   |     |\n    4065464 |    4067928 | Rdr |93  20                                                                   |     | ANTICOLL\n    4069100 |    4074924 | Tag |0A  D0  7A  B8  18                                                       |     |\n    4079708 |    4090172 | Rdr |93  70  0A  D0  7A  B8  18 [89  F6]                                      |  ok | SELECT_UID\n    4091408 |    4094928 | Tag |08 [B6  DD]                                                              |  ok |\n    4387678 |    4388670 | Rdr |52(7)                                                                    |     | WUPA\n    4389906 |    4392274 | Tag |04  00                                                                   |     |\n    4396950 |    4399414 | Rdr |93  20                                                                   |     | ANTICOLL\n    4400586 |    4406410 | Tag |0A  D0  7A  B8  18                                                       |     |\n    4411194 |    4421658 | Rdr |93  70  0A  D0  7A  B8  18 [89  F6]                                      |  ok | SELECT_UID\n    4422894 |    4426414 | Tag |08 [B6  DD]                                                              |  ok |\n    4431126 |    4435894 | Rdr |30  00 [02  A8]                                                          |  ok | READBLOCK(0)\n    4455242 |    4476106 | Tag |00  00  00  00  00  00  00  00  00  00  00  00  00  00  00  00 [37  49]  |  ok |\n    4480766 |    4485534 | Rdr |50  00 [57  CD]                                                          |  ok | HALT\n    4772062 |    4773054 | Rdr |52(7)                                                                    |     | WUPA\n    4774290 |    4776658 | Tag |04  00                                                                   |     |\n    4781334 |    4783798 | Rdr |93  20                                                                   |     | ANTICOLL\n    4784970 |    4790794 | Tag |0A  D0  7A  B8  18                                                       |     |\n    6466986 |    6467978 | Rdr |52(7)                                                                    |     | WUPA\n    6469214 |    6471582 | Tag |04  00                                                                   |     |\n    6476308 |    6478772 | Rdr |93  20                                                                   |     | ANTICOLL\n    6479944 |    648576
+[  90.049] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity', 'SimulationTraceActivity'] type=1 uid=0AD07AB8
+[  91.855] KEY> KEYM2_PRES!
+[  97.953] SERIAL_TX> b'pctbat\r\n'
+[  97.966] SERIAL_TX> b'charge\r\n'
+[ 107.982] SERIAL_TX> b'pctbat\r\n'
+[ 107.996] SERIAL_TX> b'charge\r\n'
+[ 118.012] SERIAL_TX> b'pctbat\r\n'
+[ 118.026] SERIAL_TX> b'charge\r\n'
+[ 118.508] KEY> KEY_PWR_CAN_PRES!
+[ 119.186] KEY> KEY_PWR_CAN_PRES!
+[ 119.189] FINISH(top=SimulationTraceActivity d=4)
+[ 119.592] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=1 uid=0AD07AB8
+[ 120.244] KEY> KEY_PWR_CAN_PRES!
+[ 120.582] KEY> KEY_PWR_CAN_PRES!
+[ 120.584] FINISH(top=SimulationActivity d=3)
+[ 120.595] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=0AD07AB8
+[ 128.047] SERIAL_TX> b'pctbat\r\n'
+[ 128.061] SERIAL_TX> b'charge\r\n'
+[ 133.672] KEY> KEY_PWR_CAN_PRES!
+[ 133.674] FINISH(top=ScanActivity d=2)
+[ 134.115] POLL stack=['MainActivity'] type=1 uid=0AD07AB8
+[ 135.470] KEY> KEYDOWN_PRES!
+[ 138.077] SERIAL_TX> b'pctbat\r\n'
+[ 138.091] SERIAL_TX> b'charge\r\n'
+[ 148.108] SERIAL_TX> b'pctbat\r\n'
+[ 148.120] SERIAL_TX> b'charge\r\n'
+[ 158.137] SERIAL_TX> b'pctbat\r\n'
+[ 158.151] SERIAL_TX> b'charge\r\n'
+[ 168.167] SERIAL_TX> b'pctbat\r\n'
+[ 168.181] SERIAL_TX> b'charge\r\n'
+[ 171.536] KEY> KEYUP_PRES!
+[ 178.197] SERIAL_TX> b'pctbat\r\n'
+[ 178.211] SERIAL_TX> b'charge\r\n'
+[ 183.255] KEY> KEYOK_PRES!
+[ 183.258] START(ScanActivity, None) bundle=None
+[ 183.323] PM3> hf 14a info (timeout=5000)
+[ 183.472] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 183.476] PM3> lf sea (timeout=10000)
+[ 183.687] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=0AD07AB8
+[ 184.979] PM3< ret=1 content_len=206 \nNote: False Positives ARE possible\nChecking for known tags: AWID - len: 222 -unknown- (57051) - Wiegand: ddede7e8b7edbdb7, Raw: 01deb4ddede7e8b7edbdb7e1\n\nValid AWID ID found!\n\nCouldn't identify a chipset\n\n
+[ 185.052] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "'222'", "raw": "'01deb4ddede7e8b7edbdb7e1'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 185.191] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 185.274] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "'222'", "raw": "'01deb4ddede7e8b7edbdb7e1'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 187.970] KEY> KEY_PWR_CAN_PRES!
+[ 187.973] FINISH(top=ScanActivity d=2)
+[ 188.198] POLL stack=['MainActivity'] type=11 uid=
+[ 188.227] SERIAL_TX> b'pctbat\r\n'
+[ 188.241] SERIAL_TX> b'charge\r\n'
+[ 191.931] KEY> KEYOK_PRES!
+[ 191.935] START(ScanActivity, None) bundle=None
+[ 191.965] PM3> hf 14a info (timeout=5000)
+[ 192.128] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 192.131] PM3> lf sea (timeout=10000)
+[ 192.205] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 193.556] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 193.591] PM3> hf sea (timeout=10000)
+[ 198.262] SERIAL_TX> b'pctbat\r\n'
+[ 198.276] SERIAL_TX> b'charge\r\n'
+[ 199.336] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 199.425] PM3> lf t55xx detect (timeout=10000)
+[ 202.458] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 202.486] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 202.678] PM3< ret=1 content_len=1 \n
+[ 202.681] PM3> hf felica reader (timeout=10000)
+[ 203.816] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 207.049] KEY> KEY_PWR_CAN_PRES!
+[ 207.768] KEY> KEY_PWR_CAN_PRES!
+[ 207.770] FINISH(top=ScanActivity d=2)
+[ 208.229] POLL stack=['MainActivity'] type=11 uid=
+[ 208.292] SERIAL_TX> b'pctbat\r\n'
+[ 208.306] SERIAL_TX> b'charge\r\n'
+[ 208.689] KEY> KEYOK_PRES!
+[ 208.693] START(ScanActivity, None) bundle=None
+[ 208.724] PM3> hf 14a info (timeout=5000)
+[ 208.731] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 208.870] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 208.873] PM3> lf sea (timeout=10000)
+[ 209.022] KEY> KEYOK_PRES!
+[ 210.269] PM3< ret=1 content_len=774 \nNote: False Positives ARE possible\nChecking for known tags: EM TAG ID      : 99AAAAA333\nEM410x ( RF/64 )\nUnique TAG ID      : 995555C5CC\nHoneyWell IdentKey\n    DEZ 8          : 11182899\n    DEZ 10         : 2863309619\n    DEZ 5.5        : 43690.41779\n    DEZ 3.5A       : 153.41779\n    DEZ 3.5B       : 170.41779\n    DEZ 3.5C       : 170.41779\n    DEZ 14/IK2     : 00659993305907\n    DEZ 15/IK3     : 000658561680844\n    DEZ 20/ZK      : 09090505050512051212\nOther              : 41779_170_11182899\nPattern Paxton     : 2579423539 [0x99BEE133]\nPattern 1          : 3947178 [0x3C3AAA]\nPattern Sebury     : 41779 42 2794291  [0xA333 0x2A 0x2AA333]\nVD / ID            : 153 / 2863309619\nPattern ELECTRA    : 39338 11182899\nValid EM410x ID found!\n\nCouldn't identify a chipset\n\n
+[ 210.274] CACHE: {"data": "'99AAAAA333'", "raw": "'99AAAAA333'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 210.443] CACHE: {"data": "'99AAAAA333'", "raw": "'99AAAAA333'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 210.735] POLL stack=['MainActivity', 'ScanActivity'] type=8 uid=
+[ 211.663] KEY> KEY_PWR_CAN_PRES!
+[ 212.226] KEY> KEY_PWR_CAN_PRES!
+[ 212.228] FINISH(top=ScanActivity d=2)
+[ 212.238] POLL stack=['MainActivity'] type=8 uid=
+[ 212.697] KEY> KEY_PWR_CAN_PRES!
+[ 216.990] KEY> KEYOK_PRES!
+[ 216.993] START(ScanActivity, None) bundle=None
+[ 217.060] PM3> hf 14a info (timeout=5000)
+[ 217.216] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 217.220] PM3> lf sea (timeout=10000)
+[ 217.246] POLL stack=['MainActivity', 'ScanActivity'] type=8 uid=
+[ 218.322] SERIAL_TX> b'pctbat\r\n'
+[ 218.341] SERIAL_TX> b'charge\r\n'
+[ 218.607] PM3< ret=1 content_len=734 \nNote: False Positives ARE possible\nChecking for known tags: EM TAG ID      : 1111000000\nEM410x ( RF/64 )\nUnique TAG ID      : 8888000000\nHoneyWell IdentKey\n    DEZ 8          : 00000000\n    DEZ 10         : 0285212672\n    DEZ 5.5        : 04352.00000\n    DEZ 3.5A       : 017.00000\n    DEZ 3.5B       : 017.00000\n    DEZ 3.5C       : 000.00000\n    DEZ 14/IK2     : 00073299656704\n    DEZ 15/IK3     : 000586397253632\n    DEZ 20/ZK      : 08080808000000000000\nOther              : 00000_000_00000000\nPattern Paxton     : 286539264 [0x11143E00]\nPattern 1          : 0 [0x0]\nPattern Sebury     : 0 0 0  [0x0 0x0 0x0]\nVD / ID            : 017 / 0285212672\nPattern ELECTRA    : 4369 0\nValid EM410x ID found!\n\nCouldn't identify a chipset\n\n
+[ 218.609] CACHE: {"data": "'1111000000'", "raw": "'1111000000'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 218.850] CACHE: {"data": "'1111000000'", "raw": "'1111000000'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 221.490] KEY> KEY_PWR_CAN_PRES!
+[ 221.492] FINISH(top=ScanActivity d=2)
+[ 221.754] POLL stack=['MainActivity'] type=8 uid=
+[ 222.017] KEY> KEY_PWR_CAN_PRES!
+[ 226.816] KEY> KEYOK_PRES!
+[ 226.819] START(ScanActivity, None) bundle=None
+[ 226.858] PM3> hf 14a info (timeout=5000)
+[ 227.027] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 227.030] PM3> lf sea (timeout=10000)
+[ 227.264] POLL stack=['MainActivity', 'ScanActivity'] type=8 uid=
+[ 228.362] SERIAL_TX> b'pctbat\r\n'
+[ 228.376] SERIAL_TX> b'charge\r\n'
+[ 228.736] PM3< ret=1 content_len=250 HID Prox - 000000000000099aabb33000\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D969699999A9A5A5A555555\n\nraw: 000000000000099aabb33000\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 228.741] CACHE: {"data": "'000000000000099aabb33000'", "raw": "'000000000000099aabb33000'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 228.768] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 228.915] CACHE: {"data": "'000000000000099aabb33000'", "raw": "'000000000000099aabb33000'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 238.397] SERIAL_TX> b'pctbat\r\n'
+[ 238.411] SERIAL_TX> b'charge\r\n'
+[ 248.427] SERIAL_TX> b'pctbat\r\n'
+[ 248.441] SERIAL_TX> b'charge\r\n'
+[ 258.457] SERIAL_TX> b'pctbat\r\n'
+[ 258.471] SERIAL_TX> b'charge\r\n'
+[ 262.458] KEY> KEY_PWR_CAN_PRES!
+[ 262.461] FINISH(top=ScanActivity d=2)
+[ 262.817] POLL stack=['MainActivity'] type=9 uid=
+[ 268.487] SERIAL_TX> b'pctbat\r\n'
+[ 268.501] SERIAL_TX> b'charge\r\n'
+[ 278.522] SERIAL_TX> b'pctbat\r\n'
+[ 278.536] SERIAL_TX> b'charge\r\n'
+[ 283.094] KEY> KEYOK_PRES!
+[ 283.097] START(ScanActivity, None) bundle=None
+[ 283.129] PM3> hf 14a info (timeout=5000)
+[ 283.281] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 283.284] PM3> lf sea (timeout=10000)
+[ 283.346] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 284.790] PM3< ret=1 content_len=468 \nNote: False Positives ARE possible\nChecking for known tags: FDX-B / ISO11784/5 Animal\nAnimal ID: 060-030207938416\nNational Code: 030207938416 ( 0x708888F70 )\nCountry Code: 060 - Bermuda\nReserved/RFU: 1 (0x0001)\nAnimal bit set?: True\nData block?: True  ( 0x800000 )\nRUDI bit?: True ( advanced transponder )\nUser Info?: 0 ( RFU )\nReplacement No?: 7\nCRC-16: 0xCE2B ( ok )\nRaw: 0E F1 11 10 E0 F0 E0 0F D4 73 00 00 01\n\n\nValid FDX-B ID found!\n\nCouldn't identify a chipset\n\n
+[ 284.796] CACHE: {"data": "''", "raw": "''", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 284.855] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 284.995] CACHE: {"data": "''", "raw": "''", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 288.552] SERIAL_TX> b'pctbat\r\n'
+[ 288.566] SERIAL_TX> b'charge\r\n'
+[ 298.583] SERIAL_TX> b'pctbat\r\n'
+[ 298.596] SERIAL_TX> b'charge\r\n'
+[ 308.612] SERIAL_TX> b'pctbat\r\n'
+[ 308.626] SERIAL_TX> b'charge\r\n'
+[ 311.674] KEY> KEY_PWR_CAN_PRES!
+[ 311.677] FINISH(top=ScanActivity d=2)
+[ 311.894] POLL stack=['MainActivity'] type=28 uid=
+[ 315.859] KEY> KEYOK_PRES!
+[ 315.862] START(ScanActivity, None) bundle=None
+[ 315.901] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 315.922] PM3> hf 14a info (timeout=5000)
+[ 316.078] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 316.081] PM3> lf sea (timeout=10000)
+[ 318.643] SERIAL_TX> b'pctbat\r\n'
+[ 318.656] SERIAL_TX> b'charge\r\n'
+[ 320.882] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[ 320.885] PM3> hf sea (timeout=10000)
+[ 326.623] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 326.625] PM3> lf t55xx detect (timeout=10000)
+[ 328.672] SERIAL_TX> b'pctbat\r\n'
+[ 328.685] SERIAL_TX> b'charge\r\n'
+[ 329.599] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 329.602] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 329.809] PM3< ret=1 content_len=1 \n
+[ 329.812] PM3> hf felica reader (timeout=10000)
+[ 330.941] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 335.296] KEY> KEYM1_PRES!
+[ 336.324] KEY> KEY_PWR_CAN_PRES!
+[ 336.751] KEY> KEYOK_PRES!
+[ 336.767] PM3> hf 14a info (timeout=5000)
+[ 336.925] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 336.928] PM3> lf sea (timeout=10000)
+[ 338.418] PM3< ret=1 content_len=256 \nNote: False Positives ARE possible\nChecking for known tags: GALLAGHER - Region: 0 Facility: 4369 Card No.: 0 Issue Level: 0\n   Displayed: A4369\n   Raw: 7FEAA30768D46A35868C35CF\n   CRC: CF - CF (ok)\n\nValid GALLAGHER ID found!\n\nCouldn't identify a chipset\n\n
+[ 338.423] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 338.436] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 338.650] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 338.702] SERIAL_TX> b'pctbat\r\n'
+[ 338.716] SERIAL_TX> b'charge\r\n'
+[ 348.732] SERIAL_TX> b'pctbat\r\n'
+[ 348.746] SERIAL_TX> b'charge\r\n'
+[ 358.767] SERIAL_TX> b'pctbat\r\n'
+[ 358.781] SERIAL_TX> b'charge\r\n'
+[ 363.171] KEY> KEY_PWR_CAN_PRES!
+[ 363.173] FINISH(top=ScanActivity d=2)
+[ 363.473] POLL stack=['MainActivity'] type=29 uid=
+[ 364.278] KEY> KEYOK_PRES!
+[ 364.282] START(ScanActivity, None) bundle=None
+[ 364.313] PM3> hf 14a info (timeout=5000)
+[ 364.476] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 364.480] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 364.483] PM3> lf sea (timeout=10000)
+[ 365.945] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 365.948] PM3> hf sea (timeout=10000)
+[ 368.797] SERIAL_TX> b'pctbat\r\n'
+[ 368.811] SERIAL_TX> b'charge\r\n'
+[ 371.686] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 371.689] PM3> lf t55xx detect (timeout=10000)
+[ 374.742] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 374.745] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 374.945] PM3< ret=1 content_len=1 \n
+[ 374.947] PM3> hf felica reader (timeout=10000)
+[ 376.080] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 378.827] SERIAL_TX> b'pctbat\r\n'
+[ 378.841] SERIAL_TX> b'charge\r\n'
+[ 385.742] KEY> KEY_PWR_CAN_PRES!
+[ 386.366] KEY> KEY_PWR_CAN_PRES!
+[ 386.368] FINISH(top=ScanActivity d=2)
+[ 386.511] POLL stack=['MainActivity'] type=29 uid=
+[ 387.051] KEY> KEYOK_PRES!
+[ 387.054] START(ScanActivity, None) bundle=None
+[ 387.085] PM3> hf 14a info (timeout=5000)
+[ 387.231] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 387.234] PM3> lf sea (timeout=10000)
+[ 387.513] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 388.697] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 388.701] PM3> hf sea (timeout=10000)
+[ 388.857] SERIAL_TX> b'pctbat\r\n'
+[ 388.871] SERIAL_TX> b'charge\r\n'
+[ 394.438] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 394.441] PM3> lf t55xx detect (timeout=10000)
+[ 397.496] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 397.498] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 397.698] PM3< ret=1 content_len=1 \n
+[ 397.700] PM3> hf felica reader (timeout=10000)
+[ 398.832] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 398.887] SERIAL_TX> b'pctbat\r\n'
+[ 398.906] SERIAL_TX> b'charge\r\n'
+[ 399.883] KEY> KEY_PWR_CAN_PRES!
+[ 400.362] KEY> KEY_PWR_CAN_PRES!
+[ 400.365] FINISH(top=ScanActivity d=2)
+[ 400.534] POLL stack=['MainActivity'] type=29 uid=
+[ 408.352] KEY> KEYOK_PRES!
+[ 408.356] START(ScanActivity, None) bundle=None
+[ 408.420] PM3> hf 14a info (timeout=5000)
+[ 408.547] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 408.580] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 408.584] PM3> lf sea (timeout=10000)
+[ 408.933] SERIAL_TX> b'pctbat\r\n'
+[ 408.946] SERIAL_TX> b'charge\r\n'
+[ 410.329] PM3< ret=1 content_len=617 HID Prox - 000000000000002006222332\n\nNote: False Positives ARE possible\nChecking for known tags: [H10301  ] HID H10301 26-bit                FC: 17  CN: 4505  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 273  CN: 409  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit: [ind27   ] Indala 27-bit                    FC: 6280  CN: 9010\n[indasc27] Indala ASC 27-bit                FC: 4865  CN: 4460\n[Tecom27 ] Tecom 27-bit                     FC: 96  CN: 59617\nfound 3 matching 27-bit formats\n\nraw: 000000000000002006222332\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 410.331] CACHE: {"data": "'000000000000002006222332'", "raw": "'000000000000002006222332'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 410.456] CACHE: {"data": "'000000000000002006222332'", "raw": "'000000000000002006222332'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 410.551] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 418.963] SERIAL_TX> b'pctbat\r\n'
+[ 418.976] SERIAL_TX> b'charge\r\n'
+[ 428.993] SERIAL_TX> b'pctbat\r\n'
+[ 429.006] SERIAL_TX> b'charge\r\n'
+[ 439.022] SERIAL_TX> b'pctbat\r\n'
+[ 439.036] SERIAL_TX> b'charge\r\n'
+[ 449.052] SERIAL_TX> b'pctbat\r\n'
+[ 449.065] SERIAL_TX> b'charge\r\n'
+[ 459.082] SERIAL_TX> b'pctbat\r\n'
+[ 459.096] SERIAL_TX> b'charge\r\n'
+[ 459.132] KEY> KEY_PWR_CAN_PRES!
+[ 459.140] FINISH(top=ScanActivity d=2)
+[ 459.623] POLL stack=['MainActivity'] type=9 uid=
+[ 459.971] KEY> KEYOK_PRES!
+[ 459.974] START(ScanActivity, None) bundle=None
+[ 460.012] PM3> hf 14a info (timeout=5000)
+[ 460.125] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 460.187] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 460.189] PM3> lf sea (timeout=10000)
+[ 461.835] PM3< ret=1 content_len=250 HID Prox - 000000000000099911119999\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 461.837] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 461.960] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 469.117] SERIAL_TX> b'pctbat\r\n'
+[ 469.131] SERIAL_TX> b'charge\r\n'
+[ 469.683] KEY> KEY_PWR_CAN_PRES!
+[ 469.685] FINISH(top=ScanActivity d=2)
+[ 470.148] POLL stack=['MainActivity'] type=9 uid=
+[ 479.148] SERIAL_TX> b'pctbat\r\n'
+[ 479.161] SERIAL_TX> b'charge\r\n'
+[ 489.182] SERIAL_TX> b'pctbat\r\n'
+[ 489.196] SERIAL_TX> b'charge\r\n'
+[ 499.212] SERIAL_TX> b'pctbat\r\n'
+[ 499.226] SERIAL_TX> b'charge\r\n'
+[ 509.247] SERIAL_TX> b'pctbat\r\n'
+[ 509.261] SERIAL_TX> b'charge\r\n'
+[ 519.277] SERIAL_TX> b'pctbat\r\n'
+[ 519.291] SERIAL_TX> b'charge\r\n'
+[ 521.973] KEY> KEYOK_PRES!
+[ 521.976] START(ScanActivity, None) bundle=None
+[ 522.007] PM3> hf 14a info (timeout=5000)
+[ 522.167] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 522.171] PM3> lf sea (timeout=10000)
+[ 522.221] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 523.862] PM3< ret=1 content_len=679 HID Prox - 000000000000009911aabb3c\n\nNote: False Positives ARE possible\nChecking for known tags: [PW39    ] Pyramid 39-bit wiegand format    FC: 51341  CN: 351646  parity ( fail )\nfound 1 matching 39-bit format\nParity tests failed\n\nTrying with a preamble bit: [P10001  ] HID P10001 Honeywell 40-bit      FC: 2321  CN: 43707\n[Casi40  ] Casi-Rusco 40-bit                  CN: 53835292062\n[Verkada40] Verkada 40-bit                   FC: 200  CN: 148200862  parity ( ok )\n[BC40    ] Bundy TimeClock 40-bit           FC: 2189  CN: 175823  OEM: 76  parity ( fail )\nfound 4 matching 40-bit formats\n\nraw: 000000000000009911aabb3c\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 523.864] CACHE: {"data": "'000000000000009911aabb3c'", "raw": "'000000000000009911aabb3c'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 524.055] CACHE: {"data": "'000000000000009911aabb3c'", "raw": "'000000000000009911aabb3c'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 529.312] SERIAL_TX> b'pctbat\r\n'
+[ 529.326] SERIAL_TX> b'charge\r\n'
+[ 539.342] SERIAL_TX> b'pctbat\r\n'
+[ 539.356] SERIAL_TX> b'charge\r\n'
+[ 542.286] KEY> KEY_PWR_CAN_PRES!
+[ 542.289] FINISH(top=ScanActivity d=2)
+[ 542.751] POLL stack=['MainActivity'] type=9 uid=
+[ 545.221] KEY> KEYOK_PRES!
+[ 545.225] START(ScanActivity, None) bundle=None
+[ 545.256] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 545.288] PM3> hf 14a info (timeout=5000)
+[ 545.441] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 545.444] PM3> lf sea (timeout=10000)
+[ 546.848] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 546.852] PM3> hf sea (timeout=10000)
+[ 549.372] SERIAL_TX> b'pctbat\r\n'
+[ 549.386] SERIAL_TX> b'charge\r\n'
+[ 552.590] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 552.593] PM3> lf t55xx detect (timeout=10000)
+[ 555.830] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 555.832] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 556.040] PM3< ret=1 content_len=1 \n
+[ 556.043] PM3> hf felica reader (timeout=10000)
+[ 557.188] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 559.408] SERIAL_TX> b'pctbat\r\n'
+[ 559.421] SERIAL_TX> b'charge\r\n'
+[ 567.344] KEY> KEY_PWR_CAN_PRES!
+[ 567.805] KEY> KEYOK_PRES!
+[ 567.820] PM3> hf 14a info (timeout=5000)
+[ 567.977] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 567.981] PM3> lf sea (timeout=10000)
+[ 569.265] PM3< ret=1 content_len=619 HID Prox - 00000000000000200501aae3\n\nNote: False Positives ARE possible\nChecking for known tags: [H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit: [ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\nValid HID Prox ID found!\nChipset detection: T55xx\n\n
+[ 569.267] CACHE: {"data": "'00000000000000200501aae3'", "raw": "'00000000000000200501aae3'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 569.437] SERIAL_TX> b'pctbat\r\n'
+[ 569.451] SERIAL_TX> b'charge\r\n'
+[ 569.469] CACHE: {"data": "'00000000000000200501aae3'", "raw": "'00000000000000200501aae3'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 579.468] SERIAL_TX> b'pctbat\r\n'
+[ 579.480] SERIAL_TX> b'charge\r\n'
+[ 589.497] SERIAL_TX> b'pctbat\r\n'
+[ 589.511] SERIAL_TX> b'charge\r\n'
+[ 599.532] SERIAL_TX> b'pctbat\r\n'
+[ 599.546] SERIAL_TX> b'charge\r\n'
+[ 606.564] KEY> KEY_PWR_CAN_PRES!
+[ 606.567] FINISH(top=ScanActivity d=2)
+[ 606.843] POLL stack=['MainActivity'] type=9 uid=
+[ 608.227] KEY> KEYOK_PRES!
+[ 608.230] START(ScanActivity, None) bundle=None
+[ 608.261] PM3> hf 14a info (timeout=5000)
+[ 608.347] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 608.406] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 608.409] PM3> lf sea (timeout=10000)
+[ 609.562] SERIAL_TX> b'pctbat\r\n'
+[ 609.576] SERIAL_TX> b'charge\r\n'
+[ 609.818] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 609.821] PM3> hf sea (timeout=10000)
+[ 615.558] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 615.561] PM3> lf t55xx detect (timeout=10000)
+[ 618.652] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 618.654] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 618.920] PM3< ret=1 content_len=1 \n
+[ 618.923] PM3> hf felica reader (timeout=10000)
+[ 619.599] SERIAL_TX> b'pctbat\r\n'
+[ 619.615] SERIAL_TX> b'charge\r\n'
+[ 620.058] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 629.632] SERIAL_TX> b'pctbat\r\n'
+[ 629.646] SERIAL_TX> b'charge\r\n'
+[ 629.721] KEY> KEY_PWR_CAN_PRES!
+[ 631.054] KEY> KEY_PWR_CAN_PRES!
+[ 631.057] FINISH(top=ScanActivity d=2)
+[ 631.381] POLL stack=['MainActivity'] type=9 uid=
+[ 639.662] SERIAL_TX> b'pctbat\r\n'
+[ 639.676] SERIAL_TX> b'charge\r\n'
+[ 643.170] KEY> KEYOK_PRES!
+[ 643.173] START(ScanActivity, None) bundle=None
+[ 643.204] PM3> hf 14a info (timeout=5000)
+[ 643.355] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 643.358] PM3> lf sea (timeout=10000)
+[ 643.399] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 644.757] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 644.760] PM3> hf sea (timeout=10000)
+[ 649.698] SERIAL_TX> b'pctbat\r\n'
+[ 649.711] SERIAL_TX> b'charge\r\n'
+[ 650.499] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 650.502] PM3> lf t55xx detect (timeout=10000)
+[ 653.632] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 653.634] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 653.885] PM3< ret=1 content_len=1 \n
+[ 653.887] PM3> hf felica reader (timeout=10000)
+[ 655.020] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 659.727] SERIAL_TX> b'pctbat\r\n'
+[ 659.741] SERIAL_TX> b'charge\r\n'
+[ 669.757] SERIAL_TX> b'pctbat\r\n'
+[ 669.771] SERIAL_TX> b'charge\r\n'
+[ 678.557] KEY> KEY_PWR_CAN_PRES!
+[ 679.680] KEY> KEYOK_PRES!
+[ 679.695] PM3> hf 14a info (timeout=5000)
+[ 679.788] SERIAL_TX> b'pctbat\r\n'
+[ 679.801] SERIAL_TX> b'charge\r\n'
+[ 679.856] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 679.860] PM3> lf sea (timeout=10000)
+[ 681.363] PM3< ret=1 content_len=172 \nNote: False Positives ARE possible\nChecking for known tags: IO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 ( ok )\n\nValid IO Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 681.369] CACHE: {"data": "'XSF(00)00:00273'", "raw": "'0078402010188ff7'", "type": "12", "found": "True", "progress": "1", "return": "12"}
+[ 681.455] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 681.550] CACHE: {"data": "'XSF(00)00:00273'", "raw": "'0078402010188ff7'", "type": "12", "found": "True", "progress": "1", "return": "12"}
+[ 689.817] SERIAL_TX> b'pctbat\r\n'
+[ 689.831] SERIAL_TX> b'charge\r\n'
+[ 699.847] SERIAL_TX> b'pctbat\r\n'
+[ 699.861] SERIAL_TX> b'charge\r\n'
+[ 709.877] SERIAL_TX> b'pctbat\r\n'
+[ 709.891] SERIAL_TX> b'charge\r\n'
+[ 719.907] SERIAL_TX> b'pctbat\r\n'
+[ 719.921] SERIAL_TX> b'charge\r\n'
+[ 729.937] SERIAL_TX> b'pctbat\r\n'
+[ 729.951] SERIAL_TX> b'charge\r\n'
+[ 733.252] KEY> KEY_PWR_CAN_PRES!
+[ 733.254] FINISH(top=ScanActivity d=2)
+[ 733.528] POLL stack=['MainActivity'] type=12 uid=
+[ 734.071] KEY> KEYOK_PRES!
+[ 734.074] START(ScanActivity, None) bundle=None
+[ 734.105] PM3> hf 14a info (timeout=5000)
+[ 734.261] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 734.264] PM3> lf sea (timeout=10000)
+[ 734.531] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 735.682] PM3< ret=1 content_len=194 \nNote: False Positives ARE possible\nChecking for known tags: Jablotron - Card: 7270a18, Raw: FFFF011999900079\nPrinted: 1410-01-1999-9000\n\nValid Jablotron ID found!\n\nCouldn't identify a chipset\n\n
+[ 735.692] CACHE: {"data": "'7270a18'", "raw": "'FFFF011999900079'", "type": "30", "found": "True", "progress": "1", "return": "30"}
+[ 735.875] CACHE: {"data": "'7270a18'", "raw": "'FFFF011999900079'", "type": "30", "found": "True", "progress": "1", "return": "30"}
+[ 736.035] POLL stack=['MainActivity', 'ScanActivity'] type=30 uid=
+[ 739.967] SERIAL_TX> b'pctbat\r\n'
+[ 739.981] SERIAL_TX> b'charge\r\n'
+[ 749.997] SERIAL_TX> b'pctbat\r\n'
+[ 750.016] SERIAL_TX> b'charge\r\n'
+[ 754.710] KEY> KEY_PWR_CAN_PRES!
+[ 754.713] FINISH(top=ScanActivity d=2)
+[ 755.063] POLL stack=['MainActivity'] type=30 uid=
+[ 755.451] KEY> KEYOK_PRES!
+[ 755.454] START(ScanActivity, None) bundle=None
+[ 755.485] PM3> hf 14a info (timeout=5000)
+[ 755.566] POLL stack=['MainActivity', 'ScanActivity'] type=30 uid=
+[ 755.630] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 755.634] PM3> lf sea (timeout=10000)
+[ 757.053] PM3< ret=1 content_len=223 \nNote: False Positives ARE possible\nChecking for known tags: Odd size,  false positive?\nIndala (len 130)  Raw: 80000000000000587c2c8c8cf6580015cc8cf6580015e00000000000\n\n\nValid Indala ID found!\n\nCouldn't identify a chipset\n\n
+[ 757.056] CACHE: {"raw": "'80000000000000587c2c8c8cf6580015cc8cf6580015e00000000000'", "data": "'80000000000000587c2c8c8cf6580015cc8cf6580015e00000000000'", "type": "10", "found": "True", "progress": "1", "return": "10"}
+[ 757.071] POLL stack=['MainActivity', 'ScanActivity'] type=10 uid=
+[ 757.238] CACHE: {"raw": "'80000000000000587c2c8c8cf6580015cc8cf6580015e00000000000'", "data": "'80000000000000587c2c8c8cf6580015cc8cf6580015e00000000000'", "type": "10", "found": "True", "progress": "1", "return": "10"}
+[ 760.032] SERIAL_TX> b'pctbat\r\n'
+[ 760.045] SERIAL_TX> b'charge\r\n'
+[ 770.062] SERIAL_TX> b'pctbat\r\n'
+[ 770.076] SERIAL_TX> b'charge\r\n'
+[ 779.142] KEY> KEY_PWR_CAN_PRES!
+[ 779.145] FINISH(top=ScanActivity d=2)
+[ 779.605] POLL stack=['MainActivity'] type=10 uid=
+[ 780.092] SERIAL_TX> b'pctbat\r\n'
+[ 780.106] SERIAL_TX> b'charge\r\n'
+[ 790.122] SERIAL_TX> b'pctbat\r\n'
+[ 790.136] SERIAL_TX> b'charge\r\n'
+[ 800.152] SERIAL_TX> b'pctbat\r\n'
+[ 800.166] SERIAL_TX> b'charge\r\n'
+[ 810.182] SERIAL_TX> b'pctbat\r\n'
+[ 810.196] SERIAL_TX> b'charge\r\n'
+[ 820.212] SERIAL_TX> b'pctbat\r\n'
+[ 820.226] SERIAL_TX> b'charge\r\n'
+[ 824.485] KEY> KEYOK_PRES!
+[ 824.488] START(ScanActivity, None) bundle=None
+[ 824.540] PM3> hf 14a info (timeout=5000)
+[ 824.669] POLL stack=['MainActivity', 'ScanActivity'] type=10 uid=
+[ 824.700] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 824.703] PM3> lf sea (timeout=10000)
+[ 826.064] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 826.068] PM3> hf sea (timeout=10000)
+[ 830.247] SERIAL_TX> b'pctbat\r\n'
+[ 830.261] SERIAL_TX> b'charge\r\n'
+[ 831.805] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 831.807] PM3> lf t55xx detect (timeout=10000)
+[ 834.856] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 834.858] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 835.099] PM3< ret=1 content_len=1 \n
+[ 835.102] PM3> hf felica reader (timeout=10000)
+[ 836.245] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 840.277] SERIAL_TX> b'pctbat\r\n'
+[ 840.291] SERIAL_TX> b'charge\r\n'
+[ 849.086] KEY> KEY_PWR_CAN_PRES!
+[ 849.845] KEY> KEYM1_PRES!
+[ 850.307] SERIAL_TX> b'pctbat\r\n'
+[ 850.321] SERIAL_TX> b'charge\r\n'
+[ 850.499] KEY> KEYM2_PRES!
+[ 851.268] KEY> KEYOK_PRES!
+[ 851.283] PM3> hf 14a info (timeout=5000)
+[ 851.434] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 851.437] PM3> lf sea (timeout=10000)
+[ 852.961] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 852.965] PM3> hf sea (timeout=10000)
+[ 858.703] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 858.705] PM3> lf t55xx detect (timeout=10000)
+[ 860.337] SERIAL_TX> b'pctbat\r\n'
+[ 860.351] SERIAL_TX> b'charge\r\n'
+[ 861.718] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 861.721] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 861.922] PM3< ret=1 content_len=1 \n
+[ 861.925] PM3> hf felica reader (timeout=10000)
+[ 863.057] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 865.300] KEY> KEYOK_PRES!
+[ 865.316] PM3> hf 14a info (timeout=5000)
+[ 865.464] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 865.467] PM3> lf sea (timeout=10000)
+[ 866.993] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 866.997] PM3> hf sea (timeout=10000)
+[ 870.367] SERIAL_TX> b'pctbat\r\n'
+[ 870.381] SERIAL_TX> b'charge\r\n'
+[ 872.733] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 872.736] PM3> lf t55xx detect (timeout=10000)
+[ 875.797] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 875.800] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 875.998] PM3< ret=1 content_len=1 \n
+[ 876.001] PM3> hf felica reader (timeout=10000)
+[ 877.129] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 880.402] SERIAL_TX> b'pctbat\r\n'
+[ 880.416] SERIAL_TX> b'charge\r\n'
+[ 882.646] KEY> KEYOK_PRES!
+[ 882.663] PM3> hf 14a info (timeout=5000)
+[ 882.813] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 882.816] PM3> lf sea (timeout=10000)
+[ 884.341] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 884.345] PM3> hf sea (timeout=10000)
+[ 890.082] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 890.085] PM3> lf t55xx detect (timeout=10000)
+[ 890.397] PM3< ret=1 content_len=224      Chip Type      : T55x7\n     Modulation     : ASK\n Bit rate: 2 - RF/32\n Inverted: No\n Offset: 63\n Seq. terminator: Yes\n     Block0         : 0x00088B33\n Downlink mode: default/fixed bit length\n     Password Set   : No\n\n\n
+[ 890.415] CACHE: {"found": "True", "type": "23", "chip": "'T55x7'", "modulate": "'ASK'", "b0": "'00088B33'", "key": "''", "known": "True", "progress": "3", "return": "23"}
+[ 890.432] SERIAL_TX> b'pctbat\r\n'
+[ 890.447] SERIAL_TX> b'charge\r\n'
+[ 890.626] CACHE: {"found": "True", "type": "23", "chip": "'T55x7'", "modulate": "'ASK'", "b0": "'00088B33'", "key": "''", "known": "True", "progress": "3", "return": "23"}
+[ 890.767] POLL stack=['MainActivity', 'ScanActivity'] type=23 uid=
+[ 900.473] SERIAL_TX> b'pctbat\r\n'
+[ 900.485] SERIAL_TX> b'charge\r\n'
+[ 910.502] SERIAL_TX> b'pctbat\r\n'
+[ 910.516] SERIAL_TX> b'charge\r\n'
+[ 920.266] KEY> KEYM1_PRES!
+[ 920.282] PM3> hf 14a info (timeout=5000)
+[ 920.432] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 920.435] PM3> lf sea (timeout=10000)
+[ 920.537] SERIAL_TX> b'pctbat\r\n'
+[ 920.551] SERIAL_TX> b'charge\r\n'
+[ 921.837] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 921.841] PM3> hf sea (timeout=10000)
+[ 927.578] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[ 927.581] PM3> lf t55xx detect (timeout=10000)
+[ 930.567] SERIAL_TX> b'pctbat\r\n'
+[ 930.580] SERIAL_TX> b'charge\r\n'
+[ 930.631] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 930.633] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 930.905] PM3< ret=1 content_len=1 \n
+[ 930.907] PM3> hf felica reader (timeout=10000)
+[ 932.038] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 933.514] KEY> KEY_PWR_CAN_PRES!
+[ 934.077] KEY> KEY_PWR_CAN_PRES!
+[ 934.080] FINISH(top=ScanActivity d=2)
+[ 934.333] POLL stack=['MainActivity'] type=23 uid=
+[ 939.868] KEY> KEYOK_PRES!
+[ 939.871] START(ScanActivity, None) bundle=None
+[ 939.902] PM3> hf 14a info (timeout=5000)
+[ 940.057] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 940.060] PM3> lf sea (timeout=10000)
+[ 940.342] POLL stack=['MainActivity', 'ScanActivity'] type=23 uid=
+[ 940.597] SERIAL_TX> b'pctbat\r\n'
+[ 940.612] SERIAL_TX> b'charge\r\n'
+[ 941.450] PM3< ret=1 content_len=188 \nNote: False Positives ARE possible\nChecking for known tags: PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n\n
+[ 941.453] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 941.639] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 941.845] POLL stack=['MainActivity', 'ScanActivity'] type=34 uid=
+[ 950.628] SERIAL_TX> b'pctbat\r\n'
+[ 950.641] SERIAL_TX> b'charge\r\n'
+[ 952.400] KEY> KEY_PWR_CAN_PRES!
+[ 952.402] FINISH(top=ScanActivity d=2)
+[ 952.862] POLL stack=['MainActivity'] type=34 uid=
+[ 953.338] KEY> KEYOK_PRES!
+[ 953.341] START(ScanActivity, None) bundle=None
+[ 953.365] POLL stack=['MainActivity', 'ScanActivity'] type=34 uid=
+[ 953.373] PM3> hf 14a info (timeout=5000)
+[ 953.546] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 953.549] PM3> lf sea (timeout=10000)
+[ 955.304] PM3< ret=1 content_len=257 \nNote: False Positives ARE possible\nChecking for known tags: CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nCouldn't identify a chipset\n\n
+[ 955.308] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[ 955.370] POLL stack=['MainActivity', 'ScanActivity'] type=35 uid=
+[ 955.471] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[ 960.663] SERIAL_TX> b'pctbat\r\n'
+[ 960.676] SERIAL_TX> b'charge\r\n'
+[ 961.237] KEY> KEY_PWR_CAN_PRES!
+[ 961.240] FINISH(top=ScanActivity d=2)
+[ 961.380] POLL stack=['MainActivity'] type=35 uid=
+[ 961.663] KEY> KEY_PWR_CAN_PRES!
+[ 969.430] KEY> KEYOK_PRES!
+[ 969.433] START(ScanActivity, None) bundle=None
+[ 969.484] PM3> hf 14a info (timeout=5000)
+[ 969.631] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 969.634] PM3> lf sea (timeout=10000)
+[ 969.893] POLL stack=['MainActivity', 'ScanActivity'] type=35 uid=
+[ 970.692] SERIAL_TX> b'pctbat\r\n'
+[ 970.706] SERIAL_TX> b'charge\r\n'
+[ 971.380] PM3< ret=1 content_len=213 \nNote: False Positives ARE possible\nChecking for known tags: Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e020, Raw: 00010101010101010101015e0e8040a4\n\nValid Pyramid ID found!\n\nCouldn't identify a chipset\n\n
+[ 971.382] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e8040a4'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[ 971.396] POLL stack=['MainActivity', 'ScanActivity'] type=16 uid=
+[ 971.523] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e8040a4'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[ 979.062] KEY> KEY_PWR_CAN_PRES!
+[ 979.065] FINISH(top=ScanActivity d=2)
+[ 979.409] POLL stack=['MainActivity'] type=16 uid=
+[ 979.827] KEY> KEYOK_PRES!
+[ 979.830] START(ScanActivity, None) bundle=None
+[ 979.886] PM3> hf 14a info (timeout=5000)
+[ 979.910] POLL stack=['MainActivity', 'ScanActivity'] type=16 uid=
+[ 980.037] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[ 980.040] PM3> lf sea (timeout=10000)
+[ 980.722] SERIAL_TX> b'pctbat\r\n'
+[ 980.736] SERIAL_TX> b'charge\r\n'
+[ 981.627] PM3< ret=1 content_len=412 \nNote: False Positives ARE possible\nChecking for known tags: Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nCouldn't identify a chipset\n\n
+[ 981.631] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 981.814] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 981.915] POLL stack=['MainActivity', 'ScanActivity'] type=14 uid=
+[ 990.757] SERIAL_TX> b'pctbat\r\n'
+[ 990.771] SERIAL_TX> b'charge\r\n'
+[ 993.473] KEY> KEY_PWR_CAN_PRES!
+[ 993.476] FINISH(top=ScanActivity d=2)
+[ 993.933] POLL stack=['MainActivity'] type=14 uid=
+[1000.787] SERIAL_TX> b'pctbat\r\n'
+[1000.801] SERIAL_TX> b'charge\r\n'
+[1010.817] SERIAL_TX> b'pctbat\r\n'
+[1010.831] SERIAL_TX> b'charge\r\n'
+[1011.824] KEY> KEYOK_PRES!
+[1011.827] START(ScanActivity, None) bundle=None
+[1011.859] PM3> hf 14a info (timeout=5000)
+[1011.959] POLL stack=['MainActivity', 'ScanActivity'] type=14 uid=
+[1012.012] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1012.015] PM3> lf sea (timeout=10000)
+[1013.518] PM3< ret=1 content_len=161 \nNote: False Positives ARE possible\nChecking for known tags: Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nCouldn't identify a chipset\n\n
+[1013.520] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[1013.686] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[1013.963] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[1018.701] KEY> KEY_PWR_CAN_PRES!
+[1018.703] FINISH(top=ScanActivity d=2)
+[1018.972] POLL stack=['MainActivity'] type=15 uid=
+[1019.153] KEY> KEY_PWR_CAN_PRES!
+[1020.847] SERIAL_TX> b'pctbat\r\n'
+[1020.861] SERIAL_TX> b'charge\r\n'
+[1030.877] SERIAL_TX> b'pctbat\r\n'
+[1030.891] SERIAL_TX> b'charge\r\n'
+[1040.907] SERIAL_TX> b'pctbat\r\n'
+[1040.921] SERIAL_TX> b'charge\r\n'
+[1050.937] SERIAL_TX> b'pctbat\r\n'
+[1050.951] SERIAL_TX> b'charge\r\n'
+[1060.967] SERIAL_TX> b'pctbat\r\n'
+[1060.981] SERIAL_TX> b'charge\r\n'
+[1070.997] SERIAL_TX> b'pctbat\r\n'
+[1071.011] SERIAL_TX> b'charge\r\n'
+[1081.027] SERIAL_TX> b'pctbat\r\n'
+[1081.041] SERIAL_TX> b'charge\r\n'
+[1083.016] KEY> KEYOK_PRES!
+[1083.019] START(ScanActivity, None) bundle=None
+[1083.063] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[1083.076] PM3> hf 14a info (timeout=5000)
+[1083.234] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1083.237] PM3> lf sea (timeout=10000)
+[1087.857] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[1087.860] PM3> hf sea (timeout=10000)
+[1091.057] SERIAL_TX> b'pctbat\r\n'
+[1091.071] SERIAL_TX> b'charge\r\n'
+[1093.620] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[1093.622] PM3> lf t55xx detect (timeout=10000)
+[1096.635] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[1096.638] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[1096.848] PM3< ret=1 content_len=1 \n
+[1096.851] PM3> hf felica reader (timeout=10000)
+[1097.999] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[1101.087] SERIAL_TX> b'pctbat\r\n'
+[1101.101] SERIAL_TX> b'charge\r\n'
+[1107.290] KEY> KEYOK_PRES!
+[1107.306] PM3> hf 14a info (timeout=5000)
+[1107.463] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1107.466] PM3> lf sea (timeout=10000)
+[1110.701] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1110.703] PM3> hf sea (timeout=10000)
+[1111.117] SERIAL_TX> b'pctbat\r\n'
+[1111.130] SERIAL_TX> b'charge\r\n'
+[1116.442] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[1116.445] PM3> lf t55xx detect (timeout=10000)
+[1119.639] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[1119.641] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[1119.852] PM3< ret=1 content_len=1 \n
+[1119.854] PM3> hf felica reader (timeout=10000)
+[1121.003] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[1121.148] SERIAL_TX> b'pctbat\r\n'
+[1121.164] SERIAL_TX> b'charge\r\n'
+[1123.313] KEY> KEYOK_PRES!
+[1123.330] PM3> hf 14a info (timeout=5000)
+[1123.490] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1123.493] PM3> lf sea (timeout=10000)
+[1128.113] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[1128.117] PM3> hf sea (timeout=10000)
+[1131.170] SERIAL_TX> b'pctbat\r\n'
+[1131.186] SERIAL_TX> b'charge\r\n'
+[1133.875] PM3< ret=1 content_len=70 iso14443a card select failed\nNo known/supported 13.56 MHz tags found\n\n
+[1133.877] PM3> lf t55xx detect (timeout=10000)
+[1136.956] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[1136.958] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[1137.167] PM3< ret=1 content_len=1 \n
+[1137.170] PM3> hf felica reader (timeout=10000)
+[1138.313] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[1139.991] KEY> KEY_PWR_CAN_PRES!
+[1140.446] KEY> KEY_PWR_CAN_PRES!
+[1140.449] FINISH(top=ScanActivity d=2)
+[1140.659] POLL stack=['MainActivity'] type=15 uid=
+[1141.202] SERIAL_TX> b'pctbat\r\n'
+[1141.216] SERIAL_TX> b'charge\r\n'
+[1145.757] KEY> KEYOK_PRES!
+[1145.761] START(ScanActivity, None) bundle=None
+[1145.791] PM3> hf 14a info (timeout=5000)
+[1146.168] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[1148.218] PM3< ret=1 content_len=597 \n UID: 0A D0 7A B8  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 5B25E26F51609852E757E3907C718267\n                             : DAB685DF63209AE3EA9DDBCF23B33B26\n       Signature verification: successful\n\n\n\n
+[1148.221] PM3> hf mf cgetblk 0 (timeout=5000)
+[1148.396] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[1148.398] CACHE: {"found": "True", "uid": "'0AD07AB8'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[1148.592] CACHE: {"found": "True", "uid": "'0AD07AB8'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[1148.673] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=0AD07AB8
+[1150.157] KEY> KEY_PWR_CAN_PRES!
+[1150.518] KEY> KEY_PWR_CAN_PRES!
+[1150.521] FINISH(top=ScanActivity d=2)
+[1150.678] POLL stack=['MainActivity'] type=1 uid=0AD07AB8
+[1151.232] SERIAL_TX> b'pctbat\r\n'
+[1151.246] SERIAL_TX> b'charge\r\n'
+[1161.262] SERIAL_TX> b'pctbat\r\n'
+[1161.276] SERIAL_TX> b'charge\r\n'
+[1171.292] SERIAL_TX> b'pctbat\r\n'
+[1171.306] SERIAL_TX> b'charge\r\n'
+[1179.861] KEY> KEYDOWN_PRES!
+[1180.884] KEY> KEYUP_PRES!
+[1181.225] KEY> KEYOK_PRES!
+[1181.228] START(ScanActivity, None) bundle=None
+[1181.280] PM3> hf 14a info (timeout=5000)
+[1181.322] SERIAL_TX> b'pctbat\r\n'
+[1181.336] SERIAL_TX> b'charge\r\n'
+[1181.436] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1181.439] PM3> lf sea (timeout=10000)
+[1181.722] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=0AD07AB8
+[1184.676] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1184.678] PM3> hf sea (timeout=10000)
+[1190.439] PM3< ret=1 content_len=118 iso14443a card select failed\n\niCLASS / Picopass CSN: 75 D0 E0 13 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[1190.473] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[1190.814] PM3< ret=1 content_len=1 \n
+[1190.820] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[1191.135] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[1191.136] PM3> hf iclass info (timeout=5000)
+[1191.156] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 15 ms and content ( ok )\n\n
+[1191.157] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17"}
+[1191.241] POLL stack=['MainActivity', 'ScanActivity'] type=17 uid=
+[1191.342] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17", "chip": "'Legacy'"}
+[1191.347] SERIAL_TX> b'pctbat\r\n'
+[1191.361] SERIAL_TX> b'charge\r\n'
+[1201.377] SERIAL_TX> b'pctbat\r\n'
+[1201.391] SERIAL_TX> b'charge\r\n'
+[1211.407] SERIAL_TX> b'pctbat\r\n'
+[1211.421] SERIAL_TX> b'charge\r\n'
+[1216.210] KEY> KEY_PWR_CAN_PRES!
+[1216.213] FINISH(top=ScanActivity d=2)
+[1216.277] POLL stack=['MainActivity'] type=17 uid=
+[1217.269] KEY> KEYDOWN_PRES!
+[1217.618] KEY> KEYOK_PRES!
+[1217.621] START(ReadListActivity, None) bundle=None
+[1217.781] POLL stack=['MainActivity', 'ReadListActivity'] type=17 uid=
+[1218.975] KEY> KEYUP_PRES!
+[1219.348] KEY> KEYUP_PRES!
+[1219.657] KEY> KEYUP_PRES!
+[1219.813] KEY> KEYUP_PRES!
+[1219.951] KEY> KEYUP_PRES!
+[1220.098] KEY> KEYUP_PRES!
+[1220.249] KEY> KEYUP_PRES!
+[1220.394] KEY> KEYUP_PRES!
+[1220.540] KEY> KEYUP_PRES!
+[1220.680] KEY> KEYUP_PRES!
+[1221.166] KEY> KEYUP_PRES!
+[1221.437] SERIAL_TX> b'pctbat\r\n'
+[1221.450] SERIAL_TX> b'charge\r\n'
+[1222.009] KEY> KEYUP_PRES!
+[1222.108] KEY> KEYUP_PRES!
+[1222.321] KEY> KEYUP_PRES!
+[1222.494] KEY> KEYUP_PRES!
+[1222.644] KEY> KEYUP_PRES!
+[1222.974] KEY> KEYUP_PRES!
+[1223.419] KEY> KEYUP_PRES!
+[1223.741] KEY> KEYUP_PRES!
+[1224.174] KEY> KEYUP_PRES!
+[1224.554] KEY> KEYUP_PRES!
+[1224.917] KEY> KEYUP_PRES!
+[1225.198] KEY> KEYUP_PRES!
+[1226.220] KEY> KEYUP_PRES!
+[1227.032] KEY> KEYOK_PRES!
+[1227.035] START(ReadActivity, {'tag_type': 17, 'tag_name': 'iClass Legacy'}) bundle={"tag_type": 17, "tag_name": "iClass Legacy"}
+[1227.094] PM3> hf 14a info (timeout=5000)
+[1227.249] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1227.253] PM3> lf sea (timeout=10000)
+[1227.298] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=17 uid=
+[1231.467] SERIAL_TX> b'pctbat\r\n'
+[1231.481] SERIAL_TX> b'charge\r\n'
+[1231.873] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[1231.877] PM3> hf sea (timeout=10000)
+[1237.638] PM3< ret=1 content_len=118 iso14443a card select failed\n\niCLASS / Picopass CSN: 75 D0 E0 13 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[1237.639] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[1237.993] PM3< ret=1 content_len=1 \n
+[1237.994] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[1238.314] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[1238.315] PM3> hf iclass info (timeout=5000)
+[1238.335] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 15 ms and content ( ok )\n\n
+[1238.336] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17"}
+[1238.716] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[1239.036] PM3< ret=1 content_len=1 \n
+[1239.037] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[1239.355] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[1239.358] PM3> hf iclass dump k 2020666666668888 f /mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1 (timeout=30000)
+[1240.109] PM3< ret=1 content_len=1392 Card has at least 2 application areas. AA1 limit 18 (0x12) AA2 limit 31 (0x1F)\n.\n\n block#  | data                    | ascii    |lck| info\n  0/0x00 | 75 D0 E0 13 FE FF 12 E0 | u: |   | CSN\n  1/0x01 | 12 FF FF FF 7F 1F FF 3C | .......< |   | Config\n  2/0x02 | FA FF FF FF FF FF FF FF | .: |   | E-purse\n  3/0x03 | 72 A9 64 D3 CB 09 60 38 | r.d...8 |   | Debit\n  4/0x04 | FF FF FF FF FF FF FF FF | .: |   | Credit\n  5/0x05 | FF FF FF FF FF FF FF FF | .: |   | AIA\n  6/0x06 | 03 03 03 03 00 03 E0 17 | .: |   | User / HID CFG\n  7/0x07 | 85 F3 21 DC 76 BD 68 1E | ..!.v.h. |   | User / Enc Cred\n  8/0x08 | 2A D4 C8 21 1F 99 68 71 | *..!..hq |   | User / Enc Cred\n  9/0x09 | 2A D4 C8 21 1F 99 68 71 | *..!..hq |   | User / Enc Cred\n 10/0x0A | FF FF FF FF FF FF FF FF | .: |   | User\n 11/0x0B | FF FF FF FF FF FF FF FF | .: |   | User\n 12/0x0C | FF FF FF FF FF FF FF FF | .: |   | User\n 13/0x0D | FF FF FF FF FF FF FF FF | .: |   | User\n 14/0x0E | FF FF FF FF FF FF FF FF | .: |   | User\n 15/0x0F | FF FF FF FF FF FF FF FF | .: |   | User\n 16/0x10 | FF FF FF FF FF FF FF FF | .: |   | User\n 17/0x11 | FF FF FF FF FF FF FF FF | .: |   | User\n 18/0x12 | FF FF FF FF FF FF FF FF | .: |   | User\nsaving dump file - 19 blocks read\nsaved 152 bytes to binary file /mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1.bin`\nsaved to json file /mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1.json\n\n\n
+[1241.502] SERIAL_TX> b'pctbat\r\n'
+[1241.516] SERIAL_TX> b'charge\r\n'
+[1251.532] SERIAL_TX> b'pctbat\r\n'
+[1251.546] SERIAL_TX> b'charge\r\n'
+[1261.562] SERIAL_TX> b'pctbat\r\n'
+[1261.576] SERIAL_TX> b'charge\r\n'
+[1271.592] SERIAL_TX> b'pctbat\r\n'
+[1271.606] SERIAL_TX> b'charge\r\n'
+[1281.622] SERIAL_TX> b'pctbat\r\n'
+[1281.636] SERIAL_TX> b'charge\r\n'
+[1291.652] SERIAL_TX> b'pctbat\r\n'
+[1291.666] SERIAL_TX> b'charge\r\n'
+[1300.535] KEY> KEYM2_PRES!
+[1300.539] START(WarningWriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1", "key": "2020666666668888"}
+[1300.905] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WarningWriteActivity'] type=17 uid=
+[1301.682] SERIAL_TX> b'pctbat\r\n'
+[1301.696] SERIAL_TX> b'charge\r\n'
+[1302.017] KEY> KEYM2_PRES!
+[1302.020] FINISH(top=WarningWriteActivity d=4)
+[1302.078] START(WriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Legacy_75D0E013FEFF12E0_1", "key": "2020666666668888"}
+[1302.409] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WriteActivity'] type=17 uid=
+[1302.472] PM3> hf iclass wrbl -b 6 -d 030303030003E017 -k 2020666666668888 (timeout=10000)
+[1302.792] PM3< ret=1 content_len=34 Wrote block 6 / 0x06 successful\n\n\n
+[1302.795] PM3> hf iclass wrbl -b 7 -d 85F321DC76BD681E -k 2020666666668888 (timeout=10000)
+[1303.121] PM3< ret=1 content_len=34 Wrote block 7 / 0x07 successful\n\n\n
+[1303.123] PM3> hf iclass wrbl -b 8 -d 2AD4C8211F996871 -k 2020666666668888 (timeout=10000)
+[1303.451] PM3< ret=1 content_len=34 Wrote block 8 / 0x08 successful\n\n\n
+[1303.452] PM3> hf iclass wrbl -b 9 -d 2AD4C8211F996871 -k 2020666666668888 (timeout=10000)
+[1303.779] PM3< ret=1 content_len=34 Wrote block 9 / 0x09 successful\n\n\n
+[1303.781] PM3> hf iclass wrbl -b 10 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1304.109] PM3< ret=1 content_len=35 Wrote block 10 / 0x0A successful\n\n\n
+[1304.111] PM3> hf iclass wrbl -b 11 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1304.437] PM3< ret=1 content_len=35 Wrote block 11 / 0x0B successful\n\n\n
+[1304.439] PM3> hf iclass wrbl -b 12 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1304.767] PM3< ret=1 content_len=35 Wrote block 12 / 0x0C successful\n\n\n
+[1304.768] PM3> hf iclass wrbl -b 13 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1305.095] PM3< ret=1 content_len=35 Wrote block 13 / 0x0D successful\n\n\n
+[1305.097] PM3> hf iclass wrbl -b 14 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1305.425] PM3< ret=1 content_len=35 Wrote block 14 / 0x0E successful\n\n\n
+[1305.426] PM3> hf iclass wrbl -b 15 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1305.753] PM3< ret=1 content_len=35 Wrote block 15 / 0x0F successful\n\n\n
+[1305.755] PM3> hf iclass wrbl -b 16 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1306.083] PM3< ret=1 content_len=35 Wrote block 16 / 0x10 successful\n\n\n
+[1306.084] PM3> hf iclass wrbl -b 17 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1306.411] PM3< ret=1 content_len=35 Wrote block 17 / 0x11 successful\n\n\n
+[1306.413] PM3> hf iclass wrbl -b 18 -d FFFFFFFFFFFFFFFF -k 2020666666668888 (timeout=10000)
+[1306.741] PM3< ret=1 content_len=35 Wrote block 18 / 0x12 successful\n\n\n
+[1308.659] KEY> KEYM1_PRES!
+[1308.975] PM3> hf iclass rdbl b 06 k 2020666666668888 (timeout=5000)
+[1309.292] PM3< ret=1 content_len=36 Block 6 : 03 03 03 03 00 03 E0 17\n\n\n
+[1311.712] SERIAL_TX> b'pctbat\r\n'
+[1311.726] SERIAL_TX> b'charge\r\n'
+[1321.743] SERIAL_TX> b'pctbat\r\n'
+[1321.756] SERIAL_TX> b'charge\r\n'
+[1329.039] KEY> KEYM1_PRES!
+[1329.354] PM3> hf iclass rdbl b 06 k 2020666666668888 (timeout=5000)
+[1329.671] PM3< ret=1 content_len=36 Block 6 : 03 03 03 03 00 03 E0 17\n\n\n
+[1331.777] SERIAL_TX> b'pctbat\r\n'
+[1331.791] SERIAL_TX> b'charge\r\n'
+[1341.808] SERIAL_TX> b'pctbat\r\n'
+[1341.820] SERIAL_TX> b'charge\r\n'
+[1351.837] SERIAL_TX> b'pctbat\r\n'
+[1351.850] SERIAL_TX> b'charge\r\n'
+[1361.867] SERIAL_TX> b'pctbat\r\n'
+[1361.881] SERIAL_TX> b'charge\r\n'
+[1371.898] SERIAL_TX> b'pctbat\r\n'
+[1371.911] SERIAL_TX> b'charge\r\n'
+[1380.984] KEY> KEY_PWR_CAN_PRES!
+[1381.357] KEY> KEY_PWR_CAN_PRES!
+[1381.360] PRESSPM3> called
+[1381.361] SERIAL_TX> b'presspm3\r\n'
+[1381.375] PRESSPM3< done
+[1381.376] PM3_STOP> stopPM3Task()
+[1381.376] PM3_STOP< ret=None
+[1381.377] FINISH(top=WriteActivity d=4)
+[1381.534] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=17 uid=
+[1381.726] KEY> KEY_PWR_CAN_PRES!
+[1381.728] FINISH(top=ReadActivity d=3)
+[1381.928] SERIAL_TX> b'pctbat\r\n'
+[1381.941] SERIAL_TX> b'charge\r\n'
+[1382.036] POLL stack=['MainActivity', 'ReadListActivity'] type=17 uid=
+[1382.938] KEY> KEYDOWN_PRES!
+[1383.388] KEY> KEYOK_PRES!
+[1383.391] START(ReadActivity, {'tag_type': 18, 'tag_name': 'iClass Elite'}) bundle={"tag_type": 18, "tag_name": "iClass Elite"}
+[1383.450] PM3> hf 14a info (timeout=5000)
+[1383.540] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=17 uid=
+[1383.608] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1383.613] PM3> lf sea (timeout=10000)
+[1386.820] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1386.823] PM3> hf sea (timeout=10000)
+[1391.958] SERIAL_TX> b'pctbat\r\n'
+[1391.971] SERIAL_TX> b'charge\r\n'
+[1392.588] PM3< ret=1 content_len=118 iso14443a card select failed\n\niCLASS / Picopass CSN: 4A 67 8E 15 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[1392.590] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[1392.943] PM3< ret=1 content_len=1 \n
+[1392.944] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[1393.262] PM3< ret=1 content_len=1 \n
+[1393.263] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=5000)
+[1393.582] PM3< ret=1 content_len=1 \n
+[1393.583] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 e (timeout=5000)
+[1393.903] PM3< ret=1 content_len=1 \n
+[1393.904] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=5000)
+[1394.225] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[1394.226] PM3> hf iclass info (timeout=5000)
+[1394.245] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 14 ms and content ( ok )\n\n
+[1394.246] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "18"}
+[1394.481] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[1394.558] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=18 uid=
+[1394.804] PM3< ret=1 content_len=1 \n
+[1394.806] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[1395.123] PM3< ret=1 content_len=1 \n
+[1395.124] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=5000)
+[1395.442] PM3< ret=1 content_len=1 \n
+[1395.443] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 e (timeout=5000)
+[1395.763] PM3< ret=1 content_len=1 \n
+[1395.765] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=5000)
+[1396.085] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[1396.088] PM3> hf iclass dump k 2020666666668888 f /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1 e (timeout=30000)
+[1396.839] PM3< ret=1 content_len=1389 Card has at least 2 application areas. AA1 limit 18 (0x12) AA2 limit 31 (0x1F)\n.\n\n block#  | data                    | ascii    |lck| info\n  0/0x00 | 4A 67 8E 15 FE FF 12 E0 | Jg: |   | CSN\n  1/0x01 | 12 FF FF FF 7F 1F FF 3C | .......< |   | Config\n  2/0x02 | FF FF FF FF F9 FF FF FF | .: |   | E-purse\n  3/0x03 | B7 AF 2C 06 F3 7A 3E 83 | ..,..z>. |   | Debit\n  4/0x04 | FF FF FF FF FF FF FF FF | .: |   | Credit\n  5/0x05 | FF FF FF FF FF FF FF FF | .: |   | AIA\n  6/0x06 | 03 03 03 03 00 03 E0 17 | .: |   | User / HID CFG\n  7/0x07 | 83 4D 3B 2F 21 96 14 DA | .M;/!: |   | User / Enc Cred\n  8/0x08 | 2A D4 C8 21 1F 99 68 71 | *..!..hq |   | User / Enc Cred\n  9/0x09 | 2A D4 C8 21 1F 99 68 71 | *..!..hq |   | User / Enc Cred\n 10/0x0A | FF FF FF FF FF FF FF FF | .: |   | User\n 11/0x0B | FF FF FF FF FF FF FF FF | .: |   | User\n 12/0x0C | FF FF FF FF FF FF FF FF | .: |   | User\n 13/0x0D | FF FF FF FF FF FF FF FF | .: |   | User\n 14/0x0E | FF FF FF FF FF FF FF FF | .: |   | User\n 15/0x0F | FF FF FF FF FF FF FF FF | .: |   | User\n 16/0x10 | FF FF FF FF FF FF FF FF | .: |   | User\n 17/0x11 | FF FF FF FF FF FF FF FF | .: |   | User\n 18/0x12 | FF FF FF FF FF FF FF FF | .: |   | User\nsaving dump file - 19 blocks read\nsaved 152 bytes to binary file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1.bin\nsaved to json file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1.json\n\n\n
+[1399.770] KEY> KEYM2_PRES!
+[1399.773] START(WarningWriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[1400.068] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WarningWriteActivity'] type=18 uid=
+[1400.505] KEY> KEYM2_PRES!
+[1400.507] FINISH(top=WarningWriteActivity d=4)
+[1400.539] START(WriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[1400.570] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WriteActivity'] type=18 uid=
+[1400.860] PM3> hf iclass wrbl -b 6 -d 030303030003E017 -k 2020666666668888 (timeout=10000)
+[1401.168] PM3< ret=1 content_len=17 Writing failed\n\n\n
+[1401.992] SERIAL_TX> b'pctbat\r\n'
+[1402.006] SERIAL_TX> b'charge\r\n'
+[1412.027] SERIAL_TX> b'pctbat\r\n'
+[1412.041] SERIAL_TX> b'charge\r\n'
+[1418.813] KEY> KEYM1_PRES!
+[1419.128] PM3> hf iclass rdbl b 06 k 2020666666668888 (timeout=5000)
+[1419.439] PM3< ret=1 content_len=1 \n
+[1420.858] KEY> KEYOK_PRES!
+[1421.173] PM3> hf iclass rdbl b 06 k 2020666666668888 (timeout=5000)
+[1421.487] PM3< ret=1 content_len=1 \n
+[1422.057] SERIAL_TX> b'pctbat\r\n'
+[1422.071] SERIAL_TX> b'charge\r\n'
+[1432.087] SERIAL_TX> b'pctbat\r\n'
+[1432.101] SERIAL_TX> b'charge\r\n'
+[1434.766] KEY> KEY_PWR_CAN_PRES!
+[1442.117] SERIAL_TX> b'pctbat\r\n'
+[1442.131] SERIAL_TX> b'charge\r\n'
+[1452.147] SERIAL_TX> b'pctbat\r\n'
+[1452.161] SERIAL_TX> b'charge\r\n'
+[1462.177] SERIAL_TX> b'pctbat\r\n'
+[1462.191] SERIAL_TX> b'charge\r\n'
+[1464.724] KEY> KEY_PWR_CAN_PRES!
+[1464.727] PRESSPM3> called
+[1464.728] SERIAL_TX> b'presspm3\r\n'
+[1464.740] PRESSPM3< done
+[1464.741] PM3_STOP> stopPM3Task()
+[1464.741] PM3_STOP< ret=None
+[1464.742] FINISH(top=WriteActivity d=4)
+[1465.166] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=18 uid=
+[1465.171] KEY> KEY_PWR_CAN_PRES!
+[1465.173] FINISH(top=ReadActivity d=3)
+[1465.668] POLL stack=['MainActivity', 'ReadListActivity'] type=18 uid=
+[1466.632] KEY> KEYUP_PRES!
+[1466.858] KEY> KEYUP_PRES!
+[1467.047] KEY> KEYUP_PRES!
+[1467.339] KEY> KEYUP_PRES!
+[1467.930] KEY> KEYUP_PRES!
+[1468.611] KEY> KEYUP_PRES!
+[1469.350] KEY> KEYDOWN_PRES!
+[1469.673] KEY> KEYOK_PRES!
+[1469.676] START(ReadActivity, {'tag_type': 19, 'tag_name': 'ISO15693 ICODE'}) bundle={"tag_type": 19, "tag_name": "ISO15693 ICODE"}
+[1469.686] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=18 uid=
+[1469.735] PM3> hf 14a info (timeout=5000)
+[1469.877] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1469.882] PM3> lf sea (timeout=10000)
+[1472.207] SERIAL_TX> b'pctbat\r\n'
+[1472.221] SERIAL_TX> b'charge\r\n'
+[1474.502] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[1474.508] PM3> hf sea (timeout=10000)
+[1480.246] PM3< ret=1 content_len=151 iso14443a card select failed\n\nUID: E0 04 01 3C F9 43 B3 02\nTYPE MATCH NXP (Philips); IC NTP53x2/NTP5210/NTA5332 ( NTAG 5 )\n\nValid ISO15693 tag found\n\n\n
+[1480.254] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[1480.516] PM3> hf 15 dump f /mnt/upan/dump/icode/ICODE_E004013CF943B302_1 (timeout=38000)
+[1480.703] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E004013CF943B302
+[1481.918] PM3< ret=1 content_len=998 Using scan mode\nReading memory\n\n blk | data        |lck| ascii\n   0 | E1 40 0E 01 | 0 | .@..\n   1 | 03 00 FE 00 | 0 | .: 2 | 00 00 00 00 | 0 | ....\n   3 | 00 00 00 00 | 0 | .: 4 | 00 00 00 00 | 0 | ....\n   5 | 00 00 00 00 | 0 | .: 6 | 00 00 00 00 | 0 | ....\n   7 | 00 00 00 00 | 0 | .: 8 | 00 00 00 00 | 0 | ....\n   9 | 00 00 00 00 | 0 | .: 10 | 00 00 00 00 | 0 | ....\n  11 | 00 00 00 00 | 0 | .: 12 | 00 00 00 00 | 0 | ....\n  13 | 00 00 00 00 | 0 | .: 14 | 00 00 00 00 | 0 | ....\n  15 | 00 00 00 00 | 0 | .: 16 | 00 00 00 00 | 0 | ....\n  17 | 00 00 00 00 | 0 | .: 18 | 00 00 00 00 | 0 | ....\n  19 | 00 00 00 00 | 0 | .: 20 | 00 00 00 00 | 0 | ....\n  21 | 00 00 00 00 | 0 | .: 22 | 00 00 00 00 | 0 | ....\n  23 | 00 00 00 00 | 0 | .: 24 | 00 00 00 00 | 0 | ....\n  25 | 00 00 00 00 | 0 | .: 26 | 00 00 00 00 | 0 | ....\n  27 | 00 00 00 00 | 0 | .: saved 2235 bytes to binary file /mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin\nsaved to json file /mnt/upan/dump/icode/ICODE_E004013CF943B302_1.json\n\n
+[1482.238] SERIAL_TX> b'pctbat\r\n'
+[1482.251] SERIAL_TX> b'charge\r\n'
+[1492.267] SERIAL_TX> b'pctbat\r\n'
+[1492.281] SERIAL_TX> b'charge\r\n'
+[1497.876] KEY> KEYM2_PRES!
+[1497.879] START(WarningWriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin"
+[1498.229] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WarningWriteActivity'] type=19 uid=E004013CF943B302
+[1499.227] KEY> KEYM2_PRES!
+[1499.230] FINISH(top=WarningWriteActivity d=4)
+[1499.232] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E004013CF943B302
+[1499.289] START(WriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin"
+[1499.625] PM3> hf 15 restore f /mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin.bin (timeout=28888)
+[1499.734] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WriteActivity'] type=19 uid=E004013CF943B302
+[1499.915] PM3< ret=1 content_len=92 Using scan mode\nError - can't find `/mnt/upan/dump/icode/ICODE_E004013CF943B302_1.bin.bin`\n\n
+[1502.298] SERIAL_TX> b'pctbat\r\n'
+[1502.311] SERIAL_TX> b'charge\r\n'
+[1512.327] SERIAL_TX> b'pctbat\r\n'
+[1512.341] SERIAL_TX> b'charge\r\n'
+[1522.362] SERIAL_TX> b'pctbat\r\n'
+[1522.376] SERIAL_TX> b'charge\r\n'
+[1532.393] SERIAL_TX> b'pctbat\r\n'
+[1532.406] SERIAL_TX> b'charge\r\n'
+[1542.422] SERIAL_TX> b'pctbat\r\n'
+[1542.436] SERIAL_TX> b'charge\r\n'
+[1552.452] SERIAL_TX> b'pctbat\r\n'
+[1552.466] SERIAL_TX> b'charge\r\n'
+[1562.482] SERIAL_TX> b'pctbat\r\n'
+[1562.496] SERIAL_TX> b'charge\r\n'
+[1572.512] SERIAL_TX> b'pctbat\r\n'
+[1572.526] SERIAL_TX> b'charge\r\n'
+[1582.542] SERIAL_TX> b'pctbat\r\n'
+[1582.556] SERIAL_TX> b'charge\r\n'
+[1592.572] SERIAL_TX> b'pctbat\r\n'
+[1592.586] SERIAL_TX> b'charge\r\n'
+[1602.602] SERIAL_TX> b'pctbat\r\n'
+[1602.616] SERIAL_TX> b'charge\r\n'
+[1612.632] SERIAL_TX> b'pctbat\r\n'
+[1612.646] SERIAL_TX> b'charge\r\n'
+[1622.662] SERIAL_TX> b'pctbat\r\n'
+[1622.676] SERIAL_TX> b'charge\r\n'
+[1632.675] KEY> KEY_PWR_CAN_PRES!
+[1632.693] SERIAL_TX> b'pctbat\r\n'
+[1632.706] SERIAL_TX> b'charge\r\n'
+[1633.036] KEY> KEY_PWR_CAN_PRES!
+[1633.039] PRESSPM3> called
+[1633.040] SERIAL_TX> b'presspm3\r\n'
+[1633.055] PRESSPM3< done
+[1633.056] PM3_STOP> stopPM3Task()
+[1633.056] PM3_STOP< ret=None
+[1633.057] FINISH(top=WriteActivity d=4)
+[1633.428] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E004013CF943B302
+[1633.444] KEY> KEY_PWR_CAN_PRES!
+[1633.448] FINISH(top=ReadActivity d=3)
+[1633.930] POLL stack=['MainActivity', 'ReadListActivity'] type=19 uid=E004013CF943B302
+[1635.035] KEY> KEYDOWN_PRES!
+[1635.480] KEY> KEYOK_PRES!
+[1635.482] START(ReadActivity, {'tag_type': 46, 'tag_name': 'ISO15693 ST SA'}) bundle={"tag_type": 46, "tag_name": "ISO15693 ST SA"}
+[1635.546] PM3> hf 14a info (timeout=5000)
+[1635.690] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1635.695] PM3> lf sea (timeout=10000)
+[1635.935] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E004013CF943B302
+[1638.929] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1638.933] PM3> hf sea (timeout=10000)
+[1642.722] SERIAL_TX> b'pctbat\r\n'
+[1642.736] SERIAL_TX> b'charge\r\n'
+[1644.672] PM3< ret=1 content_len=115 iso14443a card select failed\n\nUID: E0 53 01 10 D2 A8 91 1F\nTYPE: no tag-info available\n\nValid ISO15693 tag found\n\n\n
+[1644.674] CACHE: {"found": "True", "uid": "'E0530110D2A8911F'", "type": "19", "progress": "2", "return": "19"}
+[1644.910] PM3> hf 15 dump f /mnt/upan/dump/icode/ICODE_E0530110D2A8911F_1 (timeout=38000)
+[1644.949] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E0530110D2A8911F
+[1647.375] PM3< ret=1 content_len=2003 Using scan mode\nReading memory\n\n blk | data        |lck| ascii\n   0 | 00 00 00 00 | 0 | .: 1 | 00 00 00 00 | 0 | ....\n   2 | 00 00 00 00 | 0 | .: 3 | 00 00 00 00 | 0 | ....\n   4 | 00 00 00 00 | 0 | .: 5 | 00 00 00 00 | 0 | ....\n   6 | 00 00 00 00 | 0 | .: 7 | 00 00 00 00 | 0 | ....\n   8 | 00 00 00 00 | 0 | .: 9 | 00 00 00 00 | 0 | ....\n  10 | 00 00 00 00 | 0 | .: 11 | 00 00 00 00 | 0 | ....\n  12 | 00 00 00 00 | 0 | .: 13 | 00 00 00 00 | 0 | ....\n  14 | 00 00 00 00 | 0 | .: 15 | 00 00 00 00 | 0 | ....\n  16 | 00 00 00 00 | 0 | .: 17 | 00 00 00 00 | 0 | ....\n  18 | 00 00 00 00 | 0 | .: 19 | 00 00 00 00 | 0 | ....\n  20 | 00 00 00 00 | 0 | .: 21 | 00 00 00 00 | 0 | ....\n  22 | 00 00 00 00 | 0 | .: 23 | 00 00 00 00 | 0 | ....\n  24 | 00 00 00 00 | 0 | .: 25 | 00 00 00 00 | 0 | ....\n  26 | 00 00 00 00 | 0 | .: 27 | 00 00 00 00 | 0 | ....\n  28 | 00 00 00 00 | 0 | .: 29 | 00 00 00 00 | 0 | ....\n  30 | 00 00 00 00 | 0 | .: 31 | 00 00 00 00 | 0 | ....\n  32 | 00 00 00 00 | 0 | .: 33 | 00 00 00 00 | 0 | ....\n  34 | 00 00 00 00 | 0 | .: 35 | 00 00 00 00 | 0 | ....\n  36 | 00 00 00 00 | 0 | .: 37 | 00 00 00 00 | 0 | ....\n  38 | 00 00 00 00 | 0 | .: 39 | 00 00 00 00 | 0 | ....\n  40 | 00 00 00 00 | 0 | .: 41 | 00 00 00 00 | 0 | ....\n  42 | 00 00 00 00 | 0 | .: 43 | 00 00 00 00 | 0 | ....\n  44 | 00 00 00 00 | 0 | .: 45 | 00 00 00 00 | 0 | ....\n  46 | 00 00 00 00 | 0 | .: 47 | 00 00 00 00 | 0 | ....\n  48 | 00 00 00 00 | 0 | .: 49 | 00 00 00 00 | 0 | ....\n  50 | 00 00 00 00 | 0 | .: 51 | 00 00 00 00 | 0 | ....\n  52 | 00 00 00 00 | 0 | .: 53 | 00 00 00 00 | 0 | ....\n  54 | 00 00 00 00 | 0 | .: 55 | 00 00 00 00 | 0 | ....\n  56 | 00 00 00 00 | 0 | .: 57 | 00 00 00 00 | 0 | ....\n  58 | 00 00 00 00 | 0 | .: 59 | 00 00 00 00 | 0 | ....\n  60 | 00 00 00 00 | 0 | .: 61 | 00 00 00 00 | 0 | ....\n  62 | 00 00 00 00 | 0 | .: 63 | 00 00 00 00 | 0 | ....\nsaved 2235 bytes to binary file /mnt/upan/dump/icode/ICODE_E0530110D2A8911F_1.bin\nsaved to json file /mnt/upan/dump/icode/ICODE_E0530110D2A8911F_1.json\n\n
+[1649.885] KEY> KEY_PWR_CAN_PRES!
+[1651.502] KEY> KEY_PWR_CAN_PRES!
+[1651.505] FINISH(top=ReadActivity d=3)
+[1651.961] POLL stack=['MainActivity', 'ReadListActivity'] type=19 uid=E0530110D2A8911F
+[1652.752] SERIAL_TX> b'pctbat\r\n'
+[1652.766] SERIAL_TX> b'charge\r\n'
+[1662.782] SERIAL_TX> b'pctbat\r\n'
+[1662.796] SERIAL_TX> b'charge\r\n'
+[1672.812] SERIAL_TX> b'pctbat\r\n'
+[1672.825] SERIAL_TX> b'charge\r\n'
+[1682.842] SERIAL_TX> b'pctbat\r\n'
+[1682.856] SERIAL_TX> b'charge\r\n'
+[1687.119] KEY> KEYUP_PRES!
+[1687.433] KEY> KEYUP_PRES!
+[1687.691] KEY> KEYUP_PRES!
+[1687.926] KEY> KEYUP_PRES!
+[1692.872] SERIAL_TX> b'pctbat\r\n'
+[1692.886] SERIAL_TX> b'charge\r\n'
+[1702.902] SERIAL_TX> b'pctbat\r\n'
+[1702.916] SERIAL_TX> b'charge\r\n'
+[1712.937] SERIAL_TX> b'pctbat\r\n'
+[1712.951] SERIAL_TX> b'charge\r\n'
+[1719.439] KEY> KEYDOWN_PRES!
+[1720.151] KEY> KEYDOWN_PRES!
+[1722.342] KEY> KEYOK_PRES!
+[1722.345] START(ReadActivity, {'tag_type': 7, 'tag_name': 'NTAG216 888b'}) bundle={"tag_type": 7, "tag_name": "NTAG216 888b"}
+[1722.410] PM3> hf 14a info (timeout=5000)
+[1722.567] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=19 uid=E0530110D2A8911F
+[1722.967] SERIAL_TX> b'pctbat\r\n'
+[1722.981] SERIAL_TX> b'charge\r\n'
+[1724.398] PM3< ret=1 content_len=281 \n UID: 11 22 33 55 66 77 88  \nATQA: 00 44\n SAK: 00 [2]\n      Emosyn-EM Microelectronics USA\nPossible types:\n    NTAG21x Modifiable\nTYPE: NTAG 216 888bytes (NT2H1611G0DU) ( NTAG21x )\n   MIFARE Ultralight/C/NTAG Compatible\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[1724.400] PM3> hf mfu info (timeout=8888)
+[1726.936] PM3< ret=1 content_len=2023 \n      TYPE: NTAG 216 888bytes (NT2H1611G0DU)\n       UID: 11 22 33 55 66 77 88\n    UID[0]: 11, Emosyn-EM Microelectronics USA\n      BCC0: 44, crc should be 88\n      BCC1: FF, crc should be CC\n  Internal: FF\n      Lock: FF FF  - 1111111111111111\n       OTP: E1 10 6D 00  - 11100001000100000110110100000000\n\n--- NDEF Message\nCapability Container: E1106D00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  6D: Physical Memory Size: 872 bytes\n  6D: NDEF Memory Size: 872 bytes\n  00: Additional feature information\n  00000000\n  000 .: - RFU\n  ...0 ... - Don't support special frame\n  ....0 .. - Don't support lock block\n  .....00  - RFU\n  .......0 - IC don't support multiple block reads\n\n--- Tag Counter\n       [02]: FF FF FF\n\n--- Tag Signature\n             TAG IC Signature: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n                             : FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\n       Signature verification: failed\n\n--- Tag Version\n       Raw bytes: 0004040201001303\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: NTAG\n Product subtype: 02, 50pF\n   Major version: 01\n   Minor version: 00\n            Size: 13, (1024 - 512 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [227/0xE3]: 000000FF\n                    - strong modulation mode disabled\n                    - pages don't need authentication\n  cfg1 [228/0xE4]: 00050000\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [229/0xE5]: FFFFFFFF ( cannot be read )\n  PACK [230/0xE6]: FFFF     ( cannot be read )\n  RFU  [230/0xE6]:     FFFF ( cannot be read )\n\n--- Known EV1/NTAG passwords\nPassword: FFFFFFFF  pack... FFFF\n--- Fingerprint\nn/a\n\n\n
+[1726.942] CACHE: {"found": "True", "type": "7", "isMFU": "True", "uid": "'11223355667788'"}
+[1727.076] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=7 uid=11223355667788
+[1727.200] PM3> hf mfu dump f /mnt/upan/dump/mfu/NTAG216_11223355667788_1 (timeout=30000)
+[1730.493] PM3< ret=1 content_len=8055 TYPE: NTAG 216 888bytes (NT2H1611G0DU) ( NTAG21x )\nReading tag memory: MFU dump file information\nVersion: 00 04 04 02 01 00 13 03\nTBD 0: 00 00\nTBD 1: 00\nSignature: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF\n             FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF\nCounter 0: 00 00 00\nTearing 0: 00\nCounter 1: 00 00 00\nTearing 1: 00\nCounter 2: FF FF FF\nTearing 2: 00\nMax data page: 230 ( 924 bytes )\nHeader size: 56 bytes\n\nblock#   | data        |lck| ascii\n  0/0x00 | 11 22 33 44 |   | ."3D\n  1/0x01 | 55 66 77 88 |   | Ufw.\n  2/0x02 | FF FF FF FF |   | .: 3/0x03 | E1 10 6D 00 | 1 | ..m.\n  4/0x04 | 03 00 FE 00 | 1 | .: 5/0x05 | 00 00 00 00 | 1 | ....\n  6/0x06 | FF FF FF FF | 1 | .: 7/0x07 | FF FF FF FF | 1 | ....\n  8/0x08 | FF FF FF FF | 1 | .: 9/0x09 | FF FF FF FF | 1 | ....\n 10/0x0A | FF FF FF FF | 1 | .: 11/0x0B | FF FF FF FF | 1 | ....\n 12/0x0C | FF FF FF FF | 1 | .: 13/0x0D | FF FF FF FF | 1 | ....\n 14/0x0E | FF FF FF FF | 1 | .: 15/0x0F | FF FF FF FF | 1 | ....\n 16/0x10 | FF FF FF FF | ? | .: 17/0x11 | FF FF FF FF | ? | ....\n 18/0x12 | FF FF FF FF | ? | .: 19/0x13 | FF FF FF FF | ? | ....\n 20/0x14 | FF FF FF FF | ? | .: 21/0x15 | FF FF FF FF | ? | ....\n 22/0x16 | FF FF FF FF | ? | .: 23/0x17 | FF FF FF FF | ? | ....\n 24/0x18 | FF FF FF FF | ? | .: 25/0x19 | FF FF FF FF | ? | ....\n 26/0x1A | FF FF FF FF | ? | .: 27/0x1B | FF FF FF FF | ? | ....\n 28/0x1C | FF FF FF FF | ? | .: 29/0x1D | FF FF FF FF | ? | ....\n 30/0x1E | FF FF FF FF | ? | .: 31/0x1F | FF FF FF FF | ? | ....\n 32/0x20 | FF FF FF FF | ? | .: 33/0x21 | FF FF FF FF | ? | ....\n 34/0x22 | FF FF FF FF | ? | .: 35/0x23 | FF FF FF FF | ? | ....\n 36/0x24 | FF FF FF FF | ? | .: 37/0x25 | FF FF FF FF | ? | ....\n 38/0x26 | FF FF FF FF | ? | .: 39/0x27 | FF FF FF FF | ? | ....\n 40/0x28 | FF FF FF FF | ? | .: 41/0x29 | FF FF FF FF | ? | ....\n 42/0x2A | FF FF FF FF | ? | .: 43/0x2B | FF FF FF FF | ? | ....\n 44/0x2C | FF FF FF FF | ? | .: 45/0x2D | FF FF FF FF | ? | ....\n 46/0x2E | FF FF FF FF | ? | .: 47/0x2F | FF FF FF FF | ? | ....\n 48/0x30 | FF FF FF FF | ? | .: 49/0x31 | FF FF FF FF | ? | ....\n 50/0x32 | FF FF FF FF | ? | .: 51/0x33 | FF FF FF FF | ? | ....\n 52/0x34 | FF FF FF FF | ? | .: 53/0x35 | FF FF FF FF | ? | ....\n 54/0x36 | FF FF FF FF | ? | .: 55/0x37 | FF FF FF FF | ? | ....\n 56/0x38 | FF FF FF FF | ? | .: 57/0x39 | FF FF FF FF | ? | ....\n 58/0x3A | FF FF FF FF | ? | .: 59/0x3B | FF FF FF FF | ? | ....\n 60/0x3C | FF FF FF FF | ? | .: 61/0x3D | FF FF FF FF | ? | ....\n 62/0x3E | FF FF FF FF | ? | .: 63/0x3F | FF FF FF FF | ? | ....\n 64/0x40 | FF FF FF FF | ? | .: 65/0x41 | FF FF FF FF | ? | ....\n 66/0x42 | FF FF FF FF | ? | .: 67/0x43 | FF FF FF FF | ? | ....\n 68/0x44 | FF FF FF FF | ? | .: 69/0x45 | FF FF FF FF | ? | ....\n 70/0x46 | FF FF FF FF | ? | .: 71/0x47 | FF FF FF FF | ? | ....\n 72/0x48 | FF FF FF FF | ? | .: 73/0x49 | FF FF FF FF | ? | ....\n 74/0x4A | FF FF FF FF | ? | .: 75/0x4B | FF FF FF FF | ? | ....\n 76/0x4C | FF FF FF FF | ? | .: 77/0x4D | FF FF FF FF | ? | ....\n 78/0x4E | FF FF FF FF | ? | .: 79/0x4F | FF FF FF FF | ? | ....\n 80/0x50 | FF FF FF FF | ? | .: 81/0x51 | FF FF FF FF | ? | ....\n 82/0x52 | FF FF FF FF | ? | .: 83/0x53 | FF FF FF FF | ? | ....\n 84/0x54 | FF FF FF FF | ? | .: 85/0x55 | FF FF FF FF | ? | ....\n 86/0x56 | FF FF FF FF | ? | .: 87/0x57 | FF FF FF FF | ? | ....\n 88/0x58 | FF FF FF FF | ? | .: 89/0x59 | FF FF FF FF | ? | ....\n 90/0x5A | FF FF FF FF | ? | .: 91/0x5B | FF FF FF FF | ? | ....\n 92/0x5C | FF FF FF FF | ? | .: 93/0x5D | FF FF FF FF | ? | ....\n 94/0x5E | FF FF FF FF | ? | .: 95/0x5F | FF FF FF FF | ? | ....\n 96/0x60 | FF FF FF FF | ? | .: 97/0x61 | FF FF FF FF | ? | ....\n 98/0x62 | FF FF FF FF | ? | .: 99/0x63 | FF FF FF FF | ? | ....\n100/0x64 | FF FF FF FF | ? | .: 101/0x65 | FF FF FF FF | ? | .: 102/0x66 | FF FF FF FF | ? | .: 103/0x67 | FF FF FF FF | ? | .: 104/0x68 | FF FF FF FF | ? | .: 105/0x69 | FF FF FF FF | ? | .: 106/0x6A | FF FF FF FF | 
+[1732.997] SERIAL_TX> b'pctbat\r\n'
+[1733.011] SERIAL_TX> b'charge\r\n'
+[1743.027] SERIAL_TX> b'pctbat\r\n'
+[1743.041] SERIAL_TX> b'charge\r\n'
+[1753.057] SERIAL_TX> b'pctbat\r\n'
+[1753.071] SERIAL_TX> b'charge\r\n'
+[1763.087] SERIAL_TX> b'pctbat\r\n'
+[1763.101] SERIAL_TX> b'charge\r\n'
+[1773.117] SERIAL_TX> b'pctbat\r\n'
+[1773.131] SERIAL_TX> b'charge\r\n'
+[1783.148] SERIAL_TX> b'pctbat\r\n'
+[1783.161] SERIAL_TX> b'charge\r\n'
+[1793.177] SERIAL_TX> b'pctbat\r\n'
+[1793.191] SERIAL_TX> b'charge\r\n'
+[1803.207] SERIAL_TX> b'pctbat\r\n'
+[1803.221] SERIAL_TX> b'charge\r\n'
+[1806.273] KEY> KEY_PWR_CAN_PRES!
+[1806.659] KEY> KEY_PWR_CAN_PRES!
+[1806.662] FINISH(top=ReadActivity d=3)
+[1806.694] POLL stack=['MainActivity', 'ReadListActivity'] type=7 uid=11223355667788
+[1807.113] KEY> KEY_PWR_CAN_PRES!
+[1807.115] FINISH(top=ReadListActivity d=2)
+[1807.196] POLL stack=['MainActivity'] type=7 uid=11223355667788
+[1807.659] KEY> KEY_PWR_CAN_PRES!
+[1813.237] SERIAL_TX> b'pctbat\r\n'
+[1813.251] SERIAL_TX> b'charge\r\n'
+[1818.517] KEY> KEYDOWN_PRES!
+[1818.898] KEY> KEYDOWN_PRES!
+[1819.271] KEY> KEYDOWN_PRES!
+[1819.750] KEY> KEYDOWN_PRES!
+[1820.017] KEY> KEYDOWN_PRES!
+[1820.264] KEY> KEYDOWN_PRES!
+[1820.544] KEY> KEYDOWN_PRES!
+[1820.956] KEY> KEYDOWN_PRES!
+[1821.220] KEY> KEYDOWN_PRES!
+[1821.349] KEY> KEYDOWN_PRES!
+[1821.756] KEY> KEYDOWN_PRES!
+[1822.371] KEY> KEYOK_PRES!
+[1822.398] START(PluginsMenuActivity, None) bundle=None
+[1822.721] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=7 uid=11223355667788
+[1823.056] KEY> KEYDOWN_PRES!
+[1823.267] SERIAL_TX> b'pctbat\r\n'
+[1823.281] SERIAL_TX> b'charge\r\n'
+[1823.548] KEY> KEYDOWN_PRES!
+[1824.105] KEY> KEYDOWN_PRES!
+[1824.572] KEY> KEYOK_PRES!
+[1824.673] START(CanvasModeActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/doom', 'manifest': {'name': 'DOOM', 'version': '1.0.0', 'author': 'Lab401 / id Software (shareware)', 'description': 'DOOM Episode 1 -- Knee-Deep in the Dead', 'canvas_mode': True, 'entry_class': 'DoomPlugin', 'binary': 'doom', 'args': ['-iwad', 'doom1.wad', '-width', '240', '-height', '240'], 'key_map': {'UP': 'Up', 'DOWN': 'Down', 'LEFT': 'Left', 'RIGHT': 'Right', 'OK': 'Return', 'M1': 'comma', 'M2': 'period', 'ALL': 'Control_L'}, 'min_fw_version': '1.0.0', 'order': 200, 'notes': 'PWR exits unconditionally (kills process). doom1.wad is freely distributable shareware. Binary assets (doom, doom1.wad) must be placed in this directory.'}, 'binary': 'doom', 'args': ['-iwad', 'doom1.wad', '-width', '240', '-height', '240'], 'key_map': {'UP': 'Up', 'DOWN': 'Down', 'LEFT': 'Left', 'RIGHT': 'Right', 'OK': 'Return', 'M1': 'comma', 'M2': 'period', 'ALL': 'Control_L'}}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/doom", "manifest": {"name": "DOOM", "version": "1.0.0", "author": "Lab401 / id Software (shareware)", "description": "DOOM Episode 1 -- Knee-Deep in the Dead", "canvas_mode": true, "entry_class": "DoomPlugin", "binary": "doom", "args": ["-iwad", "doom1.wad", "-width", "240", "-height", "240"], "key_map": {"UP": "Up", "DOWN": "Down", "LEFT": "Left", "RIGHT": "Right", "OK": "Return", "M1": "comma", "M2": "period", "ALL": "Control_L"}, "min_fw_version": "1.0.0", "order": 200, "notes": "PWR exits unconditionally (kills process). doom1.wad is freely distributable shareware. Binary assets (doom, doom1.wad) must be placed in this directory."}, "binary": "doom", "args": ["-iwad", "doom1.wad", "-width", "240", "-height", "240"], "key_map": {"UP": "Up", "DOWN": "Down", "LEFT": "Left", "RIGHT": "Right", "OK": "Return", "M1": "comma", "M2": "period", "ALL": "Control_L"}}
+[1824.707] SERIAL_TX> b"i'm alive\r\n"
+[1824.726] POLL stack=['MainActivity', 'PluginsMenuActivity', 'CanvasModeActivity'] type=7 uid=11223355667788
+[1829.724] SERIAL_TX> b"i'm alive\r\n"
+[1833.299] SERIAL_TX> b'pctbat\r\n'
+[1833.316] SERIAL_TX> b'charge\r\n'
+[1834.552] KEY> KEYOK_PRES!
+[1834.758] SERIAL_TX> b"i'm alive\r\n"
+[1836.413] KEY> KEY_PWR_CAN_PRES!
+[1836.582] FINISH(top=CanvasModeActivity d=3)
+[1836.781] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=7 uid=11223355667788
+[1837.341] KEY> KEY_PWR_CAN_PRES!
+[1837.343] FINISH(top=PluginsMenuActivity d=2)
+[1837.784] POLL stack=['MainActivity'] type=7 uid=11223355667788
+[1838.903] KEY> KEYUP_PRES!
+[1839.247] KEY> KEYUP_PRES!
+[1839.531] KEY> KEYUP_PRES!
+[1839.791] KEY> KEYUP_PRES!
+[1840.189] KEY> KEYOK_PRES!
+[1840.193] START(AboutActivity, None) bundle=None
+[1840.290] POLL stack=['MainActivity', 'AboutActivity'] type=7 uid=11223355667788
+[1840.311] SERIAL_TX> b'version\r\n'
+[1840.631] PM3> hw version (timeout=10000)
+[1840.657] PM3< ret=1 content_len=899 \n [ Proxmark3 ]\n\n [ Client ]\n  Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 5.4.0 20160609\n  Platform: Linux / arm\n  Readline/Linenoise support.absent\n  QT GUI support: absent\n  Native BT support: absent\n  Python script support: absent\n  Python SWIG support: absent\n  Lua script support: present ( 5.4.7 )\n  Lua SWIG support: present\n\n [ Model ]\n  Firmware: PM3 GENERIC\n  External flash: present\n\n [ ARM ]\n  Bootrom: RRG/Iceman/master/release (git)\n  OS: Iceman/master/v4.21128-suspect 2026-02-25 16:15:01 ddaba4e24\n  Compiler: GCC 13.2.1 20231009\n\n [ FPGA ]\n fpga_icopyx_hf.ncd image 3s100evq100 14-04-2026 08:13:20\n  FPGA firmware: chip mismatch\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Internal SRAM size: 64K bytes\n  --= Architecture identifier: AT91SAM7Sxx Series\n  --= Embedded flash memory 512K bytes ( 63% used )\n\n\n
+[1843.336] SERIAL_TX> b'pctbat\r\n'
+[1843.351] SERIAL_TX> b'charge\r\n'
+[1852.062] KEY> KEY_PWR_CAN_PRES!
+[1852.065] FINISH(top=AboutActivity d=2)
+[1852.309] POLL stack=['MainActivity'] type=7 uid=11223355667788
+[1853.367] SERIAL_TX> b'pctbat\r\n'
+[1853.381] SERIAL_TX> b'charge\r\n'
+[1863.397] SERIAL_TX> b'pctbat\r\n'
+[1863.411] SERIAL_TX> b'charge\r\n'
+[1873.428] SERIAL_TX> b'pctbat\r\n'
+[1873.441] SERIAL_TX> b'charge\r\n'
+[1878.145] KEY> KEYUP_PRES!
+[1878.392] KEY> KEYUP_PRES!
+[1878.730] KEY> KEYUP_PRES!
+[1878.937] KEY> KEYUP_PRES!
+[1879.113] KEY> KEYUP_PRES!
+[1879.283] KEY> KEYUP_PRES!
+[1879.442] KEY> KEYUP_PRES!
+[1880.165] KEY> KEYOK_PRES!
+[1880.168] START(ReadListActivity, None) bundle=None
+[1880.351] POLL stack=['MainActivity', 'ReadListActivity'] type=7 uid=11223355667788
+[1881.315] KEY> KEYDOWN_PRES!
+[1881.668] KEY> KEYDOWN_PRES!
+[1881.823] KEY> KEYDOWN_PRES!
+[1881.967] KEY> KEYDOWN_PRES!
+[1882.109] KEY> KEYDOWN_PRES!
+[1882.263] KEY> KEYDOWN_PRES!
+[1883.457] SERIAL_TX> b'pctbat\r\n'
+[1883.471] SERIAL_TX> b'charge\r\n'
+[1884.216] KEY> KEYOK_PRES!
+[1884.219] START(ReadActivity, {'tag_type': 2, 'tag_name': 'Ultralight'}) bundle={"tag_type": 2, "tag_name": "Ultralight"}
+[1884.285] PM3> hf 14a info (timeout=5000)
+[1884.359] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=7 uid=11223355667788
+[1886.925] PM3< ret=1 content_len=313 \n UID: 00 00 00 00 00 00 00  \nATQA: 00 44\n SAK: 00 [2]\n      no tag-info available\nPossible types:\nTYPE: NTAG 203 144bytes (NT2H0301F0DT) ( NTAG21x )\n   MIFARE Ultralight/C/NTAG Compatible\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities : Gen 2 / CUID\nMagic capabilities : NTAG21x\n\n\n\n
+[1886.927] PM3> hf mfu info (timeout=8888)
+[1888.661] PM3< ret=1 content_len=380 \n      TYPE: NTAG 213 144bytes (NT2H1311G0DU) ( NTAG21x )\n       UID: 00 00 00 00 00 00 00\n    UID[0]: 00, no tag-info available\n      BCC0: 00, crc should be 88\n      BCC1: 00 ( ok )\n  Internal: 00\n      Lock: 00 00  - 0000000000000000\n       OTP: 00 00 00 00  - 00000000000000000000000000000000\n\n--- Tag Counter\n       [02]: 00 00 00\nError: tag didn't answer to READ SIGNATURE\n\n
+[1888.662] CACHE: {"found": "True", "type": "5", "isMFU": "True", "uid": "'00000000000000'"}
+[1888.867] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=5 uid=00000000000000
+[1888.898] PM3> hf mfu dump f /mnt/upan/dump/mfu/NTAG213_00000000000000_1 (timeout=30000)
+[1891.600] PM3< ret=1 content_len=2070 TYPE: NTAG 213 144bytes (NT2H1311G0DU) ( NTAG21x )\nReading tag memory: MFU dump file information\nVersion: 00 00 00 00 00 00 00 00\nTBD 0: 00 00\nTBD 1: 00\nSignature: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n             00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nCounter 0: 00 00 00\nTearing 0: 00\nCounter 1: 00 00 00\nTearing 1: 00\nCounter 2: 00 00 00\nTearing 2: 00\nMax data page: 44 ( 180 bytes )\nHeader size: 56 bytes\n\nblock#   | data        |lck| ascii\n  0/0x00 | 00 00 00 00 |   | .: 1/0x01 | 00 00 00 00 |   | ....\n  2/0x02 | 00 00 00 00 |   | .: 3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | .: 5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | .: 7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | .: 9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | .: 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | .: 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | .: 15/0x0F | 00 00 00 00 | 0 | ....\n 16/0x10 | 00 00 00 00 | ? | .: 17/0x11 | 00 00 00 00 | ? | ....\n 18/0x12 | 00 00 00 00 | ? | .: 19/0x13 | 00 00 00 00 | ? | ....\n 20/0x14 | 00 00 00 00 | ? | .: 21/0x15 | 00 00 00 00 | ? | ....\n 22/0x16 | 00 00 00 00 | ? | .: 23/0x17 | 00 00 00 00 | ? | ....\n 24/0x18 | 00 00 00 00 | ? | .: 25/0x19 | 00 00 00 00 | ? | ....\n 26/0x1A | 00 00 00 00 | ? | .: 27/0x1B | 00 00 00 00 | ? | ....\n 28/0x1C | 00 00 00 00 | ? | .: 29/0x1D | 00 00 00 00 | ? | ....\n 30/0x1E | 00 00 00 00 | ? | .: 31/0x1F | 00 00 00 00 | ? | ....\n 32/0x20 | 00 00 00 00 | ? | .: 33/0x21 | 00 00 00 00 | ? | ....\n 34/0x22 | 00 00 00 00 | ? | .: 35/0x23 | 00 00 00 00 | ? | ....\n 36/0x24 | 00 00 00 00 | ? | .: 37/0x25 | 00 00 00 00 | ? | ....\n 38/0x26 | 00 00 00 00 | ? | .: 39/0x27 | 00 00 00 00 | ? | ....\n 40/0x28 | 00 00 00 00 | ? | .: 41/0x29 | 00 00 00 00 | ? | ....\n 42/0x2A | 00 00 00 00 | ? | .: 43/0x2B | 00 00 00 00 | ? | ....\n 44/0x2C | 00 00 00 00 | ? | .: saved 236 bytes to binary file /mnt/upan/dump/mfu/NTAG213_00000000000000_1.bin\nsaved to json file /mnt/upan/dump/mfu/NTAG213_00000000000000_1.json\n\n
+[1893.487] SERIAL_TX> b'pctbat\r\n'
+[1893.501] SERIAL_TX> b'charge\r\n'
+[1893.716] KEY> KEY_PWR_CAN_PRES!
+[1896.461] KEY> KEY_PWR_CAN_PRES!
+[1896.463] FINISH(top=ReadActivity d=3)
+[1896.880] POLL stack=['MainActivity', 'ReadListActivity'] type=5 uid=00000000000000
+[1900.404] KEY> KEYDOWN_PRES!
+[1900.969] KEY> KEYDOWN_PRES!
+[1901.346] KEY> KEYOK_PRES!
+[1901.348] START(ReadActivity, {'tag_type': 4, 'tag_name': 'Ultralight EV1'}) bundle={"tag_type": 4, "tag_name": "Ultralight EV1"}
+[1901.388] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=5 uid=00000000000000
+[1901.410] PM3> hf 14a info (timeout=5000)
+[1902.605] PM3< ret=1 content_len=351 \n UID: 04 C6 C7 2A C1 4E 80  \nATQA: 00 44\n SAK: 00 [4]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight\nATS may be corrupted.\nLength of ATS (18 bytes incl. 2 Bytes CRC) doesn't match TL\nATS: 85 00 00 A0 00 00 0A C3 00 04 03 01 01 00 0B 03 [ 41 DF ]\n     85: TL    length is 133 bytes\n\nMagic capabilities : Gen 2 / CUID\n\n\n\n
+[1902.607] PM3> hf mfu info (timeout=8888)
+[1903.517] SERIAL_TX> b'pctbat\r\n'
+[1903.531] SERIAL_TX> b'charge\r\n'
+[1905.532] PM3< ret=1 content_len=1680 \n      TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101) ( USCUID-UL )\n       UID: 04 C6 C7 2A C1 4E 80\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: 8D ( ok )\n      BCC1: 25 ( ok )\n  Internal: 48 ( default )\n      Lock: 00 00  - 0000000000000000\n       OTP: 00 00 00 00  - 00000000000000000000000000000000\n\n--- Tag Counters\n       [0]: 00 00 00\n            - BD tearing ( ok )\n       [1]: 00 00 00\n            - BD tearing ( ok )\n       [2]: 00 00 00\n            - BD tearing ( ok )\n\n--- Tag Signature\n             TAG IC Signature: A7C2E8486EC62D5AA4B731B8FF221EDB\n                             : 6549BB04451C3EAAB281F6CC0C5DB1AB\n       Signature verification: failed\n\n--- Tag Version\n       Raw bytes: 0004030101000B03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: Ultralight\n Product subtype: 01, 17 pF\n   Major version: 01\n   Minor version: 00\n            Size: 0B, (64 - 32 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [16/0x10]: 00000000\n                    - strong modulation mode disabled\n                    - page 0 and above need authentication\n  cfg1 [17/0x11]: 00000000\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 00, Virtual Card Type Identifier is not default\n  PWD  [18/0x12]: 00000000 ( cannot be read )\n  PACK [19/0x13]: 0000     ( cannot be read )\n  RFU  [19/0x13]:     0000 ( cannot be read )\n\n--- Known EV1/NTAG passwords\npassword not known\n--- Fingerprint\nn/a\n\n\n
+[1905.537] CACHE: {"found": "True", "type": "4", "isMFU": "True", "uid": "'04C6C72AC14E80'"}
+[1905.768] PM3> hf mfu dump f /mnt/upan/dump/mfu/M0-UL-EV1_04C6C72AC14E80_1 (timeout=30000)
+[1905.896] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=4 uid=04C6C72AC14E80
+[1907.780] PM3< ret=1 content_len=1274 TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101) ( USCUID-UL )\nReading tag memory: MFU dump file information\nVersion: 00 04 03 01 01 00 0B 03\nTBD 0: 00 00\nTBD 1: 00\nSignature: A7 C2 E8 48 6E C6 2D 5A A4 B7 31 B8 FF 22 1E DB\n             65 49 BB 04 45 1C 3E AA B2 81 F6 CC 0C 5D B1 AB\nCounter 0: 00 00 00\nTearing 0: BD\nCounter 1: 00 00 00\nTearing 1: BD\nCounter 2: 00 00 00\nTearing 2: BD\nMax data page: 19 ( 80 bytes )\nHeader size: 56 bytes\n\nblock#   | data        |lck| ascii\n  0/0x00 | 04 C6 C7 8D |   | .: 1/0x01 | 2A C1 4E 80 |   | *.N.\n  2/0x02 | 25 48 00 00 |   | %H..\n  3/0x03 | 00 00 00 00 | 0 | .: 4/0x04 | FF FF FF FF | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | .: 6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | .: 8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | .: 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | .: 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | .: 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | .: 16/0x10 | 00 00 00 00 | ? | ....\n 17/0x11 | 00 00 00 00 | ? | .: 18/0x12 | 00 00 00 00 | ? | ....\n 19/0x13 | 00 00 00 00 | ? | .: saved 136 bytes to binary file /mnt/upan/dump/mfu/M0-UL-EV1_04C6C72AC14E80_1.bin\nsaved to json file /mnt/upan/dump/mfu/M0-UL-EV1_04C6C72AC14E80_1.json\n\n
+[1913.548] SERIAL_TX> b'pctbat\r\n'
+[1913.561] SERIAL_TX> b'charge\r\n'
+[1923.577] SERIAL_TX> b'pctbat\r\n'
+[1923.591] SERIAL_TX> b'charge\r\n'
+[1924.003] KEY> KEY_PWR_CAN_PRES!
+[1933.607] SERIAL_TX> b'pctbat\r\n'
+[1933.621] SERIAL_TX> b'charge\r\n'
+[1943.642] SERIAL_TX> b'pctbat\r\n'
+[1943.656] SERIAL_TX> b'charge\r\n'
+[1953.673] SERIAL_TX> b'pctbat\r\n'
+[1953.686] SERIAL_TX> b'charge\r\n'
+[1961.333] KEY> KEY_PWR_CAN_PRES!
+[1961.336] FINISH(top=ReadActivity d=3)
+[1961.478] POLL stack=['MainActivity', 'ReadListActivity'] type=4 uid=04C6C72AC14E80
+[1961.842] KEY> KEY_PWR_CAN_PRES!
+[1961.845] FINISH(top=ReadListActivity d=2)
+[1961.980] POLL stack=['MainActivity'] type=4 uid=04C6C72AC14E80
+[1963.035] KEY> KEYUP_PRES!
+[1963.558] KEY> KEYOK_PRES!
+[1963.561] START(ScanActivity, None) bundle=None
+[1963.619] PM3> hf 14a info (timeout=5000)
+[1963.703] SERIAL_TX> b'pctbat\r\n'
+[1963.716] SERIAL_TX> b'charge\r\n'
+[1963.984] POLL stack=['MainActivity', 'ScanActivity'] type=4 uid=04C6C72AC14E80
+[1964.836] PM3< ret=1 content_len=193 \n UID: 04 E1 CE C5 93 7A 8C  \nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[1964.838] PM3> hf mfu info (timeout=8888)
+[1966.354] PM3< ret=1 content_len=1 \n
+[1966.357] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04E1CEC5937A8C'"}
+[1966.490] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04E1CEC5937A8C
+[1966.555] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04E1CEC5937A8C'"}
+[1973.733] SERIAL_TX> b'pctbat\r\n'
+[1973.746] SERIAL_TX> b'charge\r\n'
+[1980.791] KEY> KEY_PWR_CAN_PRES!
+[1980.794] FINISH(top=ScanActivity d=2)
+[1981.013] POLL stack=['MainActivity'] type=2 uid=04E1CEC5937A8C
+[1981.680] KEY> KEYOK_PRES!
+[1981.683] START(ScanActivity, None) bundle=None
+[1981.714] PM3> hf 14a info (timeout=5000)
+[1981.871] PM3< ret=1 content_len=30 iso14443a card select failed\n\n
+[1981.874] PM3> lf sea (timeout=10000)
+[1982.016] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04E1CEC5937A8C
+[1983.762] SERIAL_TX> b'pctbat\r\n'
+[1983.776] SERIAL_TX> b'charge\r\n'
+[1985.105] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1985.108] PM3> hf sea (timeout=10000)
+[1991.934] PM3< ret=1 content_len=214 \n UID: 04 9C C9 91 30 71 85  \nATQA: 00 44\n SAK: 00 [2]\n      NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\nValid ISO14443-A tag found\n\n\n
+[1991.940] PM3> hf 14a info (timeout=5000)
+[1993.184] PM3< ret=1 content_len=193 \n UID: 04 9C C9 91 30 71 85  \nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[1993.186] PM3> hf mfu info (timeout=8888)
+[1993.792] SERIAL_TX> b'pctbat\r\n'
+[1993.806] SERIAL_TX> b'charge\r\n'
+[1995.168] PM3< ret=1 content_len=945 \n      TYPE: NTAG 203 144bytes (NT2H0301F0DT)\n       UID: 04 9C C9 91 30 71 85\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: D9 ( ok )\n      BCC1: 55 ( ok )\n  Internal: 48 ( default )\n      Lock: 00 00  - 0000000000000000\n       OTP: E1 10 12 00  - 11100001000100000001001000000000\n\n--- NDEF Message\nCapability Container: E1101200\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  12: Physical Memory Size: 144 bytes\n  12: NDEF Memory Size: 144 bytes\n  00: Additional feature information\n  00000000\n  000 .: - RFU\n  ...0 ... - Don't support special frame\n  ....0 .. - Don't support lock block\n  .....00  - RFU\n  .......0 - IC don't support multiple block reads\n\n--- Tag Silicon Information\n       Wafer Counter: 17704466 ( 0x10E2612 )\n   Wafer Coordinates: x 412, y 457 (0x19C, 0x1C9)\n           Test Site: 1\n--- Fingerprint\nn/a\n\n\n
+[1995.169] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'049CC991307185'", "progress": "2"}
+[1995.348] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'049CC991307185'", "progress": "2"}
+[1995.538] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=049CC991307185
+[2003.822] SERIAL_TX> b'pctbat\r\n'
+[2003.836] SERIAL_TX> b'charge\r\n'
+[2013.852] SERIAL_TX> b'pctbat\r\n'
+[2013.866] SERIAL_TX> b'charge\r\n'
+[2023.887] SERIAL_TX> b'pctbat\r\n'
+[2023.901] SERIAL_TX> b'charge\r\n'
+[2032.763] KEY> KEY_PWR_CAN_PRES!
+[2032.766] FINISH(top=ScanActivity d=2)
+[2033.093] POLL stack=['MainActivity'] type=2 uid=049CC991307185
+[2033.917] SERIAL_TX> b'pctbat\r\n'
+[2033.931] SERIAL_TX> b'charge\r\n'
+[2043.952] SERIAL_TX> b'pctbat\r\n'
+[2043.966] SERIAL_TX> b'charge\r\n'
+[2048.143] KEY> KEYOK_PRES!
+[2048.146] START(ScanActivity, None) bundle=None
+[2048.177] PM3> hf 14a info (timeout=5000)
+[2048.616] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=049CC991307185
+[2049.205] PM3< ret=1 content_len=184 \n UID: 04 0F 8E 87 66 C0 8E  \nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   NTAG 2xx\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[2049.207] PM3> hf mfu info (timeout=8888)
+[2051.659] PM3< ret=1 content_len=2156 \n      TYPE: NTAG 216 888bytes (NT2H1611G0DU)\n       UID: 04 0F 8E 87 66 C0 8E\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: 0D ( ok )\n      BCC1: AF ( ok )\n  Internal: 48 ( default )\n      Lock: 00 00  - 0000000000000000\n       OTP: E1 10 6D 00  - 11100001000100000110110100000000\n\n--- NDEF Message\nCapability Container: E1106D00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  6D: Physical Memory Size: 872 bytes\n  6D: NDEF Memory Size: 872 bytes\n  00: Additional feature information\n  00000000\n  000 .: - RFU\n  ...0 ... - Don't support special frame\n  ....0 .. - Don't support lock block\n  .....00  - RFU\n  .......0 - IC don't support multiple block reads\n\n--- Tag Silicon Information\n       Wafer Counter: 18353360 ( 0x1180CD0 )\n   Wafer Coordinates: x 527, y 910 (0x20F, 0x38E)\n           Test Site: 7\n\n--- Tag Counter\n       [02]: 00 00 00\n\n--- Tag Signature\n             TAG IC Signature: 00000000000000000000000000000000\n                             : 00000000000000000000000000000000\n       Signature verification: failed\n\n--- Tag Version\n       Raw bytes: 0004040201001303\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: NTAG\n Product subtype: 02, 50pF\n   Major version: 01\n   Minor version: 00\n            Size: 13, (1024 - 512 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [227/0xE3]: 040000FF\n                    - strong modulation mode enabled\n                    - pages don't need authentication\n  cfg1 [228/0xE4]: 00050000\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [229/0xE5]: 00000000 ( cannot be read )\n  PACK [230/0xE6]: 0000     ( cannot be read )\n  RFU  [230/0xE6]:     0000 ( cannot be read )\n\n--- Known EV1/NTAG passwords\nPassword: FFFFFFFF  pack... 0000\n--- Fingerprint\nn/a\n\n\n
+[2051.661] CACHE: {"found": "True", "type": "7", "isMFU": "True", "uid": "'040F8E8766C08E'"}
+[2051.857] CACHE: {"found": "True", "type": "7", "isMFU": "True", "uid": "'040F8E8766C08E'"}
+[2052.122] POLL stack=['MainActivity', 'ScanActivity'] type=7 uid=040F8E8766C08E
+[2053.982] SERIAL_TX> b'pctbat\r\n'
+[2053.996] SERIAL_TX> b'charge\r\n'
+[2064.018] SERIAL_TX> b'pctbat\r\n'
+[2064.031] SERIAL_TX> b'charge\r\n'
+[2074.047] SERIAL_TX> b'pctbat\r\n'
+[2074.061] SERIAL_TX> b'charge\r\n'
+[2084.078] SERIAL_TX> b'pctbat\r\n'
+[2084.097] SERIAL_TX> b'charge\r\n'

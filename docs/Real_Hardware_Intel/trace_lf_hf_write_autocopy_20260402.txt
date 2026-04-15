@@ -1,0 +1,542 @@
+=== WRITE FLOW TRACE ===
+[   0.004] write.so patched OK
+[   0.006] POLL stack=['dict'] 
+[   0.007] === ALL INSTALLED ===
+[ 156.158] START(ReadListActivity, None)
+[ 156.868] POLL stack=['dict', 'dict'] 
+[ 164.128] PM3> lf awid read (timeout=5000)
+[ 164.433] PM3< ret=1 \n
+[ 166.662] PM3> lf awid read (timeout=5000)
+[ 166.962] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (16503) - Wiegand: f45bf6dedbf080ef, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[ 167.399] POLL stack=['dict', 'dict'] type=11 uid=
+[ 167.974] PM3> lf awid read (timeout=5000)
+[ 168.262] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (1914) - Wiegand: 45bf6dedbf080ef5, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[ 174.249] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01deb4ddede7e8b7edbdb7e1'})
+[ 174.913] POLL stack=['dict', 'dict', 'dict'] type=11 uid=
+[ 176.030] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01deb4ddede7e8b7edbdb7e1'})
+[ 176.098] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 176.122] WRITE.write returned: -9999
+[ 176.159] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 177.056] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[ 177.057] PM3> lf t55xx detect (timeout=10000)
+[ 177.444] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 177.456] PM3> lf t55xx write b 1 d 01deb4dd (timeout=8000)
+[ 177.598] PM3< ret=1 \n[=] Writing page 0  block: 01  data: 0x01DEB4DD \n
+[ 177.599] PM3> lf t55xx write b 2 d ede7e8b7 (timeout=8000)
+[ 177.734] PM3< ret=1 \n[=] Writing page 0  block: 02  data: 0xEDE7E8B7 \n
+[ 177.735] PM3> lf t55xx write b 3 d edbdb7e1 (timeout=8000)
+[ 177.866] PM3< ret=1 \n[=] Writing page 0  block: 03  data: 0xEDBDB7E1 \n
+[ 177.867] PM3> lf t55xx write b 0 d 00107060 (timeout=5000)
+[ 177.999] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00107060 \n
+[ 178.002] PM3> lf t55xx detect (timeout=10000)
+[ 178.385] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : FSK2a\n[=]      Bit Rate       : 4 - RF/50\n[=]      Inverted       : Yes\n[=]      Offset         : 32\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00107060\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 178.390] PM3> lf t55xx write b 7 d 20206666 (timeout=5000)
+[ 178.533] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[ 178.534] PM3> lf t55xx write b 0 d 00107070 (timeout=5000)
+[ 178.656] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00107070 \n
+[ 178.657] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 180.043] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : FSK2a\n[=]      Bit Rate       : 4 - RF/50\n[=]      Inverted       : Yes\n[=]      Offset         : 32\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00107070\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : Yes\n[=]      Password       : 20206666\n\n
+[ 180.050] PM3> lf sea (timeout=10000)
+[ 181.140] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n\n[+] Valid AWID ID found!\n\n[+] Chipset detection: T55xx\n
+[ 181.168] PM3> lf awid read (timeout=5000)
+[ 181.464] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[ 183.307] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 183.310] PM3> lf sea (timeout=10000)
+[ 183.310] WRITE.verify returned: -9999
+[ 184.428] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n\n[+] Valid AWID ID found!\n\n[+] Chipset detection: T55xx\n
+[ 184.438] PM3> lf awid read (timeout=5000)
+[ 184.746] PM3< ret=1 \n[+] AWID - len: 222 -unknown- (32395) - Wiegand: 203bd69bbdbcfd16, Raw: 01deb4ddede7e8b7edbdb7e1\n
+[ 187.935] POLL stack=['dict', 'dict'] type=11 uid=
+[ 193.946] POLL stack=['dict'] type=11 uid=
+[ 194.821] START(ReadListActivity, None)
+[ 195.450] POLL stack=['dict', 'dict'] type=11 uid=
+[ 199.598] PM3> hf 14a info (timeout=5000)
+[ 201.428] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 00 00 00 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    no tag-info available\nTYPE: Unknown 000000\n[+]    MIFARE Ultralight/C/NTAG Compatible\n[=] SAK incorrectly claims that card doesn't support RATS\n[+]  ATS: 0A 78 00 81 02 DB A0 C1 19 40 2A B5 \n[+]        -  TL : length is 10 bytes\n[+]        -  T0 : TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n[+]        - TA1 : different divisors are supported, DR: [], DS: []\n[+]        - TB1 : SFGI = 1 (SFGT = 8192/fc), FWI = 8 (FWT = 1048576/fc)\n[+]        - TC1 : NAD is NOT supported, CID is supported\n[+] Magic capabilities : Gen 2 / CUID\n
+[ 201.450] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 201.698] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 201.700] PM3> hf mfu info (timeout=8888)
+[ 201.962] POLL stack=['dict', 'dict'] type=? uid=
+[ 203.036] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n      TYPE: Unknown 000000\n[+]        UID: 00 00 00 00 00 00 00 \n[+]     UID[0]: 00, no tag-info available\n      BCC0: 00, crc should be 88\n[+]       BCC1: 00 (ok)\n[+]   Internal: 00 (not default)\n[+]       Lock: 00 00  - 00\n[+] OneTimePad: 00 00 00 00  - 0000\n\n
+[ 203.465] POLL stack=['dict', 'dict'] type=2 uid=00000000000000
+[ 204.355] PM3>  hf mfu dump f /mnt/upan/dump/mfu/M0-UL_00000000000000_1 (timeout=8888)
+[ 208.212] PM3< ret=1 \nTYPE: Unknown 000000\n[+] Reading tag memory...\n[!] Authentication Failed UL-EV1/NTAG\n[=] MFU dump file information\n[=] -------------------------------------------------------------\n[=]       Version | 00 00 00 00 00 00 00 00 \n[=]         TBD 0 | 00 00 \n[=]         TBD 1 | 00 \n[=]     Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \n[=]     Counter 0 | 00 00 00 \n[=]     Tearing 0 | 00 \n[=]     Counter 1 | 00 00 00 \n[=]     Tearing 1 | 00 \n[=]     Counter 2 | 00 00 00 \n[=]     Tearing 2 | 00 \n[=] Max data page | 14 (60 bytes)\n[=]   Header size | 56\n[=] -------------------------------------------------------------\n[=] block#   | data        |lck| ascii\n[=] ---------+-------------+---+------\n[=]   0/0x00 | 00 00 00 00 |   | ....\n[=]   1/0x01 | 00 00 00 00 |   | ....\n[=]   2/0x02 | 00 00 00 00 |   | ....\n[=]   3/0x03 | 00 00 00 00 | 0 | ....\n[=]   4/0x04 | 00 00 00 00 | 0 | ....\n[=]   5/0x05 | 00 00 00 00 | 0 | ....\n[=]   6/0x06 | 00 00 00 00 | 0 | ....\n[=]   7/0x07 | 00 00 00 00 | 0 | ....\n[=]   8/0x08 | 00 00 00 00 | 0 | ....\n[=]   9/0x09 | 00 00 00 00 | 0 | ....\n[=]  10/0x0A | 00 00 00 00 | 0 | ....\n[=]  11/0x0B | 00 00 00 00 | 0 | ....\n[=]  12/0x0C | 00 00 00 00 | 0 | ....\n[=]  13/0x0D | 00 00 00 00 | 0 | ....\n[=]  14/0x0E | 00 00 00 00 | 0 | ....\n[=]  15/0x0F | 00 00 00 00 | 0 | ....\n[=] ---------------------------------\n[+] saved 120 bytes to binary file /mnt/upan/dump/mfu/M0-UL_00000000000000_1.bin\n[+] saved to json file /mnt/upan/dump/mfu/M0-UL_00000000000000_1.json\n
+[ 211.049] START(WarningWriteActivity, '/mnt/upan/dump/mfu/M0-UL_00000000000000_1')
+[ 211.497] POLL stack=['dict', 'dict', 'dict'] type=2 uid=00000000000000
+[ 212.785] START(WriteActivity, '/mnt/upan/dump/mfu/M0-UL_00000000000000_1')
+[ 212.828] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['uid', 'found', 'isMFU', 'type']), /mnt/upan/dump/mfu/M0-UL_00000000000000_1)
+[ 212.831] WRITE.write returned: -9999
+[ 212.832] PM3> hf mfu restore s e f /mnt/upan/dump/mfu/M0-UL_00000000000000_1.bin (timeout=10888)
+[ 212.987] PM3< ret=1 \n[+] loaded 120 bytes from binary file /mnt/upan/dump/mfu/M0-UL_00000000000000_1.bin\n[-] Failed convert on load to new Ultralight/NTAG format\n
+[ 212.993] PM3> hf 14a info (timeout=5000)
+[ 214.933] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 00 00 00 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    no tag-info available\nTYPE: Unknown 000000\n[+]    MIFARE Ultralight/C/NTAG Compatible\n[=] SAK incorrectly claims that card doesn't support RATS\n[+]  ATS: 0A 78 00 81 02 DB A0 C1 19 40 2A B5 \n[+]        -  TL : length is 10 bytes\n[+]        -  T0 : TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n[+]        - TA1 : different divisors are supported, DR: [], DS: []\n[+]        - TB1 : SFGI = 1 (SFGT = 8192/fc), FWI = 8 (FWT = 1048576/fc)\n[+]        - TC1 : NAD is NOT supported, CID is supported\n[+] Magic capabilities : Gen 2 / CUID\n
+[ 214.935] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 215.195] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 215.196] PM3> hf mfu info (timeout=8888)
+[ 215.505] POLL stack=['dict', 'dict', 'dict'] type=? uid=
+[ 216.526] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n      TYPE: Unknown 000000\n[+]        UID: 00 00 00 00 00 00 00 \n[+]     UID[0]: 00, no tag-info available\n      BCC0: 00, crc should be 88\n[+]       BCC1: 00 (ok)\n[+]   Internal: 00 (not default)\n[+]       Lock: 00 00  - 00\n[+] OneTimePad: 00 00 00 00  - 0000\n\n
+[ 217.008] POLL stack=['dict', 'dict', 'dict'] type=2 uid=00000000000000
+[ 218.773] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['uid', 'found', 'isMFU', 'type']), /mnt/upan/dump/mfu/M0-UL_00000000000000_1)
+[ 218.776] PM3> hf 14a info (timeout=5000)
+[ 218.778] WRITE.verify returned: -9999
+[ 220.740] PM3< ret=1 \n\n[+]  UID: 00 00 00 00 00 00 00 \n[+] ATQA: 00 44\n[+]  SAK: 00 [2]\n[+] MANUFACTURER:    no tag-info available\nTYPE: Unknown 000000\n[+]    MIFARE Ultralight/C/NTAG Compatible\n[=] SAK incorrectly claims that card doesn't support RATS\n[+]  ATS: 0A 78 00 81 02 DB A0 C1 19 40 2A B5 \n[+]        -  TL : length is 10 bytes\n[+]        -  T0 : TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n[+]        - TA1 : different divisors are supported, DR: [], DS: []\n[+]        - TB1 : SFGI = 1 (SFGT = 8192/fc), FWI = 8 (FWT = 1048576/fc)\n[+]        - TC1 : NAD is NOT supported, CID is supported\n[+] Magic capabilities : Gen 2 / CUID\n
+[ 220.742] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 220.970] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 220.971] PM3> hf mfu info (timeout=8888)
+[ 221.016] POLL stack=['dict', 'dict', 'dict'] type=? uid=
+[ 222.299] PM3< ret=1 \n\n[=] --- Tag Information --------------------------\n[=] -------------------------------------------------------------\n      TYPE: Unknown 000000\n[+]        UID: 00 00 00 00 00 00 00 \n[+]     UID[0]: 00, no tag-info available\n      BCC0: 00, crc should be 88\n[+]       BCC1: 00 (ok)\n[+]   Internal: 00 (not default)\n[+]       Lock: 00 00  - 00\n[+] OneTimePad: 00 00 00 00  - 0000\n\n
+[ 222.520] POLL stack=['dict', 'dict', 'dict'] type=2 uid=00000000000000
+[ 225.527] POLL stack=['dict', 'dict'] type=2 uid=00000000000000
+[ 227.531] POLL stack=['dict'] type=2 uid=00000000000000
+[ 232.782] START(ReadListActivity, None)
+[ 233.050] POLL stack=['dict', 'dict'] type=2 uid=00000000000000
+[ 233.836] PM3> hf 14a info (timeout=5000)
+[ 234.710] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 235.054] POLL stack=['dict', 'dict'] type=1 uid=567F2F19
+[ 242.524] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1')
+[ 243.068] POLL stack=['dict', 'dict', 'dict'] type=1 uid=567F2F19
+[ 244.678] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1')
+[ 244.747] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1)
+[ 244.755] WRITE.write returned: -9999
+[ 244.756] PM3> hf 14a info (timeout=5000)
+[ 245.631] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 245.680] PM3> hf mf cload b /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1.bin (timeout=8888)
+[ 247.638] PM3< ret=1 \n[+] loaded 1024 bytes from binary file /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1.bin\n[=] Copying to magic card\n................................................................\n\n[+] Card loaded 64 blocks from file\n
+[ 247.645] PM3> hf 14a raw -p -a -b 7 40 (timeout=8888)
+[ 247.882] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 247.882] PM3> hf 14a raw -p -a 43 (timeout=8888)
+[ 248.116] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 248.117] PM3> hf 14a raw -c -p -a e000 (timeout=8888)
+[ 248.366] PM3< ret=1 \nreceived 18 bytes\n7A FF 00 00 00 00 00 00 00 00 00 00 00 00 00 08 4E 17 \n
+[ 248.367] PM3> hf 14a raw -c -p -a e100 (timeout=8888)
+[ 248.602] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 248.603] PM3> hf 14a raw -c -p -a 85000000000000000000000000000008 (timeout=8888)
+[ 248.847] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 248.848] PM3> hf 14a raw -c -a 5000 (timeout=8888)
+[ 249.097] PM3< ret=1 \nreceived 0 bytes\n
+[ 249.100] PM3> hf 14a info (timeout=5000)
+[ 249.979] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 253.224] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1)
+[ 253.227] PM3> hf 14a info (timeout=5000)
+[ 253.227] WRITE.verify returned: -9999
+[ 254.134] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 256.106] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1)
+[ 256.108] PM3> hf 14a info (timeout=5000)
+[ 256.108] WRITE.write returned: -9999
+[ 257.003] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 257.044] PM3> hf mf cload b /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1.bin (timeout=8888)
+[ 258.993] PM3< ret=1 \n[+] loaded 1024 bytes from binary file /mnt/upan/dump/mf1/M1-1K-4B_567F2F19_1.bin\n[=] Copying to magic card\n................................................................\n\n[+] Card loaded 64 blocks from file\n
+[ 258.994] PM3> hf 14a raw -p -a -b 7 40 (timeout=8888)
+[ 259.225] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 259.225] PM3> hf 14a raw -p -a 43 (timeout=8888)
+[ 259.461] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 259.461] PM3> hf 14a raw -c -p -a e000 (timeout=8888)
+[ 259.703] PM3< ret=1 \nreceived 18 bytes\n85 00 00 00 00 00 00 00 00 00 00 00 00 00 00 08 18 47 \n
+[ 259.704] PM3> hf 14a raw -c -p -a e100 (timeout=8888)
+[ 259.940] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 259.941] PM3> hf 14a raw -c -p -a 85000000000000000000000000000008 (timeout=8888)
+[ 260.182] PM3< ret=1 \nreceived 1 bytes\n0A \n
+[ 260.183] PM3> hf 14a raw -c -a 5000 (timeout=8888)
+[ 260.429] PM3< ret=1 \nreceived 0 bytes\n
+[ 260.431] PM3> hf 14a info (timeout=5000)
+[ 261.323] PM3< ret=1 \n\n[+]  UID: 56 7F 2F 19 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Gen 1a\n[+] Prng detection: weak\n
+[ 264.604] POLL stack=['dict', 'dict'] type=1 uid=567F2F19
+[ 265.606] POLL stack=['dict'] type=1 uid=567F2F19
+[ 268.905] START(ReadListActivity, None)
+[ 269.614] POLL stack=['dict', 'dict'] type=1 uid=567F2F19
+[ 270.520] PM3> hf 14a info (timeout=5000)
+[ 272.080] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 272.083] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 272.337] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 272.619] POLL stack=['dict', 'dict'] type=1 uid=AA991523
+[ 274.108] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 274.714] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] |-----|----------------|---|----------------|---|\n[+] ( 0:Failed / 1:Success)\n\n
+[ 285.275] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_AA991523_2.bin')
+[ 285.641] POLL stack=['dict', 'dict', 'dict'] type=1 uid=AA991523
+[ 286.769] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_AA991523_2.bin')
+[ 286.838] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_AA991523_2.bin)
+[ 286.841] PM3> hf 14a info (timeout=5000)
+[ 286.841] WRITE.write returned: -9999
+[ 288.388] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 288.390] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 288.632] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 289.356] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 290.008] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] |-----|----------------|---|----------------|---|\n[+] ( 0:Failed / 1:Success)\n\n
+[ 290.495] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 290.752] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 290.754] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 291.001] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 291.002] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 291.258] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 291.260] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 291.503] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 291.504] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 291.761] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 291.762] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 292.008] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 292.010] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 292.265] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 292.266] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 292.513] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 292.514] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 292.772] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 292.773] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 293.034] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 293.035] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 293.293] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 293.294] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 293.540] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 293.542] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 293.804] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 293.805] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 294.058] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 294.059] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 294.306] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 294.308] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 294.566] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 294.567] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 294.824] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 294.825] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 295.073] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 295.075] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 295.332] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 295.333] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 295.591] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 295.592] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 295.840] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 295.842] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 296.103] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 296.104] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 296.362] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 296.363] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 296.622] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 296.623] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 296.882] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 296.883] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 297.132] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 297.133] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 297.393] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 297.394] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 297.650] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 297.651] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 297.906] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 297.907] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 298.152] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 298.154] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 298.409] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 298.410] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 298.656] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 298.657] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 298.906] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 298.908] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 299.169] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 299.170] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 299.430] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 299.431] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 299.691] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 299.693] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 299.949] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 299.950] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 300.205] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 300.206] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 300.457] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 300.459] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 300.718] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 300.719] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 300.980] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 300.980] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 301.242] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 301.244] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 301.501] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 301.502] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 301.759] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 301.760] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 302.010] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 302.012] PM3> hf mf wrbl 0 A ffffffffffff AA991523050804006263646566676869 (timeout=5888)
+[ 302.269] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: AA 99 15 23 05 08 04 00 62 63 64 65 66 67 68 69 \nisOk:01\n
+[ 302.270] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 302.531] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 302.532] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 302.793] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 302.795] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 303.054] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 303.055] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 303.318] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 303.320] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 303.577] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 303.579] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 303.841] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 303.843] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 304.103] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 304.104] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 304.366] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 304.368] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 304.626] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 304.628] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 304.885] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 304.887] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 305.152] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 305.154] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 305.411] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 305.413] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 305.669] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 305.671] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 305.923] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 305.925] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 306.172] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 306.174] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 306.420] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 306.422] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 306.684] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 306.686] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 306.950] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 307.154] PM3> hf 14a info (timeout=5000)
+[ 308.723] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 308.724] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 308.983] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 313.203] POLL stack=['dict', 'dict'] type=1 uid=AA991523
+[ 314.206] POLL stack=['dict'] type=1 uid=AA991523
+[ 316.228] START(AutoCopyActivity, None)
+[ 316.382] PM3> hf 14a info (timeout=5000)
+[ 316.715] POLL stack=['dict', 'dict'] type=1 uid=AA991523
+[ 317.931] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 317.933] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 318.167] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 319.899] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 320.517] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] |-----|----------------|---|----------------|---|\n[+] ( 0:Failed / 1:Success)\n\n
+[ 331.010] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_AA991523_3.bin')
+[ 331.245] POLL stack=['dict', 'dict', 'dict'] type=1 uid=AA991523
+[ 331.951] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_AA991523_3.bin')
+[ 332.003] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_AA991523_3.bin)
+[ 332.006] PM3> hf 14a info (timeout=5000)
+[ 332.006] WRITE.write returned: -9999
+[ 333.565] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 333.568] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 333.820] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 334.708] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 335.395] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] |-----|----------------|---|----------------|---|\n[+] ( 0:Failed / 1:Success)\n\n
+[ 335.885] PM3> hf mf wrbl 60 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 336.142] PM3< ret=1 \n--block no 60, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 336.143] PM3> hf mf wrbl 61 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 336.389] PM3< ret=1 \n--block no 61, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 336.390] PM3> hf mf wrbl 62 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 336.647] PM3< ret=1 \n--block no 62, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 336.649] PM3> hf mf wrbl 56 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 336.898] PM3< ret=1 \n--block no 56, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 336.899] PM3> hf mf wrbl 57 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 337.155] PM3< ret=1 \n--block no 57, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 337.155] PM3> hf mf wrbl 58 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 337.409] PM3< ret=1 \n--block no 58, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 337.411] PM3> hf mf wrbl 52 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 337.662] PM3< ret=1 \n--block no 52, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 337.663] PM3> hf mf wrbl 53 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 337.919] PM3< ret=1 \n--block no 53, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 337.920] PM3> hf mf wrbl 54 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 338.177] PM3< ret=1 \n--block no 54, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 338.179] PM3> hf mf wrbl 48 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 338.423] PM3< ret=1 \n--block no 48, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 338.424] PM3> hf mf wrbl 49 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 338.670] PM3< ret=1 \n--block no 49, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 338.671] PM3> hf mf wrbl 50 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 338.929] PM3< ret=1 \n--block no 50, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 338.931] PM3> hf mf wrbl 44 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 339.190] PM3< ret=1 \n--block no 44, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 339.191] PM3> hf mf wrbl 45 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 339.448] PM3< ret=1 \n--block no 45, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 339.449] PM3> hf mf wrbl 46 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 339.694] PM3< ret=1 \n--block no 46, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 339.695] PM3> hf mf wrbl 40 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 339.958] PM3< ret=1 \n--block no 40, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 339.959] PM3> hf mf wrbl 41 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 340.214] PM3< ret=1 \n--block no 41, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 340.214] PM3> hf mf wrbl 42 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 340.462] PM3< ret=1 \n--block no 42, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 340.464] PM3> hf mf wrbl 36 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 340.729] PM3< ret=1 \n--block no 36, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 340.731] PM3> hf mf wrbl 37 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 340.982] PM3< ret=1 \n--block no 37, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 340.982] PM3> hf mf wrbl 38 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 341.231] PM3< ret=1 \n--block no 38, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 341.233] PM3> hf mf wrbl 32 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 341.489] PM3< ret=1 \n--block no 32, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 341.490] PM3> hf mf wrbl 33 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 341.749] PM3< ret=1 \n--block no 33, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 341.750] PM3> hf mf wrbl 34 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 342.000] PM3< ret=1 \n--block no 34, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 342.002] PM3> hf mf wrbl 28 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 342.253] PM3< ret=1 \n--block no 28, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 342.254] PM3> hf mf wrbl 29 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 342.510] PM3< ret=1 \n--block no 29, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 342.510] PM3> hf mf wrbl 30 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 342.760] PM3< ret=1 \n--block no 30, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 342.762] PM3> hf mf wrbl 24 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 343.022] PM3< ret=1 \n--block no 24, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 343.023] PM3> hf mf wrbl 25 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 343.283] PM3< ret=1 \n--block no 25, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 343.284] PM3> hf mf wrbl 26 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 343.543] PM3< ret=1 \n--block no 26, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 343.545] PM3> hf mf wrbl 20 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 343.806] PM3< ret=1 \n--block no 20, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 343.807] PM3> hf mf wrbl 21 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 344.067] PM3< ret=1 \n--block no 21, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 344.068] PM3> hf mf wrbl 22 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 344.328] PM3< ret=1 \n--block no 22, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 344.330] PM3> hf mf wrbl 16 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 344.589] PM3< ret=1 \n--block no 16, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 344.590] PM3> hf mf wrbl 17 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 344.835] PM3< ret=1 \n--block no 17, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 344.836] PM3> hf mf wrbl 18 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 345.097] PM3< ret=1 \n--block no 18, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 345.099] PM3> hf mf wrbl 12 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 345.362] PM3< ret=1 \n--block no 12, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 345.363] PM3> hf mf wrbl 13 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 345.627] PM3< ret=1 \n--block no 13, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 345.628] PM3> hf mf wrbl 14 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 345.905] PM3< ret=1 \n--block no 14, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 345.907] PM3> hf mf wrbl 8 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 346.171] PM3< ret=1 \n--block no 8, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 346.172] PM3> hf mf wrbl 9 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 346.438] PM3< ret=1 \n--block no 9, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 346.439] PM3> hf mf wrbl 10 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 346.693] PM3< ret=1 \n--block no 10, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 346.696] PM3> hf mf wrbl 4 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 346.960] PM3< ret=1 \n--block no 4, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 346.961] PM3> hf mf wrbl 5 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 347.216] PM3< ret=1 \n--block no 5, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 347.217] PM3> hf mf wrbl 6 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 347.475] PM3< ret=1 \n--block no 6, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 347.477] PM3> hf mf wrbl 0 A ffffffffffff AA991523050804006263646566676869 (timeout=5888)
+[ 347.736] PM3< ret=1 \n--block no 0, key A - FF FF FF FF FF FF \n--data: AA 99 15 23 05 08 04 00 62 63 64 65 66 67 68 69 \nisOk:01\n
+[ 347.737] PM3> hf mf wrbl 1 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 347.995] PM3< ret=1 \n--block no 1, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 347.996] PM3> hf mf wrbl 2 A ffffffffffff 00000000000000000000000000000000 (timeout=5888)
+[ 348.246] PM3< ret=1 \n--block no 2, key A - FF FF FF FF FF FF \n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \nisOk:01\n
+[ 348.248] PM3> hf mf wrbl 63 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 348.504] PM3< ret=1 \n--block no 63, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 348.507] PM3> hf mf wrbl 59 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 348.766] PM3< ret=1 \n--block no 59, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 348.768] PM3> hf mf wrbl 55 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 349.030] PM3< ret=1 \n--block no 55, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 349.033] PM3> hf mf wrbl 51 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 349.295] PM3< ret=1 \n--block no 51, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 349.297] PM3> hf mf wrbl 47 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 349.543] PM3< ret=1 \n--block no 47, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 349.545] PM3> hf mf wrbl 43 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 349.796] PM3< ret=1 \n--block no 43, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 349.798] PM3> hf mf wrbl 39 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 350.054] PM3< ret=1 \n--block no 39, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 350.056] PM3> hf mf wrbl 35 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 350.312] PM3< ret=1 \n--block no 35, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 350.313] PM3> hf mf wrbl 31 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 350.564] PM3< ret=1 \n--block no 31, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 350.566] PM3> hf mf wrbl 27 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 350.822] PM3< ret=1 \n--block no 27, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 350.824] PM3> hf mf wrbl 23 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 351.083] PM3< ret=1 \n--block no 23, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 351.085] PM3> hf mf wrbl 19 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 351.347] PM3< ret=1 \n--block no 19, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 351.349] PM3> hf mf wrbl 15 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 351.612] PM3< ret=1 \n--block no 15, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 351.614] PM3> hf mf wrbl 11 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 351.879] PM3< ret=1 \n--block no 11, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 351.881] PM3> hf mf wrbl 7 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 352.133] PM3< ret=1 \n--block no 7, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 352.135] PM3> hf mf wrbl 3 A ffffffffffff FFFFFFFFFFFFFF078069FFFFFFFFFFFF (timeout=5888)
+[ 352.393] PM3< ret=1 \n--block no 3, key A - FF FF FF FF FF FF \n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF \nisOk:01\n
+[ 352.596] PM3> hf 14a info (timeout=5000)
+[ 354.160] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 354.163] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 354.418] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 356.049] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['found', 'uid', 'len', 'sak', 'atqa', 'bbcErr', 'static', 'gen1a', 'type']), /mnt/upan/dump/mf1/M1-1K-4B_AA991523_3.bin)
+[ 356.053] WRITE.verify returned: -9999
+[ 356.074] PM3> hf 14a info (timeout=5000)
+[ 357.635] PM3< ret=1 \n\n[+]  UID: AA 99 15 23 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Prng detection: weak\n
+[ 357.638] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 357.895] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 361.307] POLL stack=['dict'] type=1 uid=AA991523
+[ 364.536] START(ReadListActivity, None)
+[ 364.821] POLL stack=['dict', 'dict'] type=1 uid=AA991523
+[ 373.569] PM3> lf fdx read (timeout=5000)
+[ 373.882] PM3< ret=1 \n[|]
+[ 374.344] POLL stack=['dict', 'dict'] 
+[ 377.235] PM3> lf fdx read (timeout=5000)
+[ 377.621] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+] Raw                0E F1 11 10 E0 F0 E0 0F \n[/]
+[ 377.850] POLL stack=['dict', 'dict'] type=28 uid=
+[ 378.616] PM3> lf fdx read (timeout=5000)
+[ 378.976] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+] Raw                0E F1 11 10 E0 F0 E0 0F \n[-]
+[ 386.984] START(WarningWriteActivity, {'return': 1, 'data': '0060-030207938416', 'raw': '0060-030207938416'})
+[ 387.366] POLL stack=['dict', 'dict', 'dict'] type=28 uid=
+[ 388.028] START(WriteActivity, {'return': 1, 'data': '0060-030207938416', 'raw': '0060-030207938416'})
+[ 388.093] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 388.120] WRITE.write returned: -9999
+[ 388.154] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 389.052] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[ 389.053] PM3> lf t55xx detect (timeout=10000)
+[ 389.400] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 389.403] PM3> lf fdx clone c 0060 n 030207938416 (timeout=5000)
+[ 391.234] PM3< ret=1 \n[=]       Country code 60\n[=]      National code 30207938416\n[=]     Set animal bit N\n[=] Set data block bit N\n[=]      Extended data 0x0\n[=]                RFU 0\n[=] Preparing to clone FDX-B to T55x7 with animal ID: 0060-30207938416\n[+] Blk | Data \n[+] ----+------------\n[+]  00 | 00098080\n[+]  01 | 0021DF18\n[+]  02 | 8C43C1F0\n[+]  03 | 804026B2\n[+]  04 | E8040201\n[+] Success writing to tag\n[+] Done\n
+[ 391.237] PM3> lf t55xx detect (timeout=10000)
+[ 391.584] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098080\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 391.585] PM3> lf t55xx write b 7 d 20206666 (timeout=5000)
+[ 391.700] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[ 391.701] PM3> lf t55xx write b 0 d 00098090 (timeout=5000)
+[ 391.837] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00098090 \n
+[ 391.837] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 393.350] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098090\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : Yes\n[=]      Password       : 20206666\n\n
+[ 393.354] PM3> lf sea (timeout=10000)
+[ 394.518] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n\n[+] Valid FDX-B ID found!\n\n[+] Chipset detection: T55xx\n
+[ 394.529] PM3> lf fdx read (timeout=5000)
+[ 394.812] PM3< ret=1 \n[\]
+[ 397.267] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 397.282] WRITE.write returned: -9999
+[ 397.331] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 398.228] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[ 398.229] PM3> lf t55xx detect (timeout=10000)
+[ 398.641] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 32\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 398.645] PM3> lf fdx clone c 0060 n 030207938416 (timeout=5000)
+[ 400.453] PM3< ret=1 \n[=]       Country code 60\n[=]      National code 30207938416\n[=]     Set animal bit N\n[=] Set data block bit N\n[=]      Extended data 0x0\n[=]                RFU 0\n[=] Preparing to clone FDX-B to T55x7 with animal ID: 0060-30207938416\n[+] Blk | Data \n[+] ----+------------\n[+]  00 | 00098080\n[+]  01 | 0021DF18\n[+]  02 | 8C43C1F0\n[+]  03 | 804026B2\n[+]  04 | E8040201\n[+] Done\n
+[ 400.456] PM3> lf t55xx detect (timeout=10000)
+[ 400.832] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098080\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 400.833] PM3> lf t55xx write b 7 d 20206666 (timeout=5000)
+[ 400.969] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[ 400.970] PM3> lf t55xx write b 0 d 00098090 (timeout=5000)
+[ 401.097] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00098090 \n
+[ 401.097] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 402.642] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098090\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : Yes\n[=]      Password       : 20206666\n\n
+[ 402.645] PM3> lf sea (timeout=10000)
+[ 403.760] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n\n[+] Valid FDX-B ID found!\n\n[+] Chipset detection: T55xx\n
+[ 403.762] PM3> lf fdx read (timeout=5000)
+[ 404.035] PM3< ret=1 \n[|]
+[ 406.191] WRITE.write(method(<bound method WriteActivity.on_write of <activity_main.Write), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 406.218] WRITE.write returned: -9999
+[ 406.248] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[ 407.147] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[ 407.147] PM3> lf t55xx detect (timeout=10000)
+[ 407.526] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 407.530] PM3> lf fdx clone c 0060 n 030207938416 (timeout=5000)
+[ 409.364] PM3< ret=1 \n[=]       Country code 60\n[=]      National code 30207938416\n[=]     Set animal bit N\n[=] Set data block bit N\n[=]      Extended data 0x0\n[=]                RFU 0\n[=] Preparing to clone FDX-B to T55x7 with animal ID: 0060-30207938416\n[+] Blk | Data \n[+] ----+------------\n[+]  00 | 00098080\n[+]  01 | 0021DF18\n[+]  02 | 8C43C1F0\n[+]  03 | 804026B2\n[+]  04 | E8040201\n[+] Success writing to tag\n[+] Done\n
+[ 409.367] PM3> lf t55xx detect (timeout=10000)
+[ 409.721] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098080\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n
+[ 409.722] PM3> lf t55xx write b 7 d 20206666 (timeout=5000)
+[ 409.862] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[ 409.862] PM3> lf t55xx write b 0 d 00098090 (timeout=5000)
+[ 409.981] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00098090 \n
+[ 409.982] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[ 411.414] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098090\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : Yes\n[=]      Password       : 20206666\n\n
+[ 411.418] PM3> lf sea (timeout=10000)
+[ 412.544] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n\n[+] Valid FDX-B ID found!\n\n[+] Chipset detection: T55xx\n
+[ 412.546] PM3> lf fdx read (timeout=5000)
+[ 412.911] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n[/]
+[ 417.135] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 417.167] PM3> lf sea (timeout=10000)
+[ 417.167] WRITE.verify returned: -9999
+[ 419.451] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[-] No known 125/134 kHz tags found!\nCouldn't identify a chipset\n
+[ 419.472] PM3> data save f /tmp/lf_trace_tmp (timeout=10000)
+[ 419.551] PM3< ret=1 \n[+] saved 30000 bytes to PM3 file '/tmp/lf_trace_tmp.pm3'\n
+[ 423.030] WRITE.verify(method(<bound method WriteActivity.on_verify of <activity_main.Writ), dict(keys=['return', 'data', 'raw', 'type', 'found']), dict(keys=['return', 'data', 'raw']))
+[ 423.033] PM3> lf sea (timeout=10000)
+[ 423.033] WRITE.verify returned: -9999
+[ 424.208] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n\n[+] Valid FDX-B ID found!\n\n[+] Chipset detection: T55xx\n
+[ 424.211] PM3> lf fdx read (timeout=5000)
+[ 424.587] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw                0E F1 11 10 E0 F0 00 00 \n[-]
+[ 427.428] POLL stack=['dict', 'dict'] type=28 uid=
+[ 427.930] POLL stack=['dict'] type=28 uid=

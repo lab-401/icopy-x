@@ -1,0 +1,9 @@
+{
+  "title": "Simulation",
+  "content_contains": [
+    "HID Prox ID"
+  ],
+  "sim_buttons": {
+    "M2": "Start"
+  }
+}

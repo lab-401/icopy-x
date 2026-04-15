@@ -1,0 +1,63 @@
+=== TRACE (ORIGINAL FIRMWARE) ===
+[   0.005] POLL stack=['dict'] 
+[   0.006] === ALL INSTALLED ===
+[   1.844] AUDIO.setKeyAudioEnable((True,))
+[  33.308] START(BacklightActivity, None)
+[  33.350] SETTINGS.getBacklight(())
+[  33.586] POLL stack=['dict', 'dict'] 
+[  38.664] SETTINGS.setBacklight((0,))
+[  40.385] SETTINGS.setBacklight((1,))
+[  41.725] SETTINGS.setBacklight((2,))
+[  43.199] SETTINGS.setBacklight((1,))
+[  44.415] SETTINGS.setBacklight((0,))
+[  47.346] SETTINGS.getBacklight(())
+[  47.354] FINISH(top=dict d=2)
+[  47.608] POLL stack=['dict'] 
+[  48.475] START(VolumeActivity, None)
+[  48.516] SETTINGS.getVolume(())
+[  48.527] AUDIO.setKeyAudioEnable((False,))
+[  48.610] POLL stack=['dict', 'dict'] 
+[  49.495] AUDIO.playVolumeExam((100,))
+[  49.932] SETTINGS.setVolume((3,))
+[  49.944] AUDIO.setVolume((100,))
+[  49.945] AUDIO.playVolumeExam((100,))
+[  50.573] AUDIO.playVolumeExam((50,))
+[  51.167] SETTINGS.setVolume((2,))
+[  51.174] AUDIO.setVolume((50,))
+[  51.175] AUDIO.playVolumeExam((50,))
+[  51.598] AUDIO.playVolumeExam((20,))
+[  52.002] SETTINGS.setVolume((1,))
+[  52.010] AUDIO.setVolume((20,))
+[  52.010] AUDIO.playVolumeExam((20,))
+[  52.423] AUDIO.playVolumeExam((0,))
+[  52.955] SETTINGS.setVolume((0,))
+[  52.962] AUDIO.setVolume((0,))
+[  52.963] AUDIO.playVolumeExam((0,))
+[  54.202] AUDIO.setKeyAudioEnable((True,))
+[  54.246] FINISH(top=dict d=2)
+[  54.621] POLL stack=['dict'] 
+[  79.167] START(AutoCopyActivity, None)
+[  79.379] PM3> hf 14a info (timeout=5000)
+[  79.569] PM3< ret=1 \n
+[  79.571] PM3> lf sea (timeout=10000)
+[  79.656] POLL stack=['dict', 'dict'] 
+[  80.756] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n\n[+] Valid GALLAGHER ID found!\n\nCouldn't identify a chipset\n
+[  81.160] POLL stack=['dict', 'dict'] type=29 uid=
+[  81.648] PM3> lf gallagher read (timeout=5000)
+[  81.901] PM3< ret=1 \n0 -9 -18 -27 -36 -45 -54 -63 -\n[=]  Before:  7F D5 8C 3B 8D 8D 8D C3 \n[=]  After :  0A CD 60 65 3F 3F 3F 56 \n[+] GALLAGHER - Region: 2 FC: 64725 CN: 719622 Issue Level: 6\n[+]    Printed: B64725\n[+]    Raw: 7FEAA30768D46A35868C35CF\n[+]    CRC: 8C - F8 (fail)\n
+[  91.495] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[  92.181] POLL stack=['dict', 'dict', 'dict'] type=29 uid=
+[  93.010] FINISH(top=dict d=3)
+[  93.019] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 64725,719622', 'raw': '7FEAA30768D46A35868C35CF'})
+[  93.158] PM3> lf t55xx wipe p 20206666 (timeout=5000)
+[  94.039] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Writing page 0  block: 05  data: 0x00000000 \n[=] Writing page 0  block: 06  data: 0x00000000 \n[=] Writing page 0  block: 07  data: 0x00000000 \n
+[  94.040] PM3> lf t55xx detect (timeout=10000)
+[  95.181] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[  95.187] PM3> lf t55xx detect p 20206666 (timeout=10000)
+[  97.515] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[  98.450] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys (timeout=180000)
+[ 130.562] PM3< ret=1 \n[+] loaded 107 keys from dictionary file /tmp/.keys/t5577_tmp_keys.dic\n[=] Testing 51243648\n[=] Testing 000D8787\n[=] Testing 19920427\n[=] Testing 65857569\n[=] Testing 05D73B9F\n[=] Testing 89A69E60\n[=] Testing 314159E0\n[=] Testing AA55BBBB\n[=] Testing A5B4C3D2\n[=] Testing 1C0B5848\n[=] Testing 00434343\n[=] Testing 44B44CAE\n[=] Testing 88661858\n[=] Testing 575F4F4B\n[=] Testing 50520901\n[=] Testing 50524F58\n[=] Testing 00000000\n[=] Testing 11111111\n[=] Testing 22222222\n[=] Testing 33333333\n[=] Testing 44444444\n[=] Testing 55555555\n[=] Testing 66666666\n[=] Testing 77777777\n[=] Testing 88888888\n[=] Testing 99999999\n[=] Testing AAAAAAAA\n[=] Testing BBBBBBBB\n[=] Testing CCCCCCCC\n[=] Testing DDDDDDDD\n[=] Testing EEEEEEEE\n[=] Testing FFFFFFFF\n[=] Testing A0A1A2A3\n[=] Testing B0B1B2B3\n[=] Testing AABBCCDD\n[=] Testing BBCCDDEE\n[=] Testing CCDDEEFF\n[=] Testing 50415353\n[=] Testing 00000001\n[=] Testing 00000002\n[=] Testing 0000000A\n[=] Testing 0000000B\n[=] Testing 01020304\n[=] Testing 02030405\n[=] Testing 03040506\n[=] Testing 04050607\n[=] Testing 05060708\n[=] Testing 06070809\n[=] Testing 0708090A\n[=] Testing 08090A0B\n[=] Testing 090A0B0C\n[=] Testing 0A0B0C0D\n[=] Testing 0B0C0D0E\n[=] Testing 0C0D0E0F\n[=] Testing 01234567\n[=] Testing 12345678\n[=] Testing 10000000\n[=] Testing 20000000\n[=] Testing 30000000\n[=] Testing 40000000\n[=] Testing 50000000\n[=] Testing 60000000\n[=] Testing 70000000\n[=] Testing 80000000\n[=] Testing 90000000\n[=] Testing A0000000\n[=] Testing B0000000\n[=] Testing C0000000\n[=] Testing D0000000\n[=] Testing E0000000\n[=] Testing F0000000\n[=] Testing 10101010\n[=] Testing 01010101\n[=] Testing 11223344\n[=] Testing 22334455\n[=] Testing 33445566\n[=] Testing 44556677\n[=] Testing 55667788\n[=] Testing 66778899\n[=] Testing 778899AA\n[=] Testing 8899AABB\n[=] Testing 99AABBCC\n[=] Testing 0CB7E7FC\n[=] Testing FABADA11\n[=] Testing 87654321\n[=] Testing 12341234\n[=] Testing 69696969\n[=] Testing 12121212\n[=] Testing 12344321\n[=] Testing 1234ABCD\n[=] Testing 11112222\n[=] Testing 13131313\n[=] Testing 10041004\n[=] Testing 31415926\n[=] Testing ABCD1234\n[=] Testing 20002000\n[=] Testing 19721972\n[=] Testing AA55AA55\n[=] Testing 55AA55AA\n[=] Testing 4F271149\n[=] Testing 07D7BB0B\n[=] Testing 9636EF8F\n[=] Testing B5F44686\n[=] Testing 9E3779B9\n[=] Testing C6EF3720\n[=] Testing 7854794A\n[=] Testing F1EA5EED\n[!] Check pwd failed\n\n[+] time in check pwd 32 seconds\n\n
+[ 197.913] FINISH(top=dict d=3)
+[ 198.342] POLL stack=['dict', 'dict'] type=29 uid=
+[ 198.878] FINISH(top=dict d=2)
+[ 199.345] POLL stack=['dict'] type=29 uid=

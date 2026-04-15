@@ -1,0 +1,158 @@
+=== FULL TRACE (iceman-fw v4) ===
+[   0.114] pm3_compat version=iceman needs_translation=True
+[   0.115] presspm3 hook OK
+[   0.118] POLL stack=['MainActivity'] 
+[   0.118] === ALL INSTALLED ===
+[   6.013] SERIAL_TX> b'pctbat\r\n'
+[   6.026] SERIAL_TX> b'charge\r\n'
+[  13.949] KEY> KEYDOWN_PRES!
+[  14.131] KEY> KEYDOWN_PRES!
+[  14.493] KEY> KEYOK_PRES!
+[  14.618] START(ScanActivity, None) bundle=None
+[  14.694] POLL stack=['MainActivity', 'ScanActivity'] 
+[  14.860] PM3> hf 14a info (timeout=5000)
+[  16.043] SERIAL_TX> b'pctbat\r\n'
+[  16.056] SERIAL_TX> b'charge\r\n'
+[  16.296] PM3< ret=1 content_len=164 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\n
+[  16.341] PM3> hf mf cgetblk 0 (timeout=5000)
+[  16.466] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  16.474] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  16.701] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  16.728] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  20.656] KEY> KEY_PWR_CAN_PRES!
+[  20.658] FINISH(top=ScanActivity d=2)
+[  20.714] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[  21.524] KEY> KEYOK_PRES!
+[  21.527] START(ScanActivity, None) bundle=None
+[  21.558] PM3> hf 14a info (timeout=5000)
+[  21.717] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  23.290] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[  23.292] PM3> hf mf cgetblk 0 (timeout=5000)
+[  23.418] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  23.419] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  23.597] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  23.721] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  24.944] KEY> KEY_PWR_CAN_PRES!
+[  25.346] KEY> KEY_PWR_CAN_PRES!
+[  25.348] FINISH(top=ScanActivity d=2)
+[  25.725] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  26.072] SERIAL_TX> b'pctbat\r\n'
+[  26.086] SERIAL_TX> b'charge\r\n'
+[  26.331] KEY> KEY_PWR_CAN_PRES!
+[  28.192] KEY> KEYOK_PRES!
+[  28.194] START(ScanActivity, None) bundle=None
+[  28.229] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  28.250] PM3> hf 14a info (timeout=5000)
+[  29.597] PM3< ret=1 content_len=231 \n UID: 11 22 33 55 66 77 88  \nATQA: 00 44\n SAK: 00 [2]\n      Emosyn-EM Microelectronics USA\nPossible types:\n    NTAG21x Modifiable\n   Possible AZTEK (iso14443a compliant)\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  29.598] PM3> hf mfu info (timeout=8888)
+[  30.674] PM3< ret=1 content_len=1 \n
+[  30.684] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[  30.734] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=11223355667788
+[  30.864] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[  32.486] KEY> KEYDOWN_PRES!
+[  36.107] SERIAL_TX> b'pctbat\r\n'
+[  36.121] SERIAL_TX> b'charge\r\n'
+[  46.142] SERIAL_TX> b'pctbat\r\n'
+[  46.156] SERIAL_TX> b'charge\r\n'
+[  56.173] SERIAL_TX> b'pctbat\r\n'
+[  56.186] SERIAL_TX> b'charge\r\n'
+[  59.436] KEY> KEY_PWR_CAN_PRES!
+[  59.438] FINISH(top=ScanActivity d=2)
+[  59.777] POLL stack=['MainActivity'] type=2 uid=11223355667788
+[  60.230] KEY> KEYOK_PRES!
+[  60.233] START(ScanActivity, None) bundle=None
+[  60.279] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=11223355667788
+[  60.289] PM3> hf 14a info (timeout=5000)
+[  61.018] PM3< ret=1 content_len=201 \n UID: 04 C6 C7 2A C1 4E 80  \nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight EV1 48b\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  61.019] PM3> hf mfu info (timeout=8888)
+[  62.115] PM3< ret=1 content_len=1 \n
+[  62.117] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04C6C72AC14E80'"}
+[  62.283] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04C6C72AC14E80
+[  62.313] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04C6C72AC14E80'"}
+[  63.984] KEY> KEYDOWN_PRES!
+[  66.202] SERIAL_TX> b'pctbat\r\n'
+[  66.216] SERIAL_TX> b'charge\r\n'
+[  76.237] SERIAL_TX> b'pctbat\r\n'
+[  76.251] SERIAL_TX> b'charge\r\n'
+[  81.154] KEY> KEY_PWR_CAN_PRES!
+[  81.157] FINISH(top=ScanActivity d=2)
+[  81.312] POLL stack=['MainActivity'] type=2 uid=04C6C72AC14E80
+[  82.213] KEY> KEYOK_PRES!
+[  82.216] START(ScanActivity, None) bundle=None
+[  82.247] PM3> hf 14a info (timeout=5000)
+[  82.314] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04C6C72AC14E80
+[  83.599] PM3< ret=1 content_len=199 \n UID: 00 00 00 00 00 00 00  \nATQA: 00 44\n SAK: 00 [2]\n      no tag-info available\nPossible types:\n   Possible AZTEK (iso14443a compliant)\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  83.600] PM3> hf mf cgetblk 0 (timeout=5000)
+[  83.728] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  83.733] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'00'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[  83.818] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[  83.916] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'00'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[  86.019] KEY> KEYDOWN_PRES!
+[  86.272] SERIAL_TX> b'pctbat\r\n'
+[  86.286] SERIAL_TX> b'charge\r\n'
+[  89.510] KEY> KEY_PWR_CAN_PRES!
+[  89.512] FINISH(top=ScanActivity d=2)
+[  89.828] POLL stack=['MainActivity'] type=40 uid=00000000000000
+[  90.291] KEY> KEYOK_PRES!
+[  90.294] START(ScanActivity, None) bundle=None
+[  90.325] PM3> hf 14a info (timeout=5000)
+[  90.330] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[  90.428] PM3< ret=1 content_len=1 \n
+[  90.432] PM3> lf sea (timeout=10000)
+[  95.076] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  95.130] PM3> hf sea (timeout=10000)
+[  96.303] SERIAL_TX> b'pctbat\r\n'
+[  96.316] SERIAL_TX> b'charge\r\n'
+[ 100.689] PM3< ret=1 content_len=89 \niCLASS / Picopass CSN: 75 D0 E0 13 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[ 100.747] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[ 101.086] PM3< ret=1 content_len=1 \n
+[ 101.091] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[ 101.405] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[ 101.406] PM3> hf iclass info (timeout=5000)
+[ 106.333] SERIAL_TX> b'pctbat\r\n'
+[ 106.346] SERIAL_TX> b'charge\r\n'
+[ 106.408] REWORK> reworkPM3All()
+[ 106.409] SERIAL_TX> b'restartpm3\r\n'
+[ 109.431] CONNECT> connect2PM3()
+[ 109.434] CONNECT< socket=True
+[ 109.436] REWORK< socket=True
+[ 114.444] REWORK> reworkPM3All()
+[ 114.445] SERIAL_TX> b'restartpm3\r\n'
+[ 116.363] SERIAL_TX> b'pctbat\r\n'
+[ 116.376] SERIAL_TX> b'charge\r\n'
+[ 117.464] CONNECT> connect2PM3()
+[ 117.467] CONNECT< socket=True
+[ 117.469] REWORK< socket=True
+[ 122.477] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 122.478] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17"}
+[ 122.684] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17", "chip": "'Legacy'"}
+[ 122.888] POLL stack=['MainActivity', 'ScanActivity'] type=17 uid=
+[ 124.748] KEY> KEYDOWN_PRES!
+[ 126.311] KEY> KEY_PWR_CAN_PRES!
+[ 126.313] FINISH(top=ScanActivity d=2)
+[ 126.402] POLL stack=['MainActivity'] type=17 uid=
+[ 126.404] SERIAL_TX> b'pctbat\r\n'
+[ 126.421] SERIAL_TX> b'charge\r\n'
+[ 129.698] KEY> KEYOK_PRES!
+[ 129.701] START(ScanActivity, None) bundle=None
+[ 129.742] PM3> hf 14a info (timeout=5000)
+[ 129.927] POLL stack=['MainActivity', 'ScanActivity'] type=17 uid=
+[ 134.762] REWORK> reworkPM3All()
+[ 134.762] SERIAL_TX> b'restartpm3\r\n'
+[ 136.438] SERIAL_TX> b'pctbat\r\n'
+[ 136.451] SERIAL_TX> b'charge\r\n'
+[ 137.785] CONNECT> connect2PM3()
+[ 137.788] CONNECT< socket=True
+[ 137.788] REWORK< socket=True
+[ 142.795] REWORK> reworkPM3All()
+[ 142.796] SERIAL_TX> b'restartpm3\r\n'
+[ 145.815] CONNECT> connect2PM3()
+[ 145.820] CONNECT< socket=True
+[ 145.821] REWORK< socket=True
+[ 146.472] SERIAL_TX> b'pctbat\r\n'
+[ 146.486] SERIAL_TX> b'charge\r\n'
+[ 150.829] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 156.502] SERIAL_TX> b'pctbat\r\n'
+[ 156.516] SERIAL_TX> b'charge\r\n'
+[ 166.532] SERIAL_TX> b'pctbat\r\n'
+[ 166.546] SERIAL_TX> b'charge\r\n'

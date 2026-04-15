@@ -1,0 +1,1032 @@
+=== FULL TRACE (iceman-fw v5 audit) ===
+[   0.114] pm3_compat version=iceman needs_translation=True
+[   0.114] presspm3 hook OK
+[   0.117] POLL stack=['MainActivity'] 
+[   0.118] === ALL INSTALLED ===
+[   5.961] SERIAL_TX> b'pctbat\r\n'
+[   5.974] SERIAL_TX> b'charge\r\n'
+[  15.991] SERIAL_TX> b'pctbat\r\n'
+[  16.005] SERIAL_TX> b'charge\r\n'
+[  26.021] SERIAL_TX> b'pctbat\r\n'
+[  26.035] SERIAL_TX> b'charge\r\n'
+[  36.057] SERIAL_TX> b'pctbat\r\n'
+[  36.070] SERIAL_TX> b'charge\r\n'
+[  40.153] KEY> KEYDOWN_PRES!
+[  40.372] KEY> KEYDOWN_PRES!
+[  40.828] KEY> KEYOK_PRES!
+[  40.951] START(ScanActivity, None) bundle=None
+[  41.161] PM3> hf 14a info (timeout=5000)
+[  41.177] POLL stack=['MainActivity', 'ScanActivity'] 
+[  42.591] PM3< ret=1 content_len=164 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\n
+[  42.636] PM3> hf mf cgetblk 0 (timeout=5000)
+[  42.760] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  42.768] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  42.983] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  43.180] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  44.346] KEY> KEY_PWR_CAN_PRES!
+[  44.916] KEY> KEY_PWR_CAN_PRES!
+[  44.918] FINISH(top=ScanActivity d=2)
+[  45.185] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[  46.086] SERIAL_TX> b'pctbat\r\n'
+[  46.100] SERIAL_TX> b'charge\r\n'
+[  54.498] KEY> KEYOK_PRES!
+[  54.501] START(ScanActivity, None) bundle=None
+[  54.542] PM3> hf 14a info (timeout=5000)
+[  54.699] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  55.991] PM3< ret=1 content_len=231 \n UID: 11 22 33 55 66 77 88  \nATQA: 00 44\n SAK: 00 [2]\n      Emosyn-EM Microelectronics USA\nPossible types:\n    NTAG21x Modifiable\n   Possible AZTEK (iso14443a compliant)\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  55.993] PM3> hf mfu info (timeout=8888)
+[  56.116] SERIAL_TX> b'pctbat\r\n'
+[  56.130] SERIAL_TX> b'charge\r\n'
+[  57.089] PM3< ret=1 content_len=1 \n
+[  57.100] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[  57.204] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=11223355667788
+[  57.280] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[  58.574] KEY> KEYDOWN_PRES!
+[  59.109] KEY> KEY_PWR_CAN_PRES!
+[  66.151] SERIAL_TX> b'pctbat\r\n'
+[  66.165] SERIAL_TX> b'charge\r\n'
+[  66.357] KEY> KEY_PWR_CAN_PRES!
+[  66.359] FINISH(top=ScanActivity d=2)
+[  66.586] KEY> KEY_PWR_CAN_PRES!
+[  66.719] POLL stack=['MainActivity'] type=2 uid=11223355667788
+[  67.195] KEY> KEYOK_PRES!
+[  67.197] START(ScanActivity, None) bundle=None
+[  67.221] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=11223355667788
+[  67.261] PM3> hf 14a info (timeout=5000)
+[  68.241] PM3< ret=1 content_len=193 \n UID: 04 C6 C7 2A C1 4E 80  \nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER: NXP Semiconductors Germany\nPossible types:\n   MIFARE Ultralight\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  68.242] PM3> hf mfu info (timeout=8888)
+[  69.329] PM3< ret=1 content_len=1 \n
+[  69.330] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04C6C72AC14E80'"}
+[  69.513] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04C6C72AC14E80'"}
+[  69.726] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04C6C72AC14E80
+[  76.181] SERIAL_TX> b'pctbat\r\n'
+[  76.195] SERIAL_TX> b'charge\r\n'
+[  77.119] KEY> KEY_PWR_CAN_PRES!
+[  77.121] FINISH(top=ScanActivity d=2)
+[  77.238] POLL stack=['MainActivity'] type=2 uid=04C6C72AC14E80
+[  77.905] KEY> KEYOK_PRES!
+[  77.908] START(ScanActivity, None) bundle=None
+[  77.973] PM3> hf 14a info (timeout=5000)
+[  78.240] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04C6C72AC14E80
+[  79.459] PM3< ret=1 content_len=233 \n UID: 00 00 00 00 00 00 00  \nATQA: 00 44\n SAK: 00 [2]\n      no tag-info available\nPossible types:\nTYPE: MIFARE Ultralight C (MF0ULC)\n   MIFARE Ultralight/C/NTAG Compatible\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[  79.460] PM3> hf mfu info (timeout=8888)
+[  80.397] PM3< ret=1 content_len=76 \n      TYPE: MIFARE Ultralight C (MF0ULC)\nError: tag didn't answer to READ\n\n
+[  80.398] CACHE: {"found": "True", "type": "3", "isMFU": "True", "uid": "'00000000000000'"}
+[  80.596] CACHE: {"found": "True", "type": "3", "isMFU": "True", "uid": "'00000000000000'"}
+[  80.745] POLL stack=['MainActivity', 'ScanActivity'] type=3 uid=00000000000000
+[  86.211] SERIAL_TX> b'pctbat\r\n'
+[  86.225] SERIAL_TX> b'charge\r\n'
+[  96.241] SERIAL_TX> b'pctbat\r\n'
+[  96.255] SERIAL_TX> b'charge\r\n'
+[  99.941] KEY> KEY_PWR_CAN_PRES!
+[  99.943] FINISH(top=ScanActivity d=2)
+[ 100.281] POLL stack=['MainActivity'] type=3 uid=00000000000000
+[ 100.685] KEY> KEYOK_PRES!
+[ 100.687] START(ScanActivity, None) bundle=None
+[ 100.719] PM3> hf 14a info (timeout=5000)
+[ 100.783] POLL stack=['MainActivity', 'ScanActivity'] type=3 uid=00000000000000
+[ 102.030] PM3< ret=1 content_len=143 \n UID: 00 00 00 00  \nATQA: 00 02\n SAK: 18 [2]\nPossible types:\n   MIFARE Classic 4K\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[ 102.032] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 102.160] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 102.161] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'18'", "atqa": "'0002'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "0", "progress": "0", "return": "0"}
+[ 102.286] POLL stack=['MainActivity', 'ScanActivity'] type=0 uid=00000000
+[ 102.361] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'18'", "atqa": "'0002'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "0", "progress": "0", "return": "0"}
+[ 106.277] SERIAL_TX> b'pctbat\r\n'
+[ 106.289] SERIAL_TX> b'charge\r\n'
+[ 116.307] SERIAL_TX> b'pctbat\r\n'
+[ 116.319] SERIAL_TX> b'charge\r\n'
+[ 124.160] KEY> KEY_PWR_CAN_PRES!
+[ 124.162] FINISH(top=ScanActivity d=2)
+[ 124.332] POLL stack=['MainActivity'] type=0 uid=00000000
+[ 124.914] KEY> KEYOK_PRES!
+[ 124.917] START(ScanActivity, None) bundle=None
+[ 124.948] PM3> hf 14a info (timeout=5000)
+[ 125.334] POLL stack=['MainActivity', 'ScanActivity'] type=0 uid=00000000
+[ 126.049] PM3< ret=1 content_len=159 \n UID: 00 00 00 00 00 00 00  \nATQA: 00 44\n SAK: 08 [2]\n      no tag-info available\nPossible types:\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[ 126.050] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 126.178] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 126.183] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'08'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 126.337] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 126.342] SERIAL_TX> b'pctbat\r\n'
+[ 126.356] SERIAL_TX> b'charge\r\n'
+[ 126.373] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'08'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 136.372] SERIAL_TX> b'pctbat\r\n'
+[ 136.385] SERIAL_TX> b'charge\r\n'
+[ 146.401] SERIAL_TX> b'pctbat\r\n'
+[ 146.415] SERIAL_TX> b'charge\r\n'
+[ 156.431] SERIAL_TX> b'pctbat\r\n'
+[ 156.445] SERIAL_TX> b'charge\r\n'
+[ 160.697] KEY> KEY_PWR_CAN_PRES!
+[ 160.699] FINISH(top=ScanActivity d=2)
+[ 160.887] POLL stack=['MainActivity'] type=40 uid=00000000000000
+[ 165.883] KEY> KEYOK_PRES!
+[ 165.886] START(ScanActivity, None) bundle=None
+[ 165.895] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 165.943] PM3> hf 14a info (timeout=5000)
+[ 166.039] PM3< ret=1 content_len=1 \n
+[ 166.042] PM3> lf sea (timeout=10000)
+[ 166.461] SERIAL_TX> b'pctbat\r\n'
+[ 166.475] SERIAL_TX> b'charge\r\n'
+[ 170.687] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[ 170.738] PM3> hf sea (timeout=10000)
+[ 176.290] PM3< ret=1 content_len=122 \nUID: E0 04 01 3C F9 43 B3 02\nTYPE MATCH NXP (Philips); IC NTP53x2/NTP5210/NTA5332 ( NTAG 5 )\n\nValid ISO15693 tag found\n\n\n
+[ 176.324] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[ 176.413] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E004013CF943B302
+[ 176.492] SERIAL_TX> b'pctbat\r\n'
+[ 176.511] SERIAL_TX> b'charge\r\n'
+[ 176.529] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[ 186.523] SERIAL_TX> b'pctbat\r\n'
+[ 186.540] SERIAL_TX> b'charge\r\n'
+[ 189.609] KEY> KEY_PWR_CAN_PRES!
+[ 189.611] FINISH(top=ScanActivity d=2)
+[ 189.933] POLL stack=['MainActivity'] type=19 uid=E004013CF943B302
+[ 190.749] KEY> KEYOK_PRES!
+[ 190.752] START(ScanActivity, None) bundle=None
+[ 190.818] PM3> hf 14a info (timeout=5000)
+[ 190.935] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E004013CF943B302
+[ 192.195] PM3< ret=1 content_len=199 \n UID: 00 00 00 00 00 00 00  \nATQA: 00 44\n SAK: 00 [2]\n      no tag-info available\nPossible types:\n   Possible AZTEK (iso14443a compliant)\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[ 192.196] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 192.324] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 192.326] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'00'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 192.439] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 192.505] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'00'", "atqa": "'0044'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 193.747] KEY> KEY_PWR_CAN_PRES!
+[ 196.556] SERIAL_TX> b'pctbat\r\n'
+[ 196.570] SERIAL_TX> b'charge\r\n'
+[ 197.152] KEY> KEY_PWR_CAN_PRES!
+[ 197.154] FINISH(top=ScanActivity d=2)
+[ 197.447] POLL stack=['MainActivity'] type=40 uid=00000000000000
+[ 199.244] KEY> KEYOK_PRES!
+[ 199.247] START(ScanActivity, None) bundle=None
+[ 199.303] PM3> hf 14a info (timeout=5000)
+[ 199.451] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 201.031] PM3< ret=1 content_len=597 \n UID: 7A F2 EC B2  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[ 201.032] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 201.158] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 201.160] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 201.311] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 201.455] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[ 202.370] KEY> KEY_PWR_CAN_PRES!
+[ 202.918] KEY> KEY_PWR_CAN_PRES!
+[ 202.920] FINISH(top=ScanActivity d=2)
+[ 202.958] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 205.883] KEY> KEYOK_PRES!
+[ 205.886] START(ScanActivity, None) bundle=None
+[ 205.917] PM3> hf 14a info (timeout=5000)
+[ 205.970] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[ 206.013] PM3< ret=1 content_len=1 \n
+[ 206.015] PM3> lf sea (timeout=10000)
+[ 206.586] SERIAL_TX> b'pctbat\r\n'
+[ 206.600] SERIAL_TX> b'charge\r\n'
+[ 210.637] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[ 210.640] PM3> hf sea (timeout=10000)
+[ 216.202] PM3< ret=1 content_len=89 \niCLASS / Picopass CSN: 75 D0 E0 13 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[ 216.234] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[ 216.578] PM3< ret=1 content_len=1 \n
+[ 216.583] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[ 216.621] SERIAL_TX> b'pctbat\r\n'
+[ 216.635] SERIAL_TX> b'charge\r\n'
+[ 216.899] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[ 216.899] PM3> hf iclass info (timeout=5000)
+[ 216.919] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 14 ms and content ( ok )\n\n
+[ 216.920] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17"}
+[ 216.992] POLL stack=['MainActivity', 'ScanActivity'] type=17 uid=
+[ 217.120] CACHE: {"found": "True", "type": "17", "csn": "'75D0E013FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "17", "chip": "'Legacy'"}
+[ 223.212] KEY> KEY_PWR_CAN_PRES!
+[ 223.214] FINISH(top=ScanActivity d=2)
+[ 223.503] POLL stack=['MainActivity'] type=17 uid=
+[ 226.090] KEY> KEYOK_PRES!
+[ 226.092] START(ScanActivity, None) bundle=None
+[ 226.124] PM3> hf 14a info (timeout=5000)
+[ 226.230] PM3< ret=1 content_len=1 \n
+[ 226.233] PM3> lf sea (timeout=10000)
+[ 226.508] POLL stack=['MainActivity', 'ScanActivity'] type=17 uid=
+[ 226.656] SERIAL_TX> b'pctbat\r\n'
+[ 226.670] SERIAL_TX> b'charge\r\n'
+[ 229.470] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[ 229.472] PM3> hf sea (timeout=10000)
+[ 235.035] PM3< ret=1 content_len=89 \niCLASS / Picopass CSN: 4A 67 8E 15 FE FF 12 E0\n\nValid iCLASS tag / PicoPass tag found\n\n\n
+[ 235.036] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 (timeout=5000)
+[ 235.390] PM3< ret=1 content_len=1 \n
+[ 235.391] PM3> hf iclass rdbl b 01 k 2020666666668888 (timeout=5000)
+[ 235.707] PM3< ret=1 content_len=1 \n
+[ 235.708] PM3> hf iclass rdbl b 01 k 6666202066668888 (timeout=5000)
+[ 236.027] PM3< ret=1 content_len=1 \n
+[ 236.028] PM3> hf iclass rdbl b 01 k AFA785A7DAB33378 e (timeout=5000)
+[ 236.347] PM3< ret=1 content_len=1 \n
+[ 236.348] PM3> hf iclass rdbl b 01 k 2020666666668888 e (timeout=5000)
+[ 236.670] PM3< ret=1 content_len=36 Block 1 : 12 FF FF FF 7F 1F FF 3C\n\n\n
+[ 236.671] PM3> hf iclass info (timeout=5000)
+[ 236.687] SERIAL_TX> b'pctbat\r\n'
+[ 236.701] SERIAL_TX> b'charge\r\n'
+[ 236.702] PM3< ret=1 content_len=83 Ping sent with payload len: 32\nPing response received in 14 ms and content ( ok )\n\n
+[ 236.715] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "18"}
+[ 236.930] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "18", "chip": "'Elite'"}
+[ 237.025] POLL stack=['MainActivity', 'ScanActivity'] type=18 uid=
+[ 238.657] KEY> KEY_PWR_CAN_PRES!
+[ 239.337] KEY> KEY_PWR_CAN_PRES!
+[ 239.339] FINISH(top=ScanActivity d=2)
+[ 239.530] POLL stack=['MainActivity'] type=18 uid=
+[ 246.717] SERIAL_TX> b'pctbat\r\n'
+[ 246.729] SERIAL_TX> b'charge\r\n'
+[ 256.751] SERIAL_TX> b'pctbat\r\n'
+[ 256.765] SERIAL_TX> b'charge\r\n'
+[ 257.695] KEY> KEYOK_PRES!
+[ 257.698] START(ScanActivity, None) bundle=None
+[ 257.764] PM3> hf 14a info (timeout=5000)
+[ 257.860] PM3< ret=1 content_len=1 \n
+[ 257.863] PM3> lf sea (timeout=10000)
+[ 258.057] POLL stack=['MainActivity', 'ScanActivity'] type=18 uid=
+[ 259.612] PM3< ret=1 content_len=206 \nNote: False Positives ARE possible\nChecking for known tags: AWID - len: 222 -unknown- (48567) - Wiegand: bbdbcfd16fdb7b6f, Raw: 01deb4ddede7e8b7edbdb7e1\n\nValid AWID ID found!\n\nCouldn't identify a chipset\n\n
+[ 259.638] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "'222'", "raw": "'01deb4ddede7e8b7edbdb7e1'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 259.866] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "'222'", "raw": "'01deb4ddede7e8b7edbdb7e1'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 260.061] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 266.781] SERIAL_TX> b'pctbat\r\n'
+[ 266.795] SERIAL_TX> b'charge\r\n'
+[ 274.245] KEY> KEY_PWR_CAN_PRES!
+[ 274.247] FINISH(top=ScanActivity d=2)
+[ 274.583] POLL stack=['MainActivity'] type=11 uid=
+[ 275.126] KEY> KEYOK_PRES!
+[ 275.128] START(ScanActivity, None) bundle=None
+[ 275.184] PM3> hf 14a info (timeout=5000)
+[ 275.280] PM3< ret=1 content_len=1 \n
+[ 275.282] PM3> lf sea (timeout=10000)
+[ 275.585] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 276.682] PM3< ret=1 content_len=734 \nNote: False Positives ARE possible\nChecking for known tags: EM TAG ID      : 1111000000\nEM410x ( RF/64 )\nUnique TAG ID      : 8888000000\nHoneyWell IdentKey\n    DEZ 8          : 00000000\n    DEZ 10         : 0285212672\n    DEZ 5.5        : 04352.00000\n    DEZ 3.5A       : 017.00000\n    DEZ 3.5B       : 017.00000\n    DEZ 3.5C       : 000.00000\n    DEZ 14/IK2     : 00073299656704\n    DEZ 15/IK3     : 000586397253632\n    DEZ 20/ZK      : 08080808000000000000\nOther              : 00000_000_00000000\nPattern Paxton     : 286539264 [0x11143E00]\nPattern 1          : 0 [0x0]\nPattern Sebury     : 0 0 0  [0x0 0x0 0x0]\nVD / ID            : 017 / 0285212672\nPattern ELECTRA    : 4369 0\nValid EM410x ID found!\n\nCouldn't identify a chipset\n\n
+[ 276.688] CACHE: {"data": "'1111000000'", "raw": "'1111000000'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 276.811] SERIAL_TX> b'pctbat\r\n'
+[ 276.825] SERIAL_TX> b'charge\r\n'
+[ 276.871] CACHE: {"data": "'1111000000'", "raw": "'1111000000'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 277.089] POLL stack=['MainActivity', 'ScanActivity'] type=8 uid=
+[ 280.761] KEY> KEY_PWR_CAN_PRES!
+[ 280.763] FINISH(top=ScanActivity d=2)
+[ 281.096] POLL stack=['MainActivity'] type=8 uid=
+[ 285.568] KEY> KEYOK_PRES!
+[ 285.570] START(ScanActivity, None) bundle=None
+[ 285.601] PM3> hf 14a info (timeout=5000)
+[ 285.604] POLL stack=['MainActivity', 'ScanActivity'] type=8 uid=
+[ 285.710] PM3< ret=1 content_len=1 \n
+[ 285.713] PM3> lf sea (timeout=10000)
+[ 286.847] SERIAL_TX> b'pctbat\r\n'
+[ 286.860] SERIAL_TX> b'charge\r\n'
+[ 287.144] PM3< ret=1 content_len=250 HID Prox - 000000000000099aabb33000\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D969699999A9A5A5A555555\n\nraw: 000000000000099aabb33000\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 287.149] CACHE: {"data": "'000000000000099aabb33000'", "raw": "'000000000000099aabb33000'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 287.351] CACHE: {"data": "'000000000000099aabb33000'", "raw": "'000000000000099aabb33000'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 287.614] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 296.883] SERIAL_TX> b'pctbat\r\n'
+[ 296.894] SERIAL_TX> b'charge\r\n'
+[ 304.971] KEY> KEY_PWR_CAN_PRES!
+[ 304.973] FINISH(top=ScanActivity d=2)
+[ 305.140] POLL stack=['MainActivity'] type=9 uid=
+[ 306.911] SERIAL_TX> b'pctbat\r\n'
+[ 306.925] SERIAL_TX> b'charge\r\n'
+[ 309.962] KEY> KEYOK_PRES!
+[ 309.965] START(ScanActivity, None) bundle=None
+[ 309.996] PM3> hf 14a info (timeout=5000)
+[ 310.099] PM3< ret=1 content_len=1 \n
+[ 310.102] PM3> lf sea (timeout=10000)
+[ 310.148] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 311.609] PM3< ret=1 content_len=468 \nNote: False Positives ARE possible\nChecking for known tags: FDX-B / ISO11784/5 Animal\nAnimal ID: 060-030207938416\nNational Code: 030207938416 ( 0x708888F70 )\nCountry Code: 060 - Bermuda\nReserved/RFU: 1 (0x0001)\nAnimal bit set?: True\nData block?: True  ( 0x800000 )\nRUDI bit?: True ( advanced transponder )\nUser Info?: 0 ( RFU )\nReplacement No?: 7\nCRC-16: 0xCE2B ( ok )\nRaw: 0E F1 11 10 E0 F0 E0 0F D4 73 00 00 01\n\n\nValid FDX-B ID found!\n\nCouldn't identify a chipset\n\n
+[ 311.628] CACHE: {"data": "''", "raw": "''", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 311.652] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 311.809] CACHE: {"data": "''", "raw": "''", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 316.942] SERIAL_TX> b'pctbat\r\n'
+[ 316.954] SERIAL_TX> b'charge\r\n'
+[ 326.971] SERIAL_TX> b'pctbat\r\n'
+[ 326.985] SERIAL_TX> b'charge\r\n'
+[ 336.350] KEY> KEY_PWR_CAN_PRES!
+[ 336.352] FINISH(top=ScanActivity d=2)
+[ 336.688] POLL stack=['MainActivity'] type=28 uid=
+[ 337.006] SERIAL_TX> b'pctbat\r\n'
+[ 337.020] SERIAL_TX> b'charge\r\n'
+[ 337.400] KEY> KEYOK_PRES!
+[ 337.403] START(ScanActivity, None) bundle=None
+[ 337.435] PM3> hf 14a info (timeout=5000)
+[ 337.541] PM3< ret=1 content_len=1 \n
+[ 337.545] PM3> lf sea (timeout=10000)
+[ 337.690] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 339.034] PM3< ret=1 content_len=256 \nNote: False Positives ARE possible\nChecking for known tags: GALLAGHER - Region: 0 Facility: 4369 Card No.: 0 Issue Level: 0\n   Displayed: A4369\n   Raw: 7FEAA30768D46A35868C35CF\n   CRC: CF - CF (ok)\n\nValid GALLAGHER ID found!\n\nCouldn't identify a chipset\n\n
+[ 339.050] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 339.194] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 339.235] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "''", "raw": "'7FEAA30768D46A35868C35CF'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 344.300] KEY> KEY_PWR_CAN_PRES!
+[ 344.302] FINISH(top=ScanActivity d=2)
+[ 344.703] POLL stack=['MainActivity'] type=29 uid=
+[ 347.036] SERIAL_TX> b'pctbat\r\n'
+[ 347.050] SERIAL_TX> b'charge\r\n'
+[ 349.237] KEY> KEYOK_PRES!
+[ 349.240] START(ScanActivity, None) bundle=None
+[ 349.296] PM3> hf 14a info (timeout=5000)
+[ 349.390] PM3< ret=1 content_len=1 \n
+[ 349.393] PM3> lf sea (timeout=10000)
+[ 349.711] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 350.858] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 350.869] PM3> hf sea (timeout=10000)
+[ 356.398] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 356.464] PM3> lf t55xx detect (timeout=10000)
+[ 357.066] SERIAL_TX> b'pctbat\r\n'
+[ 357.080] SERIAL_TX> b'charge\r\n'
+[ 359.507] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 359.541] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 359.743] PM3< ret=1 content_len=1 \n
+[ 359.745] PM3> hf felica reader (timeout=10000)
+[ 360.878] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 363.015] KEY> KEY_PWR_CAN_PRES!
+[ 363.605] KEY> KEY_PWR_CAN_PRES!
+[ 363.607] FINISH(top=ScanActivity d=2)
+[ 363.734] POLL stack=['MainActivity'] type=29 uid=
+[ 367.101] SERIAL_TX> b'pctbat\r\n'
+[ 367.115] SERIAL_TX> b'charge\r\n'
+[ 368.744] KEY> KEYOK_PRES!
+[ 368.747] START(ScanActivity, None) bundle=None
+[ 368.777] PM3> hf 14a info (timeout=5000)
+[ 368.880] PM3< ret=1 content_len=1 \n
+[ 368.883] PM3> lf sea (timeout=10000)
+[ 369.243] POLL stack=['MainActivity', 'ScanActivity'] type=29 uid=
+[ 370.586] PM3< ret=1 content_len=617 HID Prox - 000000000000002006222332\n\nNote: False Positives ARE possible\nChecking for known tags: [H10301  ] HID H10301 26-bit                FC: 17  CN: 4505  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 273  CN: 409  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit: [ind27   ] Indala 27-bit                    FC: 6280  CN: 9010\n[indasc27] Indala ASC 27-bit                FC: 4865  CN: 4460\n[Tecom27 ] Tecom 27-bit                     FC: 96  CN: 59617\nfound 3 matching 27-bit formats\n\nraw: 000000000000002006222332\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 370.587] CACHE: {"data": "'000000000000002006222332'", "raw": "'000000000000002006222332'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 370.732] CACHE: {"data": "'000000000000002006222332'", "raw": "'000000000000002006222332'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 370.746] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 376.912] KEY> KEY_PWR_CAN_PRES!
+[ 376.914] FINISH(top=ScanActivity d=2)
+[ 377.131] SERIAL_TX> b'pctbat\r\n'
+[ 377.145] SERIAL_TX> b'charge\r\n'
+[ 377.257] POLL stack=['MainActivity'] type=9 uid=
+[ 382.593] KEY> KEYOK_PRES!
+[ 382.596] START(ScanActivity, None) bundle=None
+[ 382.659] PM3> hf 14a info (timeout=5000)
+[ 382.766] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 382.769] PM3< ret=1 content_len=1 \n
+[ 382.771] PM3> lf sea (timeout=10000)
+[ 384.518] PM3< ret=1 content_len=250 HID Prox - 000000000000099911119999\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 384.519] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 384.642] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 387.162] SERIAL_TX> b'pctbat\r\n'
+[ 387.175] SERIAL_TX> b'charge\r\n'
+[ 397.191] SERIAL_TX> b'pctbat\r\n'
+[ 397.205] SERIAL_TX> b'charge\r\n'
+[ 407.221] SERIAL_TX> b'pctbat\r\n'
+[ 407.235] SERIAL_TX> b'charge\r\n'
+[ 414.861] KEY> KEY_PWR_CAN_PRES!
+[ 414.864] FINISH(top=ScanActivity d=2)
+[ 415.315] POLL stack=['MainActivity'] type=9 uid=
+[ 415.799] KEY> KEYOK_PRES!
+[ 415.802] START(ScanActivity, None) bundle=None
+[ 415.820] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 415.834] PM3> hf 14a info (timeout=5000)
+[ 415.959] PM3< ret=1 content_len=1 \n
+[ 415.962] PM3> lf sea (timeout=10000)
+[ 417.251] SERIAL_TX> b'pctbat\r\n'
+[ 417.264] SERIAL_TX> b'charge\r\n'
+[ 417.429] PM3< ret=1 content_len=250 HID Prox - 000000000000099911119999\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 417.430] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 417.589] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 419.077] KEY> KEYDOWN_PRES!
+[ 427.281] SERIAL_TX> b'pctbat\r\n'
+[ 427.295] SERIAL_TX> b'charge\r\n'
+[ 437.311] SERIAL_TX> b'pctbat\r\n'
+[ 437.325] SERIAL_TX> b'charge\r\n'
+[ 447.341] SERIAL_TX> b'pctbat\r\n'
+[ 447.355] SERIAL_TX> b'charge\r\n'
+[ 457.372] SERIAL_TX> b'pctbat\r\n'
+[ 457.385] SERIAL_TX> b'charge\r\n'
+[ 467.406] SERIAL_TX> b'pctbat\r\n'
+[ 467.420] SERIAL_TX> b'charge\r\n'
+[ 469.823] KEY> KEY_PWR_CAN_PRES!
+[ 469.825] FINISH(top=ScanActivity d=2)
+[ 469.902] POLL stack=['MainActivity'] type=9 uid=
+[ 474.413] KEY> KEYOK_PRES!
+[ 474.416] START(ScanActivity, None) bundle=None
+[ 474.447] PM3> hf 14a info (timeout=5000)
+[ 474.553] PM3< ret=1 content_len=1 \n
+[ 474.556] PM3> lf sea (timeout=10000)
+[ 474.910] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 475.959] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 475.963] PM3> hf sea (timeout=10000)
+[ 477.436] SERIAL_TX> b'pctbat\r\n'
+[ 477.449] SERIAL_TX> b'charge\r\n'
+[ 481.500] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 481.502] PM3> lf t55xx detect (timeout=10000)
+[ 484.577] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 484.579] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 484.855] PM3< ret=1 content_len=1 \n
+[ 484.857] PM3> hf felica reader (timeout=10000)
+[ 486.002] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 486.748] KEY> KEY_PWR_CAN_PRES!
+[ 487.203] KEY> KEY_PWR_CAN_PRES!
+[ 487.205] FINISH(top=ScanActivity d=2)
+[ 487.431] POLL stack=['MainActivity'] type=9 uid=
+[ 487.465] SERIAL_TX> b'pctbat\r\n'
+[ 487.480] SERIAL_TX> b'charge\r\n'
+[ 491.636] KEY> KEYOK_PRES!
+[ 491.639] START(ScanActivity, None) bundle=None
+[ 491.670] PM3> hf 14a info (timeout=5000)
+[ 491.778] PM3< ret=1 content_len=1 \n
+[ 491.781] PM3> lf sea (timeout=10000)
+[ 491.939] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 493.142] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 493.146] PM3> hf sea (timeout=10000)
+[ 497.501] SERIAL_TX> b'pctbat\r\n'
+[ 497.515] SERIAL_TX> b'charge\r\n'
+[ 498.682] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 498.685] PM3> lf t55xx detect (timeout=10000)
+[ 501.738] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 501.741] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 501.980] PM3< ret=1 content_len=1 \n
+[ 501.982] PM3> hf felica reader (timeout=10000)
+[ 503.122] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 507.532] SERIAL_TX> b'pctbat\r\n'
+[ 507.545] SERIAL_TX> b'charge\r\n'
+[ 510.014] KEY> KEY_PWR_CAN_PRES!
+[ 510.474] KEY> KEY_PWR_CAN_PRES!
+[ 510.476] FINISH(top=ScanActivity d=2)
+[ 510.969] POLL stack=['MainActivity'] type=9 uid=
+[ 511.311] KEY> KEYOK_PRES!
+[ 511.314] START(ScanActivity, None) bundle=None
+[ 511.370] PM3> hf 14a info (timeout=5000)
+[ 511.471] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 511.472] PM3< ret=1 content_len=1 \n
+[ 511.474] PM3> lf sea (timeout=10000)
+[ 512.982] PM3< ret=1 content_len=250 HID Prox - 000000000000099911119999\n\nNote: False Positives ARE possible\nChecking for known tags: Trying with a preamble bit: DemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 512.983] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 513.128] CACHE: {"data": "'000000000000099911119999'", "raw": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 514.472] KEY> KEY_PWR_CAN_PRES!
+[ 517.566] SERIAL_TX> b'pctbat\r\n'
+[ 517.580] SERIAL_TX> b'charge\r\n'
+[ 527.601] SERIAL_TX> b'pctbat\r\n'
+[ 527.615] SERIAL_TX> b'charge\r\n'
+[ 531.851] KEY> KEYM1_PRES!
+[ 531.866] PM3> hf 14a info (timeout=5000)
+[ 531.959] PM3< ret=1 content_len=1 \n
+[ 531.962] PM3> lf sea (timeout=10000)
+[ 533.787] PM3< ret=1 content_len=172 \nNote: False Positives ARE possible\nChecking for known tags: IO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 ( ok )\n\nValid IO Prox ID found!\n\nCouldn't identify a chipset\n\n
+[ 533.793] CACHE: {"data": "'XSF(00)00:00273'", "raw": "'0078402010188ff7'", "type": "12", "found": "True", "progress": "1", "return": "12"}
+[ 533.973] CACHE: {"data": "'XSF(00)00:00273'", "raw": "'0078402010188ff7'", "type": "12", "found": "True", "progress": "1", "return": "12"}
+[ 534.005] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 537.108] KEY> KEY_PWR_CAN_PRES!
+[ 537.110] FINISH(top=ScanActivity d=2)
+[ 537.511] POLL stack=['MainActivity'] type=12 uid=
+[ 537.631] SERIAL_TX> b'pctbat\r\n'
+[ 537.645] SERIAL_TX> b'charge\r\n'
+[ 541.293] KEY> KEYOK_PRES!
+[ 541.296] START(ScanActivity, None) bundle=None
+[ 541.327] PM3> hf 14a info (timeout=5000)
+[ 541.429] PM3< ret=1 content_len=1 \n
+[ 541.432] PM3> lf sea (timeout=10000)
+[ 541.519] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 542.869] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 542.872] PM3> hf sea (timeout=10000)
+[ 547.661] SERIAL_TX> b'pctbat\r\n'
+[ 547.675] SERIAL_TX> b'charge\r\n'
+[ 548.407] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 548.410] PM3> lf t55xx detect (timeout=10000)
+[ 551.471] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 551.474] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 551.670] PM3< ret=1 content_len=1 \n
+[ 551.672] PM3> hf felica reader (timeout=10000)
+[ 552.802] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 554.133] KEY> KEY_PWR_CAN_PRES!
+[ 554.569] KEY> KEY_PWR_CAN_PRES!
+[ 554.571] FINISH(top=ScanActivity d=2)
+[ 555.041] POLL stack=['MainActivity'] type=12 uid=
+[ 557.696] SERIAL_TX> b'pctbat\r\n'
+[ 557.710] SERIAL_TX> b'charge\r\n'
+[ 558.941] KEY> KEYOK_PRES!
+[ 558.944] START(ScanActivity, None) bundle=None
+[ 559.008] PM3> hf 14a info (timeout=5000)
+[ 559.048] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 559.100] PM3< ret=1 content_len=1 \n
+[ 559.103] PM3> lf sea (timeout=10000)
+[ 560.485] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 560.488] PM3> hf sea (timeout=10000)
+[ 566.026] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 566.028] PM3> lf t55xx detect (timeout=10000)
+[ 567.726] SERIAL_TX> b'pctbat\r\n'
+[ 567.745] SERIAL_TX> b'charge\r\n'
+[ 569.179] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 569.181] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 569.455] PM3< ret=1 content_len=1 \n
+[ 569.457] PM3> hf felica reader (timeout=10000)
+[ 570.588] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 571.711] KEY> KEY_PWR_CAN_PRES!
+[ 572.152] KEY> KEY_PWR_CAN_PRES!
+[ 572.154] FINISH(top=ScanActivity d=2)
+[ 572.570] POLL stack=['MainActivity'] type=12 uid=
+[ 576.551] KEY> KEYOK_PRES!
+[ 576.554] START(ScanActivity, None) bundle=None
+[ 576.576] POLL stack=['MainActivity', 'ScanActivity'] type=12 uid=
+[ 576.612] PM3> hf 14a info (timeout=5000)
+[ 576.724] PM3< ret=1 content_len=1 \n
+[ 576.727] PM3> lf sea (timeout=10000)
+[ 577.761] SERIAL_TX> b'pctbat\r\n'
+[ 577.775] SERIAL_TX> b'charge\r\n'
+[ 578.112] PM3< ret=1 content_len=223 \nNote: False Positives ARE possible\nChecking for known tags: Odd size,  false positive?\nIndala (len 105)  Raw: 80000000000fff0000003ef39c83ffc000000fbce7300000000000ff\n\n\nValid Indala ID found!\n\nCouldn't identify a chipset\n\n
+[ 578.114] CACHE: {"raw": "'80000000000fff0000003ef39c83ffc000000fbce7300000000000ff'", "data": "'80000000000fff0000003ef39c83ffc000000fbce7300000000000ff'", "type": "10", "found": "True", "progress": "1", "return": "10"}
+[ 578.303] CACHE: {"raw": "'80000000000fff0000003ef39c83ffc000000fbce7300000000000ff'", "data": "'80000000000fff0000003ef39c83ffc000000fbce7300000000000ff'", "type": "10", "found": "True", "progress": "1", "return": "10"}
+[ 578.581] POLL stack=['MainActivity', 'ScanActivity'] type=10 uid=
+[ 587.796] SERIAL_TX> b'pctbat\r\n'
+[ 587.810] SERIAL_TX> b'charge\r\n'
+[ 597.826] SERIAL_TX> b'pctbat\r\n'
+[ 597.840] SERIAL_TX> b'charge\r\n'
+[ 599.519] KEY> KEY_PWR_CAN_PRES!
+[ 599.521] FINISH(top=ScanActivity d=2)
+[ 599.613] POLL stack=['MainActivity'] type=10 uid=
+[ 599.844] KEY> KEY_PWR_CAN_PRES!
+[ 605.972] KEY> KEYOK_PRES!
+[ 605.974] START(ScanActivity, None) bundle=None
+[ 606.005] PM3> hf 14a info (timeout=5000)
+[ 606.100] PM3< ret=1 content_len=1 \n
+[ 606.102] PM3> lf sea (timeout=10000)
+[ 606.123] POLL stack=['MainActivity', 'ScanActivity'] type=10 uid=
+[ 607.627] PM3< ret=1 content_len=123 \nNote: False Positives ARE possible\nChecking for known tags: No known 125/134 kHz tags found!\nCouldn't identify a chipset\n\n
+[ 607.631] PM3> hf sea (timeout=10000)
+[ 607.856] SERIAL_TX> b'pctbat\r\n'
+[ 607.870] SERIAL_TX> b'charge\r\n'
+[ 613.168] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 613.171] PM3> lf t55xx detect (timeout=10000)
+[ 616.230] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 616.233] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 616.429] PM3< ret=1 content_len=1 \n
+[ 616.431] PM3> hf felica reader (timeout=10000)
+[ 617.564] PM3< ret=1 content_len=19 card timeout (-4)\n\n
+[ 617.886] SERIAL_TX> b'pctbat\r\n'
+[ 617.899] SERIAL_TX> b'charge\r\n'
+[ 620.949] KEY> KEY_PWR_CAN_PRES!
+[ 621.412] KEY> KEY_PWR_CAN_PRES!
+[ 621.414] FINISH(top=ScanActivity d=2)
+[ 621.649] POLL stack=['MainActivity'] type=10 uid=
+[ 627.218] KEY> KEYOK_PRES!
+[ 627.221] START(ScanActivity, None) bundle=None
+[ 627.277] PM3> hf 14a info (timeout=5000)
+[ 627.375] PM3< ret=1 content_len=1 \n
+[ 627.378] PM3> lf sea (timeout=10000)
+[ 627.659] POLL stack=['MainActivity', 'ScanActivity'] type=10 uid=
+[ 627.916] SERIAL_TX> b'pctbat\r\n'
+[ 627.930] SERIAL_TX> b'charge\r\n'
+[ 628.754] PM3< ret=1 content_len=188 \nNote: False Positives ARE possible\nChecking for known tags: PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n\n
+[ 628.762] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 628.924] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 629.162] POLL stack=['MainActivity', 'ScanActivity'] type=34 uid=
+[ 637.951] SERIAL_TX> b'pctbat\r\n'
+[ 637.965] SERIAL_TX> b'charge\r\n'
+[ 642.561] KEY> KEY_PWR_CAN_PRES!
+[ 642.563] FINISH(top=ScanActivity d=2)
+[ 642.682] POLL stack=['MainActivity'] type=34 uid=
+[ 643.378] KEY> KEYOK_PRES!
+[ 643.381] START(ScanActivity, None) bundle=None
+[ 643.411] PM3> hf 14a info (timeout=5000)
+[ 643.512] PM3< ret=1 content_len=1 \n
+[ 643.515] PM3> lf sea (timeout=10000)
+[ 643.685] POLL stack=['MainActivity', 'ScanActivity'] type=34 uid=
+[ 645.215] PM3< ret=1 content_len=257 \nNote: False Positives ARE possible\nChecking for known tags: CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nCouldn't identify a chipset\n\n
+[ 645.219] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[ 645.389] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[ 645.689] POLL stack=['MainActivity', 'ScanActivity'] type=35 uid=
+[ 647.981] SERIAL_TX> b'pctbat\r\n'
+[ 647.994] SERIAL_TX> b'charge\r\n'
+[ 650.035] KEY> KEY_PWR_CAN_PRES!
+[ 650.037] FINISH(top=ScanActivity d=2)
+[ 650.197] POLL stack=['MainActivity'] type=35 uid=
+[ 650.873] KEY> KEY_PWR_CAN_PRES!
+[ 658.011] SERIAL_TX> b'pctbat\r\n'
+[ 658.025] SERIAL_TX> b'charge\r\n'
+[ 668.041] SERIAL_TX> b'pctbat\r\n'
+[ 668.055] SERIAL_TX> b'charge\r\n'
+[ 673.784] KEY> KEYOK_PRES!
+[ 673.787] START(ScanActivity, None) bundle=None
+[ 673.848] PM3> hf 14a info (timeout=5000)
+[ 673.941] PM3< ret=1 content_len=1 \n
+[ 673.944] PM3> lf sea (timeout=10000)
+[ 674.231] POLL stack=['MainActivity', 'ScanActivity'] type=35 uid=
+[ 675.648] PM3< ret=1 content_len=213 \nNote: False Positives ARE possible\nChecking for known tags: Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e020, Raw: 00010101010101010101015e0e8040a4\n\nValid Pyramid ID found!\n\nCouldn't identify a chipset\n\n
+[ 675.650] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e8040a4'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[ 675.736] POLL stack=['MainActivity', 'ScanActivity'] type=16 uid=
+[ 675.846] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e8040a4'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[ 677.177] KEY> KEY_PWR_CAN_PRES!
+[ 677.759] KEY> KEY_PWR_CAN_PRES!
+[ 677.761] FINISH(top=ScanActivity d=2)
+[ 678.071] SERIAL_TX> b'pctbat\r\n'
+[ 678.084] SERIAL_TX> b'charge\r\n'
+[ 678.240] POLL stack=['MainActivity'] type=16 uid=
+[ 682.486] KEY> KEY_PWR_CAN_PRES!
+[ 687.796] KEY> KEYOK_PRES!
+[ 687.799] START(ScanActivity, None) bundle=None
+[ 687.863] PM3> hf 14a info (timeout=5000)
+[ 687.970] PM3< ret=1 content_len=1 \n
+[ 687.972] PM3> lf sea (timeout=10000)
+[ 688.101] SERIAL_TX> b'pctbat\r\n'
+[ 688.115] SERIAL_TX> b'charge\r\n'
+[ 688.255] POLL stack=['MainActivity', 'ScanActivity'] type=16 uid=
+[ 689.505] PM3< ret=1 content_len=412 \nNote: False Positives ARE possible\nChecking for known tags: Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nCouldn't identify a chipset\n\n
+[ 689.508] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 689.716] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 689.759] POLL stack=['MainActivity', 'ScanActivity'] type=14 uid=
+[ 698.136] SERIAL_TX> b'pctbat\r\n'
+[ 698.150] SERIAL_TX> b'charge\r\n'
+[ 701.802] KEY> KEY_PWR_CAN_PRES!
+[ 701.805] FINISH(top=ScanActivity d=2)
+[ 702.154] KEY> KEY_PWR_CAN_PRES!
+[ 702.277] POLL stack=['MainActivity'] type=14 uid=
+[ 706.883] KEY> KEYOK_PRES!
+[ 706.886] START(ScanActivity, None) bundle=None
+[ 706.919] PM3> hf 14a info (timeout=5000)
+[ 707.016] PM3< ret=1 content_len=1 \n
+[ 707.018] PM3> lf sea (timeout=10000)
+[ 707.286] POLL stack=['MainActivity', 'ScanActivity'] type=14 uid=
+[ 708.166] SERIAL_TX> b'pctbat\r\n'
+[ 708.179] SERIAL_TX> b'charge\r\n'
+[ 708.461] PM3< ret=1 content_len=161 \nNote: False Positives ARE possible\nChecking for known tags: Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nCouldn't identify a chipset\n\n
+[ 708.463] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[ 708.634] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[ 708.789] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[ 710.347] KEY> KEY_PWR_CAN_PRES!
+[ 710.796] KEY> KEY_PWR_CAN_PRES!
+[ 710.799] FINISH(top=ScanActivity d=2)
+[ 711.294] POLL stack=['MainActivity'] type=15 uid=
+[ 718.197] SERIAL_TX> b'pctbat\r\n'
+[ 718.210] SERIAL_TX> b'charge\r\n'
+[ 720.611] KEY> KEYOK_PRES!
+[ 720.614] START(ScanActivity, None) bundle=None
+[ 720.645] PM3> hf 14a info (timeout=5000)
+[ 720.766] PM3< ret=1 content_len=1 \n
+[ 720.769] PM3> lf sea (timeout=10000)
+[ 720.809] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[ 725.389] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[ 725.392] PM3> hf sea (timeout=10000)
+[ 728.226] SERIAL_TX> b'pctbat\r\n'
+[ 728.240] SERIAL_TX> b'charge\r\n'
+[ 729.907] PM3< ret=1 content_len=60 \nIDm: 010108018D162D1A\n\nValid ISO18092 / FeliCa tag found\n\n\n
+[ 729.917] PM3> lf t55xx detect (timeout=10000)
+[ 732.983] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 732.985] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 733.194] PM3< ret=1 content_len=1 \n
+[ 733.196] PM3> hf felica reader (timeout=10000)
+[ 733.310] PM3< ret=1 content_len=47 FeliCa tag info\n\nIDm  01 01 08 01 8D 16 2D 1A\n\n
+[ 733.314] CACHE: {"found": "True", "idm": "'010108018D162D1A'", "progress": "5", "return": "21", "type": "21"}
+[ 733.329] POLL stack=['MainActivity', 'ScanActivity'] type=21 uid=
+[ 733.475] CACHE: {"found": "True", "idm": "'010108018D162D1A'", "progress": "5", "return": "21", "type": "21"}
+[ 738.256] SERIAL_TX> b'pctbat\r\n'
+[ 738.270] SERIAL_TX> b'charge\r\n'
+[ 748.291] SERIAL_TX> b'pctbat\r\n'
+[ 748.304] SERIAL_TX> b'charge\r\n'
+[ 749.474] KEY> KEY_PWR_CAN_PRES!
+[ 749.476] FINISH(top=ScanActivity d=2)
+[ 749.854] POLL stack=['MainActivity'] type=21 uid=
+[ 750.641] KEY> KEYOK_PRES!
+[ 750.644] START(ScanActivity, None) bundle=None
+[ 750.675] PM3> hf 14a info (timeout=5000)
+[ 750.785] PM3< ret=1 content_len=1 \n
+[ 750.788] PM3> lf sea (timeout=10000)
+[ 750.856] POLL stack=['MainActivity', 'ScanActivity'] type=21 uid=
+[ 754.024] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[ 754.026] PM3> hf sea (timeout=10000)
+[ 758.175] PM3< ret=1 content_len=669 \n UID    : C5 F7 25 D7\n ATQB   : 00 00 00 00 00 81 71\n CHIPID : 00\n      App Data: 00 00 00 00\n      Protocol: 00 81 71\n      Bit Rate: 106 kbit/s only PICC <-> PCD\nMax Frame Size: 256 bytes\n Protocol Type: Protocol is compliant with ISO/IEC 14443-4\nFrame Wait Integer: 7 - 4096 ETUs | 38656 us\n App Data Code: Application is Proprietary\n Frame Options: NAD is not supported\n Frame Options: CID is supported\nTag :\n  Max Buf Length: 0 (MBLI) chained frames not supported\n  CID : 0\n\n    Passe Navigo Decouverte (Transport Ile de France) (Transport)\n    https://www.iledefrance-mobilites.fr/titres-et-tarifs/supports/passe-navigo-decouverte\n\n\nValid ISO14443-B tag found\n\n\n
+[ 758.181] CACHE: {"found": "True", "uid": "'C5F725D7'", "atqb": "'00000000008171'", "type": "22", "progress": "2", "return": "22"}
+[ 758.321] SERIAL_TX> b'pctbat\r\n'
+[ 758.335] SERIAL_TX> b'charge\r\n'
+[ 758.368] POLL stack=['MainActivity', 'ScanActivity'] type=22 uid=C5F725D7
+[ 758.424] CACHE: {"found": "True", "uid": "'C5F725D7'", "atqb": "'00000000008171'", "type": "22", "progress": "2", "return": "22"}
+[ 768.351] SERIAL_TX> b'pctbat\r\n'
+[ 768.365] SERIAL_TX> b'charge\r\n'
+[ 778.381] SERIAL_TX> b'pctbat\r\n'
+[ 778.395] SERIAL_TX> b'charge\r\n'
+[ 779.159] KEY> KEY_PWR_CAN_PRES!
+[ 779.161] FINISH(top=ScanActivity d=2)
+[ 779.411] POLL stack=['MainActivity'] type=22 uid=C5F725D7
+[ 780.186] KEY> KEYOK_PRES!
+[ 780.189] START(ScanActivity, None) bundle=None
+[ 780.220] PM3> hf 14a info (timeout=5000)
+[ 780.330] PM3< ret=1 content_len=1 \n
+[ 780.333] PM3> lf sea (timeout=10000)
+[ 780.414] POLL stack=['MainActivity', 'ScanActivity'] type=22 uid=C5F725D7
+[ 784.954] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[ 784.957] PM3> hf sea (timeout=10000)
+[ 788.411] SERIAL_TX> b'pctbat\r\n'
+[ 788.425] SERIAL_TX> b'charge\r\n'
+[ 790.497] PM3< ret=1 content_len=86 \nUID: E0 53 01 10 6C A9 5A 11\nTYPE: no tag-info available\n\nValid ISO15693 tag found\n\n\n
+[ 790.499] CACHE: {"found": "True", "uid": "'E05301106CA95A11'", "type": "19", "progress": "2", "return": "19"}
+[ 790.673] CACHE: {"found": "True", "uid": "'E05301106CA95A11'", "type": "19", "progress": "2", "return": "19"}
+[ 790.944] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E05301106CA95A11
+[ 792.677] KEY> KEYDOWN_PRES!
+[ 798.441] SERIAL_TX> b'pctbat\r\n'
+[ 798.455] SERIAL_TX> b'charge\r\n'
+[ 801.894] KEY> KEY_PWR_CAN_PRES!
+[ 801.897] FINISH(top=ScanActivity d=2)
+[ 801.961] POLL stack=['MainActivity'] type=19 uid=E05301106CA95A11
+[ 802.720] KEY> KEYOK_PRES!
+[ 802.722] START(ScanActivity, None) bundle=None
+[ 802.775] PM3> hf 14a info (timeout=5000)
+[ 802.964] POLL stack=['MainActivity', 'ScanActivity'] type=19 uid=E05301106CA95A11
+[ 803.985] PM3< ret=1 content_len=522 \n UID: 00 00 00 00 00 00 00  \nATQA: 03 44\n SAK: 20 [1]\n      no tag-info available\nPossible types:\n   JCOP 31/41\nATS: 06 75 33 81 02 00 [ 51 10 ]\n     06: TL    length is 6 bytes\n     ...75: T0    TA1 is present, TB1 is present, TC1 is present, FSCI is 5 (FSC = 64)\n     ......33: TA1   different divisors are supported, DR: [2, 4], DS: [2, 4]\n     .........81: TB1   SFGI = 1 (SFGT = 8192/fc), FWI = 8 (FWT = 1048576/fc)\n     ............02: TC1   NAD is NOT supported, CID is supported\n\n00  (compact TLV data object)\n\n\n\n
+[ 803.987] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 804.112] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 804.114] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'20'", "atqa": "'0344'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 804.316] CACHE: {"found": "True", "uid": "'00000000000000'", "len": "7", "sak": "'20'", "atqa": "'0344'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[ 804.467] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 806.227] KEY> KEY_PWR_CAN_PRES!
+[ 807.632] KEY> KEY_PWR_CAN_PRES!
+[ 807.635] FINISH(top=ScanActivity d=2)
+[ 807.974] POLL stack=['MainActivity'] type=40 uid=00000000000000
+[ 808.471] SERIAL_TX> b'pctbat\r\n'
+[ 808.485] SERIAL_TX> b'charge\r\n'
+[ 809.711] KEY> KEYOK_PRES!
+[ 809.714] START(ScanActivity, None) bundle=None
+[ 809.779] PM3> hf 14a info (timeout=5000)
+[ 809.987] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=00000000000000
+[ 811.129] PM3< ret=1 content_len=142 \n UID: 00 00 00 00  \nATQA: 00 04\n SAK: 09 [2]\nPossible types:\n   MIFARE Mini 0.3K\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[ 811.130] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 811.258] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 811.259] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'09'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "25", "progress": "0", "return": "25"}
+[ 811.455] CACHE: {"found": "True", "uid": "'00000000'", "len": "4", "sak": "'09'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "25", "progress": "0", "return": "25"}
+[ 811.496] POLL stack=['MainActivity', 'ScanActivity'] type=25 uid=00000000
+[ 818.506] SERIAL_TX> b'pctbat\r\n'
+[ 818.520] SERIAL_TX> b'charge\r\n'
+[ 828.536] SERIAL_TX> b'pctbat\r\n'
+[ 828.550] SERIAL_TX> b'charge\r\n'
+[ 832.674] KEY> KEYM1_PRES!
+[ 832.690] PM3> hf 14a info (timeout=5000)
+[ 834.048] PM3< ret=1 content_len=251 \n UID: 11 22 33 55 66 77 88  \nATQA: 00 44\n SAK: 00 [2]\n      Emosyn-EM Microelectronics USA\nPossible types:\n    NTAG21x Modifiable\nTYPE: Unknown 000000\n   MIFARE Ultralight/C/NTAG Compatible\nProprietary non iso14443-4 card found\nRATS not supported\n\n\n\n
+[ 834.050] PM3> hf mfu info (timeout=8888)
+[ 834.846] PM3< ret=1 content_len=62 \n      TYPE: Unknown 000000\nError: tag didn't answer to READ\n\n
+[ 834.848] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[ 835.023] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'11223355667788'"}
+[ 835.043] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=11223355667788
+[ 838.566] SERIAL_TX> b'pctbat\r\n'
+[ 838.580] SERIAL_TX> b'charge\r\n'
+[ 848.596] SERIAL_TX> b'pctbat\r\n'
+[ 848.610] SERIAL_TX> b'charge\r\n'
+[ 855.982] KEY> KEY_PWR_CAN_PRES!
+[ 855.984] FINISH(top=ScanActivity d=2)
+[ 856.074] POLL stack=['MainActivity'] type=2 uid=11223355667788
+[ 857.571] KEY> KEYDOWN_PRES!
+[ 858.373] KEY> KEYOK_PRES!
+[ 858.376] START(ReadListActivity, None) bundle=None
+[ 858.579] POLL stack=['MainActivity', 'ReadListActivity'] type=2 uid=11223355667788
+[ 858.631] SERIAL_TX> b'pctbat\r\n'
+[ 858.645] SERIAL_TX> b'charge\r\n'
+[ 859.575] KEY> KEYOK_PRES!
+[ 859.578] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[ 859.583] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=2 uid=11223355667788
+[ 859.638] PM3> hf 14a info (timeout=5000)
+[ 861.043] PM3< ret=1 content_len=164 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\n
+[ 861.044] PM3> hf mf cgetblk 0 (timeout=5000)
+[ 861.172] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 861.174] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 861.601] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=5E5BCE4C
+[ 861.687] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 861.788] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 861.794] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 868.661] SERIAL_TX> b'pctbat\r\n'
+[ 868.675] SERIAL_TX> b'charge\r\n'
+[ 877.347] PM3< ret=1 content_len=1192 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nRunning strategy 2\n\nTime in checkkeys (fast) 15.5s\n\n\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 001 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 002 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 003 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 004 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 005 | 4a6352684677   | 1 | 536653644c65   | 1 |\n| 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success )\n\n\n\n
+[ 877.352] PM3> hf mf rdsc 0 A 4A6352684677 (timeout=15000)
+[ 877.494] PM3< ret=1 content_len=219 \ndata: 5E 5B CE 4C 87 08 04 00 03 13 44 92 0B AA B5 1D\ndata: 00 00 80 49 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 877.498] PM3> hf mf rdsc 1 A 4A6352684677 (timeout=15000)
+[ 877.621] PM3< ret=1 content_len=219 \ndata: 5A 0B 65 A4 75 4F 57 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 877.625] PM3> hf mf rdsc 2 A 4A6352684677 (timeout=15000)
+[ 877.748] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 877.751] PM3> hf mf rdsc 3 A 4A6352684677 (timeout=15000)
+[ 877.879] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 877.882] PM3> hf mf rdsc 4 A 4A6352684677 (timeout=15000)
+[ 878.007] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 878.011] PM3> hf mf rdsc 5 A 4A6352684677 (timeout=15000)
+[ 878.137] PM3< ret=1 content_len=219 \ndata: 00 04 20 22 07 04 03 41 50 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 4A 63 52 68 46 77 78 77 88 00 00 00 00 00 00 00\n\n\n
+[ 878.141] PM3> hf mf rdsc 6 A FFFFFFFFFFFF (timeout=15000)
+[ 878.267] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.270] PM3> hf mf rdsc 7 A FFFFFFFFFFFF (timeout=15000)
+[ 878.396] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.400] PM3> hf mf rdsc 8 A FFFFFFFFFFFF (timeout=15000)
+[ 878.526] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.529] PM3> hf mf rdsc 9 A FFFFFFFFFFFF (timeout=15000)
+[ 878.656] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.659] PM3> hf mf rdsc 10 A FFFFFFFFFFFF (timeout=15000)
+[ 878.691] SERIAL_TX> b'pctbat\r\n'
+[ 878.705] SERIAL_TX> b'charge\r\n'
+[ 878.785] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.788] PM3> hf mf rdsc 11 A FFFFFFFFFFFF (timeout=15000)
+[ 878.914] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 878.917] PM3> hf mf rdsc 12 A FFFFFFFFFFFF (timeout=15000)
+[ 879.045] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 879.048] PM3> hf mf rdsc 13 A FFFFFFFFFFFF (timeout=15000)
+[ 879.174] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 879.177] PM3> hf mf rdsc 14 A FFFFFFFFFFFF (timeout=15000)
+[ 879.304] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 879.307] PM3> hf mf rdsc 15 A FFFFFFFFFFFF (timeout=15000)
+[ 879.432] PM3< ret=1 content_len=219 \ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\n\n\n
+[ 888.721] SERIAL_TX> b'pctbat\r\n'
+[ 888.735] SERIAL_TX> b'charge\r\n'
+[ 898.751] SERIAL_TX> b'pctbat\r\n'
+[ 898.765] SERIAL_TX> b'charge\r\n'
+[ 908.786] SERIAL_TX> b'pctbat\r\n'
+[ 908.800] SERIAL_TX> b'charge\r\n'
+[ 918.816] SERIAL_TX> b'pctbat\r\n'
+[ 918.830] SERIAL_TX> b'charge\r\n'
+[ 928.846] SERIAL_TX> b'pctbat\r\n'
+[ 928.860] SERIAL_TX> b'charge\r\n'
+[ 937.445] KEY> KEYM2_PRES!
+[ 937.449] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin"
+[ 937.712] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WarningWriteActivity'] type=1 uid=5E5BCE4C
+[ 938.833] KEY> KEYM2_PRES!
+[ 938.835] FINISH(top=WarningWriteActivity d=4)
+[ 938.868] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_5E5BCE4C_1.bin"
+[ 938.877] SERIAL_TX> b'pctbat\r\n'
+[ 938.890] SERIAL_TX> b'charge\r\n'
+[ 939.216] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity', 'WriteActivity'] type=1 uid=5E5BCE4C
+[ 939.298] PM3> hf 14a info (timeout=10000)
+[ 939.390] PM3< ret=1 content_len=1 \n
+[ 939.390] PM3> hf mf cgetblk 0 (timeout=10000)
+[ 939.521] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 939.531] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 948.971] SERIAL_TX> b'pctbat\r\n'
+[ 948.985] SERIAL_TX> b'charge\r\n'
+[ 959.001] SERIAL_TX> b'pctbat\r\n'
+[ 959.015] SERIAL_TX> b'charge\r\n'
+[ 969.036] SERIAL_TX> b'pctbat\r\n'
+[ 969.050] SERIAL_TX> b'charge\r\n'
+[ 979.066] SERIAL_TX> b'pctbat\r\n'
+[ 979.080] SERIAL_TX> b'charge\r\n'
+[ 989.097] SERIAL_TX> b'pctbat\r\n'
+[ 989.110] SERIAL_TX> b'charge\r\n'
+[ 999.126] SERIAL_TX> b'pctbat\r\n'
+[ 999.139] SERIAL_TX> b'charge\r\n'
+[1009.156] SERIAL_TX> b'pctbat\r\n'
+[1009.170] SERIAL_TX> b'charge\r\n'
+[1019.187] SERIAL_TX> b'pctbat\r\n'
+[1019.199] SERIAL_TX> b'charge\r\n'
+[1027.571] KEY> KEY_PWR_CAN_PRES!
+[1027.573] FINISH(top=WriteActivity d=4)
+[1027.850] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=5E5BCE4C
+[1029.221] SERIAL_TX> b'pctbat\r\n'
+[1029.235] SERIAL_TX> b'charge\r\n'
+[1029.860] KEY> KEY_PWR_CAN_PRES!
+[1029.862] FINISH(top=ReadActivity d=3)
+[1030.355] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=5E5BCE4C
+[1031.146] KEY> KEY_PWR_CAN_PRES!
+[1031.148] FINISH(top=ReadListActivity d=2)
+[1031.358] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[1031.977] KEY> KEY_PWR_CAN_PRES!
+[1034.191] KEY> KEYOK_PRES!
+[1034.194] START(ReadListActivity, None) bundle=None
+[1034.363] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=5E5BCE4C
+[1034.960] KEY> KEYOK_PRES!
+[1034.962] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[1035.030] PM3> hf 14a info (timeout=5000)
+[1035.366] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=5E5BCE4C
+[1037.359] PM3< ret=1 content_len=36870 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\nChkKeys_fast: Can't select card (ALL)\nchkKey: Failed at fast selecting the card!\n\nRunning strategy 2\nChkKeys_fast: Can't select card (ALL)\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at ] chkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting thlecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKe\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Fa
+[1037.504] PM3> lf sea (timeout=10000)
+[1038.689] PM3< ret=1 content_len=36745 fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\n[#e card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast sey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card! the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at
+[1038.692] PM3> hf mf wrbl 60 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1039.256] SERIAL_TX> b'pctbat\r\n'
+[1039.269] SERIAL_TX> b'charge\r\n'
+[1041.812] PM3< ret=1 content_len=106 \nNote: False Positives ARE possible\nChecking for known tags: No data found!\nCouldn't identify a chipset\n\n\n
+[1041.815] PM3> hf mf wrbl 60 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1041.905] PM3< ret=1 content_len=110 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nisOk:01\n\n
+[1041.908] PM3> hf mf wrbl 61 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1042.000] PM3< ret=1 content_len=115 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\n
+[1042.008] PM3> hf sea (timeout=10000)
+[1042.094] PM3< ret=1 content_len=115 Writing block no 61, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\n
+[1042.099] PM3> lf t55xx detect (timeout=10000)
+[1048.968] PM3< ret=1 content_len=193 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\nValid ISO14443-A tag found\n\n\n
+[1048.973] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[1049.291] SERIAL_TX> b'pctbat\r\n'
+[1049.305] SERIAL_TX> b'charge\r\n'
+[1051.916] REWORK> reworkPM3All()
+[1051.916] SERIAL_TX> b'restartpm3\r\n'
+[1053.980] REWORK> reworkPM3All()
+[1053.980] SERIAL_TX> b'restartpm3\r\n'
+[1054.933] CONNECT> connect2PM3()
+[1054.934] CONNECT< socket=True
+[1054.934] REWORK< socket=True
+[1056.997] CONNECT> connect2PM3()
+[1056.999] CONNECT< socket=True
+[1057.000] REWORK< socket=True
+[1059.326] SERIAL_TX> b'pctbat\r\n'
+[1059.339] SERIAL_TX> b'charge\r\n'
+[1061.925] REWORK> reworkPM3All()
+[1061.926] REWORK> reworkPM3All()
+[1061.926] SERIAL_TX> b'restartpm3\r\n'
+[1061.926] SERIAL_TX> b'restartpm3\r\n'
+[1064.948] CONNECT> connect2PM3()
+[1064.949] CONNECT> connect2PM3()
+[1064.956] CONNECT< socket=True
+[1064.960] CONNECT< socket=True
+[1064.964] REWORK< socket=True
+[1064.970] REWORK< socket=True
+[1069.355] SERIAL_TX> b'pctbat\r\n'
+[1069.370] SERIAL_TX> b'charge\r\n'
+[1069.975] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1069.979] PM3> hf felica reader (timeout=10000)
+[1074.983] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1074.984] PM3> hf mf wrbl 61 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1079.387] SERIAL_TX> b'pctbat\r\n'
+[1079.400] SERIAL_TX> b'charge\r\n'
+[1079.991] REWORK> reworkPM3All()
+[1079.992] SERIAL_TX> b'restartpm3\r\n'
+[1083.008] CONNECT> connect2PM3()
+[1083.010] CONNECT< socket=True
+[1083.011] REWORK< socket=True
+[1084.996] REWORK> reworkPM3All()
+[1084.997] SERIAL_TX> b'restartpm3\r\n'
+[1088.012] CONNECT> connect2PM3()
+[1088.017] CONNECT< socket=True
+[1088.017] REWORK< socket=True
+[1089.416] SERIAL_TX> b'pctbat\r\n'
+[1089.430] SERIAL_TX> b'charge\r\n'
+[1093.030] REWORK> reworkPM3All()
+[1093.031] SERIAL_TX> b'restartpm3\r\n'
+[1096.048] CONNECT> connect2PM3()
+[1096.052] CONNECT< socket=True
+[1096.052] REWORK< socket=True
+[1098.030] REWORK> reworkPM3All()
+[1098.030] SERIAL_TX> b'restartpm3\r\n'
+[1099.447] SERIAL_TX> b'pctbat\r\n'
+[1099.460] SERIAL_TX> b'charge\r\n'
+[1101.047] CONNECT> connect2PM3()
+[1101.052] CONNECT< socket=True
+[1101.054] REWORK< socket=True
+[1106.064] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1109.477] SERIAL_TX> b'pctbat\r\n'
+[1109.489] SERIAL_TX> b'charge\r\n'
+[1111.066] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1111.067] PM3> hf mf wrbl 61 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1119.506] SERIAL_TX> b'pctbat\r\n'
+[1119.519] SERIAL_TX> b'charge\r\n'
+[1121.079] REWORK> reworkPM3All()
+[1121.080] SERIAL_TX> b'restartpm3\r\n'
+[1124.098] CONNECT> connect2PM3()
+[1124.101] CONNECT< socket=True
+[1124.102] REWORK< socket=True
+[1127.656] KEY> KEY_PWR_CAN_PRES!
+[1128.013] KEY> KEY_PWR_CAN_PRES!
+[1128.015] FINISH(top=ReadActivity d=3)
+[1128.055] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=5E5BCE4C
+[1128.526] KEY> KEY_PWR_CAN_PRES!
+[1128.528] FINISH(top=ReadListActivity d=2)
+[1128.557] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[1129.160] KEY> KEY_PWR_CAN_PRES!
+[1129.536] SERIAL_TX> b'pctbat\r\n'
+[1129.550] SERIAL_TX> b'charge\r\n'
+[1129.758] KEY> KEYDOWN_PRES!
+[1129.976] KEY> KEYDOWN_PRES!
+[1130.163] KEY> KEYDOWN_PRES!
+[1130.299] KEY> KEYDOWN_PRES!
+[1130.469] KEY> KEYDOWN_PRES!
+[1131.841] KEY> KEYDOWN_PRES!
+[1132.160] KEY> KEYDOWN_PRES!
+[1133.099] KEY> KEYDOWN_PRES!
+[1133.341] KEY> KEYDOWN_PRES!
+[1133.525] KEY> KEYDOWN_PRES!
+[1133.745] KEY> KEYDOWN_PRES!
+[1134.115] REWORK> reworkPM3All()
+[1134.116] SERIAL_TX> b'restartpm3\r\n'
+[1134.134] KEY> KEYOK_PRES!
+[1134.173] START(PluginsMenuActivity, None) bundle=None
+[1134.578] POLL stack=['MainActivity', 'PluginsMenuActivity'] type=1 uid=5E5BCE4C
+[1134.924] KEY> KEYDOWN_PRES!
+[1135.166] KEY> KEYDOWN_PRES!
+[1135.691] KEY> KEYOK_PRES!
+[1135.774] START(PluginActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/pm3_raw', 'manifest': {'name': 'PM3 Raw', 'version': '1.0.0', 'author': 'Lab401', 'description': 'Run hw version and display output', 'entry_class': 'PM3RawPlugin', 'permissions': ['pm3'], 'order': 99}, 'ui_definition': {'plugin': True, 'name': 'PM3 Raw', 'version': '1.0.0', 'initial_state': 'idle', 'states': {'idle': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': "Press OK to run 'hw version'", 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'OK': 'run:do_run', 'M1': 'finish'}}, 'transitions': {'on_result.status==done': 'done', 'on_result.status==error': 'error', 'on_error': 'error'}}, 'done': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{output_lines}', 'size': 'normal'}], 'scrollable': True}, 'buttons': {'left': 'Back', 'right': 'Again'}, 'keys': {'M1': 'finish', 'M2': 'set_state:idle'}}}, 'error': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{error_msg}', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'M1': 'finish'}}}}}, 'entry_class': <class 'plugins.pm3_raw.PM3RawPlugin'>, 'plugin_key': 'pm3_raw'}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/pm3_raw", "manifest": {"name": "PM3 Raw", "version": "1.0.0", "author": "Lab401", "description": "Run hw version and display output", "entry_class": "PM3RawPlugin", "permissions": ["pm3"], "order": 99}, "ui_definition": {"plugin": true, "name": "PM3 Raw", "version": "1.0.0", "initial_state": "idle", "states": {"idle": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "Press OK to run 'hw version'", "size": "normal"}]}, "buttons": {"left": "Back", "right": null}, "keys": {"OK": "run:do_run", "M1": "finish"}}, "transitions": {"on_result.status==done": "done", "on_result.status==error": "error", "on_error": "error"}}, "done": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "{output_lines}", "size": "normal"}], "scrollable": true}, "buttons": {"left": "Back", "right": "Again"}, "keys": {"M1": "finish", "M2": "set_state:idle"}}}, "error": {"screen": {"title": "PM3 Raw", "content": {"typ
+[1136.082] POLL stack=['MainActivity', 'PluginsMenuActivity', 'PluginActivity'] type=1 uid=5E5BCE4C
+[1136.889] KEY> KEYOK_PRES!
+[1136.893] PM3> hw version (timeout=5000)
+[1136.894] REWORK> reworkPM3All()
+[1136.894] SERIAL_TX> b'restartpm3\r\n'
+[1137.133] CONNECT> connect2PM3()
+[1137.139] CONNECT< socket=True
+[1137.140] REWORK< socket=True
+[1139.571] SERIAL_TX> b'pctbat\r\n'
+[1139.584] SERIAL_TX> b'charge\r\n'
+[1139.912] CONNECT> connect2PM3()
+[1139.917] CONNECT< socket=True
+[1139.918] REWORK< socket=True
+[1144.925] REWORK> reworkPM3All()
+[1144.926] SERIAL_TX> b'restartpm3\r\n'
+[1147.152] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1147.155] PM3> hf mf wrbl 62 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)
+[1147.156] REWORK> reworkPM3All()
+[1147.159] SERIAL_TX> b'restartpm3\r\n'
+[1147.943] CONNECT> connect2PM3()
+[1147.946] CONNECT< socket=True
+[1147.947] REWORK< socket=True
+[1149.601] SERIAL_TX> b'pctbat\r\n'
+[1149.615] SERIAL_TX> b'charge\r\n'
+[1150.177] CONNECT> connect2PM3()
+[1150.180] CONNECT< socket=True
+[1150.182] REWORK< socket=True
+[1152.955] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1159.631] SERIAL_TX> b'pctbat\r\n'
+[1159.644] SERIAL_TX> b'charge\r\n'
+[1160.194] REWORK> reworkPM3All()
+[1160.195] SERIAL_TX> b'restartpm3\r\n'
+[1161.405] KEY> KEY_PWR_CAN_PRES!
+[1161.408] FINISH(top=PluginActivity d=3)
+[1161.631] KEY> KEY_PWR_CAN_PRES!
+[1161.639] FINISH(top=PluginsMenuActivity d=2)
+[1161.650] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[1163.213] CONNECT> connect2PM3()
+[1163.218] CONNECT< socket=True
+[1163.220] REWORK< socket=True
+[1169.662] SERIAL_TX> b'pctbat\r\n'
+[1169.675] SERIAL_TX> b'charge\r\n'
+[1173.233] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[1173.234] PM3> hf mf wrbl 62 A FFFFFFFFFFFF 00000000000000000000000000000000 (timeout=10000)

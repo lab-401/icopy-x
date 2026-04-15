@@ -1,0 +1,187 @@
+=== TRACE ===
+[   0.004] === ALL INSTALLED ===
+[   0.005] POLL stack=['dict'] 
+[-1770640856.899] START(ReadListActivity, None)
+[-1770640856.137] POLL stack=['dict', 'dict'] 
+[-1770640847.393] PM3> lf fdx read
+[-1770640847.008] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+
+[-1770640846.610] POLL stack=['dict', 'dict'] type=28 uid=
+[-1770640845.982] PM3> lf fdx read
+[-1770640845.657] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+
+[-1770640841.947] FINISH(top=dict d=2)
+[-1770640841.595] POLL stack=['dict'] type=28 uid=
+[-1770640727.204] START(ReadListActivity, None)
+[-1770640726.931] POLL stack=['dict', 'dict'] type=28 uid=
+[-1770640721.979] PM3> lf fdx read
+[-1770640721.578] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+
+[-1770640720.537] PM3> lf fdx read
+[-1770640720.179] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       14339 (0x3803)\n[+]   Animal bit set?  True\n[+]       Data block?  True  [value 0x800000]\n[+] CRC-16             0xCE2B (ok)\n[+
+[-1770640711.275] START(WarningWriteActivity, {'return': 1, 'data': '0060-030207938416', 'raw': '0060-030207938416'})
+[-1770640710.894] POLL stack=['dict', 'dict', 'dict'] type=28 uid=
+[-1770640709.677] FINISH(top=dict d=3)
+[-1770640709.668] START(WriteActivity, {'return': 1, 'data': '0060-030207938416', 'raw': '0060-030207938416'})
+[-1770640709.541] PM3> lf t55xx wipe p 20206666
+[-1770640708.658] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640708.657] PM3> lf t55xx detect
+[-1770640707.507] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640707.502] PM3> lf t55xx detect p 20206666
+[-1770640705.174] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640704.474] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys
+[-1770640672.631] PM3< ret=1 \n[+] loaded 107 keys from dictionary file /tmp/.keys/t5577_tmp_keys.dic\n[=] Testing 51243648\n[=] Testing 000D8787\n[=] Testing 19920427\n[=] Testing 65857569\n[=] Testing 05D73B9F\n[=] Testing 89A69E60\n[=] Testing 314159E0\n[=] Testing AA55BBBB\n[=] Testing A5B4C3D2\n[=] Testing 1C0B5848\n[=] Testing 004343
+[-1770640666.774] PM3> lf t55xx wipe p 20206666
+[-1770640665.888] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640665.887] PM3> lf t55xx detect
+[-1770640665.483] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640665.477] PM3> lf fdx clone c 0060 n 030207938416
+[-1770640663.591] PM3< ret=1 \n[=]       Country code 60\n[=]      National code 30207938416\n[=]     Set animal bit N\n[=] Set data block bit N\n[=]      Extended data 0x0\n[=]                RFU 0\n[=] Preparing to clone FDX-B to T55x7 with animal ID: 0060-30207938416\n[+] Blk | Data \n[+] ----+------------\n[+]  00 | 00098080\n[+]  01 
+[-1770640663.589] PM3> lf t55xx detect
+[-1770640663.227] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098080\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Pas
+[-1770640663.223] PM3> lf t55xx write b 7 d 20206666
+[-1770640663.096] PM3< ret=1 \n[=] Writing page 0  block: 07  data: 0x20206666 \n
+[-1770640663.095] PM3> lf t55xx write b 0 d 00098090
+[-1770640662.968] PM3< ret=1 \n[=] Writing page 0  block: 00  data: 0x00098090 \n
+[-1770640662.967] PM3> lf t55xx detect p 20206666
+[-1770640661.529] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : BIPHASEa - (CDP)\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : Yes\n[=]      Offset         : 33\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00098090\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Pas
+[-1770640661.522] PM3> lf sea
+[-1770640660.410] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Count
+[-1770640660.390] PM3> lf fdx read
+[-1770640660.046] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw  
+[-1770640658.742] PM3> lf sea
+[-1770640657.595] PM3< ret=1 \n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=] \n[=] Checking for known tags...\n[=] \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Count
+[-1770640657.593] PM3> lf fdx read
+[-1770640657.250] PM3< ret=1 \n[+] FDX-B / ISO 11784/5 Animal\n[+] Animal ID          0060-030207938416\n[+] National Code      030207938416 (0x708888F70)\n[+] Country Code       0060\n[+] Reserved/RFU       0 (0x0000)\n[+]   Animal bit set?  False\n[+]       Data block?  False  [value 0x0]\n[+] CRC-16             0x74AC (ok)\n[+] Raw  
+[-1770640654.269] FINISH(top=dict d=3)
+[-1770640653.784] POLL stack=['dict', 'dict'] type=28 uid=
+[-1770640653.537] FINISH(top=dict d=2)
+[-1770640653.282] POLL stack=['dict'] type=28 uid=
+[-1770640652.510] START(ReadListActivity, None)
+[-1770640651.778] POLL stack=['dict', 'dict'] type=28 uid=
+[-1770640646.408] PM3> lf t55xx detect
+[-1770640645.130] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640645.129] PM3> hf sea
+[-1770640644.765] POLL stack=['dict', 'dict'] type=23 uid=
+[-1770640643.267] PM3< ret=1 \n[-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO14443-A tag...[|]                                          [/] Sear
+[-1770640643.263] PM3> hf felica reader
+[-1770640641.233] PM3< ret=1 \n[!] card timeout\n
+[-1770640640.183] PM3> lf t55xx detect
+[-1770640638.865] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640638.166] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys
+[-1770640634.588] PM3< ret=-1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640629.520] PM3> lf t55xx detect
+[-1770640628.338] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640628.337] PM3> hf sea
+[-1770640626.470] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Sear
+[-1770640626.469] PM3> hf felica reader
+[-1770640624.466] PM3< ret=1 \n[!] card timeout\n
+[-1770640623.476] PM3> lf t55xx detect
+[-1770640622.284] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640621.499] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys
+[-1770640609.963] PM3< ret=-1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640606.643] PM3> lf t55xx detect
+[-1770640603.965] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640603.964] PM3> hf sea
+[-1770640602.091] PM3< ret=1 \n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Sear
+[-1770640602.090] PM3> hf felica reader
+[-1770640600.074] PM3< ret=1 \n[!] card timeout\n
+[-1770640599.084] PM3> lf t55xx detect
+[-1770640597.604] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640596.896] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys
+[-1770640593.768] PM3< ret=-1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640591.007] FINISH(top=dict d=2)
+[-1770640590.672] POLL stack=['dict'] type=23 uid=
+[-1770640589.718] START(ReadListActivity, None)
+[-1770640589.163] POLL stack=['dict', 'dict'] type=23 uid=
+[-1770640581.163] PM3> lf t55xx detect
+[-1770640580.529] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 32\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E8\n[=]      Downlink Mode  : long leading reference\n[=]      Password Set   : N
+[-1770640579.529] PM3> lf t55xx detect
+[-1770640579.199] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 32\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E8\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640579.198] PM3> lf t55xx read b 0 
+[-1770640578.920] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 000880E8 | 00000000000010001000000011101000 | ..\n
+[-1770640578.915] PM3> lf t55xx read b 1 
+[-1770640578.632] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  01 | 00000000 | 00000000000000000000000000000000 | ....\n
+[-1770640578.631] PM3> lf t55xx read b 2 
+[-1770640578.342] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  02 | 00000000 | 00000000000000000000000000000000 | ....\n
+[-1770640578.122] PM3> lf t55xx dump f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3
+[-1770640575.046] PM3< ret=1 \n[+] Reading Page 0:\n[+] blk | hex data | binary                           | ascii\n[+] ----+----------+----------------------------------+-------\n[+]  00 | 000880E8 | 00000000000010001000000011101000 | ..\n[+]  01 | 00000000 | 00000000000000000000000000000000 | ....\n[+]  02 | 00000000 | 0000000000000
+[-1770640568.043] START(WarningWriteActivity, {'return': 1, 'data': None, 'raw': None, 'file': '/mnt/upan/dump/t55xx/T55xx_000)
+[-1770640567.628] POLL stack=['dict', 'dict', 'dict'] type=23 uid=
+[-1770640566.728] FINISH(top=dict d=3)
+[-1770640566.720] START(WriteActivity, {'return': 1, 'data': None, 'raw': None, 'file': '/mnt/upan/dump/t55xx/T55xx_000)
+[-1770640566.622] POLL stack=['dict', 'dict'] type=23 uid=
+[-1770640566.587] PM3> lf t55xx wipe p 20206666
+[-1770640566.118] POLL stack=['dict', 'dict', 'dict'] type=23 uid=
+[-1770640565.700] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640565.699] PM3> lf t55xx detect
+[-1770640565.324] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640565.321] PM3> lf t55xx detect
+[-1770640564.956] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640564.955] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640563.763] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640563.757] PM3> lf t55xx detect
+[-1770640562.570] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640560.421] PM3> lf t55xx wipe p 20206666
+[-1770640559.542] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640559.541] PM3> lf t55xx detect
+[-1770640559.141] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640559.138] PM3> lf t55xx detect
+[-1770640558.735] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640558.734] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640557.532] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640557.526] PM3> lf t55xx detect
+[-1770640556.179] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640551.249] PM3> lf t55xx wipe p 20206666
+[-1770640550.351] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640550.350] PM3> lf t55xx detect
+[-1770640549.971] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640549.967] PM3> lf t55xx detect
+[-1770640549.613] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640549.612] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640548.401] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640548.395] PM3> lf t55xx detect
+[-1770640546.772] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640543.258] PM3> lf t55xx wipe p 20206666
+[-1770640542.375] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640542.374] PM3> lf t55xx detect
+[-1770640541.968] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640541.964] PM3> lf t55xx detect
+[-1770640541.614] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640541.613] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640540.403] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640540.397] PM3> lf t55xx detect
+[-1770640538.821] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640537.671] PM3> lf t55xx wipe p 20206666
+[-1770640536.792] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640536.791] PM3> lf t55xx detect
+[-1770640536.426] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 32\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E8\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640536.423] PM3> lf t55xx detect
+[-1770640534.846] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640530.822] PM3> lf t55xx wipe p 20206666
+[-1770640529.926] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640529.925] PM3> lf t55xx detect
+[-1770640529.518] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640529.515] PM3> lf t55xx detect
+[-1770640529.132] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640529.130] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640527.929] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640527.923] PM3> lf t55xx detect
+[-1770640526.618] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640524.308] PM3> lf t55xx wipe p 20206666
+[-1770640523.408] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640523.407] PM3> lf t55xx detect
+[-1770640522.231] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640522.230] PM3> lf t55xx detect p 20206666
+[-1770640519.902] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640519.201] PM3> lf t55xx chk f /tmp/.keys/t5577_tmp_keys
+[-1770640474.262] PM3< ret=1 \n[+] loaded 107 keys from dictionary file /tmp/.keys/t5577_tmp_keys.dic\n[=] Testing 51243648\n[=] Testing 000D8787\n[=] Testing 19920427\n[=] Testing 65857569\n[=] Testing 05D73B9F\n[=] Testing 89A69E60\n[=] Testing 314159E0\n[=] Testing AA55BBBB\n[=] Testing A5B4C3D2\n[=] Testing 1C0B5848\n[=] Testing 004343
+[-1770640452.981] PM3> lf t55xx wipe p 20206666
+[-1770640452.090] PM3< ret=1 \n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  
+[-1770640452.089] PM3> lf t55xx detect
+[-1770640451.663] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640451.659] PM3> lf t55xx detect
+[-1770640451.267] PM3< ret=1 \n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   :
+[-1770640451.266] PM3> lf t55xx restore f /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin
+[-1770640450.072] PM3< ret=1 \n[+] loaded 48 bytes from binary file /mnt/upan/dump/t55xx/T55xx_000880E8_00000000_00000000_3.bin\n[=] Writing page 0  block: 01  data: 0x00000000 \n[=] Writing page 0  block: 02  data: 0x00000000 \n[=] Writing page 0  block: 03  data: 0x00000000 \n[=] Writing page 0  block: 04  data: 0x00000000 \n[=] Wr
+[-1770640450.067] PM3> lf t55xx detect
+[-1770640448.887] PM3< ret=1 \n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n
+[-1770640446.687] FINISH(top=dict d=3)
+[-1770640446.431] POLL stack=['dict', 'dict'] type=23 uid=

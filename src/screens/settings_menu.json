@@ -1,0 +1,27 @@
+{
+    "screen_id": "settings_menu",
+    "title": "Settings",
+    "title_bg": "#7C829A",
+    "content": {
+        "type": "settings_list",
+        "items": [
+            {
+                "label": "Screen Mirroring",
+                "resource_key": "screen_mirroring",
+                "type": "toggle",
+                "config_key": "screen_mirror",
+                "default": 0
+            }
+        ]
+    },
+    "buttons": {
+        "left": "",
+        "right": ""
+    },
+    "key_map": {
+        "UP": "scroll:-1",
+        "DOWN": "scroll:1",
+        "OK": "toggle",
+        "PWR": "finish"
+    }
+}

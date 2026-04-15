@@ -1,0 +1,20 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "Felica",
+      "13.56MHZ",
+      "IDM: :01FE010203040506"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 21
+  },
+  "toast": "Tag Found"
+}

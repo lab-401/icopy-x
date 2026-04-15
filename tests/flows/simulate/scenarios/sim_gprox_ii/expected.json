@@ -1,0 +1,9 @@
+{
+  "title": "Simulation",
+  "content_contains": [
+    "G-Prox II ID"
+  ],
+  "sim_buttons": {
+    "M2": "Start"
+  }
+}

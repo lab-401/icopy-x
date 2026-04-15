@@ -1,0 +1,8 @@
+{
+  "title": "Read Tag",
+  "toast": "Wrong type",
+  "result_buttons": {
+    "M1": "Rescan",
+    "M2": "Rescan"
+  }
+}

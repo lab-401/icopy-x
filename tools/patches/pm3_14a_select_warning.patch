@@ -1,0 +1,31 @@
+diff --git a/client/src/cmdhf14a.c b/client/src/cmdhf14a.c
+index 14ddfd6..5a2112c 100644
+--- a/client/src/cmdhf14a.c
++++ b/client/src/cmdhf14a.c
+@@ -266,7 +266,7 @@ int hf14a_getversion_data(iso14a_card_select_t *card, uint64_t select_status, ve
+             DropField();
+ 
+             if (res == PM3_ETIMEOUT) {
+-                PrintAndLogEx(DEBUG, "iso14443a card select timeout");
++                PrintAndLogEx(WARNING, "iso14443a card select timeout");
+                 return PM3_ETIMEOUT;
+             }
+ 
+@@ -2681,7 +2681,7 @@ int infoHF14A(bool verbose, bool do_nack_test, bool do_aid_search) {
+     SendCommandMIX(CMD_HF_ISO14443A_READER, ISO14A_CONNECT | ISO14A_NO_DISCONNECT, 0, 0, NULL, 0);
+     PacketResponseNG resp;
+     if (WaitForResponseTimeout(CMD_ACK, &resp, 2500) == false) {
+-        PrintAndLogEx(DEBUG, "iso14443a card select timeout");
++        PrintAndLogEx(WARNING, "iso14443a card select timeout");
+         DropField();
+         return PM3_ETIMEOUT;
+     }
+@@ -2699,7 +2699,7 @@ int infoHF14A(bool verbose, bool do_nack_test, bool do_aid_search) {
+     uint64_t select_status = resp.oldarg[0];
+ 
+     if (select_status == 0) {
+-        PrintAndLogEx(DEBUG, "iso14443a card select failed");
++        PrintAndLogEx(WARNING, "iso14443a card select failed");
+         DropField();
+         return select_status;
+     }

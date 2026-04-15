@@ -1,0 +1,21 @@
+{
+  "scanning_phase": {
+    "title": "Scan Tag",
+    "M1": null,
+    "scan_cache": null
+  },
+  "result_phase": {
+    "title": "Scan Tag",
+    "M1": "Rescan",
+    "M2": "Simulate",
+    "content_contains": [
+      "STR512",
+      "ISO14443-B",
+      "13.56MHZ",
+      "UID: AABBCCDD"
+    ],
+    "scan_cache_found": true,
+    "scan_cache_type": 22
+  },
+  "toast": "Tag Found"
+}

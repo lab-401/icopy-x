@@ -1,0 +1,85 @@
+=== FAIL READ TRACE ===
+[   0.002] PATCHED hfmfread.readAllSector
+[   0.003] PATCHED hfmfread.cacheFile
+[   0.003] PATCHED hfmfread.callListener
+[   0.003] PATCHED hfmfkeys.fchks
+[   0.004] PATCHED hfmfkeys.keysFromPrintParse
+[   0.004] PATCHED lfread.createRetObj
+[   0.004] PATCHED lfread.read
+[   0.005] PATCHED lfread.readAWID
+[   0.005] PATCHED lfread.readCardIdAndRaw
+[   0.005] PATCHED lfread.readEM410X
+[   0.006] PATCHED lfread.readEM4X05
+[   0.006] PATCHED lfread.readFCCNAndRaw
+[   0.007] PATCHED lfread.readFDX
+[   0.007] PATCHED lfread.readGALLAGHER
+[   0.007] PATCHED lfread.readGProx2
+[   0.008] PATCHED lfread.readHID
+[   0.008] PATCHED lfread.readIndala
+[   0.008] PATCHED lfread.readJablotron
+[   0.008] PATCHED lfread.readKeri
+[   0.009] PATCHED lfread.readNedap
+[   0.009] PATCHED lfread.readNexWatch
+[   0.009] PATCHED lfread.readNoralsy
+[   0.010] PATCHED lfread.readPAC
+[   0.010] PATCHED lfread.readParadox
+[   0.010] PATCHED lfread.readPresco
+[   0.010] PATCHED lfread.readProxIO
+[   0.011] PATCHED lfread.readPyramid
+[   0.011] PATCHED lfread.readSecurakey
+[   0.011] PATCHED lfread.readT55XX
+[   0.012] PATCHED lfread.readViking
+[   0.012] PATCHED lfread.readVisa2000
+[   0.015] POLL stack=['dict'] 
+[   0.015] === ALL INSTALLED ===
+[ 224.755] START(ReadListActivity, None)
+[ 225.510] POLL stack=['dict', 'dict'] 
+[ 226.036] PM3> hf 14a info (timeout=5000)
+[ 227.077] PM3< ret=1 \n\n[+]  UID: AA 55 C3 96 \n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K / Classic 1K CL2\n[+]    MIFARE Plus 2K / Plus EV1 2K\n[+]    MIFARE Plus CL2 2K / Plus CL2 EV1 2K\n[=] proprietary non iso14443-4 card found, RATS not supported\n[+] Magic capabilities : Write Once / FUID\n[+] Prng detection: weak\n
+[ 227.097] PM3> hf mf cgetblk 0 (timeout=5888)
+[ 227.331] PM3< ret=1 \n--block number: 0 \n[#] wupC1 error\n[!!] Can't read block. error=-1\n
+[ 227.515] POLL stack=['dict', 'dict'] type=1 uid=AA55C396
+[ 228.392] HFMFKEYS.fchks({'found': True, 'uid': 'AA55C396', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcEr, 1024)
+[ 229.132] PM3> hf mf fchk 1 /tmp/.keys/mf_tmp_keys (timeout=600000)
+[ 230.476] PM3< ret=1 \n[+] Loaded 108 keys from /tmp/.keys/mf_tmp_keys\n[=] Running strategy 1\n[=] Chunk: 0.4s | found 32/32 keys (85)\n[=] time in checkkeys (fast) 0.4s\n\n\n[+] found keys:\n[+] |-----|----------------|---|----------------|---|\n[+] | Sec | key A          |res| key B          |res|\n[+] |-----|----------------|---|----------------|---|\n[+] | 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n[+] | 00
+[ 230.608] HFMFKEYS.keysFromPrintParse(1024)
+[ 230.739] HFMFKEYS.keysFromPrintParse returned: 32
+[ 231.879] HFMFKEYS.fchks returned: 1
+[ 232.272] HFMFREAD.readAllSector(1024, {'found': True, 'uid': 'AA55C396', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcEr, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 233.368] HFMFREAD.callListener(0, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 233.369] HFMFREAD.callListener returned: None
+[ 234.328] HFMFREAD.callListener(1, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 234.348] HFMFREAD.callListener returned: None
+[ 235.029] HFMFREAD.callListener(2, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 235.030] HFMFREAD.callListener returned: None
+[ 235.658] HFMFREAD.callListener(3, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 235.659] HFMFREAD.callListener returned: None
+[ 236.055] HFMFREAD.callListener(4, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 236.056] HFMFREAD.callListener returned: None
+[ 236.378] HFMFREAD.callListener(5, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 236.379] HFMFREAD.callListener returned: None
+[ 236.713] HFMFREAD.callListener(6, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 236.715] HFMFREAD.callListener returned: None
+[ 237.039] HFMFREAD.callListener(7, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 237.040] HFMFREAD.callListener returned: None
+[ 237.365] HFMFREAD.callListener(8, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 237.366] HFMFREAD.callListener returned: None
+[ 237.701] HFMFREAD.callListener(9, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 237.703] HFMFREAD.callListener returned: None
+[ 238.028] HFMFREAD.callListener(10, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 238.029] HFMFREAD.callListener returned: None
+[ 238.382] HFMFREAD.callListener(11, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 238.384] HFMFREAD.callListener returned: None
+[ 238.728] HFMFREAD.callListener(12, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 238.730] HFMFREAD.callListener returned: None
+[ 239.327] HFMFREAD.callListener(13, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 239.329] HFMFREAD.callListener returned: None
+[ 240.062] HFMFREAD.callListener(14, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 240.066] HFMFREAD.callListener returned: None
+[ 240.779] HFMFREAD.callListener(15, 16, <bound method ReadActivity.onReading of <activity_main.ReadListActivity object a)
+[ 240.981] HFMFREAD.callListener returned: None
+[ 241.212] HFMFREAD.cacheFile('/mnt/upan/dump/mf1/M1-1K-4B_AA55C396_6.eml')
+[ 241.213] HFMFREAD.cacheFile returned: None
+[ 241.660] HFMFREAD.cacheFile('/mnt/upan/dump/mf1/M1-1K-4B_AA55C396_6.bin')
+[ 241.660] HFMFREAD.cacheFile returned: None
+[ 241.878] HFMFREAD.readAllSector returned: 1

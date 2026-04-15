@@ -1,0 +1,73 @@
+=== FULL TRACE ===
+[   0.014] POLL stack=['MainActivity'] 
+[   0.015] === ALL INSTALLED ===
+[   0.158] KEY> KEYDOWN_PRES!
+[   0.426] KEY> KEYDOWN_PRES!
+[   0.684] KEY> KEYDOWN_PRES!
+[   0.945] KEY> KEYDOWN_PRES!
+[   1.200] KEY> KEYDOWN_PRES!
+[   1.575] KEY> KEYDOWN_PRES!
+[   1.736] KEY> KEYDOWN_PRES!
+[   2.026] KEY> KEYDOWN_PRES!
+[   2.268] KEY> KEYDOWN_PRES!
+[   2.509] KEY> KEYDOWN_PRES!
+[   2.875] KEY> KEYDOWN_PRES!
+[   4.044] KEY> KEYUP_PRES!
+[   4.298] KEY> KEYUP_PRES!
+[   4.539] KEY> KEYUP_PRES!
+[   4.990] KEY> KEYUP_PRES!
+[   5.434] KEY> KEYOK_PRES!
+[   5.452] START(DiagnosisActivity, None) bundle=None
+[   5.525] POLL stack=['MainActivity', 'DiagnosisActivity'] 
+[   6.436] KEY> KEYM2_PRES!
+[   6.442] PM3> hf tune (timeout=8888)
+[   6.607] SERIAL_TX> b'pctbat\r\n'
+[   6.624] SERIAL_TX> b'charge\r\n'
+[   6.978] PM3< ret=1 content_len=755 Measuring HF antenna\nPress pm3 button or <Enter> to exit\n0 mV /  0 V / 65 Vmax   [=] 37705 mV / 37 V / 37 Vmax   [=] 37683 mV / 37 V / 37 Vmax   [=] 37692 mV / 37 V / 37 Vmax   [=] 37687 mV / 37 V / 37 Vmax   [=] 37700 mV / 37 V / 37 Vmax   [=] 37670 mV / 37 V / 37 Vmax   [=] 37675 mV / 37 V / 37 Vmax   [=] 37662 mV / 37 V / 37 Vmax   [=] 37666 mV / 37 V / 37 Vmax   [=] 37726 mV / 37 V / 37 Vmax   [=] 37670 mV / 37 V / 37 Vmax   [=] 37662 mV / 37 V / 37 Vmax   [=] 37649 mV / 37 V / 37 Vmax   [=] 37666 mV / 37 V / 37 Vmax   [=] 37657 mV / 37 V / 37 Vmax   [=] 37649 mV / 37 V / 37 Vmax   [=] 37653 mV / 37 V / 37 Vmax   [=] 37657 mV / 37 V / 37 Vmax   [=] 37632 mV / 37 V / 37 Vmax   [=] 37666 mV / 37 V / 37 Vmax   [2K\nDone!\n\n
+[   6.985] PM3> lf tune (timeout=8888)
+[   7.520] PM3< ret=1 content_len=769 Measuring LF antenna at 125.00 kHz\nPress pm3 button or <Enter> to exit\n0 mV /  0 V / 71 Vmax   [=] 44421 mV / 44 V / 44 Vmax   [=] 44464 mV / 44 V / 44 Vmax   [=] 44438 mV / 44 V / 44 Vmax   [=] 44472 mV / 44 V / 44 Vmax   [=] 44446 mV / 44 V / 44 Vmax   [=] 44464 mV / 44 V / 44 Vmax   [=] 44446 mV / 44 V / 44 Vmax   [=] 44429 mV / 44 V / 44 Vmax   [=] 44472 mV / 44 V / 44 Vmax   [=] 44421 mV / 44 V / 44 Vmax   [=] 44412 mV / 44 V / 44 Vmax   [=] 44421 mV / 44 V / 44 Vmax   [=] 44446 mV / 44 V / 44 Vmax   [=] 44421 mV / 44 V / 44 Vmax   [=] 44464 mV / 44 V / 44 Vmax   [=] 44446 mV / 44 V / 44 Vmax   [=] 44438 mV / 44 V / 44 Vmax   [=] 44429 mV / 44 V / 44 Vmax   [=] 44438 mV / 44 V / 44 Vmax   [=] 44421 mV / 44 V / 44 Vmax   [2K\nDone!\n\n
+[   7.523] PM3> hf 14a reader (timeout=5888)
+[   7.650] PM3< ret=1 content_len=1 \n
+[   7.656] PM3> lf sea (timeout=8888)
+[  12.279] PM3< ret=1 content_len=134 \nNote: False Positives ARE possible\nChecking for known tags: command execution time out\n\nNo data found!\nCouldn't identify a chipset\n\n\n
+[  12.281] PM3> mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola (timeout=5888)
+[  12.611] PM3< ret=1 content_len=102 Loaded 2 bytes from binary file `/tmp/test_pm3_mem.nikola`\nWrote 2 bytes to file test_pm3_mem.nikola\n\n
+[  12.614] PM3> mem spiffs wipe (timeout=5888)
+[  12.957] PM3< ret=1 content_len=76 Wiping all files from SPIFFS file system\nremoved test_pm3_mem.nikola\nDone!\n\n
+[  15.097] KEY> KEY_PWR_CAN_PRES!
+[  15.617] KEY> KEY_PWR_CAN_PRES!
+[  15.620] FINISH(top=DiagnosisActivity d=2)
+[  16.041] POLL stack=['MainActivity'] 
+[  16.646] SERIAL_TX> b'pctbat\r\n'
+[  16.659] SERIAL_TX> b'charge\r\n'
+[  23.351] KEY> KEYDOWN_PRES!
+[  23.564] KEY> KEYDOWN_PRES!
+[  23.764] KEY> KEYDOWN_PRES!
+[  24.381] KEY> KEYDOWN_PRES!
+[  24.704] KEY> KEYDOWN_PRES!
+[  25.687] KEY> KEYDOWN_PRES!
+[  26.054] KEY> KEYOK_PRES!
+[  26.208] START(LUAScriptCMDActivity, None) bundle=None
+[  26.557] POLL stack=['MainActivity', 'LUAScriptCMDActivity'] 
+[  26.676] SERIAL_TX> b'pctbat\r\n'
+[  26.688] SERIAL_TX> b'charge\r\n'
+[  28.828] KEY> KEYDOWN_PRES!
+[  29.068] KEY> KEYDOWN_PRES!
+[  29.250] KEY> KEYDOWN_PRES!
+[  29.399] KEY> KEYDOWN_PRES!
+[  29.549] KEY> KEYDOWN_PRES!
+[  29.656] KEY> KEYDOWN_PRES!
+[  29.864] KEY> KEYDOWN_PRES!
+[  30.028] KEY> KEYDOWN_PRES!
+[  30.182] KEY> KEYDOWN_PRES!
+[  30.729] KEY> KEYDOWN_PRES!
+[  30.939] KEY> KEYDOWN_PRES!
+[  31.276] KEY> KEYDOWN_PRES!
+[  32.553] KEY> KEYUP_PRES!
+[  36.706] SERIAL_TX> b'pctbat\r\n'
+[  36.719] SERIAL_TX> b'charge\r\n'
+[  37.427] KEY> KEYOK_PRES!
+[  37.430] START(ConsolePrinterActivity, {'cmd': 'script run hf_14a_raw', 'title': 'LUA Script'}) bundle={"cmd": "script run hf_14a_raw", "title": "LUA Script"}
+[  37.450] PM3> script run hf_14a_raw (timeout=-1)
+[  37.460] PM3< ret=1 content_len=41 Error - can't find hf_14a_raw.[lua|cmd]\n\n
+[  37.575] POLL stack=['MainActivity', 'LUAScriptCMDActivity', 'ConsolePrinterActivity'] 

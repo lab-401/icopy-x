@@ -1,0 +1,36 @@
+=== FULL TRACE (iceman-fw compat test) ===
+[   0.091] pm3_compat version=iceman needs_translation=True
+[   0.092] presspm3 hook OK
+[   0.094] POLL stack=['MainActivity'] 
+[   0.094] === ALL INSTALLED ===
+[   6.103] SERIAL_TX> b'pctbat\r\n'
+[   6.116] SERIAL_TX> b'charge\r\n'
+[  16.133] SERIAL_TX> b'pctbat\r\n'
+[  16.146] SERIAL_TX> b'charge\r\n'
+[  26.163] SERIAL_TX> b'pctbat\r\n'
+[  26.176] SERIAL_TX> b'charge\r\n'
+[  36.198] SERIAL_TX> b'pctbat\r\n'
+[  36.211] SERIAL_TX> b'charge\r\n'
+[  46.228] SERIAL_TX> b'pctbat\r\n'
+[  46.242] SERIAL_TX> b'charge\r\n'
+[  56.263] SERIAL_TX> b'pctbat\r\n'
+[  56.276] SERIAL_TX> b'charge\r\n'
+[  58.869] KEY> KEYDOWN_PRES!
+[  59.101] KEY> KEYDOWN_PRES!
+[  59.645] KEY> KEYOK_PRES!
+[  59.769] START(ScanActivity, None) bundle=None
+[  59.951] PM3> hf 14a info (timeout=5000)
+[  60.178] POLL stack=['MainActivity', 'ScanActivity'] 
+[  61.381] PM3< ret=1 content_len=172 \n UID: 5E 5B CE 4C  \nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection: weak\n\n\n\npm3 -->\n
+[  61.425] PM3> hf mf cgetblk 0 (timeout=5000)
+[  61.550] PM3< ret=1 content_len=48 wupC1 error\nCan't read block. error=-1\n\npm3 -->\n
+[  61.558] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  61.681] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=5E5BCE4C
+[  61.777] CACHE: {"found": "True", "uid": "'5E5BCE4C'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  64.177] KEY> KEY_PWR_CAN_PRES!
+[  64.179] FINISH(top=ScanActivity d=2)
+[  64.186] POLL stack=['MainActivity'] type=1 uid=5E5BCE4C
+[  66.293] SERIAL_TX> b'pctbat\r\n'
+[  66.306] SERIAL_TX> b'charge\r\n'
+[  76.323] SERIAL_TX> b'pctbat\r\n'
+[  76.336] SERIAL_TX> b'charge\r\n'

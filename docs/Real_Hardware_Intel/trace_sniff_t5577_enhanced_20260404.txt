@@ -1,0 +1,15 @@
+=== ENHANCED SNIFF TRACE ===
+[   0.004] [TThread-1] === ALL INSTALLED ===
+[   0.004] [TThread-9] POLL stack=['dict']
+[  70.214] [TThread-6] START(SniffActivity, None)
+[  70.386] [TThread-9] POLL stack=['dict', 'dict']
+[  83.875] [TThread-1] PM3> lf config a 0 t 20 s 10000 (timeout=5000, listener=None)
+[  83.917] [TThread-1] PM3< ret=1 listener_calls=0 cache=\n
+[  83.918] [TThread-1] PM3> lf t55xx sniff (timeout=-1, listener=None)
+[  88.282] [TThread-1] PM3< ret=1 listener_calls=0 cache=\n[#] LF Sampling config\n[#]   [q] divisor.............95 ( 125.00 kHz )\n[#]   [b] bits per sample.....8\n[#]   [d] decimation..........1\n[#]   [a] averaging...........No\n[#]   [t] trigger threshold...2
+[ 110.014] [TThread-2] PM3> lf config a 0 t 20 s 10000 (timeout=5000, listener=None)
+[ 110.030] [TThread-2] PM3< ret=1 listener_calls=0 cache=\n
+[ 110.031] [TThread-2] PM3> lf t55xx sniff (timeout=-1, listener=None)
+[ 113.333] [TThread-2] PM3< ret=1 listener_calls=0 cache=\n[#]   [q] divisor.............95 ( 125.00 kHz )\n[#]   [b] bits per sample.....8\n[#]   [d] decimation..........1\n[#]   [a] averaging...........No\n[#]   [t] trigger threshold...20\n[#]   [s] samples to 
+[ 121.904] [TThread-6] FINISH(top=dict d=2)
+[ 121.958] [TThread-9] POLL stack=['dict']

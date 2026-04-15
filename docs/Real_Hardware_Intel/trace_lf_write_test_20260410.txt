@@ -1,0 +1,149 @@
+=== TRACE ===
+[   0.096] POLL stack=['MainActivity'] 
+[   0.097] === ALL INSTALLED ===
+[  44.671] START(AutoCopyActivity)
+[  44.773] PM3> hf 14a info (timeout=5000)
+[  44.914] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[  44.971] PM3> lf sea (timeout=10000)
+[  44.983] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  46.035] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] AWID - len: 170 -unknown- (17160) - Wiegand: 4406d2d2d2108610, Raw: 01b4b4b48421841111111111\n\n[+] Valid AWID ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[  46.081] CACHE: {"data": "'FC,CN: X,X'", "fc": "''", "cn": "''", "len": "'170'", "raw": "'01b4b4b48421841111111111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[  46.316] PM3> lf awid read (timeout=10000)
+[  46.488] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[  46.568] PM3< ret=1 [usb|script] pm3 --> lf awid read\n[+] AWID - len: 170 -unknown- (26985) - Wiegand: 444444444406d2d2, Raw: 01b4b4b48421841111111111\n\nNikola.D: 0\n
+[  52.545] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01b4b4b48421841111111111'})
+[  52.998] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=11 uid=
+[  54.770] FINISH(top=WarningWriteActivity d=3)
+[  54.780] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,X', 'raw': '01b4b4b48421841111111111'})
+[  55.002] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=11 uid=
+[  55.290] PM3> lf t55xx detect (timeout=10000)
+[  56.396] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  56.399] PM3> lf t55xx wipe p 20206666 (timeout=10000)
+[  57.252] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe p 20206666\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  57.253] PM3> lf t55xx detect (timeout=10000)
+[  58.341] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  58.342] PM3> lf t55xx wipe (timeout=10000)
+[  59.193] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  59.194] PM3> lf t55xx detect (timeout=10000)
+[  60.257] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  63.029] PM3> lf sea (timeout=10000)
+[  64.168] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] Indala - len 234, Raw: 80000000000000000000000000000000000000000000000000000000\n\n[+] Valid Indala ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[  64.175] PM3> lf awid read (timeout=10000)
+[  64.436] PM3< ret=1 [usb|script] pm3 --> lf awid read\n\nNikola.D: -10\n
+[  69.935] PM3> lf t55xx detect (timeout=10000)
+[  71.036] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  71.037] PM3> lf t55xx wipe p 20206666 (timeout=10000)
+[  71.891] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe p 20206666\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  71.892] PM3> lf t55xx detect (timeout=10000)
+[  72.975] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  72.975] PM3> lf t55xx wipe (timeout=10000)
+[  73.827] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  73.828] PM3> lf t55xx detect (timeout=10000)
+[  74.929] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  85.524] FINISH(top=WriteActivity d=3)
+[  85.591] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[  86.264] FINISH(top=AutoCopyActivity d=2)
+[  86.608] POLL stack=['MainActivity'] type=11 uid=
+[  87.619] START(AutoCopyActivity)
+[  87.644] PM3> hf 14a info (timeout=5000)
+[  87.769] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[  87.787] PM3> lf sea (timeout=10000)
+[  88.112] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[  90.281] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[/]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  90.283] PM3> hf sea (timeout=10000)
+[  92.111] PM3< ret=1 [usb|script] pm3 --> hf sea\n[-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO14443-A tag...[|]                                          [/] Searching for ISO15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO14443-B tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[  92.137] PM3> lf t55xx detect (timeout=10000)
+[  93.173] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  93.175] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[  93.387] PM3< ret=1 [usb|script] pm3 --> lf em 4x05_info FFFFFFFF\n\nNikola.D: -10\n
+[  93.391] PM3> hf felica reader (timeout=10000)
+[  95.371] PM3< ret=1 [usb|script] pm3 --> hf felica reader\n[!] card timeout\n\nNikola.D: -4\n
+[ 100.069] PM3> hf 14a info (timeout=5000)
+[ 100.273] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 100.276] PM3> lf sea (timeout=10000)
+[ 101.362] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\n[+] Valid HID Prox ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 101.367] CACHE: {"data": "'99911119999'", "raw": "'99911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 101.541] PM3> lf hid read (timeout=10000)
+[ 101.645] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 101.787] PM3< ret=1 [usb|script] pm3 --> lf hid read\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\nNikola.D: 0\n
+[ 109.270] START(WarningWriteActivity, {'return': 1, 'data': '99911119999', 'raw': ''})
+[ 109.672] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=9 uid=
+[ 124.075] FINISH(top=WarningWriteActivity d=3)
+[ 124.086] START(WriteActivity, {'return': 1, 'data': '99911119999', 'raw': ''})
+[ 124.194] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=9 uid=
+[ 124.446] PM3> lf t55xx detect (timeout=10000)
+[ 125.516] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 125.517] PM3> lf t55xx wipe p 20206666 (timeout=10000)
+[ 126.380] PM3< ret=1 [usb|script] pm3 --> lf t55xx wipe p 20206666\n\n[=] Begin wiping T55x7 tag\n\n[=] Default configation block 000880E0\n[=] Writing page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\n[=] Writing page 0  block: 01  data: 0x00000000\n[=] Writing page 0  block: 02  data: 0x00000000\n[=] Writing page 0  block: 03  data: 0x00000000\n[=] Writing page 0  block: 04  data: 0x00000000\n[=] Writing page 0  block: 05  data: 0x00000000\n[=] Writing page 0  block: 06  data: 0x00000000\n[=] Writing page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 126.381] PM3> lf t55xx detect (timeout=10000)
+[ 126.646] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[=]      Chip Type      : T55x7\n[=]      Modulation     : ASK\n[=]      Bit Rate       : 2 - RF/32\n[=]      Inverted       : No\n[=]      Offset         : 33\n[=]      Seq. Term.     : Yes\n[=]      Block0         : 0x000880E0\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n\nNikola.D: 0\n
+[ 126.664] PM3> lf hid clone 99911119999 (timeout=10000)
+[ 126.667] PM3< ret=1 [usb|script] pm3 --> lf hid clone 99911119999\n[=] Preparing to clone HID tag with ID: 99911119999\n[+] Done\n\nNikola.D: 0\n
+[ 126.668] PM3> lf sea (timeout=10000)
+[ 128.098] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\n[+] Valid HID Prox ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[ 128.099] PM3> lf hid read (timeout=10000)
+[ 128.347] PM3< ret=1 [usb|script] pm3 --> lf hid read\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\nNikola.D: 0\n
+[ 133.162] PM3> lf sea (timeout=10000)
+[ 134.235] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\n[+] Valid HID Prox ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[ 134.237] PM3> lf hid read (timeout=10000)
+[ 134.485] PM3< ret=1 [usb|script] pm3 --> lf hid read\n[+] HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\nNikola.D: 0\n
+[ 147.884] FINISH(top=WriteActivity d=3)
+[ 148.231] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 148.462] FINISH(top=AutoCopyActivity d=2)
+[ 148.732] POLL stack=['MainActivity'] type=9 uid=
+[ 159.528] START(AutoCopyActivity)
+[ 159.552] PM3> hf 14a info (timeout=5000)
+[ 159.679] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 159.696] PM3> lf sea (timeout=10000)
+[ 159.748] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 162.195] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[\]Searching for MOTOROLA tag...\n[-] No data found!\n[=] Signal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[ 162.198] PM3> hf sea (timeout=10000)
+[ 164.027] PM3< ret=1 [usb|script] pm3 --> hf sea\n[|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO14443-A tag...[-]                                          [\] Searching for ISO15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[ 164.029] PM3> lf t55xx detect (timeout=10000)
+[ 165.089] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[!] Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 165.091] PM3> lf em 4x05_info FFFFFFFF (timeout=5000)
+[ 165.302] PM3< ret=1 [usb|script] pm3 --> lf em 4x05_info FFFFFFFF\n\nNikola.D: -10\n
+[ 165.305] PM3> hf felica reader (timeout=10000)
+[ 167.286] PM3< ret=1 [usb|script] pm3 --> hf felica reader\n[!] card timeout\n\nNikola.D: -4\n
+[ 170.192] PM3> hf 14a info (timeout=5000)
+[ 170.399] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 170.402] PM3> lf sea (timeout=10000)
+[ 171.520] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\n[+] Valid Jablotron ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 171.535] CACHE: {"data": "'7270a18'", "raw": "'FFFF011999900079'", "type": "30", "found": "True", "progress": "1", "return": "30"}
+[ 171.682] PM3> lf jablotron read (timeout=10000)
+[ 171.768] POLL stack=['MainActivity', 'AutoCopyActivity'] type=30 uid=
+[ 171.971] PM3< ret=1 [usb|script] pm3 --> lf jablotron read\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\nNikola.D: 0\n
+[ 176.138] START(WarningWriteActivity, {'return': 1, 'data': '7270a18', 'raw': 'FFFF011999900079'})
+[ 176.276] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=30 uid=
+[ 178.026] FINISH(top=WarningWriteActivity d=3)
+[ 178.037] START(WriteActivity, {'return': 1, 'data': '7270a18', 'raw': 'FFFF011999900079'})
+[ 178.280] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=30 uid=
+[ 178.371] PM3> lf t55xx detect (timeout=10000)
+[ 178.639] PM3< ret=1 [usb|script] pm3 --> lf t55xx detect\n[=]      Chip Type      : T55x7\n[=]      Modulation     : FSK2a\n[=]      Bit Rate       : 4 - RF/50\n[=]      Inverted       : Yes\n[=]      Offset         : 32\n[=]      Seq. Term.     : No\n[=]      Block0         : 0x00107060\n[=]      Downlink Mode  : default/fixed bit length\n[=]      Password Set   : No\n\n\nNikola.D: 0\n
+[ 178.641] PM3> lf t55xx write b 1 d FFFF0119 (timeout=10000)
+[ 178.746] PM3< ret=1 [usb|script] pm3 --> lf t55xx write b 1 d FFFF0119\n[=] Writing page 0  block: 01  data: 0xFFFF0119\n\nNikola.D: 0\n
+[ 178.747] PM3> lf t55xx write b 2 d 99900079 (timeout=10000)
+[ 178.862] PM3< ret=1 [usb|script] pm3 --> lf t55xx write b 2 d 99900079\n[=] Writing page 0  block: 02  data: 0x99900079\n\nNikola.D: 0\n
+[ 178.862] PM3> lf t55xx write b 0 d 00158040 (timeout=10000)
+[ 178.967] PM3< ret=1 [usb|script] pm3 --> lf t55xx write b 0 d 00158040\n[=] Writing page 0  block: 00  data: 0x00158040\n\nNikola.D: 0\n
+[ 178.967] PM3> lf sea (timeout=10000)
+[ 180.044] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\n[+] Valid Jablotron ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[ 180.045] PM3> lf jablotron read (timeout=10000)
+[ 180.342] PM3< ret=1 [usb|script] pm3 --> lf jablotron read\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\nNikola.D: 0\n
+[ 183.675] PM3> lf sea (timeout=10000)
+[ 184.811] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\n[+] Valid Jablotron ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[ 184.814] PM3> lf jablotron read (timeout=10000)
+[ 185.108] PM3< ret=1 [usb|script] pm3 --> lf jablotron read\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\nNikola.D: 0\n
+[ 186.934] FINISH(top=WriteActivity d=3)
+[ 187.295] POLL stack=['MainActivity', 'AutoCopyActivity'] type=30 uid=
+[ 187.871] FINISH(top=AutoCopyActivity d=2)
+[ 188.297] POLL stack=['MainActivity'] type=30 uid=
+[ 190.146] START(AutoCopyActivity)
+[ 190.169] PM3> hf 14a info (timeout=5000)
+[ 190.301] POLL stack=['MainActivity', 'AutoCopyActivity'] type=30 uid=
+[ 190.306] PM3< ret=1 [usb|script] pm3 --> hf 14a info\n\nNikola.D: 0\n
+[ 190.318] PM3> lf sea (timeout=10000)
+[ 191.465] PM3< ret=1 [usb|script] pm3 --> lf sea\n\n[=] NOTE: some demods output possible binary\n[=] if it finds something that looks like a tag\n[=] False Positives ARE possible\n[=]\n[=] Checking for known tags...\n[=]\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\n[+] Valid Jablotron ID found!\n\n[+] Chipset detection: T55xx\n\nNikola.D: 0\n
+[ 191.469] CACHE: {"data": "'7270a18'", "raw": "'FFFF011999900079'", "type": "30", "found": "True", "progress": "1", "return": "30"}
+[ 191.627] PM3> lf jablotron read (timeout=10000)
+[ 191.918] PM3< ret=1 [usb|script] pm3 --> lf jablotron read\n[+] Jablotron - Card: 7270a18, Raw: FFFF011999900079\n[+] Printed: 1410-01-1999-9000\n\nNikola.D: 0\n

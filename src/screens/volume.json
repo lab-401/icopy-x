@@ -1,0 +1,28 @@
+{
+    "id": "volume",
+    "screen": {
+        "title": "Volume",
+        "content": {
+            "type": "checked_list",
+            "style": "radio",
+            "items": [
+                {"label": "Off", "resource_key": "valueline1"},
+                {"label": "Low", "resource_key": "valueline2"},
+                {"label": "Middle", "resource_key": "valueline3"},
+                {"label": "High", "resource_key": "valueline4"}
+            ],
+            "selected": "{current_level}"
+        },
+        "buttons": {
+            "left": "",
+            "right": ""
+        },
+        "keys": {
+            "UP": "scroll:-1",
+            "DOWN": "scroll:1",
+            "M2": "save",
+            "OK": "save",
+            "PWR": "finish"
+        }
+    }
+}
