@@ -1,0 +1,79 @@
+name: Build PM3 Client (ARM)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pm3_tag:
+        description: 'PM3 release tag (leave empty for latest)'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ARM cross-compiler
+        run: |
+          sudo dpkg --add-architecture armhf
+          sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list
+          echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted universe' | sudo tee -a /etc/apt/sources.list
+          echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ jammy-updates main restricted universe' | sudo tee -a /etc/apt/sources.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
+          arm-linux-gnueabihf-gcc --version | head -1
+
+      - name: Resolve PM3 tag
+        id: tag
+        run: |
+          TAG="${{ github.event.inputs.pm3_tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(git ls-remote --tags https://github.com/RfidResearchGroup/proxmark3.git "v4.*" \
+              | grep -v '\^{}' | sed 's|.*refs/tags/||' \
+              | sort -t. -k1,1 -k2,2n | tail -1)
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Building PM3 client from: $TAG"
+
+      - name: Clone and patch PM3
+        run: |
+          git clone --depth 1 --branch ${{ steps.tag.outputs.tag }} https://github.com/RfidResearchGroup/proxmark3.git /tmp/pm3
+          cd /tmp/pm3
+          for p in ${{ github.workspace }}/tools/patches/pm3_*.patch; do
+            [ -f "$p" ] || continue
+            if git apply --check "$p" 2>/dev/null; then
+              git apply "$p" && echo "Applied: $(basename $p)"
+            else
+              echo "Skipped: $(basename $p)"
+            fi
+          done
+
+      - name: Build PM3 client
+        run: |
+          cd /tmp/pm3
+          make -j$(nproc) client \
+            PLATFORM=PM3ICOPYX \
+            CC=arm-linux-gnueabihf-gcc \
+            CXX=arm-linux-gnueabihf-g++ \
+            LD=arm-linux-gnueabihf-ld \
+            "AR=arm-linux-gnueabihf-ar rcs" \
+            RANLIB=arm-linux-gnueabihf-ranlib \
+            cpu_arch=arm \
+            SKIPQT=1 SKIPPYTHON=1 SKIPREVENGTEST=1 SKIPGD=1 SKIPBT=1 SKIPREADLINE=1
+          file client/proxmark3
+          echo "GLIBC max: $(objdump -T client/proxmark3 | grep -oP 'GLIBC_\d+\.\d+' | sort -t. -k2,2n | tail -1)"
+
+      - name: Package artifacts
+        run: |
+          mkdir -p /tmp/pm3-out
+          cp /tmp/pm3/client/proxmark3 /tmp/pm3-out/
+          cd /tmp/pm3/client && zip -r /tmp/pm3-out/lua.zip luascripts/ lualibs/
+          echo "${{ steps.tag.outputs.tag }}" > /tmp/pm3-out/VERSION
+          ls -lh /tmp/pm3-out/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pm3-client-arm-${{ steps.tag.outputs.tag }}
+          path: /tmp/pm3-out/
+          retention-days: 7
