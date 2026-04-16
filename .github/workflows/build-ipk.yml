@@ -6,10 +6,14 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      pm3_tag:
+        description: 'PM3 release tag (leave empty for latest v4.x)'
+        required: false
+        default: ''
 
 env:
   PM3_REPO: https://github.com/RfidResearchGroup/proxmark3.git
-  PM3_TAG: v4.21128
   # Both client and firmware use PM3ICOPYX (iCopy-X with XC3S100E FPGA).
   # hw version confirms: "fpga_icopyx_hf.ncd image 3s100evq100"
   PM3_CLIENT_PLATFORM: PM3ICOPYX
@@ -17,6 +21,26 @@ env:
   ARM_TOOLCHAIN: arm-linux-gnueabihf
 
 jobs:
+  resolve-pm3-tag:
+    name: Resolve PM3 Release Tag
+    runs-on: ubuntu-latest
+    outputs:
+      pm3_tag: ${{ steps.resolve.outputs.tag }}
+    steps:
+      - name: Resolve latest PM3 release
+        id: resolve
+        run: |
+          TAG="${{ github.event.inputs.pm3_tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(git ls-remote --tags ${{ env.PM3_REPO }} "v4.*" \
+              | grep -v '\^{}' | sed 's|.*refs/tags/||' \
+              | sort -t. -k1,1 -k2,2n | tail -1)
+            echo "Resolved latest: $TAG"
+          else
+            echo "Using provided: $TAG"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
   test:
     name: Verify IPK Contents
     needs: [cross-compile-pm3, cross-compile-pm3-firmware]
@@ -171,7 +195,10 @@ jobs:
 
   cross-compile-pm3:
     name: Cross-compile Proxmark3 Client
+    needs: [resolve-pm3-tag]
     runs-on: ubuntu-latest
+    env:
+      PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
     steps:
       - uses: actions/checkout@v4
 
@@ -221,6 +248,13 @@ jobs:
               fi
             done
 
+            # GCC 5.4 compat fixups for newer PM3 releases
+            sed -i "s/-fstack-clash-protection//g" Makefile.defs client/Makefile 2>/dev/null || true
+            sed -i "s/static const uint8_t protocol_marker\[\]/const uint8_t protocol_marker[]/" client/src/cmdhfaliro.c 2>/dev/null || true
+            if [ -f client/src/cmdhfvas.c ]; then
+              sed -i "s/^static const uint16_t \(VAS_STATUS_[A-Z_]*\) = \(0x[0-9A-Fa-f]*\);/#define \1 \2/" client/src/cmdhfvas.c
+            fi
+
             export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig
             export PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig
 
@@ -248,12 +282,17 @@ jobs:
           file /tmp/pm3-out/proxmark3
           cat /tmp/pm3-out/version.txt
 
-          # Verify the binary is ARM
+          # Verify the binary is ARM and glibc <= 2.23
           if ! file /tmp/pm3-out/proxmark3 | grep -qi "ARM"; then
             echo "::error::Binary is NOT ARM! Cross-compilation failed."
             exit 1
           fi
-          echo "Binary confirmed as ARM (ELF 32-bit LSB, EABI5, glibc 2.23 compatible)"
+          GLIBC_MAX=$(objdump -T /tmp/pm3-out/proxmark3 | grep -oP 'GLIBC_\d+\.\d+' | sort -t. -k2,2n | tail -1)
+          echo "GLIBC max: $GLIBC_MAX"
+          if echo "$GLIBC_MAX" | grep -qP 'GLIBC_2\.(2[4-9]|[3-9]\d)'; then
+            echo "::error::Binary requires $GLIBC_MAX but device has glibc 2.23!"
+            exit 1
+          fi
 
       - name: Upload PM3 client artifact
         uses: actions/upload-artifact@v4
@@ -265,7 +304,10 @@ jobs:
 
   cross-compile-pm3-firmware:
     name: Cross-compile PM3 Firmware (fullimage)
+    needs: [resolve-pm3-tag]
     runs-on: ubuntu-latest
+    env:
+      PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
     steps:
       - uses: actions/checkout@v4
 
@@ -279,7 +321,7 @@ jobs:
 
       - name: Clone RRG Proxmark3
         run: |
-          git clone --depth 1 $PM3_REPO /tmp/proxmark3
+          git clone --depth 1 --branch $PM3_TAG $PM3_REPO /tmp/proxmark3
 
       - name: Apply iCopy-X firmware patches
         run: |
@@ -332,7 +374,10 @@ jobs:
 
   build-iceman-client-linux:
     name: Iceman PM3 Client (Linux x86_64)
+    needs: [resolve-pm3-tag]
     runs-on: ubuntu-latest
+    env:
+      PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
     steps:
       - name: Install dependencies
         run: |
@@ -362,7 +407,10 @@ jobs:
 
   build-iceman-client-windows:
     name: Iceman PM3 Client (Windows x86_64)
+    needs: [resolve-pm3-tag]
     runs-on: windows-latest
+    env:
+      PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
     defaults:
       run:
         shell: msys2 {0}
@@ -408,7 +456,10 @@ jobs:
 
   build-iceman-client-macos:
     name: Iceman PM3 Client (macOS)
+    needs: [resolve-pm3-tag]
     runs-on: macos-latest
+    env:
+      PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
     steps:
       - name: Install dependencies
         run: brew install readline pkg-config openssl lz4
