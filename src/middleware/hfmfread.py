@@ -308,8 +308,9 @@ def _parse_blocks_from_text(text):
     return blocks
 
 def readBlock(block, typ, key):
-    """Read single block. PM3: hf mf rdbl {block} {typ} {key}."""
-    cmd = 'hf mf rdbl {} {} {}'.format(block, typ, key)
+    """Read single block. PM3: hf mf rdbl --blk {block} -a/-b -k {key}."""
+    cmd = 'hf mf rdbl --blk {} {} -k {}'.format(
+        block, '-a' if typ == 'A' else '-b', key)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return None
@@ -325,7 +326,8 @@ def readSector(sector, typ, key):
     """Read a full sector. PM3: hf mf rdsc {sector} {typ} {key}."""
     fb = mifare.sectorToBlock(sector) if mifare else sector * 4
     bc = mifare.getBlockCountInSector(sector) if mifare else 4
-    cmd = 'hf mf rdsc {} {} {}'.format(sector, typ, key)
+    cmd = 'hf mf rdsc -s {} {} -k {}'.format(
+        sector, '-a' if typ == 'A' else '-b', key)
     ret = executor.startPM3Task(cmd, 15000)
     if ret == -1:
         return None
@@ -349,8 +351,8 @@ def readBlocks(sector, keyA, keyB, infos):
     return result if isinstance(result, list) else None
 
 def readIfIsGen1a(infos):
-    """Check if card is Gen1a via hf mf cgetblk 0."""
-    ret = executor.startPM3Task('hf mf cgetblk 0', 5888)
+    """Check if card is Gen1a via hf mf cgetblk --blk 0."""
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5888)
     if ret == -1:
         return None
     if executor.hasKeyword('wupC1 error') or executor.hasKeyword("Can't read block"):

@@ -154,7 +154,8 @@ def is_gen1a_magic():
 
     # Active probe via Gen1a backdoor command
     # Binary: STR@0x0001dcb4 'hf mf cgetblk 0'
-    ret = executor.startPM3Task('hf mf cgetblk 0', 5000)
+    # Compat flip: iceman syntax — positional block → --blk flag
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5000)
 
     if ret != executor.CODE_PM3_TASK_ERROR:
         # Binary: references getPrintContent, isEmptyContent, 'data:', 'fail'

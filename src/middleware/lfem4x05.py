@@ -30,7 +30,7 @@ Ground truth:
     Strings:    docs/v1090_strings/lfem4x05_strings.txt
 
 API:
-    CMD = 'lf em 4x05_info FFFFFFFF'
+    CMD = 'lf em 4x05 info -p FFFFFFFF'
     TIMEOUT = 5000
 
     parser() -> dict
@@ -46,9 +46,9 @@ API:
 import re
 
 # ---------------------------------------------------------------------------
-# Constants -- EXACT from QEMU extraction
+# Constants -- EXACT from QEMU extraction (flipped to iceman syntax)
 # ---------------------------------------------------------------------------
-CMD = 'lf em 4x05_info FFFFFFFF'
+CMD = 'lf em 4x05 info -p FFFFFFFF'
 TIMEOUT = 5000
 
 # Module-level state -- accessed by read.so (lfem4x05.DUMP_TEMP)
@@ -68,7 +68,7 @@ _RE_SERIAL = r'.*Serial.*:(.*)'
 # ===========================================================================
 
 def parser():
-    """Parse lf em 4x05_info output from executor cache.
+    """Parse lf em 4x05 info output from executor cache.
 
     QEMU-verified return values:
         No 'Chip Type' keyword -> {'found': False}
@@ -143,7 +143,7 @@ def parser():
 def info4X05(key=None):
     """Get EM4x05 tag info.
 
-    QEMU-verified: sends 'lf em 4x05_info' with optional key.
+    QEMU-verified: sends 'lf em 4x05 info' with optional key.
     Returns parser() result. Caches in DUMP_TEMP (accessed by read.so).
     """
     global DUMP_TEMP, KEY_TEMP
@@ -156,12 +156,12 @@ def info4X05(key=None):
             return {'found': False}
 
     if key:
-        cmd = 'lf em 4x05_info %s' % key
+        cmd = 'lf em 4x05 info -p %s' % key
         KEY_TEMP = key
     else:
-        # Ground truth: binary string constant CMD = 'lf em 4x05_info FFFFFFFF'
+        # Ground truth: binary string constant CMD = 'lf em 4x05 info -p FFFFFFFF'
         # Original sends default key FFFFFFFF when no explicit key given.
-        # Original PM3 trace confirms: first scan command is 'lf em 4x05_info FFFFFFFF'
+        # Original PM3 trace confirms: first scan command is 'lf em 4x05 info -p FFFFFFFF'
         cmd = CMD
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -175,7 +175,7 @@ def info4X05(key=None):
 def read4x05(block, key=None):
     """Read a single EM4x05 block.
 
-    QEMU-verified: sends 'lf em 4x05_read <block> <key>'.
+    QEMU-verified: sends 'lf em 4x05 read -a <block> -p <key>'.
     Returns block data string or ''.
     """
     try:
@@ -187,9 +187,9 @@ def read4x05(block, key=None):
             return ''
 
     if key:
-        cmd = 'lf em 4x05_read %s %s' % (block, key)
+        cmd = 'lf em 4x05 read -a %s -p %s' % (block, key)
     else:
-        cmd = 'lf em 4x05_read %s' % block
+        cmd = 'lf em 4x05 read -a %s' % block
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -214,9 +214,9 @@ def dump4X05(infos=None, key=None):
     """Dump EM4x05 tag data to file.
 
     Ground truth (original PM3 log):
-        lf em 4x05_info FFFFFFFF
-        lf em 4x05_info
-        lf em 4x05_dump f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
+        lf em 4x05 info -p FFFFFFFF
+        lf em 4x05 info
+        lf em 4x05 dump -f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
 
     Original .so creates dump path via appfiles.create_em4x05(),
     includes ' f <path>' in the PM3 command, then extracts the path
@@ -235,7 +235,7 @@ def dump4X05(infos=None, key=None):
             return -1
 
     # Build dump file path from serial number
-    # Ground truth (original PM3 log): lf em 4x05_dump f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
+    # Ground truth (original PM3 log): lf em 4x05 dump -f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
     # appfiles.create_em4x05() adds the EM4305_ prefix and _N uniqueness suffix
     sn = ''
     if isinstance(infos, dict):
@@ -252,8 +252,8 @@ def dump4X05(infos=None, key=None):
         dump_path = os.path.join('/mnt/upan/dump/em4x05', 'EM4305_%s' % sn if sn else 'EM4305')
 
     # Ground truth: binary format string ' f {}' (lfem4x05_strings.txt line 825)
-    # Command: 'lf em 4x05_dump' + ' f {}'.format(path)
-    cmd = 'lf em 4x05_dump' + ' f {}'.format(dump_path)
+    # Command: 'lf em 4x05 dump' + ' -f {}'.format(path)
+    cmd = 'lf em 4x05 dump' + ' -f {}'.format(dump_path)
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -287,7 +287,7 @@ def set_key(key):
         except ImportError:
             return -1
 
-    cmd = 'lf em 4x05_write 2 %s %s' % (key, key)
+    cmd = 'lf em 4x05 write -a 2 -d %s -p %s' % (key, key)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1

@@ -45,9 +45,9 @@ _KEY_LEGACY_2 = '2020666666668888'
 _KEY_LEGACY_3 = '6666202066668888'
 
 # PM3 commands
-_CMD_RDBL = 'hf iclass rdbl b {:02d} k {}'
+_CMD_RDBL = 'hf iclass rdbl --blk {:02d} -k {}'
 _CMD_INFO = 'hf iclass info'
-_CMD_CHK = 'hf iclass chk f '
+_CMD_CHK = 'hf iclass chk -f '
 
 # Regex patterns
 _RE_CSN = r'CSN:*\s([A-Fa-f0-9 ]+)'
@@ -86,7 +86,7 @@ def checkKey(typ_or_key, key=None, block=1, elite=False):
 
     cmd = _CMD_RDBL.format(block, actual_key)
     if elite:
-        cmd += ' e'
+        cmd += ' --elite'
     ret = executor.startPM3Task(cmd, 5000)
     if ret == -1:
         return False
@@ -137,7 +137,7 @@ def readTagBlock(typ_or_key, block_or_key=None, key=None, elite=False):
 
     cmd = _CMD_RDBL.format(actual_block, actual_key)
     if elite:
-        cmd += ' e'
+        cmd += ' --elite'
     ret = executor.startPM3Task(cmd, 5000)
     if ret == -1:
         return ''
@@ -216,7 +216,7 @@ def chkKeys(infos):
     # Fallback: file-based key check via 'hf iclass chk'
     # Ground truth: archive/lib_transliterated/hficlass.py line 254
     # Original .so falls back to 'hf iclass chk f <keyfile>' when rdbl fails
-    cmd = 'hf iclass chk'
+    cmd = 'hf iclass chk --vb6kdf'
     ret = executor.startPM3Task(cmd, 30000)
     if ret == -1:
         return None

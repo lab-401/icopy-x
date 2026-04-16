@@ -126,11 +126,11 @@ B0_WRITE_MAP = {
 
 # RAW_CLONE_MAP: tag type ID -> PM3 clone command template
 RAW_CLONE_MAP = {
-    14: 'lf securakey clone b {}',
-    29: 'lf gallagher clone b {}',
-    34: 'lf pac clone b {}',
-    35: 'lf paradox clone b {}',
-    45: 'lf nexwatch clone r {}',
+    14: 'lf securakey clone -r {}',
+    29: 'lf gallagher clone -r {}',
+    34: 'lf pac clone -r {}',
+    35: 'lf paradox clone -r {}',
+    45: 'lf nexwatch clone -r {}',
 }
 
 # Lock-unavailable types (from __pyx_k_lock_unavailable_list)
@@ -144,10 +144,10 @@ LOCK_UNAVAILABLE_LIST = []
 def write_em410x(em410x_id):
     """Write EM410x ID to T5577 card.
 
-    QEMU-verified: sends 'lf em 410x_write <id> 1'
+    QEMU-verified: sends 'lf em 410x clone --id <id>'
     Returns 1 on success, -1 on error.
     """
-    cmd = 'lf em 410x_write {} 1'.format(em410x_id)
+    cmd = 'lf em 410x clone --id {}'.format(em410x_id)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -157,9 +157,9 @@ def write_em410x(em410x_id):
 def write_hid(hid_id):
     """Clone HID Prox to T5577.
 
-    QEMU-verified: sends 'lf hid clone {}'.
+    QEMU-verified: sends 'lf hid clone -r {}'.
     """
-    cmd = 'lf hid clone {}'.format(hid_id)
+    cmd = 'lf hid clone -r {}'.format(hid_id)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -169,9 +169,9 @@ def write_hid(hid_id):
 def write_indala(raw):
     """Clone Indala to T5577.
 
-    QEMU-verified: sends 'lf indala clone {} -r {}'.
+    QEMU-verified: sends 'lf indala clone -r {}'.
     """
-    cmd = 'lf indala clone {} -r {}'.format(raw, raw)
+    cmd = 'lf indala clone -r {}'.format(raw)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -181,11 +181,11 @@ def write_indala(raw):
 def write_fdx_par(animal_id):
     """Clone FDX-B animal tag.
 
-    QEMU-verified: sends 'lf fdx clone c <country> n <national_id>'.
+    QEMU-verified: sends 'lf fdxb clone --country <country> --national <national_id>'.
     """
     parts = str(animal_id).replace('-', ' ').split()
     if len(parts) >= 2:
-        cmd = 'lf fdx clone c {} n {}'.format(parts[0], parts[1])
+        cmd = 'lf fdxb clone --country {} --national {}'.format(parts[0], parts[1])
     else:
         return None
     ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -227,7 +227,7 @@ def write_raw_t55xx(raw):
     """Write raw data to T5577 blocks."""
     blocks = [raw[i:i + 8] for i in range(0, len(raw), 8)]
     for i, block_data in enumerate(blocks):
-        cmd = 'lf t55xx write b {} d {}'.format(i, block_data)
+        cmd = 'lf t55xx write -b {} -d {}'.format(i, block_data)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return False
@@ -244,9 +244,9 @@ def write_b0_need(typ, key=None):
 
     config_block = B0_WRITE_MAP[typ]
     if key:
-        cmd = 'lf t55xx write b 0 d {} p {}'.format(config_block, key)
+        cmd = 'lf t55xx write -b 0 -d {} -p {}'.format(config_block, key)
     else:
-        cmd = 'lf t55xx write b 0 d {}'.format(config_block)
+        cmd = 'lf t55xx write -b 0 -d {}'.format(config_block)
     executor.startPM3Task(cmd, TIMEOUT)
     return None
 
@@ -267,9 +267,9 @@ def write_raw(typ, raw, key=None):
     for i, block_data in enumerate(blocks):
         block_num = i + 1
         if key:
-            cmd = 'lf t55xx write b {} d {} p {}'.format(block_num, block_data, key)
+            cmd = 'lf t55xx write -b {} -d {} -p {}'.format(block_num, block_data, key)
         else:
-            cmd = 'lf t55xx write b {} d {}'.format(block_num, block_data)
+            cmd = 'lf t55xx write -b {} -d {}'.format(block_num, block_data)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return -1
@@ -293,7 +293,7 @@ def write_dump_t55xx(file, key=None):
     and compares read-back blocks against dump file.
     Returns 1 on verified success, -1 on restore failure or verify mismatch.
     """
-    cmd = 'lf t55xx restore f {}'.format(file)
+    cmd = 'lf t55xx restore -f {}'.format(file)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -360,14 +360,14 @@ def write_dump_t55xx(file, key=None):
 def write_block_em4x05(blocks, start, end, key):
     """Write blocks to EM4x05 tag.
 
-    Sends 'lf em 4x05_write <block> <data> <key>' for each block.
+    Sends 'lf em 4x05 write -a <block> -d <data> -p <key>' for each block.
     """
     for i in range(start, end + 1):
         if i < len(blocks):
             data = blocks[i]
             if not data or not data.strip():
                 continue
-            cmd = 'lf em 4x05_write {} {} {}'.format(i, data, key)
+            cmd = 'lf em 4x05 write -a {} -d {} -p {}'.format(i, data, key)
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1
@@ -409,14 +409,16 @@ def write_dump_em4x05(file, key=None):
     for block_num in write_order:
         if block_num < len(blocks):
             data = blocks[block_num]
-            cmd = 'lf em 4x05_write {} {} {}'.format(block_num, data, key or '')
+            cmd = 'lf em 4x05 write -a {} -d {} -p {}'.format(block_num, data, key or '')
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1
 
     # Verify: read blocks back
     for block_num in range(min(len(blocks), 16)):
-        cmd = 'lf em 4x05_read {} {}'.format(block_num, key or '')
+        cmd = 'lf em 4x05 read -a {}'.format(block_num)
+        if key:
+            cmd += ' -p {}'.format(key)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return -1

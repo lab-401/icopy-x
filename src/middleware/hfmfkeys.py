@@ -252,16 +252,8 @@ def fchks(infos, size, with_call=True):
     uid = infos.get('uid', '') if isinstance(infos, dict) else ''
     key_file = genKeyFile(uid, list(DEFAULT_KEYS))
 
-    if size == 4096:
-        sp = '4'
-    elif size == 2048:
-        sp = '2'
-    elif size == 320:
-        sp = '0'
-    else:
-        sp = '1'
-
-    cmd = 'hf mf fchk {} {}'.format(sp, key_file)
+    size_flag = {4096: '--4k', 2048: '--2k', 320: '--mini'}.get(size, '--1k')
+    cmd = 'hf mf fchk {} -f {}'.format(size_flag, key_file)
     ret = executor.startPM3Task(cmd, 600000)
     if ret == -1:
         return -1
@@ -278,7 +270,7 @@ def darkside():
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*:\s*([A-Fa-f0-9]{12})', text)
+    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text)
     if m:
         key = m.group(1).upper()
         putKey2Map(0, A, key)
@@ -302,14 +294,14 @@ def nestedOneKey(known, target, retryMax=5):
         return -1
     target_sector = getSectorFromTK(target)
     target_type = getTypeFromTK(target)
-    cmd = 'hf mf nested 1 {} {} {} {} {}'.format(
-        known_sector * 4, known_type, known_key,
-        target_sector * 4, target_type)
+    cmd = 'hf mf nested --1k --blk {} {} -k {} --tblk {} {}'.format(
+        known_sector * 4, '-a' if known_type == 'A' else '-b', known_key,
+        target_sector * 4, '--ta' if target_type == 'A' else '--tb')
     ret = executor.startPM3Task(cmd, 30000)
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*:\s*([A-Fa-f0-9]{12})', text)
+    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text)
     if m:
         putKey2Map(target_sector, target_type, m.group(1).upper())
         return 1

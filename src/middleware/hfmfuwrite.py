@@ -110,7 +110,7 @@ def write(infos, file):
     """
     # Build PM3 command
     # Strings: __pyx_kp_u_hf_mfu_restore_s_e_f = "hf mfu restore s e f {}"
-    cmd = "hf mfu restore s e f {}".format(file)
+    cmd = "hf mfu restore -s -e -f {}".format(file)
 
     # Execute with callback
     # Strings: __pyx_n_s_startPM3Task

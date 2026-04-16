@@ -144,7 +144,7 @@ def sniffT5577Start():
     The original activity_main.so calls sniffT5577Start(), NOT sniff125KStart().
     """
     import executor
-    executor.startPM3Task('lf config a 0 t 20 s 10000', 5000)
+    executor.startPM3Task('lf config -a 0 -t 20 -s 10000', 5000)
     executor.startPM3Task('lf t55xx sniff', -1)
 
 # ── Trace length parsers ─────────────────────────────────────────────

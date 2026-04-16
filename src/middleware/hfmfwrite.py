@@ -140,9 +140,10 @@ def start_wrbl_cmd(block, typ, key, data):
     """Build the wrbl command string.
 
     Strings: __pyx_k_start_wrbl_cmd
-    Format: 'hf mf wrbl {block} {A|B} {key} {data}'
+    Format: 'hf mf wrbl --blk {block} -a/-b -k {key} -d {data} --force'
     """
-    return 'hf mf wrbl {} {} {} {}'.format(block, typ, key, data)
+    return 'hf mf wrbl --blk {} {} -k {} -d {} --force'.format(
+        block, '-a' if typ == 'A' else '-b', key, data)
 
 def write_block(block, typ, key, data):
     """Write a single block.
@@ -154,7 +155,7 @@ def write_block(block, typ, key, data):
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
-    if executor.hasKeyword('isOk:01'):
+    if executor.hasKeyword(r'isOk:01|Write \( ok \)'):
         return 1
     return -1
 
@@ -187,11 +188,12 @@ def gen1afreeze():
         __pyx_k_hf_14a_raw_p_a_43
         __pyx_k_hf_14a_raw_c_p_a_850000000000000000000000000000 08
     """
+    # Compat flip: -p (keep-field-on) renamed to -k in iceman
     commands = [
-        'hf 14a raw -p -a -b 7 40',
-        'hf 14a raw -c -p -a 43',
-        'hf 14a raw -c -p -a e000',
-        'hf 14a raw -c -p -a 85000000000000000000000000000008',
+        'hf 14a raw -k -a -b 7 40',
+        'hf 14a raw -c -k -a 43',
+        'hf 14a raw -c -k -a e000',
+        'hf 14a raw -c -k -a 85000000000000000000000000000008',
         'hf 14a raw -c -a 5000',
     ]
     for cmd in commands:
@@ -212,7 +214,7 @@ def write_with_gen1a(infos, file):
 
     Returns 1 on success, -1 on failure.
     """
-    cmd = 'hf mf cload b {}'.format(file)
+    cmd = 'hf mf cload -f {}'.format(file)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
@@ -234,7 +236,7 @@ def write_with_gen1a_only_uid(infos):
     uid = infos.get('uid', '')
     sak = infos.get('sak', '08')
     atqa = infos.get('atqa', '0004')
-    cmd = 'hf mf csetuid {} {} {} w'.format(uid, sak, atqa)
+    cmd = 'hf mf csetuid -u {} -s {} -a {} -w'.format(uid, sak, atqa)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
@@ -396,7 +398,7 @@ def write_common(listener, infos, bundle):
     #        gen1a card   → "[+] Block 0: 2CADC272..." (actual block data)
     # Non-gen1a fixtures may contain: "isOk:00", "Can't set magic card block"
     import re as _re
-    ret = executor.startPM3Task('hf mf cgetblk 0', 10000)
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
     if ret == 1:
         text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
@@ -436,7 +438,7 @@ def write_common(listener, infos, bundle):
 
     # Step 5: Post-write card check
     executor.startPM3Task('hf 14a info', 10000)
-    executor.startPM3Task('hf mf cgetblk 0', 10000)
+    executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
 
     return result
 
@@ -499,7 +501,7 @@ def verify(infos, bundle):
             card_uid = m.group(1).replace(' ', '').upper()
 
         # Gen1a probe (matches original trace exactly)
-        executor.startPM3Task('hf mf cgetblk 0', 10000)
+        executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
 
         # Compare UID with expected
         expected_uid = (infos.get('uid') or '').upper()

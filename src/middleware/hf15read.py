@@ -76,7 +76,7 @@ def read(infos):
         if n > 999:
             break
 
-    cmd = 'hf 15 dump f {}'.format(path)
+    cmd = 'hf 15 dump -f {}'.format(path)
     ret = executor.startPM3Task(cmd, TIMEOUT)
 
     if ret == -1:

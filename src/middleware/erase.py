@@ -72,7 +72,7 @@ def detect_mf1_tag():
     # Gen1a is confirmed when cgetblk returns actual block data without errors.
     # Legacy firmware included 'isOk:01'; iceman returns 'data: XX XX ...' format.
     import re as _re
-    ret = executor.startPM3Task('hf mf cgetblk 0', 5888)
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5888)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
     has_error = ('wupC1 error' in cache or "Can't read block" in cache)
     has_block_data = bool(_re.search(
@@ -178,8 +178,9 @@ def _erase_std_m1(info_cache, on_progress=None):
     # Key check (trace: timeout=600000ms)
     if on_progress:
         on_progress('chkdic', 0, 0)
+    size_flag = {0: '--mini', 1: '--1k', 2: '--2k', 4: '--4k'}.get(mf_type, '--1k')
     ret = executor.startPM3Task(
-        'hf mf fchk %d /tmp/.keys/mf_tmp_keys' % mf_type, 600000)
+        'hf mf fchk %s -f /tmp/.keys/mf_tmp_keys' % size_flag, 600000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
 
     # Check if any keys were found
@@ -272,17 +273,17 @@ def _erase_std_m1(info_cache, on_progress=None):
         # Try Key A up to 3 times
         for _attempt in range(3):
             ret = executor.startPM3Task(
-                'hf mf wrbl %d A %s %s' % (block, ka, data), 5888)
+                'hf mf wrbl --blk %d -a -k %s -d %s --force' % (block, ka, data), 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache:
+            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
                 written = True
                 break
         # Fallback to Key B
         if not written:
             ret = executor.startPM3Task(
-                'hf mf wrbl %d B %s %s' % (block, kb, data), 5888)
+                'hf mf wrbl --blk %d -b -k %s -d %s --force' % (block, kb, data), 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache:
+            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
                 written = True
         if not written:
             return 'error'
@@ -301,18 +302,18 @@ def _erase_std_m1(info_cache, on_progress=None):
         written = False
         for _attempt in range(3):
             ret = executor.startPM3Task(
-                'hf mf wrbl %d A %s %s' % (block, ka, transport_trailer),
+                'hf mf wrbl --blk %d -a -k %s -d %s --force' % (block, ka, transport_trailer),
                 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache:
+            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
                 written = True
                 break
         if not written:
             ret = executor.startPM3Task(
-                'hf mf wrbl %d B %s %s' % (block, kb, transport_trailer),
+                'hf mf wrbl --blk %d -b -k %s -d %s --force' % (block, kb, transport_trailer),
                 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache:
+            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
                 written = True
         # Trailer write failures are non-fatal (card may have restricted access)
         write_count += 1
@@ -355,14 +356,14 @@ def erase_t5577():
         return 'success'
 
     # Step 3: Try with DRM password 20206666
-    executor.startPM3Task('lf t55xx wipe p 20206666', 5000)
+    executor.startPM3Task('lf t55xx wipe -p 20206666', 5000)
     ret = executor.startPM3Task('lf t55xx detect', 10000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
     if 'Chip Type' in cache:
         return 'success'
 
     # Step 4: Try detect with password (timeout=10000, from trace)
-    ret = executor.startPM3Task('lf t55xx detect p 20206666', 10000)
+    ret = executor.startPM3Task('lf t55xx detect -p 20206666', 10000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
     if 'Chip Type' in cache:
         return 'success'
@@ -370,7 +371,7 @@ def erase_t5577():
     # Step 5: Password brute force (last resort)
     # Trace: lf t55xx chk f /tmp/.keys/t5577_tmp_keys (timeout=180000)
     executor.startPM3Task(
-        'lf t55xx chk f /tmp/.keys/t5577_tmp_keys', 180000)
+        'lf t55xx chk -f /tmp/.keys/t5577_tmp_keys', 180000)
 
     # All strategies failed
     return 'failed'

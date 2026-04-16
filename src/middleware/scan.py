@@ -454,7 +454,7 @@ def lf_wav_filter():
 
     try:
         # Step 1: Save PM3 graph buffer to temp file
-        cmd = 'data save f ' + FILE_BASE
+        cmd = 'data save -f ' + FILE_BASE
         ret = executor.startPM3Task(cmd, 90)
         if ret == -1:
             return False

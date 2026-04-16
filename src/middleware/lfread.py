@@ -107,42 +107,42 @@ def readFCCNAndRaw(cmd, uid_index=0, raw_index=0):
 
 
 def readEM410X(listener=None, infos=None):
-    return read('lf em 410x_read', lfsearch.REGEX_EM410X, lfsearch.REGEX_RAW,
+    return read('lf em 410x reader', lfsearch.REGEX_EM410X, lfsearch.REGEX_RAW,
                 uid_index=1, raw_index=0)
 
 
 def readHID(listener=None, infos=None):
-    return read('lf hid read', lfsearch.REGEX_HID, lfsearch.REGEX_RAW,
+    return read('lf hid reader', lfsearch.REGEX_HID, lfsearch.REGEX_RAW,
                 uid_index=1, raw_index=0)
 
 
 def readIndala(listener=None, infos=None):
-    return read('lf indala read', lfsearch.REGEX_RAW, lfsearch.REGEX_RAW,
+    return read('lf indala reader', lfsearch.REGEX_RAW, lfsearch.REGEX_RAW,
                 uid_index=1, raw_index=1)
 
 
 def readAWID(listener=None, infos=None):
-    return readFCCNAndRaw('lf awid read')
+    return readFCCNAndRaw('lf awid reader')
 
 
 def readProxIO(listener=None, infos=None):
-    return readCardIdAndRaw('lf io read')
+    return readCardIdAndRaw('lf io reader')
 
 
 def readGProx2(listener=None, infos=None):
-    return readFCCNAndRaw('lf gproxii read')
+    return readFCCNAndRaw('lf gproxii reader')
 
 
 def readSecurakey(listener=None, infos=None):
-    return readFCCNAndRaw('lf securakey read')
+    return readFCCNAndRaw('lf securakey reader')
 
 
 def readViking(listener=None, infos=None):
-    return readCardIdAndRaw('lf viking read')
+    return readCardIdAndRaw('lf viking reader')
 
 
 def readPyramid(listener=None, infos=None):
-    return readFCCNAndRaw('lf pyramid read')
+    return readFCCNAndRaw('lf pyramid reader')
 
 
 def readT55XX(listener=None, infos=None):
@@ -163,48 +163,48 @@ def readEM4X05(listener=None, infos=None):
 
 
 def readFDX(listener=None, infos=None):
-    return read('lf fdx read', lfsearch.REGEX_ANIMAL, lfsearch.REGEX_RAW,
+    return read('lf fdxb reader', lfsearch.REGEX_ANIMAL, lfsearch.REGEX_RAW,
                 uid_index=1, raw_index=0)
 
 
 def readGALLAGHER(listener=None, infos=None):
-    return readFCCNAndRaw('lf gallagher read')
+    return readFCCNAndRaw('lf gallagher reader')
 
 
 def readJablotron(listener=None, infos=None):
-    return readCardIdAndRaw('lf jablotron read')
+    return readCardIdAndRaw('lf jablotron reader')
 
 
 def readKeri(listener=None, infos=None):
-    return readFCCNAndRaw('lf keri read')
+    return readFCCNAndRaw('lf keri reader')
 
 
 def readNedap(listener=None, infos=None):
-    return readCardIdAndRaw('lf nedap read')
+    return readCardIdAndRaw('lf nedap reader')
 
 
 def readNoralsy(listener=None, infos=None):
-    return readCardIdAndRaw('lf noralsy read')
+    return readCardIdAndRaw('lf noralsy reader')
 
 
 def readPAC(listener=None, infos=None):
-    return readCardIdAndRaw('lf pac read')
+    return readCardIdAndRaw('lf pac reader')
 
 
 def readParadox(listener=None, infos=None):
-    return readFCCNAndRaw('lf paradox read')
+    return readFCCNAndRaw('lf paradox reader')
 
 
 def readPresco(listener=None, infos=None):
-    return readCardIdAndRaw('lf presco read')
+    return readCardIdAndRaw('lf presco reader')
 
 
 def readVisa2000(listener=None, infos=None):
-    return readCardIdAndRaw('lf visa2000 read')
+    return readCardIdAndRaw('lf visa2000 reader')
 
 
 def readNexWatch(listener=None, infos=None):
-    return readCardIdAndRaw('lf nexwatch read')
+    return readCardIdAndRaw('lf nexwatch reader')
 
 
 READ = {

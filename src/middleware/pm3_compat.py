@@ -68,6 +68,26 @@ PM3_VERSION_ICEMAN = 'iceman'      # RRG/Iceman PM3
 _current_version = None  # Set by detect_pm3_version()
 
 # ---------------------------------------------------------------------------
+# Legacy compatibility toggle.
+#
+# Set to False to disable ALL legacy (factory) firmware compatibility.
+# When False:
+#   - translate() is a no-op (iceman commands go direct)
+#   - translate_response() is a no-op (executor cleanup is sufficient)
+#   - detect_pm3_version() still runs but its result is unused
+#
+# When True (default):
+#   - On iceman FW: forward rules translate any remaining factory-syntax
+#     commands; response normalizers convert iceman output to factory format.
+#   - On factory FW: reverse rules translate iceman-syntax commands back
+#     to factory positional syntax.
+#
+# To fully remove legacy support: set LEGACY_COMPAT = False, or delete
+# this file entirely.  executor.py handles pm3_compat being absent.
+# ---------------------------------------------------------------------------
+LEGACY_COMPAT = True
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -87,14 +107,20 @@ def _target_key_type_flag(t):
 
 
 # ---------------------------------------------------------------------------
-# ANSI stripping
+# ANSI stripping — kept for backward compatibility.
+# Primary cleanup now lives in executor._clean_pm3_output().
 # ---------------------------------------------------------------------------
 
 _ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
 
 
 def strip_ansi(text):
-    """Remove ANSI color/formatting escape sequences from text."""
+    """Remove ANSI color/formatting escape sequences from text.
+
+    Note: executor.py now calls _clean_pm3_output() unconditionally,
+    which includes ANSI stripping.  This function is retained for any
+    external callers but is no longer called by executor.
+    """
     if not text:
         return text
     return _ANSI_RE.sub('', text)
@@ -459,6 +485,326 @@ _TRANSLATION_RULES = [
 
 
 # ---------------------------------------------------------------------------
+# Reverse translation rules (iceman → factory/original)
+#
+# Used when running on original (factory) firmware with middleware modules
+# that have been migrated to iceman syntax.  Converts iceman CLI-flag
+# commands back to old-style positional syntax the factory PM3 understands.
+#
+# Populated flow-by-flow as middleware modules are migrated.
+# Rules are tried in order; first match wins.
+# ---------------------------------------------------------------------------
+
+def _reverse_mf_rdbl(m):
+    """hf mf rdbl --blk {blk} -a/-b -k {key} -> hf mf rdbl {blk} A/B {key}"""
+    blk = m.group(1)
+    typ = 'A' if m.group(2) == '-a' else 'B'
+    key = m.group(3)
+    return 'hf mf rdbl %s %s %s' % (blk, typ, key)
+
+
+def _reverse_mf_rdsc(m):
+    """hf mf rdsc -s {sec} -a/-b -k {key} -> hf mf rdsc {sec} A/B {key}"""
+    sec = m.group(1)
+    typ = 'A' if m.group(2) == '-a' else 'B'
+    key = m.group(3)
+    return 'hf mf rdsc %s %s %s' % (sec, typ, key)
+
+
+def _reverse_mf_fchk(m):
+    """hf mf fchk --mini/--1k/--2k/--4k -f {file} -> hf mf fchk 0/1/2/4 {file}"""
+    size_map = {'--mini': '0', '--1k': '1', '--2k': '2', '--4k': '4'}
+    sp = size_map.get(m.group(1), '1')
+    return 'hf mf fchk %s %s' % (sp, m.group(2))
+
+
+def _reverse_mf_nested(m):
+    """hf mf nested --size --blk {blk} -a/-b -k {key} --tblk {tblk} --ta/--tb
+    -> hf mf nested {size} {blk} A/B {key} {tblk} A/B"""
+    size_map = {'--mini': '0', '--1k': '1', '--2k': '2', '--4k': '4'}
+    sp = size_map.get(m.group(1), '1')
+    blk = m.group(2)
+    typ = 'A' if m.group(3) == '-a' else 'B'
+    key = m.group(4)
+    tblk = m.group(5)
+    ttyp = 'A' if m.group(6) == '--ta' else 'B'
+    return 'hf mf nested %s %s %s %s %s %s' % (sp, blk, typ, key, tblk, ttyp)
+
+
+def _reverse_mf_wrbl(m):
+    """hf mf wrbl --blk {blk} -a/-b -k {key} -d {data} --force
+    -> hf mf wrbl {blk} A/B {key} {data}"""
+    blk = m.group(1)
+    typ = 'A' if m.group(2) == '-a' else 'B'
+    key = m.group(3)
+    data = m.group(4)
+    return 'hf mf wrbl %s %s %s %s' % (blk, typ, key, data)
+
+
+def _reverse_14a_raw(m):
+    """hf 14a raw ... -k ... -> hf 14a raw ... -p ... (reverse flag rename)"""
+    cmd = m.group(0)
+    return re.sub(r'(?<=\s)-k(?=\s|$)', '-p', cmd)
+
+
+def _reverse_mf_csetuid(m):
+    """hf mf csetuid -u {uid} -s {sak} -a {atqa} [-w]
+    -> hf mf csetuid {uid} {sak} {atqa} [w]"""
+    uid = m.group(1)
+    sak = m.group(2)
+    atqa = m.group(3)
+    has_w = m.group(4) is not None
+    result = 'hf mf csetuid %s %s %s' % (uid, sak, atqa)
+    if has_w:
+        result += ' w'
+    return result
+
+
+def _reverse_em410x_clone(m):
+    """lf em 410x clone --id {id} -> lf em 410x_write {id} 1"""
+    return 'lf em 410x_write %s 1' % m.group(1)
+
+
+def _reverse_indala_clone(m):
+    """lf indala clone -r {raw} -> lf indala clone {raw} -r {raw}"""
+    raw = m.group(1)
+    return 'lf indala clone %s -r %s' % (raw, raw)
+
+
+def _reverse_t55xx_read_page1(m):
+    """lf t55xx read -b {blk} -p {key} --page1 -> lf t55xx read b {blk} p {key} o 1"""
+    return 'lf t55xx read b %s p %s o 1' % (m.group(1), m.group(2))
+
+
+_REVERSE_TRANSLATION_RULES = [
+    # -----------------------------------------------------------------------
+    # Flow 1: Scan — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # data save -f {file} -> data save f {file}
+    (re.compile(r'^data save\s+-f\s+(\S+)$'), r'data save f \1'),
+
+    # hf mf cgetblk --blk {blk} -> hf mf cgetblk {blk}
+    (re.compile(r'^hf mf cgetblk\s+--blk\s+(\S+)$'), r'hf mf cgetblk \1'),
+
+    # -----------------------------------------------------------------------
+    # Flow 2: Read HF — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # hf mf rdbl --blk {blk} -a/-b -k {key} -> hf mf rdbl {blk} A/B {key}
+    (re.compile(r'^hf mf rdbl\s+--blk\s+(\S+)\s+(-[ab])\s+-k\s+(\S+)$'),
+     _reverse_mf_rdbl),
+
+    # hf mf rdsc -s {sec} -a/-b -k {key} -> hf mf rdsc {sec} A/B {key}
+    (re.compile(r'^hf mf rdsc\s+-s\s+(\S+)\s+(-[ab])\s+-k\s+(\S+)$'),
+     _reverse_mf_rdsc),
+
+    # hf mf fchk --mini/--1k/--2k/--4k -f {file} -> hf mf fchk 0/1/2/4 {file}
+    (re.compile(r'^hf mf fchk\s+(--(?:mini|1k|2k|4k))\s+-f\s+(\S+)$'),
+     _reverse_mf_fchk),
+
+    # hf mf nested --size --blk {blk} -a/-b -k {key} --tblk {tblk} --ta/--tb
+    (re.compile(r'^hf mf nested\s+(--(?:mini|1k|2k|4k))\s+--blk\s+(\S+)\s+(-[ab])\s+-k\s+(\S+)\s+--tblk\s+(\S+)\s+(--t[ab])$'),
+     _reverse_mf_nested),
+
+    # hf mfu dump -f {file} -> hf mfu dump f {file}
+    (re.compile(r'^hf mfu dump\s+-f\s+(\S+)$'), r'hf mfu dump f \1'),
+
+    # -----------------------------------------------------------------------
+    # Flow 3: Write HF — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # hf mf wrbl --blk {blk} -a/-b -k {key} -d {data} --force
+    (re.compile(r'^hf mf wrbl\s+--blk\s+(\S+)\s+(-[ab])\s+-k\s+(\S+)\s+-d\s+(\S+)\s+--force$'),
+     _reverse_mf_wrbl),
+
+    # hf 14a raw ... -k ... -> hf 14a raw ... -p ...
+    (re.compile(r'^hf 14a raw\s+.*(?<=\s)-k(?=\s|$).*$'), _reverse_14a_raw),
+
+    # hf mf cload -f {file} -> hf mf cload b {file}
+    (re.compile(r'^hf mf cload\s+-f\s+(\S+)$'), r'hf mf cload b \1'),
+
+    # hf mf csetuid -u {uid} -s {sak} -a {atqa} [-w]
+    (re.compile(r'^hf mf csetuid\s+-u\s+(\S+)\s+-s\s+(\S+)\s+-a\s+(\S+)(?:\s+(-w))?$'),
+     _reverse_mf_csetuid),
+
+    # hf mfu restore -s -e -f {file} -> hf mfu restore s e f {file}
+    (re.compile(r'^hf mfu restore\s+-s\s+-e\s+-f\s+(\S+)$'), r'hf mfu restore s e f \1'),
+
+    # -----------------------------------------------------------------------
+    # Flow 4: Erase — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # lf t55xx wipe -p {key} -> lf t55xx wipe p {key}
+    (re.compile(r'^lf t55xx wipe\s+-p\s+(\S+)$'), r'lf t55xx wipe p \1'),
+
+    # lf t55xx detect -p {key} -> lf t55xx detect p {key}
+    (re.compile(r'^lf t55xx detect\s+-p\s+(\S+)$'), r'lf t55xx detect p \1'),
+
+    # lf t55xx chk -f {file} -> lf t55xx chk f {file}
+    (re.compile(r'^lf t55xx chk\s+-f\s+(\S+)$'), r'lf t55xx chk f \1'),
+
+    # -----------------------------------------------------------------------
+    # Flow 8: iCLASS — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # hf iclass rdbl --blk {blk} -k {key} --elite -> hf iclass rdbl b {blk} k {key} e
+    # (elite variant must come before non-elite)
+    (re.compile(r'^hf iclass rdbl\s+--blk\s+(\S+)\s+-k\s+(\S+)\s+--elite$'),
+     r'hf iclass rdbl b \1 k \2 e'),
+    # hf iclass rdbl --blk {blk} -k {key} -> hf iclass rdbl b {blk} k {key}
+    (re.compile(r'^hf iclass rdbl\s+--blk\s+(\S+)\s+-k\s+(\S+)$'),
+     r'hf iclass rdbl b \1 k \2'),
+
+    # hf iclass chk --vb6kdf -> hf iclass chk
+    (re.compile(r'^hf iclass chk\s+--vb6kdf$'), 'hf iclass chk'),
+
+    # hf iclass dump -k {key} -f {path} --elite -> hf iclass dump k {key} f {path} e
+    (re.compile(r'^hf iclass dump\s+-k\s+(\S+)\s+-f\s+(\S+)\s+--elite$'),
+     r'hf iclass dump k \1 f \2 e'),
+    # hf iclass dump -k {key} -f {path} -> hf iclass dump k {key} f {path}
+    (re.compile(r'^hf iclass dump\s+-k\s+(\S+)\s+-f\s+(\S+)$'),
+     r'hf iclass dump k \1 f \2'),
+    # hf iclass dump -k {key} --elite -> hf iclass dump k {key} e
+    (re.compile(r'^hf iclass dump\s+-k\s+(\S+)\s+--elite$'),
+     r'hf iclass dump k \1 e'),
+    # hf iclass dump -k {key} -> hf iclass dump k {key}
+    (re.compile(r'^hf iclass dump\s+-k\s+(\S+)$'),
+     r'hf iclass dump k \1'),
+
+    # hf iclass calcnewkey --old {old} --new {new} --elite
+    (re.compile(r'^hf iclass calcnewkey\s+--old\s+(\S+)\s+--new\s+(\S+)\s+--elite$'),
+     r'hf iclass calcnewkey o \1 n \2 --elite'),
+    # hf iclass calcnewkey --old {old} --new {new}
+    (re.compile(r'^hf iclass calcnewkey\s+--old\s+(\S+)\s+--new\s+(\S+)$'),
+     r'hf iclass calcnewkey o \1 n \2'),
+
+    # hf iclass wrbl --blk {blk} -d {data} -k {key} --elite
+    (re.compile(r'^hf iclass wrbl\s+--blk\s+(\S+)\s+-d\s+(\S+)\s+-k\s+(\S+)\s+--elite$'),
+     r'hf iclass wrbl -b \1 -d \2 -k \3 --elite'),
+    # hf iclass wrbl --blk {blk} -d {data} -k {key}
+    (re.compile(r'^hf iclass wrbl\s+--blk\s+(\S+)\s+-d\s+(\S+)\s+-k\s+(\S+)$'),
+     r'hf iclass wrbl -b \1 -d \2 -k \3'),
+
+    # -----------------------------------------------------------------------
+    # Flow 9: ISO15693 — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # hf 15 dump -f {path} -> hf 15 dump f {path}
+    (re.compile(r'^hf 15 dump\s+-f\s+(\S+)$'), r'hf 15 dump f \1'),
+
+    # hf 15 restore -f {path} -> hf 15 restore f {path}
+    (re.compile(r'^hf 15 restore\s+-f\s+(\S+)$'), r'hf 15 restore f \1'),
+
+    # hf 15 csetuid -u {uid} -> hf 15 csetuid {uid}
+    (re.compile(r'^hf 15 csetuid\s+-u\s+(\S+)$'), r'hf 15 csetuid \1'),
+
+    # -----------------------------------------------------------------------
+    # Flows 5-7: Read/Write/Verify LF — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # -- LF reader commands (19 protocols: reader → read rename) --
+
+    # lf em 410x reader -> lf em 410x_read
+    (re.compile(r'^lf em 410x reader$'), 'lf em 410x_read'),
+
+    # lf fdxb reader -> lf fdx read (namespace + verb change)
+    (re.compile(r'^lf fdxb reader$'), 'lf fdx read'),
+
+    # lf {type} reader -> lf {type} read (18 protocols)
+    (re.compile(r'^(lf (?:hid|indala|awid|io|gproxii|securakey|viking|pyramid|'
+                r'gallagher|jablotron|keri|nedap|noralsy|pac|paradox|presco|'
+                r'visa2000|nexwatch)) reader$'), r'\1 read'),
+
+    # -- LF EM4x05 commands --
+
+    # lf em 4x05 info -p {pwd} -> lf em 4x05_info {pwd}
+    (re.compile(r'^lf em 4x05 info\s+-p\s+(\S+)$'), r'lf em 4x05_info \1'),
+
+    # lf em 4x05 info (no args) -> lf em 4x05_info
+    (re.compile(r'^lf em 4x05 info$'), 'lf em 4x05_info'),
+
+    # lf em 4x05 read -a {blk} -p {key} -> lf em 4x05_read {blk} {key}
+    (re.compile(r'^lf em 4x05 read\s+-a\s+(\S+)\s+-p\s+(\S+)$'), r'lf em 4x05_read \1 \2'),
+
+    # lf em 4x05 read -a {blk} (no key) -> lf em 4x05_read {blk}
+    (re.compile(r'^lf em 4x05 read\s+-a\s+(\S+)$'), r'lf em 4x05_read \1'),
+
+    # lf em 4x05 dump -f {file} -> lf em 4x05_dump f {file}
+    (re.compile(r'^lf em 4x05 dump\s+-f\s+(\S+)$'), r'lf em 4x05_dump f \1'),
+
+    # lf em 4x05 dump (no args) -> lf em 4x05_dump
+    (re.compile(r'^lf em 4x05 dump$'), 'lf em 4x05_dump'),
+
+    # lf em 4x05 write -a {blk} -d {data} -p {key} -> lf em 4x05_write {blk} {data} {key}
+    (re.compile(r'^lf em 4x05 write\s+-a\s+(\S+)\s+-d\s+(\S+)\s+-p\s+(\S+)$'),
+     r'lf em 4x05_write \1 \2 \3'),
+
+    # lf em 4x05 write -a {blk} -d {data} (no key)
+    (re.compile(r'^lf em 4x05 write\s+-a\s+(\S+)\s+-d\s+(\S+)$'),
+     r'lf em 4x05_write \1 \2'),
+
+    # -- LF T55xx commands (not already in Flow 4) --
+
+    # lf t55xx dump -f {file} -p {key} (3-arg before 2-arg)
+    (re.compile(r'^lf t55xx dump\s+-f\s+(\S+)\s+-p\s+(\S+)$'), r'lf t55xx dump f \1 p \2'),
+
+    # lf t55xx dump -f {file}
+    (re.compile(r'^lf t55xx dump\s+-f\s+(\S+)$'), r'lf t55xx dump f \1'),
+
+    # lf t55xx read -b {blk} -p {key} --page1
+    (re.compile(r'^lf t55xx read\s+-b\s+(\S+)\s+-p\s+(\S+)\s+--page1$'),
+     _reverse_t55xx_read_page1),
+
+    # lf t55xx read -b {blk} -p {key} (before single-arg)
+    (re.compile(r'^lf t55xx read\s+-b\s+(\S+)\s+-p\s+(\S+)$'), r'lf t55xx read b \1 p \2'),
+
+    # lf t55xx read -b {blk}
+    (re.compile(r'^lf t55xx read\s+-b\s+(\S+)$'), r'lf t55xx read b \1'),
+
+    # lf t55xx write -b {blk} -d {data} -p {key}
+    (re.compile(r'^lf t55xx write\s+-b\s+(\S+)\s+-d\s+(\S+)\s+-p\s+(\S+)$'),
+     r'lf t55xx write b \1 d \2 p \3'),
+
+    # lf t55xx write -b {blk} -d {data}
+    (re.compile(r'^lf t55xx write\s+-b\s+(\S+)\s+-d\s+(\S+)$'), r'lf t55xx write b \1 d \2'),
+
+    # lf t55xx restore -f {file}
+    (re.compile(r'^lf t55xx restore\s+-f\s+(\S+)$'), r'lf t55xx restore f \1'),
+
+    # -- LF clone commands --
+
+    # lf em 410x clone --id {id} -> lf em 410x_write {id} 1
+    (re.compile(r'^lf em 410x clone\s+--id\s+(\S+)$'), _reverse_em410x_clone),
+
+    # lf hid clone -r {raw} -> lf hid clone {raw}
+    (re.compile(r'^lf hid clone\s+-r\s+(\S+)$'), r'lf hid clone \1'),
+
+    # lf indala clone -r {raw} -> lf indala clone {raw} -r {raw}
+    (re.compile(r'^lf indala clone\s+-r\s+(\S+)$'), _reverse_indala_clone),
+
+    # lf fdxb clone --country {C} --national {N} -> lf fdx clone c {C} n {N}
+    (re.compile(r'^lf fdxb clone\s+--country\s+(\S+)\s+--national\s+(\S+)$'),
+     r'lf fdx clone c \1 n \2'),
+
+    # lf {type} clone -r {raw} -> lf {type} clone b {raw}
+    (re.compile(r'^(lf (?:securakey|gallagher|pac|paradox)) clone\s+-r\s+(\S+)$'),
+     r'\1 clone b \2'),
+
+    # lf nexwatch clone -r {raw} -> lf nexwatch clone r {raw}
+    (re.compile(r'^lf nexwatch clone\s+-r\s+(\S+)$'), r'lf nexwatch clone r \1'),
+
+    # -----------------------------------------------------------------------
+    # Flow 12: Sniff — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # lf config -a {a} -t {t} -s {s} -> lf config a {a} t {t} s {s}
+    (re.compile(r'^lf config\s+-a\s+(\S+)\s+-t\s+(\S+)\s+-s\s+(\S+)$'),
+     r'lf config a \1 t \2 s \3'),
+]
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -525,22 +871,32 @@ def get_version():
 
 
 def needs_translation():
-    """Return True if we're on iceman firmware and need translation."""
-    return _current_version == PM3_VERSION_ICEMAN
+    """Return True if translation may be needed in either direction.
+
+    During the compat flip transition:
+      - On iceman: forward rules still active for un-migrated modules
+      - On original: reverse rules active for migrated modules
+    After full migration + LEGACY_COMPAT=False, returns False always.
+    """
+    if not LEGACY_COMPAT:
+        return False
+    return _current_version in (PM3_VERSION_ICEMAN, PM3_VERSION_ORIGINAL)
 
 
 def translate(cmd):
-    """Translate old-syntax PM3 command to current PM3 version syntax.
+    """Translate PM3 command syntax for the current firmware version.
 
-    If version is original or unknown, returns cmd unchanged.
-    If version is iceman, applies translation rules.
+    Bidirectional translation:
+      - On iceman: forward rules (factory→iceman) for un-migrated modules
+      - On original: reverse rules (iceman→factory) for migrated modules
 
-    The function is idempotent: calling it on an already-translated command
-    will not break it, because the regex patterns only match old-style
-    positional syntax.
+    Each direction is idempotent: forward patterns only match factory syntax,
+    reverse patterns only match iceman syntax.  No double-translation possible.
+
+    When LEGACY_COMPAT is False, this is a no-op.
 
     Args:
-        cmd: PM3 command string (e.g. 'hf mf rdbl 0 A FFFFFFFFFFFF')
+        cmd: PM3 command string
 
     Returns:
         Translated command string.
@@ -548,29 +904,48 @@ def translate(cmd):
     if not cmd:
         return cmd
 
-    if _current_version != PM3_VERSION_ICEMAN:
+    if not LEGACY_COMPAT:
+        return cmd
+
+    if _current_version not in (PM3_VERSION_ICEMAN, PM3_VERSION_ORIGINAL):
         return cmd
 
     stripped = cmd.strip()
 
-    # Commands that hang on iceman firmware (FPGA mismatch / hardware issue).
-    # Substitute with a harmless command that returns quickly.  The middleware
-    # handles empty/missing data gracefully for these supplementary commands.
-    if stripped in _BLOCKED_CMDS_ICEMAN:
-        logger.info("translate: blocked '%s' (known to hang on iceman)", stripped)
-        return 'hw ping'
+    if _current_version == PM3_VERSION_ICEMAN:
+        # Block commands that hang on iceman (FPGA mismatch / hardware issue).
+        if stripped in _BLOCKED_CMDS_ICEMAN:
+            logger.info("translate: blocked '%s' (known to hang on iceman)", stripped)
+            return 'hw ping'
 
-    for pattern, replacement in _TRANSLATION_RULES:
-        m = pattern.match(stripped)
-        if m:
-            if callable(replacement):
-                result = replacement(m)
-            else:
-                result = m.expand(replacement)
-            logger.debug("translate: '%s' -> '%s'", stripped, result)
-            return result
+        # Forward rules: factory→iceman for un-migrated modules still
+        # sending old positional syntax.  As flows are migrated to iceman
+        # syntax, their commands no longer match these patterns and pass
+        # through unchanged (correct for iceman).
+        for pattern, replacement in _TRANSLATION_RULES:
+            m = pattern.match(stripped)
+            if m:
+                if callable(replacement):
+                    result = replacement(m)
+                else:
+                    result = m.expand(replacement)
+                logger.debug("translate: fwd '%s' -> '%s'", stripped, result)
+                return result
 
-    # No rule matched -- pass through unchanged
+    elif _current_version == PM3_VERSION_ORIGINAL:
+        # Reverse rules: iceman→factory for migrated modules sending
+        # new CLI-flag syntax.  Factory firmware needs old positional commands.
+        for pattern, replacement in _REVERSE_TRANSLATION_RULES:
+            m = pattern.match(stripped)
+            if m:
+                if callable(replacement):
+                    result = replacement(m)
+                else:
+                    result = m.expand(replacement)
+                logger.debug("translate: rev '%s' -> '%s'", stripped, result)
+                return result
+
+    # No rule matched or version unknown — pass through unchanged
     return cmd
 
 
@@ -1403,16 +1778,16 @@ _RESPONSE_NORMALIZERS = {
     'hf iclass chk': [],
     'hf felica reader': [_normalize_felica_reader],
     'hf felica litedump': [],
-    'lf sea': [_normalize_em410x_id, _normalize_hid_prox,
-               _normalize_chipset_detection, _normalize_fdxb_animal_id,
-               _normalize_gallagher_fields, _normalize_securakey_fc_hex,
-               _normalize_awid_card_number, _normalize_lf_keyword_case,
-               _normalize_indala_uid],
-    'lf search': [_normalize_em410x_id, _normalize_hid_prox,
-                  _normalize_chipset_detection, _normalize_fdxb_animal_id,
-                  _normalize_gallagher_fields, _normalize_securakey_fc_hex,
-                  _normalize_awid_card_number, _normalize_lf_keyword_case,
-                  _normalize_indala_uid],
+    'lf sea': [_normalize_lf_no_data, _normalize_em410x_id,
+               _normalize_hid_prox, _normalize_chipset_detection,
+               _normalize_fdxb_animal_id, _normalize_gallagher_fields,
+               _normalize_securakey_fc_hex, _normalize_awid_card_number,
+               _normalize_lf_keyword_case, _normalize_indala_uid],
+    'lf search': [_normalize_lf_no_data, _normalize_em410x_id,
+                  _normalize_hid_prox, _normalize_chipset_detection,
+                  _normalize_fdxb_animal_id, _normalize_gallagher_fields,
+                  _normalize_securakey_fc_hex, _normalize_awid_card_number,
+                  _normalize_lf_keyword_case, _normalize_indala_uid],
     'lf t55xx detect': [_normalize_t55xx_config],
     'lf t55xx dump': [_normalize_t55xx_config, _normalize_save_messages],
     'lf t55xx read': [],
@@ -1437,40 +1812,39 @@ _RESPONSE_NORMALIZERS = {
 # ===========================================================================
 
 def translate_response(text, cmd=None):
-    """Normalize RRG/Iceman PM3 response output to old-format patterns.
+    """Normalize PM3 response output for middleware pattern compatibility.
 
-    Called by executor._send_and_cache() after strip_ansi(), before caching.
-    Only active when firmware version is iceman.
+    Called by executor._send_and_cache() after _clean_pm3_output() (which
+    handles ANSI stripping and [+]/[=] prefix removal unconditionally).
 
-    Three-phase normalization (order matters!):
-      Phase A (pre):  noise removal + line prefix stripping
-      Phase B:        command-specific normalizers (T55xx, fchk table, etc.)
-      Phase C (post): remaining dotted-to-colon, UID annotations, ISO numbers
+    This function handles only the COMPATIBILITY normalization:
+      Phase B: command-specific normalizers (T55xx, fchk table, etc.)
+      Phase C: remaining dotted-to-colon, UID annotations, ISO numbers
 
-    Command-specific normalizers run AFTER prefix stripping but BEFORE the
-    generic dotted-to-colon, so they can match their own dotted patterns
-    (e.g. T55xx "Chip type......... T55x7") and apply custom formatting
-    (e.g. restoring "0x" prefix on Block0).
+    On iceman firmware: converts iceman-specific output to factory format
+    so old middleware patterns still match.  After the compat flip with
+    format-agnostic patterns, this becomes redundant on iceman but harmless.
 
-    The function is idempotent: calling it on already-normalized (old-format)
-    text will not break it, because the regex patterns only match new-format
-    structures.
+    On factory firmware: no normalization needed (factory output already
+    matches factory-era patterns).
 
     Args:
-        text: Raw response text (already ANSI-stripped)
+        text: Response text (already cleaned by executor._clean_pm3_output)
         cmd: Optional command string for command-specific normalization
 
     Returns:
-        Normalized response text matching old-format patterns.
+        Normalized response text.
     """
     if not text:
+        return text
+
+    if not LEGACY_COMPAT:
         return text
 
     if _current_version != PM3_VERSION_ICEMAN:
         return text
 
-    # Phase A: Strip noise and line prefixes
-    result = _pre_normalize(text)
+    result = text
 
     # Phase B: Command-specific normalizations
     if cmd:

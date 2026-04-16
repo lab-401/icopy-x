@@ -101,7 +101,7 @@ def read(infos):
             break
 
     file_path = '{}_{}'.format(path, n)
-    cmd = 'hf mfu dump f {}'.format(file_path)
+    cmd = 'hf mfu dump -f {}'.format(file_path)
     ret = executor.startPM3Task(cmd, 30000)
 
     if ret == -1:

@@ -106,11 +106,11 @@ def readFromKey(infos, key, typ):
         file_path = '/tmp/iclass_dump.bin'
 
     # Build dump command
-    cmd = 'hf iclass dump k %s' % key
+    cmd = 'hf iclass dump -k %s' % key
     if file_path:
-        cmd += ' f %s' % file_path
+        cmd += ' -f %s' % file_path
     if typ == 'Elite':
-        cmd += ' e'
+        cmd += ' --elite'
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
 

@@ -32,7 +32,7 @@ Ground truth:
 
 API:
     CMD_DETECT_NO_KEY  = 'lf t55xx detect'
-    CMD_DETECT_ON_KEY  = 'lf t55xx detect p FFFFFFFF'
+    CMD_DETECT_ON_KEY  = 'lf t55xx detect -p FFFFFFFF'
     CMD_DUMP_NO_KEY    = 'lf t55xx dump'
     KEYWORD_CASE1      = 'Could not detect modulation automatically'
     TIMEOUT = 10000
@@ -57,7 +57,7 @@ import re
 # Constants — from binary string extraction
 # ---------------------------------------------------------------------------
 CMD_DETECT_NO_KEY = 'lf t55xx detect'
-CMD_DETECT_ON_KEY = 'lf t55xx detect p FFFFFFFF'
+CMD_DETECT_ON_KEY = 'lf t55xx detect -p FFFFFFFF'
 CMD_DUMP_NO_KEY = 'lf t55xx dump'
 KEYWORD_CASE1 = 'Could not detect modulation automatically'
 TIMEOUT = 10000
@@ -417,9 +417,9 @@ def detectT55XX(key=None):
 
     # Build command with key argument, or KEY_TEMP, or no key
     if key:
-        cmd = 'lf t55xx detect p %s' % key
+        cmd = 'lf t55xx detect -p %s' % key
     elif KEY_TEMP:
-        cmd = 'lf t55xx detect p %s' % KEY_TEMP
+        cmd = 'lf t55xx detect -p %s' % KEY_TEMP
     else:
         cmd = CMD_DETECT_NO_KEY
 
@@ -478,9 +478,9 @@ def dumpT55XX(listener, key=None):
 
     cmd = CMD_DUMP_NO_KEY
     if dump_path:
-        cmd += ' f %s' % dump_path
+        cmd += ' -f %s' % dump_path
     if key:
-        cmd += ' p %s' % key
+        cmd += ' -p %s' % key
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -523,7 +523,7 @@ def chkT55xx(listener):
     except Exception:
         return []
 
-    cmd = 'lf t55xx chk f %s' % key_file
+    cmd = 'lf t55xx chk -f %s' % key_file
     executor.add_task_call(lineInternal)
     ret = executor.startPM3Task(cmd, TIMEOUT * 3)
     executor.del_task_call(lineInternal)
@@ -624,9 +624,9 @@ def dumpT55XX_Text(key=None):
     result = ''
     for b in range(8):
         if key:
-            cmd = 'lf t55xx read b {} p {}'.format(b, key)
+            cmd = 'lf t55xx read -b {} -p {}'.format(b, key)
         else:
-            cmd = 'lf t55xx read b {}'.format(b)
+            cmd = 'lf t55xx read -b {}'.format(b)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret != -1:
             content = executor.getPrintContent()
@@ -650,9 +650,11 @@ def readBlock(pwd_str, b_index, p_index=0):
             return ''
 
     if pwd_str:
-        cmd = 'lf t55xx read b {} p {} o {}'.format(b_index, pwd_str, p_index)
+        cmd = 'lf t55xx read -b {} -p {}'.format(b_index, pwd_str)
+        if p_index:
+            cmd += ' --page1'
     else:
-        cmd = 'lf t55xx read b {}'.format(b_index)
+        cmd = 'lf t55xx read -b {}'.format(b_index)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return ''
@@ -675,7 +677,7 @@ def getB0WithKey(key=None, from_detect=False):
 
     if not from_detect:
         if key:
-            cmd = 'lf t55xx detect p {}'.format(key)
+            cmd = 'lf t55xx detect -p {}'.format(key)
         else:
             cmd = CMD_DETECT_NO_KEY
         ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -763,7 +765,7 @@ def lock(setkey=True, b0=None, check_detect=True):
         return -1
 
     b0_locked = switch_lock(b0, True)
-    cmd = 'lf t55xx write b 0 d {}'.format(b0_locked)
+    cmd = 'lf t55xx write -b 0 -d {}'.format(b0_locked)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -786,7 +788,7 @@ def set_key_block(key):
         except ImportError:
             return -1
 
-    cmd = 'lf t55xx write b 7 d {}'.format(key)
+    cmd = 'lf t55xx write -b 7 -d {}'.format(key)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -807,7 +809,7 @@ def wipe_t(key=None):
             return -1
 
     if key:
-        cmd = 'lf t55xx wipe p {}'.format(key)
+        cmd = 'lf t55xx wipe -p {}'.format(key)
     else:
         cmd = 'lf t55xx wipe'
     ret = executor.startPM3Task(cmd, TIMEOUT)

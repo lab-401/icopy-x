@@ -76,7 +76,7 @@ def write(infos, file):
     # The bundle 'file' may already include .bin extension (from dump path).
     # Only append .bin if not already present to avoid double extension.
     restore_path = file if file.endswith('.bin') else '{}.bin'.format(file)
-    write_cmd = "hf 15 restore f {}".format(restore_path)
+    write_cmd = "hf 15 restore -f {}".format(restore_path)
     executor.startPM3Task(write_cmd, 28888)
 
     # Step 2: Validate restore response
@@ -94,15 +94,15 @@ def write(infos, file):
     # Step 3: Set UID on target card
     # Strings: __pyx_k_hf_15_csetuid = "hf 15 csetuid {}"
     uid = infos['uid']
-    setuid_cmd = "hf 15 csetuid {}".format(uid)
+    setuid_cmd = "hf 15 csetuid -u {}".format(uid)
     executor.startPM3Task(setuid_cmd, 5000)
 
     # Step 4: Validate csetuid response
     # Strings (line 475): "setting new UID \(ok\)" — regex-escaped parens
     # Strings: __pyx_k_can_t_read_card_UID = "can't read card UID"
-    if executor.hasKeyword("can't read card UID"):
+    if executor.hasKeyword(r"can't read card UID|no tag found"):
         return -1
-    if not executor.hasKeyword(r"setting new UID \(ok\)"):
+    if not executor.hasKeyword(r"[Ss]etting new UID \(?\s*ok\s*\)?"):
         return -1
 
     return 1

@@ -143,9 +143,9 @@ def calcNewKey(typ, oldkey, newkey, l2e=False):
     Returns calculated key hex string, or -10 on failure.
     """
     if l2e:
-        cmd = 'hf iclass calcnewkey o {} n {} --elite'.format(oldkey, newkey)
+        cmd = 'hf iclass calcnewkey --old {} --new {} --elite'.format(oldkey, newkey)
     else:
-        cmd = 'hf iclass calcnewkey o {} n {}'.format(oldkey, newkey)
+        cmd = 'hf iclass calcnewkey --old {} --new {}'.format(oldkey, newkey)
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -169,7 +169,7 @@ def writeDataBlock(typ, block, data, key):
     """
     # Elite cards (type 18) need --elite for key derivation
     is_elite = (typ == getattr(tagtypes, 'ICLASS_ELITE', 18))
-    cmd = 'hf iclass wrbl -b {} -d {} -k {}'.format(block, data, key)
+    cmd = 'hf iclass wrbl --blk {} -d {} -k {}'.format(block, data, key)
     if is_elite:
         cmd += ' --elite'
     ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -177,7 +177,7 @@ def writeDataBlock(typ, block, data, key):
         return -10
 
     # Check for success
-    if executor.hasKeyword('successful'):
+    if executor.hasKeyword(r'successful|\( ok \)'):
         return 0
     return -10
 
@@ -304,9 +304,9 @@ def verify(infos, bundle):
             content = hficlass.readTagBlock(typ, block_num, read_key,
                                             elite=is_elite)
         else:
-            cmd = 'hf iclass rdbl b {:02d} k {}'.format(block_num, read_key)
+            cmd = 'hf iclass rdbl --blk {:02d} -k {}'.format(block_num, read_key)
             if is_elite:
-                cmd += ' e'
+                cmd += ' --elite'
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1

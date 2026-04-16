@@ -56,6 +56,48 @@ import time
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
+# PM3 output cleanup — always-on, independent of pm3_compat.
+#
+# These strip ANSI color codes and RRG/Iceman structural noise ([+] prefixes,
+# echo lines, EOR markers) so middleware regex patterns work correctly.
+# This is PM3 protocol cleanup, NOT compatibility logic — needed on all
+# firmware versions.  Lives here so pm3_compat.py can be deleted when
+# legacy firmware support is no longer needed.
+# ---------------------------------------------------------------------------
+_ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
+_RE_ECHO_LINE = re.compile(r'^\[usb\|script\]\s*pm3\s*-->.*\n?', re.MULTILINE)
+_RE_EOR_MARKER = re.compile(r'^pm3\s+-->\s*\n?', re.MULTILINE)
+_RE_SECTION_HEADER = re.compile(
+    r'^\[=\]\s*-{3,}.*-{3,}\s*\n?', re.MULTILINE)
+_RE_BARE_INFO = re.compile(r'^\[=\]\s*$\n?', re.MULTILINE)
+_RE_LINE_PREFIX = re.compile(
+    r'^\[(?:\+|=|#|!!?|\-|/|\\|\|)\]\s?', re.MULTILINE)
+
+
+def _clean_pm3_output(text):
+    """Strip ANSI codes and RRG/Iceman output noise from PM3 response.
+
+    Removes:
+      - ANSI color/formatting escape sequences
+      - [usb|script] pm3 --> echo lines (command echo from piped stdin)
+      - Bare "pm3 -->" EOR markers (iCopy-X completion patch)
+      - [=] section header/separator lines
+      - [+]/[=]/[#]/[!!] line prefix markers (PrintAndLogEx prefixes)
+
+    Always runs regardless of firmware version or pm3_compat availability.
+    """
+    if not text:
+        return text
+    text = _ANSI_RE.sub('', text)
+    text = _RE_ECHO_LINE.sub('', text)
+    text = _RE_EOR_MARKER.sub('', text)
+    text = _RE_SECTION_HEADER.sub('', text)
+    text = _RE_BARE_INFO.sub('', text)
+    text = _RE_LINE_PREFIX.sub('', text)
+    return text
+
+
+# ---------------------------------------------------------------------------
 # Optional dependency: hmi_driver (for reworkPM3All restart cycle)
 # Source: executor_strings.txt — "hmi_driver", "restartpm3"
 # ---------------------------------------------------------------------------
@@ -301,15 +343,15 @@ def _send_and_cache(cmd, timeout=5888):
     except Exception:
         result = ''
 
-    # Strip ANSI color codes from RRG/Iceman PM3 output so middleware
+    # Always: strip ANSI codes and PM3 output noise so middleware
     # regex patterns (hasKeyword, getContentFromRegex) match correctly.
+    # This runs unconditionally — independent of pm3_compat availability.
+    if result:
+        result = _clean_pm3_output(result)
+
+    # Optional: compatibility-layer response normalization.
+    # Only active when pm3_compat.py exists and legacy compat is enabled.
     if pm3_compat is not None and result:
-        try:
-            result = pm3_compat.strip_ansi(result)
-        except Exception:
-            pass
-        # Normalize RRG response format to match old-format patterns
-        # expected by middleware modules (hasKeyword, getContentFromRegex).
         try:
             result = pm3_compat.translate_response(result, translated_cmd)
         except Exception:
