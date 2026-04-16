@@ -89,6 +89,11 @@ def _read_mfc(infos, listener):
     typ = infos.get('type', 1)
     size = hfmfread.sizeGuess(typ)
 
+    # Clear stale keys from previous reads — KEYS_MAP is module-level and
+    # persists across ReadActivity instances.  Without this, hasAllKeys()
+    # returns True from a prior run and key recovery is skipped.
+    hfmfkeys.KEYS_MAP.clear()
+
     # Gen1a detection
     gen1a = hfmfread.readIfIsGen1a(infos)
     if gen1a:

@@ -270,7 +270,9 @@ def darkside():
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text)
+    # Iceman PM3 uses lowercase "found valid key" in nested output and mixed
+    # case across commands — match case-insensitively to cover both.
+    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text, re.IGNORECASE)
     if m:
         key = m.group(1).upper()
         putKey2Map(0, A, key)
@@ -301,7 +303,7 @@ def nestedOneKey(known, target, retryMax=5):
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text)
+    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text, re.IGNORECASE)
     if m:
         putKey2Map(target_sector, target_type, m.group(1).upper())
         return 1
