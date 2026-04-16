@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -41,7 +49,6 @@ Battery queries:
   Send "pctbat"    -> receive "#batpct:NNN"  (NNN = 0-100)
   Send "rcharge"   -> receive "#charge:0" or "#charge:1"
 
-Source: decompiled hmi_driver.c string table + archive/ui/hmi_driver.py prototype
 """
 
 import logging
@@ -93,7 +100,6 @@ def DOpenPort(port=PORT_DEFAULT, baudrate=BAUD_DEFAULT):
         logger.warning("Serial not found, hmi disabled. %s", e)
         _ser = None
 
-
 def DClosePort():
     """Close serial port."""
     global _ser
@@ -105,7 +111,6 @@ def DClosePort():
             logger.debug("Error closing serial: %s", e)
         _ser = None
     logger.debug("Serial port closed")
-
 
 def DOpenReadThread():
     """Start background serial read thread."""
@@ -121,7 +126,6 @@ def DOpenReadThread():
     _read_thread.start()
     logger.debug("Read thread started")
 
-
 def DCloseReadThread():
     """Stop background serial read thread."""
     global _running, _read_thread
@@ -131,7 +135,6 @@ def DCloseReadThread():
         _read_thread = None
     logger.debug("Read thread stopped")
 
-
 # ═══════════════════════════════════════════════════════════
 # HMI lifecycle
 # ═══════════════════════════════════════════════════════════
@@ -139,7 +142,7 @@ def DCloseReadThread():
 def starthmi():
     """Full HMI initialization: open port, start read thread, boot sequence.
 
-    Boot sequence (from decompiled .so and logic analyser traces):
+    Boot sequence (from the original .so and logic analyser traces):
       1. Reuse early serial from _bootstrap_gd32() if available
       2. DOpenPort() (opens new connection only if no early serial)
       3. DOpenReadThread()
@@ -169,13 +172,11 @@ def starthmi():
 
     logger.info("[main]-> start ok!")
 
-
 def stophmi():
     """Shutdown HMI: close thread, close port."""
     DCloseReadThread()
     DClosePort()
     logger.info("HMI stopped")
-
 
 # ═══════════════════════════════════════════════════════════
 # Serial read loop (background thread)
@@ -210,7 +211,6 @@ def run_serial_loop():
             time.sleep(0.1)
 
     logger.debug("Serial read loop exited")
-
 
 def _serial_key_handle(keycode):
     """Parse key code string and dispatch to keymap.key.onKey().
@@ -344,7 +344,6 @@ def _serial_key_handle(keycode):
 
     logger.debug("Unknown serial data: %s", keycode)
 
-
 # ═══════════════════════════════════════════════════════════
 # PM3 hardware control (called by executor.so!)
 # ═══════════════════════════════════════════════════════════
@@ -353,26 +352,21 @@ def restartpm3():
     """Send restart command to PM3 via GD32."""
     _ser_write("restartpm3")
 
-
 def turnonpm3():
     """Power on PM3."""
     _ser_write("turnonpm3")
-
 
 def turnoffpm3():
     """Power off PM3."""
     _ser_write("turnoffpm3")
 
-
 def presspm3():
     """Simulate PM3 button press."""
     _ser_write("presspm3")
 
-
 def ledpm3():
     """Control PM3 LED."""
     _ser_write("ledpm3")
-
 
 # ═══════════════════════════════════════════════════════════
 # Battery
@@ -387,7 +381,6 @@ def readbatpercent():
     _ser_write("pctbat")
     return _bat_percent
 
-
 def readbatvol():
     """Query battery voltage.
 
@@ -396,7 +389,6 @@ def readbatvol():
     """
     _ser_write("volbat")
     return _bat_vol
-
 
 def readvccvol():
     """Query VCC voltage.
@@ -407,7 +399,6 @@ def readvccvol():
     _ser_write("volvcc")
     return _vcc_vol
 
-
 def requestChargeState():
     """Query charging status. Returns bool.
 
@@ -417,7 +408,6 @@ def requestChargeState():
     _ser_write("charge")
     return _charging
 
-
 # ═══════════════════════════════════════════════════════════
 # Display
 # ═══════════════════════════════════════════════════════════
@@ -426,11 +416,9 @@ def startscreen():
     """Initialize display."""
     _ser_write("startscreen")
 
-
 def stopscreen():
     """Turn off display."""
     _ser_write("stopscreen")
-
 
 def setbaklight(level):
     """Set backlight brightness.
@@ -458,11 +446,9 @@ def setbaklight(level):
     except Exception as e:
         logger.debug("setbaklight error: %s", e)
 
-
 def gotobl():
     """Go to bootloader mode."""
     _ser_write("gotobl")
-
 
 # ═══════════════════════════════════════════════════════════
 # Device info
@@ -472,7 +458,6 @@ def readstid():
     """Read device serial/station ID."""
     _ser_write("readstid")
     return _stid
-
 
 def readhmiversion():
     """Read HMI firmware version.
@@ -484,7 +469,6 @@ def readhmiversion():
     _ser_write("version")
     return _hmi_version
 
-
 # ═══════════════════════════════════════════════════════════
 # Serial I/O primitives
 # ═══════════════════════════════════════════════════════════
@@ -495,13 +479,11 @@ def ser_byte_mode():
         _ser.timeout = 0.01
     logger.debug("Switched to byte mode")
 
-
 def ser_cmd_mode():
     """Switch to command mode (line-buffered serial)."""
     if _ser is not None:
         _ser.timeout = 1.0
     logger.debug("Switched to cmd mode")
-
 
 def readline():
     """Read line from serial. Returns decoded string or empty."""
@@ -517,7 +499,6 @@ def readline():
             logger.debug("readline error: %s", e)
     return ""
 
-
 def ser_getc():
     """Read single byte from serial. Returns bytes or b''."""
     if _ser is not None and _ser.is_open:
@@ -527,7 +508,6 @@ def ser_getc():
             pass
     return b""
 
-
 def ser_putc(data):
     """Write bytes to serial."""
     if _ser is not None and _ser.is_open:
@@ -535,7 +515,6 @@ def ser_putc(data):
             _ser.write(data)
         except Exception as e:
             logger.debug("ser_putc error: %s", e)
-
 
 def ser_flush():
     """Flush serial buffers."""
@@ -545,7 +524,6 @@ def ser_flush():
         except Exception as e:
             logger.debug("ser_flush error: %s", e)
 
-
 # ═══════════════════════════════════════════════════════════
 # Callback registration
 # ═══════════════════════════════════════════════════════════
@@ -554,7 +532,6 @@ def SetComReadBack(callback):
     """Register callback for serial data."""
     global _com_readback
     _com_readback = callback
-
 
 # ═══════════════════════════════════════════════════════════
 # Shutdown
@@ -571,7 +548,6 @@ def planToShutdown(delay=0):
     _ser_write("plan2shutdown")
     logger.info("Shutdown planned")
 
-
 def shutdowning():
     """Send shutdown acknowledgment to GD32 and return shutdown flag.
 
@@ -582,7 +558,6 @@ def shutdowning():
     """
     _ser_write("shutdowning")
     return _shutdown_flag
-
 
 # ═══════════════════════════════════════════════════════════
 # Internal helper
@@ -595,7 +570,6 @@ def _set_com(cmd):
     Binary source: hmi_driver.so _set_com
     """
     _ser_write(cmd)
-
 
 def _ser_write(cmd):
     """Write command string to serial port with \\r\\n terminator.
@@ -612,7 +586,6 @@ def _ser_write(cmd):
             _ser.flush()
     except Exception as e:
         logger.debug("Serial write error: %s", e)
-
 
 # ═══════════════════════════════════════════════════════════
 # Test helper (not in original .so — for QEMU/test injection)

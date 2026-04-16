@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Reimplemented from sniff.so (iCopy-X v1.0.90).
 
 Ground truth:
-    Binary:   decompiled/sniff_ghidra_raw.txt (10,281 lines)
     Strings:  docs/v1090_strings/sniff_strings.txt (1484 lines)
     Audit:    docs/V1090_MODULE_AUDIT.txt (lines 154-181)
     Symbols:  18 exported functions (__pyx_mdef_5sniff_1 through _35)
@@ -62,7 +69,6 @@ PATTERN_T5577_LEADING_KEY = r'Leading [0-9a-zA-Z]* pwd write\s+\|\s+([A-Fa-f0-9]
 # sniff_strings.txt line 893
 PATTERN_M1_KEY = r'key\s+([A-Fa-f0-9]+)'
 
-
 # ── Sniff start commands ──────────────────────────────────────────────
 # Each dispatches a PM3 command via executor.startPM3Task.
 # Ground truth: sniff_ghidra_raw.txt, trace_sniff_flow_20260403.txt
@@ -81,7 +87,6 @@ def sniff14AStart():
     import executor
     executor.startPM3Task('hf 14a sniff', 8000)
 
-
 def sniff14BStart():
     """Start ISO14443B sniff.
 
@@ -90,7 +95,6 @@ def sniff14BStart():
     """
     import executor
     executor.startPM3Task('hf 14b sniff', 8000)
-
 
 def sniffIClassAStart():
     """Start iClass sniff.
@@ -101,7 +105,6 @@ def sniffIClassAStart():
     import executor
     executor.startPM3Task('hf iclass sniff', 8000)
 
-
 def sniffTopazStart():
     """Start Topaz sniff.
 
@@ -110,7 +113,6 @@ def sniffTopazStart():
     """
     import executor
     executor.startPM3Task('hf topaz sniff', 8000)
-
 
 def sniff125KStart():
     """Start generic LF 125kHz sniff.
@@ -123,7 +125,6 @@ def sniff125KStart():
     """
     import executor
     executor.startPM3Task('lf sniff', 8000)
-
 
 def sniffT5577Start():
     """Start T5577-specific LF sniff with config.
@@ -146,7 +147,6 @@ def sniffT5577Start():
     executor.startPM3Task('lf config a 0 t 20 s 10000', 5000)
     executor.startPM3Task('lf t55xx sniff', -1)
 
-
 # ── Trace length parsers ─────────────────────────────────────────────
 
 def parserHfTraceLen():
@@ -168,7 +168,6 @@ def parserHfTraceLen():
         except (ValueError, TypeError):
             return 0
     return 0
-
 
 def parserLfTraceLen():
     """Parse LF trace length from executor cache.
@@ -193,10 +192,8 @@ def parserLfTraceLen():
             return 0
     return 0
 
-
 # Backward-compat alias: original sniff.py used 'parserTraceLen' (not in binary)
 parserTraceLen = parserHfTraceLen
-
 
 # ── T5577 key/password parsers ───────────────────────────────────────
 
@@ -225,7 +222,6 @@ def parserT5577OkKeyForLine(line):
         return m.group(1)
     return ''
 
-
 def parserT5577LeadingKeyForLine(line):
     """Extract password from a 'Leading ... pwd write' trace line.
 
@@ -245,7 +241,6 @@ def parserT5577LeadingKeyForLine(line):
     if m:
         return m.group(1)
     return ''
-
 
 def parserT5577WriteKeyForLine(line):
     """Extract data from a 'Default write' (no password) trace line.
@@ -273,7 +268,6 @@ def parserT5577WriteKeyForLine(line):
     if m:
         return m.group(1)
     return ''
-
 
 def parserKeysForT5577(parser_fn):
     """Extract T5577 keys from executor cache using a line parser function.
@@ -306,7 +300,6 @@ def parserKeysForT5577(parser_fn):
             results.append(key)
     return results
 
-
 # ── HF key and data parsers ──────────────────────────────────────────
 
 def parserKeyForLine(line, regex):
@@ -327,7 +320,6 @@ def parserKeyForLine(line, regex):
     if m and m.lastindex:
         return m.group(m.lastindex)
     return ''
-
 
 def parserM1KeyForLine(line):
     """Extract MIFARE key from a single trace line.
@@ -350,7 +342,6 @@ def parserM1KeyForLine(line):
     if m:
         return m.group(1).upper()
     return ''
-
 
 def parserDataForSCA(line, src='Rdr', crc='ok', annotation=''):
     """Parse trace line for Side Channel Analysis data.
@@ -396,7 +387,6 @@ def parserDataForSCA(line, src='Rdr', crc='ok', annotation=''):
         'annotation': line_ann.strip(),
     }
 
-
 def parserUidForData(line):
     """Extract UID/CSN from trace data line.
 
@@ -426,7 +416,6 @@ def parserUidForData(line):
             return data.replace(' ', '').strip()
     return ''
 
-
 def parserUidForKeyIndex(index, lines):
     """Get UID associated with a key index from trace lines.
 
@@ -449,7 +438,6 @@ def parserUidForKeyIndex(index, lines):
                 return uid
             uid_count += 1
     return ''
-
 
 def parserKeyForM1():
     """Extract MIFARE Classic keys from executor cache.
@@ -483,7 +471,6 @@ def parserKeyForM1():
             if key:
                 result[current_uid].append(key)
     return result
-
 
 # ── Save function (NOT in sniff.so — provided for activity compatibility) ──
 

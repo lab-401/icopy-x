@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -20,7 +28,6 @@ Exports:
     Functions: bytesToHexString(bs), call(v1, v2, v3)
 
 Source: docs/V1090_MODULE_AUDIT.txt (lines 1076-1142),
-        decompiled/ymodem_ghidra_raw.txt (40045 lines),
         archive/lib_transliterated/ymodem.py,
         docs/v1090_strings/ymodem_strings.txt
 
@@ -68,7 +75,6 @@ NAK = b'\x15'   # Negative acknowledge
 CAN = b'\x18'   # Cancel
 CRC = b'C'      # CRC mode request
 
-
 # ═══════════════════════════════════════════════════════════════════════════
 # TaskState — transfer state constants
 # QEMU-verified: PREPARED=0, RUNNING=1, FINISHED=2, ABORTED=-1, ERROR=-99
@@ -80,7 +86,6 @@ class TaskState:
     FINISHED = 2
     ABORTED = -1
     ERROR = -99
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SendTask — data tracking for send operations
@@ -125,7 +130,6 @@ class SendTask:
 
     def get_valid_sent_bytes(self):
         return self._valid_sent_bytes
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ReceiveTask — data tracking for receive operations
@@ -178,7 +182,6 @@ class ReceiveTask:
 
     def get_last_valid_packet_size(self):
         return self._last_valid_packet_size
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # YModemCommon — full YMODEM protocol implementation
@@ -821,7 +824,6 @@ class YModemCommon:
 
         return file_name
 
-
 # ═══════════════════════════════════════════════════════════════════════════
 # YModemSTM32 — STM32/GD32 bootloader YMODEM variant
 # Source: V1090_MODULE_AUDIT.txt lines 1133-1140
@@ -1141,7 +1143,6 @@ class YModemSTM32:
 
         return True
 
-
 # ═══════════════════════════════════════════════════════════════════════════
 # Module-level utility functions
 # Source: V1090_MODULE_AUDIT.txt lines 1088-1090
@@ -1159,7 +1160,6 @@ def bytesToHexString(bs):
     if bs is None:
         return ''
     return ' '.join('%02X' % b for b in bs)
-
 
 def call(v1, v2, v3):
     """Generic callable wrapper.

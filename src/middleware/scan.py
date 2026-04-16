@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Transliterated from scan.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
 Ground truth:
-    Decompiled: decompiled/scan_ghidra_raw.txt
     Strings:    docs/v1090_strings/scan_strings.txt
     Traces:     docs/Real_Hardware_Intel/trace_scan_flow_20260331.txt
                 docs/Real_Hardware_Intel/trace_lf_scan_flow_20260331.txt
@@ -57,7 +64,6 @@ CODE_TAG_TYPE_WRONG = -5
 INFOS = None
 INFOS_CACHE_ENABLE = True
 
-
 # ---------------------------------------------------------------------------
 # Scan cache helpers
 # ---------------------------------------------------------------------------
@@ -66,23 +72,19 @@ def setScanCache(infos):
     global INFOS
     INFOS = infos
 
-
 def getScanCache():
     """Return the cached scan result, or None."""
     return INFOS
-
 
 def clearScanCahe():
     """Clear the scan cache.  Note: the typo is intentional (matches .so)."""
     global INFOS
     INFOS = None
 
-
 def set_infos_cache(enable):
     """Enable or disable the INFOS cache."""
     global INFOS_CACHE_ENABLE
     INFOS_CACHE_ENABLE = enable
-
 
 # ---------------------------------------------------------------------------
 # Key-setting helpers (delegate to sub-modules)
@@ -102,7 +104,6 @@ def set_scan_t55xx_key(key):
         except Exception:
             pass
 
-
 def set_scan_em4x05_key(key):
     """Set the temporary EM4x05 key used during scanning.
 
@@ -118,7 +119,6 @@ def set_scan_em4x05_key(key):
         except Exception:
             pass
 
-
 # ---------------------------------------------------------------------------
 # Factory functions that create result dicts
 # ---------------------------------------------------------------------------
@@ -129,14 +129,12 @@ def createExecTimeout(progress):
     """
     return {'progress': progress, 'return': CODE_TIMEOUT, 'found': False, 'type': -1}
 
-
 def createTagLost(progress):
     """Create a result dict representing a lost tag.
 
     Returns {'progress': progress, 'return': -2, 'found': False, 'type': -1}
     """
     return {'progress': progress, 'return': CODE_TAG_LOST, 'found': False, 'type': -1}
-
 
 def createTagMulti(progress):
     """Create a result dict representing multiple tags detected.
@@ -147,14 +145,12 @@ def createTagMulti(progress):
     """
     return {'progress': progress, 'return': CODE_TAG_MULT, 'found': True, 'type': -1}
 
-
 def createTagNoFound(progress):
     """Create a result dict representing no tag found.
 
     Returns {'progress': progress, 'return': -4, 'found': False, 'type': -1}
     """
     return {'progress': progress, 'return': CODE_TAG_NO, 'found': False, 'type': -1}
-
 
 def createTagTypeWrong(progress):
     """Create a result dict representing a wrong tag type.
@@ -163,7 +159,6 @@ def createTagTypeWrong(progress):
     """
     return {'progress': progress, 'return': CODE_TAG_TYPE_WRONG, 'found': False, 'type': -1}
 
-
 # ---------------------------------------------------------------------------
 # Predicate helpers that inspect result dicts
 # ---------------------------------------------------------------------------
@@ -171,26 +166,21 @@ def isTagFound(maps):
     """Return True if the result dict indicates a tag was found."""
     return maps['found']
 
-
 def isTagLost(maps):
     """Return True if the result dict indicates the tag was lost."""
     return maps['return'] == CODE_TAG_LOST
-
 
 def isTagMulti(maps):
     """Return True if the result dict indicates multiple tags."""
     return maps['return'] == CODE_TAG_MULT
 
-
 def isTimeout(value):
     """Return True if the result dict indicates a timeout."""
     return value['return'] == CODE_TIMEOUT
 
-
 def isTagTypeWrong(maps):
     """Return True if the result dict indicates wrong tag type."""
     return maps['return'] == CODE_TAG_TYPE_WRONG
-
 
 def isCanNext(value):
     """Return True if scanning can proceed to the next step.
@@ -204,7 +194,6 @@ def isCanNext(value):
         return False
     ret = value['return']
     return ret != CODE_TIMEOUT and ret != CODE_TAG_LOST
-
 
 # ---------------------------------------------------------------------------
 # Low-level scan functions (each talks to PM3 via executor)
@@ -287,7 +276,6 @@ def scan_14a():
     except Exception:
         return createExecTimeout(0)
 
-
 def scan_hfsea():
     """Run HF search using 'hf sea'.
 
@@ -344,7 +332,6 @@ def scan_hfsea():
     except Exception:
         return createExecTimeout(2)
 
-
 def scan_lfsea():
     """Run LF search using 'lf sea'.
 
@@ -374,7 +361,6 @@ def scan_lfsea():
     except Exception:
         return createExecTimeout(1)
 
-
 def scan_t55xx():
     """Scan for T55xx tags.
 
@@ -399,7 +385,6 @@ def scan_t55xx():
     except Exception:
         return createExecTimeout(3)
 
-
 def scan_em4x05():
     """Scan for EM4x05 tags.
 
@@ -417,7 +402,6 @@ def scan_em4x05():
         return createTagNoFound(4)
     except Exception:
         return createTagNoFound(4)
-
 
 def scan_felica():
     """Scan for FeliCa tags using 'hf felica reader'.
@@ -442,7 +426,6 @@ def scan_felica():
         return createExecTimeout(5)
     except Exception:
         return createExecTimeout(5)
-
 
 def lf_wav_filter():
     """Analyze raw LF waveform to confirm T55XX-like signal presence.
@@ -526,7 +509,6 @@ def lf_wav_filter():
             pass
         return False
 
-
 # ---------------------------------------------------------------------------
 # scanForType — module-level type-specific scan with listener callback
 # ---------------------------------------------------------------------------
@@ -598,7 +580,6 @@ def scanForType(listener, typ):
     except Exception:
         if listener:
             listener({'progress': 100, 'return': createExecTimeout(0)})
-
 
 # ---------------------------------------------------------------------------
 # Scanner class

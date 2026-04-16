@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -15,14 +23,14 @@
 """UI framework constants — layout, colors, fonts, keys, canvas tags.
 
 Every value is traceable to UI_SPEC.md (extracted from the real v1.0.90
-firmware running under QEMU) or to the decompiled actbase.c / widget.so
+firmware running under QEMU) or to the original actbase.c / widget.so
 binaries.  When a value appears in both UI_SPEC.md and the prototype
 code, UI_SPEC.md wins — it was measured from the real firmware.
 
 Source key:
     SPEC  = docs/UI_SPEC.md (QEMU-verified canvas items)
-    ACT   = decompiled/actbase.c (string table)
-    WID   = decompiled/widget_ghidra_raw.txt (string table)
+    ACT   = original binary (string table)
+    WID   = original binary (string table)
     API   = archive/root_old/qemu_api_dump_filtered.txt
 """
 

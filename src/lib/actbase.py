@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -23,8 +31,7 @@ Extends Activity (lifecycle management from actstack.py) with:
   - Lifecycle overrides (onResume/onPause show/hide battery)
 
 Every pixel coordinate, color, font, and canvas tag matches the original
-firmware as documented in decompiled/SUMMARY.md section 1 and verified
-against decompiled/actbase.c string table.
+firmware.
 
 Import convention: ``from lib.actbase import BaseActivity``
 """
@@ -74,7 +81,7 @@ class BaseActivity(Activity):
     This is the base class for ALL user-facing activities.
     Extends Activity (lifecycle) with canvas rendering.
 
-    Instance variables (from decompiled __init__):
+    Instance variables (from original __init__):
         _is_busy        — Boolean busy flag (thread-safe via _lock_busy)
         _lock_busy      — threading.Lock for busy state
         _is_title_inited  — True after first setTitle call
@@ -97,7 +104,7 @@ class BaseActivity(Activity):
         self._battery_bar = None
         self.event_ret = False
         self.resumed = False
-        # Register with actstack (matches decompiled: actstack.register(self))
+        # Register with actstack (matches original: actstack.register(self))
         actstack.register(self)
 
     # ==================================================================
@@ -313,7 +320,7 @@ class BaseActivity(Activity):
                 Default False: hidden buttons suppress their keys.
 
         If neither left nor right is specified, removes both buttons AND
-        the background (matches decompiled dismissButton).
+        the background (matches original dismissButton).
         """
         canvas = self.getCanvas()
         if canvas is None:
@@ -420,7 +427,7 @@ class BaseActivity(Activity):
         Returns:
             tuple: ('mononoki 16', 228)
 
-        The decompiled code computes Y from canvas height and linespace
+        The original code computes Y from canvas height and linespace
         metrics.  On the 240px display this resolves to BTN_LEFT_Y (228).
         """
         font_spec = '%s %d' % (FONT_BUTTON[0], FONT_BUTTON[1])
@@ -467,7 +474,7 @@ class BaseActivity(Activity):
     def _setbusy(self, state):
         """Internal: set busy flag under lock.
 
-        Uses threading.Lock (not RLock) matching the decompiled binary.
+        Uses threading.Lock (not RLock) matching the original binary.
 
         Args:
             state: bool — new busy state.
@@ -532,7 +539,7 @@ class BaseActivity(Activity):
     def onResume(self):
         """Override: show battery bar, set resumed=True.
 
-        Matches decompiled onResume: checks resumed flag, calls
+        Matches original onResume: checks resumed flag, calls
         _battery_bar.show().
         """
         self.resumed = True
@@ -541,7 +548,7 @@ class BaseActivity(Activity):
     def onPause(self):
         """Override: hide battery bar, dismiss toast, set resumed=False.
 
-        Matches decompiled onPause: mirrors onResume, calls
+        Matches original onPause: mirrors onResume, calls
         _battery_bar.hide().  Toast dismissal ensures no stale toasts
         persist when navigating back through the activity stack.
         """
@@ -558,7 +565,7 @@ class BaseActivity(Activity):
     def onDestroy(self):
         """Override: unregister from actstack.
 
-        Matches decompiled: actstack.unregister(self).
+        Matches original: actstack.unregister(self).
         """
         actstack.unregister(self)
 
@@ -623,7 +630,7 @@ class BaseActivity(Activity):
         """Return unique ID string for canvas tag prefixing.
 
         Format: 'ID:{classname}-{id}'
-        Matches decompiled: returns "ID:{}-{}" format string.
+        Matches original: returns "ID:{}-{}" format string.
 
         Returns:
             str: Unique identifier like 'ID:BaseActivity-140234567890'

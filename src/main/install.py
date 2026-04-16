@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -16,7 +24,7 @@
 
 Cython source: install.py (compiled to install.so by manufacturer)
 Binary source: device_so/install.so (98,188 bytes, ARM ELF)
-Ground truth: Ghidra decompilation + QEMU trace (2026-04-09)
+Ground truth: Ghidra analysis + QEMU trace (2026-04-09)
 
 Original functions confirmed via QEMU ExtensionFileLoader:
   install_font(unpkg_path, callback)

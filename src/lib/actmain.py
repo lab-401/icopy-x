@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -19,7 +27,6 @@ SleepModeActivity, and WarningDiskFullActivity which are also defined
 in the original actmain.so (252KB, 129 functions, 43 methods across
 4 Activity classes).
 
-Source: decompiled/SUMMARY.md section 4, docs/UI_Mapping/00_main_menu/README.md
 """
 
 import logging
@@ -40,7 +47,6 @@ from lib._constants import (
 )
 
 logger = logging.getLogger(__name__)
-
 
 # =====================================================================
 # Activity registry — maps action keys to (module_path, class_name)
@@ -76,7 +82,6 @@ _ACTIVITY_REGISTRY = {
 # discovered PluginInfo objects (both promoted and non-promoted).
 _discovered_plugins = []
 
-
 def init_plugins():
     """Discover and register plugins from the plugins/ directory.
 
@@ -99,7 +104,6 @@ def init_plugins():
     except Exception as exc:
         logger.error("Plugin discovery failed: %s", exc)
         _discovered_plugins = []
-
 
 class MainActivity(BaseActivity):
     """Root activity -- main menu with 14 items.
@@ -163,7 +167,7 @@ class MainActivity(BaseActivity):
     def onCreate(self, bundle=None):
         """Set up the main menu.
 
-        Startup sequence (from decompiled/SUMMARY.md and UI_Mapping):
+        Startup sequence:
             1. setTitle("Main Page")
             2. setLeftButton("") -- M1 empty on root (no back)
             3. setRightButton("") -- no button labels on real device
@@ -333,7 +337,7 @@ class MainActivity(BaseActivity):
     def gotoActByPos(self, pos):
         """Navigate to activity at list position (alias for _launchActivity).
 
-        Matches the decompiled method signature.
+        Matches the original method signature.
         """
         self._launchActivity(pos)
 

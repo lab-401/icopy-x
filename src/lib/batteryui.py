@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -37,7 +45,6 @@ String table analysis reveals:
 
 Import: hmi_driver, threading, audio (for playChargingAudio)
 
-Source: decompiled batteryui.so string table + Ghidra function list
 """
 
 import logging
@@ -53,7 +60,6 @@ __CHARGING_STATE = False    # Cached charging state
 __UPDATING = False          # Guard against concurrent updates
 __EVENT = threading.Event() # Poll interval wait handle
 _thread = None              # Background polling thread
-
 
 def register(battery_bar):
     """Register a BatteryBar widget to receive periodic updates.
@@ -73,7 +79,6 @@ def register(battery_bar):
             pass
     logger.debug("batteryui.register: %d bars registered", len(__BATTERY_BAR))
 
-
 def unregister(battery_bar):
     """Unregister a BatteryBar widget.
 
@@ -87,7 +92,6 @@ def unregister(battery_bar):
     except ValueError:
         pass
     logger.debug("batteryui.unregister: %d bars registered", len(__BATTERY_BAR))
-
 
 def start():
     """Start the background battery polling thread.
@@ -104,7 +108,6 @@ def start():
     _thread.start()
     logger.info("batteryui: polling started")
 
-
 def pause():
     """Stop the background polling thread.
 
@@ -114,7 +117,6 @@ def pause():
     __BATTERY_RUN = False
     __EVENT.set()  # Wake thread so it exits promptly
     logger.info("batteryui: polling paused")
-
 
 def notifyCharging(is_charging):
     """Notify that charging state changed (from hmi_driver status event).
@@ -137,7 +139,6 @@ def notifyCharging(is_charging):
 
     # Push to all registered bars via Tk main thread
     _schedule_update_views(__BATTERY_VALUE, __CHARGING_STATE)
-
 
 def __run__():
     """Background polling loop.
@@ -177,7 +178,6 @@ def __run__():
 
     logger.debug("batteryui.__run__: exited")
 
-
 def _schedule_update_views(battery, charging):
     """Schedule __update_views on the Tk main thread.
 
@@ -193,7 +193,6 @@ def _schedule_update_views(battery, charging):
     except Exception:
         # Fallback: call directly (may be in test/no-Tk context)
         __update_views(battery, charging)
-
 
 def __update_views(battery, charging):
     """Push battery state to all registered BatteryBar widgets.

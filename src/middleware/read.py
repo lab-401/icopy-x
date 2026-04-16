@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Reimplemented from read.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
 Ground truth:
-    Decompiled:  decompiled/read_ghidra_raw.txt
     Strings:     docs/v1090_strings/read_strings.txt
     Audit:       docs/V1090_MODULE_AUDIT.txt (line 151)
     Spec:        docs/middleware-integration/5-read_spec.md
@@ -53,7 +60,6 @@ except ImportError:
     except ImportError:
         tagtypes = None
 
-
 # ---------------------------------------------------------------------------
 # Callback helpers (match .so API)
 # ---------------------------------------------------------------------------
@@ -61,18 +67,15 @@ def callReadSuccess(listener, infos, bundle, is_force=False):
     if listener:
         listener({'success': True, 'tag_info': infos, 'force': is_force, 'bundle': bundle})
 
-
 def callReadFailed(listener, infos, ret):
     if listener:
         listener({'success': False, 'tag_info': infos, 'return': ret})
-
 
 def call_on_finish(ret, listener, infos, bundle, is_force=False):
     if ret == 1 or ret == 0:
         callReadSuccess(listener, infos, bundle, is_force)
     else:
         callReadFailed(listener, infos, ret)
-
 
 # ---------------------------------------------------------------------------
 # Protocol-specific reader implementations
@@ -137,7 +140,6 @@ def _read_mfc(infos, listener):
         return (1, bin_path)
     return (-1, '')
 
-
 def _read_ultralight(infos, listener):
     """MIFARE Ultralight/NTAG read."""
     import hfmfuread
@@ -145,7 +147,6 @@ def _read_ultralight(infos, listener):
     ret = result.get('return', -1)
     file_path = result.get('file', '')
     return (0 if ret >= 0 else -1, file_path)
-
 
 def _read_lf(infos, listener):
     """LF 125kHz read."""
@@ -157,7 +158,6 @@ def _read_lf(infos, listener):
         if isinstance(result, dict):
             return (result.get('return', -1), result)
     return (-1, '')
-
 
 def _read_iclass(infos, listener):
     """iCLASS read."""
@@ -172,7 +172,6 @@ def _read_iclass(infos, listener):
     ret = result.get('return', -1)
     return (0 if ret >= 0 else -1, result)
 
-
 def _read_iso15693(infos, listener):
     """ISO 15693 read."""
     import hf15read
@@ -180,7 +179,6 @@ def _read_iso15693(infos, listener):
     ret = result.get('return', -1)
     file_path = result.get('file', '')
     return (0 if ret >= 0 else -1, file_path)
-
 
 def _read_hf14a(infos, listener):
     """Generic ISO14443A read."""
@@ -190,7 +188,6 @@ def _read_hf14a(infos, listener):
     file_path = result.get('file', '')
     return (0 if ret >= 0 else -1, file_path)
 
-
 def _read_legic(infos, listener):
     """LEGIC read."""
     import legicread
@@ -198,14 +195,12 @@ def _read_legic(infos, listener):
     ret = result.get('return', -1)
     return (0 if ret >= 0 else -1, result.get('file', ''))
 
-
 def _read_felica(infos, listener):
     """FeliCa read."""
     import felicaread
     result = felicaread.read(infos)
     ret = result.get('return', -1)
     return (0 if ret >= 0 else -1, result.get('file', ''))
-
 
 # Type dispatch table
 _MFC_TYPES = {0, 1, 25, 26, 41, 42, 43, 44}
@@ -216,7 +211,6 @@ _ISO15693_TYPES = {19, 46}
 _LEGIC_TYPES = {20}
 _FELICA_TYPES = {21}
 _HF14A_TYPES = {40}
-
 
 def _dispatch_read(typ, infos, listener):
     """Dispatch to protocol-specific reader."""
@@ -237,7 +231,6 @@ def _dispatch_read(typ, infos, listener):
     if typ in _HF14A_TYPES:
         return _read_hf14a(infos, listener)
     return (-1, '')
-
 
 # ---------------------------------------------------------------------------
 # Reader class (matches read.so API)

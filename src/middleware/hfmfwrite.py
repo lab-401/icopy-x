@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -18,7 +26,6 @@ Reimplemented from hfmfwrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 DRM gate (tagChk1) is BYPASSED — open-source implementation.
 
 Ground truth:
-    Decompiled:  decompiled/hfmfwrite_ghidra_raw.txt
     Strings:     docs/v1090_strings/hfmfwrite_strings.txt
     Spec:        docs/middleware-integration/6-write_spec.md (section 2)
     Trace:       docs/Real_Hardware_Intel/trace_write_activity_attrs_20260402.txt
@@ -79,7 +86,6 @@ except ImportError:
     except ImportError:
         scan = None
 
-
 # ---------------------------------------------------------------------------
 # DRM bypass — tagChk1
 # Original: AES-based license check via /proc/cpuinfo serial.
@@ -100,7 +106,6 @@ def tagChk1(infos, file, newinfos):
     def init_tag(infos_arg):
         return infos_arg
     return init_tag
-
 
 # ---------------------------------------------------------------------------
 # read_blocks_4file — load dump .bin into dict
@@ -126,7 +131,6 @@ def read_blocks_4file(infos, file):
         return {}
     return blocks
 
-
 # ---------------------------------------------------------------------------
 # write_block / start_wrbl_cmd — per-block write
 # Strings: __pyx_k_hf_mf_wrbl, __pyx_k_isOk_01
@@ -139,7 +143,6 @@ def start_wrbl_cmd(block, typ, key, data):
     Format: 'hf mf wrbl {block} {A|B} {key} {data}'
     """
     return 'hf mf wrbl {} {} {} {}'.format(block, typ, key, data)
-
 
 def write_block(block, typ, key, data):
     """Write a single block.
@@ -155,7 +158,6 @@ def write_block(block, typ, key, data):
         return 1
     return -1
 
-
 # ---------------------------------------------------------------------------
 # call_progress — progress reporting
 # Strings: __pyx_k_call_progress, __pyx_k_progress, __pyx_k_max_value
@@ -168,7 +170,6 @@ def call_progress(listener, progress, max_val):
         listener({'max': max_val, 'progress': progress})
     except Exception:
         pass
-
 
 # ---------------------------------------------------------------------------
 # gen1afreeze — lock Gen1a magic card
@@ -195,7 +196,6 @@ def gen1afreeze():
     ]
     for cmd in commands:
         executor.startPM3Task(cmd, 10000)
-
 
 # ---------------------------------------------------------------------------
 # write_with_gen1a — bulk load via cload
@@ -225,7 +225,6 @@ def write_with_gen1a(infos, file):
     gen1afreeze()
     return 1
 
-
 def write_with_gen1a_only_uid(infos):
     """Write UID-only to Gen1a card.
 
@@ -243,7 +242,6 @@ def write_with_gen1a_only_uid(infos):
         return -1
     gen1afreeze()
     return 1
-
 
 # ---------------------------------------------------------------------------
 # write_with_standard — per-block write in reverse sector order
@@ -359,7 +357,6 @@ def write_with_standard(infos, file, listener):
         return 1
     return -1
 
-
 # ---------------------------------------------------------------------------
 # write_common — main dispatch (DRM → gen1a detect → write)
 # ---------------------------------------------------------------------------
@@ -443,7 +440,6 @@ def write_common(listener, infos, bundle):
 
     return result
 
-
 # ---------------------------------------------------------------------------
 # write — main entry point (called from write.py dispatcher)
 # ---------------------------------------------------------------------------
@@ -464,7 +460,6 @@ def write(listener, infos, bundle):
         return write_common(listener, infos, bundle)
     except Exception:
         return -1
-
 
 # ---------------------------------------------------------------------------
 # verify — read back and compare

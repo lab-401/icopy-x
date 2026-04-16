@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -23,7 +31,6 @@ Reimplements the erase logic from activity_main.so WipeTagActivity:
 Ground truth:
     Trace: docs/Real_Hardware_Intel/trace_erase_flow_20260330.txt
     UI spec: docs/UI_Mapping/13_erase_tag/README.md
-    Binary: decompiled/activity_main_ghidra_raw.txt
 
 This module does NOT touch UI. It returns a result string that the
 activity uses to show the appropriate toast. Progress is reported
@@ -38,7 +45,6 @@ Results:
 """
 
 import re
-
 
 # =====================================================================
 # MF1 — Tag Detection (separate from erase for SCANNING state)
@@ -75,7 +81,6 @@ def detect_mf1_tag():
 
     return {'info_cache': info_cache, 'is_gen1a': is_gen1a}
 
-
 # =====================================================================
 # MF1 — Erase (after detection)
 # =====================================================================
@@ -100,7 +105,6 @@ def erase_mf1_detected(info_cache, is_gen1a, on_progress=None):
         return _erase_magic_m1()
     return _erase_std_m1(info_cache, on_progress)
 
-
 def erase_mf1(on_progress=None):
     """Erase MF1 tag — detect then erase (convenience wrapper).
 
@@ -112,7 +116,6 @@ def erase_mf1(on_progress=None):
         return 'no_tag'
     return erase_mf1_detected(
         result['info_cache'], result['is_gen1a'], on_progress)
-
 
 def _erase_magic_m1():
     """Gen1a magic card: single cwipe command.
@@ -130,7 +133,6 @@ def _erase_magic_m1():
     if ret == -1:
         return 'error'
     return 'success'
-
 
 def _erase_std_m1(info_cache, on_progress=None):
     """Standard MF1 card: fchk keys then wrbl zeros/transport to all blocks.
@@ -316,7 +318,6 @@ def _erase_std_m1(info_cache, on_progress=None):
         write_count += 1
 
     return 'success'
-
 
 # =====================================================================
 # T5577

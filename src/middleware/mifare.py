@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Reimplemented from mifare.so (iCopy-X v1.0.90, C/C++ compiled, ARM 32-bit).
 
 Ground truth:
-    Decompiled:  decompiled/mifare_ghidra_raw.txt
     Strings:     docs/v1090_strings/mifare_strings.txt
     Audit:       docs/V1090_MODULE_AUDIT.txt (lines 186-211)
 
@@ -81,7 +88,6 @@ A = 'A'
 B = 'B'
 AB = 'AB'
 
-
 # ---------------------------------------------------------------------------
 # Block ↔ Sector conversion
 # ---------------------------------------------------------------------------
@@ -95,13 +101,11 @@ def blockToSector(blockIndex):
         return blockIndex // 4
     return 32 + (blockIndex - 128) // 16
 
-
 def sectorToBlock(sectorIndex):
     """Return the first block number in a sector."""
     if sectorIndex < 32:
         return sectorIndex * 4
     return 128 + (sectorIndex - 32) * 16
-
 
 # ---------------------------------------------------------------------------
 # Sector / block count queries
@@ -118,7 +122,6 @@ def getSectorCount(size):
         return SECTOR_Mini
     return 0
 
-
 def getBlockCountInSector(sectorIndex):
     """Return the number of blocks in a sector (4 for small, 16 for large)."""
     if sectorIndex < 32:
@@ -127,11 +130,9 @@ def getBlockCountInSector(sectorIndex):
         return 16
     return 0
 
-
 def getKeyCount(size):
     """Return the total number of keys for a card size (2 per sector)."""
     return getSectorCount(size) * 2
-
 
 # ---------------------------------------------------------------------------
 # Block classification
@@ -142,13 +143,11 @@ def isFirstBlock(uiBlock):
         return uiBlock % 4 == 0
     return (uiBlock - 128) % 16 == 0
 
-
 def isTrailerBlock(uiBlock):
     """Return True if the block is a sector trailer."""
     if uiBlock < 128:
         return uiBlock % 4 == 3
     return (uiBlock - 128) % 16 == 15
-
 
 def get_trailer_block(uiFirstBlock):
     """Return the trailer block number given the first block of a sector."""
@@ -156,11 +155,9 @@ def get_trailer_block(uiFirstBlock):
         return uiFirstBlock + 3
     return uiFirstBlock + 15
 
-
 def getIndexOnSector(block, sector):
     """Return the index of a block within its sector (0-based)."""
     return block - sectorToBlock(sector)
-
 
 # ---------------------------------------------------------------------------
 # Validation
@@ -169,16 +166,13 @@ def validateBlock(block):
     """Return True if the block number is within the valid range (0-255)."""
     return 0 <= block < MAX_BLOCK_COUNT
 
-
 def validateSector(sector):
     """Return True if the sector number is within the valid range (0-39)."""
     return 0 <= sector < MAX_SECTOR_COUNT
 
-
 def validateValueOperand(value):
     """Return True if the value is a valid 32-bit signed integer."""
     return -2147483648 <= value <= 2147483647
-
 
 def isBlockData(data):
     """Return True if the hex string is valid 16-byte block data (32 hex chars)."""

@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Reimplemented from hfmfuwrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
 Ground truth:
-    Decompiled:  decompiled/hfmfuwrite_ghidra_raw.txt
     Strings:     docs/v1090_strings/hfmfuwrite_strings.txt
     Spec:        docs/middleware-integration/6-write_spec.md (section 5)
 
@@ -56,7 +63,6 @@ except ImportError:
     except ImportError:
         tagtypes = None
 
-
 def write_call(line):
     """Callback for per-line PM3 output during restore.
 
@@ -75,7 +81,6 @@ def write_call(line):
     # serves primarily as the progress hook for the executor's
     # listener mechanism.
     pass
-
 
 def write(infos, file):
     """Write MIFARE Ultralight/NTAG data to a tag.
@@ -145,7 +150,6 @@ def write(infos, file):
         return -1
 
     return 1
-
 
 def verify(infos, file=None):
     """Verify MIFARE Ultralight/NTAG data after writing.

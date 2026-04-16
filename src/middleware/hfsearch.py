@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -16,7 +24,7 @@
 
 Reimplements hfsearch.so (iCopy-X v1.0.90) parser() function.
 All constants, detection keywords, regex patterns, priority order,
-and return value shapes are from the decompiled binary (Ghidra ARM).
+and return value shapes are from the original binary (Ghidra ARM).
 
 Ground truth: docs/middleware-integration/2-hf14ainfo_hfsearch_lfsearch_spec.md §2
 
@@ -79,7 +87,7 @@ def parser():
     Reads from executor.CONTENT_OUT_IN__TXT_CACHE (populated by prior
     startPM3Task('hf sea', 10000)).
 
-    Detection priority order (from decompiled binary §2.7):
+    Detection priority order (from original binary §2.7):
         1. No known tag       -> {'found': False}
         2. iCLASS             -> {'found': True, 'isIclass': True}
         3. ISO15693           -> {'found': True, 'uid': ..., 'type': 19|46}

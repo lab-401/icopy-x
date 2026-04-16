@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,7 +25,6 @@
 Transliterated from executor.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
 Ground truth:
-    Decompiled: decompiled/executor_ghidra_raw.txt (714K)
     Strings:    docs/v1090_strings/executor_strings.txt
     Traces:     docs/Real_Hardware_Intel/trace_scan_flow_20260331.txt
                 docs/Real_Hardware_Intel/trace_lf_scan_flow_20260331.txt
@@ -29,8 +36,8 @@ Architecture:
 
 Module-level function library (no classes), matching original .so interface.
 
-Behavioral notes (from decompilation + QEMU verification):
-    - hasKeyword uses re.search (decompiled: PyTuple_New(2) + PyObject_Call at 0x198a4)
+Behavioral notes (from binary analysis + QEMU verification):
+    - hasKeyword uses re.search (PyTuple_New(2) + PyObject_Call at 0x198a4)
     - isEmptyContent: '' -> False, whitespace-only -> True (counter-intuitive)
     - getContentFromRegex returns LAST capturing group via m.lastindex
     - getContentFromRegexAll returns FIRST element of re.findall (despite name)
@@ -67,7 +74,7 @@ except ImportError:
     pm3_compat = None
 
 # ---------------------------------------------------------------------------
-# Constants — from decompilation + executor_strings.txt
+# Constants — from binary analysis + executor_strings.txt
 # ---------------------------------------------------------------------------
 # executor_ghidra_raw.txt: 0x22B8 = 8888
 CODE_PM3_TASK_ERROR = -1
@@ -76,7 +83,7 @@ PM3_REMOTE_CMD_PORT = 8888
 PRINT_V_MODE = True
 
 # ---------------------------------------------------------------------------
-# Module-level state — from decompilation (module global slots)
+# Module-level state — from binary analysis (module global slots)
 # ---------------------------------------------------------------------------
 CONTENT_OUT_IN__TXT_CACHE = ''
 LABEL_PM3_CMD_TASK_RUNNING = False
@@ -101,10 +108,9 @@ _RE_NIKOLA_END = re.compile(r'Nikola\.D:\s*-?\d+\s*$', re.MULTILINE)
 # Alternative end marker — executor_strings.txt: "pm3 -->"
 _RE_PROMPT_END = re.compile(r'pm3\s+-->\s*$', re.MULTILINE)
 
-
 # ===========================================================================
 # State management
-# Decompiled: _set_running @0x16774, _set_stopped @0x167b8,
+# _set_running @0x16774, _set_stopped @0x167b8,
 #             _set_stopping @0x167fc, _wait_if_stopping @0x16840
 # ===========================================================================
 
@@ -112,31 +118,26 @@ def _set_running(status):
     global LABEL_PM3_CMD_TASK_RUNNING
     LABEL_PM3_CMD_TASK_RUNNING = status
 
-
 def _set_stopped(status):
     global LABEL_PM3_CMD_TASK_STOP
     LABEL_PM3_CMD_TASK_STOP = status
 
-
 def _set_stopping(status):
     global LABEL_PM3_CMD_TASK_STOPPING
     LABEL_PM3_CMD_TASK_STOPPING = status
-
 
 def _wait_if_stopping():
     """Block until LABEL_PM3_CMD_TASK_STOPPING becomes False."""
     while LABEL_PM3_CMD_TASK_STOPPING:
         time.sleep(0.05)
 
-
 def _stop_task_user():
     """Internal: force-stop from user request.
-    Decompiled: sets stopping flag, brief sleep for task to notice.
+    Sets stopping flag, brief sleep for task to notice.
     """
     global LABEL_PM3_CMD_TASK_STOPPING
     LABEL_PM3_CMD_TASK_STOPPING = True
     time.sleep(0.1)
-
 
 # ===========================================================================
 # TCP communication
@@ -145,7 +146,7 @@ def _stop_task_user():
 def connect2PM3(serial_port=None, baudrate=None):
     """Connect to PM3 via RemoteTaskManager TCP socket.
 
-    Decompiled: creates AF_INET SOCK_STREAM to PM3_REMOTE_ADDR:PM3_REMOTE_CMD_PORT
+    Creates AF_INET SOCK_STREAM to PM3_REMOTE_ADDR:PM3_REMOTE_CMD_PORT
     Strings: "hw connect"
     """
     global _socket_instance
@@ -165,7 +166,6 @@ def connect2PM3(serial_port=None, baudrate=None):
     except Exception:
         _socket_instance = None
         return False
-
 
 def _ensure_pipeline_ready():
     """Pre-flight check: clean up dirty pipeline from an interrupted command.
@@ -203,12 +203,11 @@ def _ensure_pipeline_ready():
 
     connect2PM3()
 
-
 def _send_raw(cmd):
     """Send a raw command string and read response (no caching, no callbacks).
 
-    Decompiled: socket.sendall + recv(1024) loop.
-    Recv buffer: 0x400 = 1024 bytes (from decompilation).
+    socket.sendall + recv(1024) loop.
+    Recv buffer: 0x400 = 1024 bytes.
     """
     if _socket_instance is None:
         return ''
@@ -235,11 +234,10 @@ def _send_raw(cmd):
     except Exception:
         return ''
 
-
 def _send_and_cache(cmd, timeout=5888):
     """Send command, cache result in CONTENT_OUT_IN__TXT_CACHE, fire callbacks.
 
-    Decompiled: formats via Nikola.D.CMD, accumulates in cache, fires
+    Formats via Nikola.D.CMD, accumulates in cache, fires
     LIST_CALL_PRINT callbacks per line.
     Strings: "Nikola.D.CMD = {}", "Nikola.D:", "timeout while waiting for reply"
     """
@@ -320,11 +318,10 @@ def _send_and_cache(cmd, timeout=5888):
     CONTENT_OUT_IN__TXT_CACHE = result
     return result
 
-
 def _send_ctrl(cmd, timeout=5888):
     """Send a control command via Nikola.D.CTL channel.
 
-    Decompiled: startPM3Ctrl uses "Nikola.D.CTL = {}" format.
+    startPM3Ctrl uses "Nikola.D.CTL = {}" format.
     Strings: "Nikola.D.CTL = {}"
     """
     global CONTENT_OUT_IN__TXT_CACHE
@@ -359,11 +356,10 @@ def _send_ctrl(cmd, timeout=5888):
         CONTENT_OUT_IN__TXT_CACHE = ''
         return ''
 
-
 def _send_plat(cmd, timeout=5888):
     """Send a platform command via Nikola.D.PLT channel.
 
-    Decompiled: startPM3Plat uses "Nikola.D.PLT = {}" format.
+    startPM3Plat uses "Nikola.D.PLT = {}" format.
     Strings: "Nikola.D.PLT = {}"
     """
     global CONTENT_OUT_IN__TXT_CACHE
@@ -398,18 +394,17 @@ def _send_plat(cmd, timeout=5888):
         CONTENT_OUT_IN__TXT_CACHE = ''
         return ''
 
-
 # ===========================================================================
 # PM3 task execution
-# Decompiled: startPM3Task @0x1af98 (28KB, Ghidra timeout — reconstructed
-#   from startPM3Plat/startPM3Ctrl which DID decompile + traces + archive)
+# startPM3Task @0x1af98 (28KB, Ghidra timeout — reconstructed
+#   from startPM3Plat/startPM3Ctrl + traces + archive)
 # Returns: 1=completed, -1=error (memory: project_startPM3Task_return.md)
 # ===========================================================================
 
 def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     """Execute a PM3 command.
 
-    Decompiled: startPM3Task @0x1af98
+    startPM3Task @0x1af98
     Strings: "Nikola.D.CMD = {}", "Nikola.D.OFFLINE"
     Trace: all PM3 traces show (cmd, timeout, rework) pattern
     Returns: 1=completed, -1=error (NOT the Nikola.D value)
@@ -455,11 +450,10 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
 
     return 1 if success else CODE_PM3_TASK_ERROR
 
-
 def stopPM3Task(listener=None, wait=True):
     """Stop the current PM3 task.
 
-    Decompiled: sets STOPPING flag, optionally blocks until RUNNING=False.
+    Sets STOPPING flag, optionally blocks until RUNNING=False.
     """
     _set_stopping(True)
 
@@ -473,12 +467,11 @@ def stopPM3Task(listener=None, wait=True):
     if listener is not None:
         del_task_call(listener)
 
-
 def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     """Send a control command to PM3.
 
-    Decompiled: uses Nikola.D.CTL channel, sets RUNNING/STOPPED state.
-    Default timeout: 5888ms (from decompilation).
+    Uses Nikola.D.CTL channel, sets RUNNING/STOPPED state.
+    Default timeout: 5888ms.
     Default ctrl_cmd='': original .so calls this without arguments from
     PCModeActivity.startPCMode() (activity_main_strings.txt:29912).
     """
@@ -491,12 +484,11 @@ def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     _set_stopped(True)
     return result
 
-
 def startPM3Plat(plat_cmd, timeout=5888):
     """Send a platform command to PM3.
 
-    Decompiled: uses Nikola.D.PLT channel, sets RUNNING/STOPPED state.
-    Default timeout: 5888ms (from decompilation).
+    Uses Nikola.D.PLT channel, sets RUNNING/STOPPED state.
+    Default timeout: 5888ms.
     """
     _set_running(True)
     _set_stopped(False)
@@ -507,11 +499,10 @@ def startPM3Plat(plat_cmd, timeout=5888):
     _set_stopped(True)
     return result
 
-
 def reworkPM3All():
     """Restart the entire PM3 system and reconnect.
 
-    Decompiled: calls hmi_driver.restartpm3(), closes socket, sleeps 3s, reconnects.
+    Calls hmi_driver.restartpm3(), closes socket, sleeps 3s, reconnects.
     Strings: "restartpm3", "hmi_driver"
     """
     global _socket_instance
@@ -532,10 +523,9 @@ def reworkPM3All():
     time.sleep(3)
     connect2PM3()
 
-
 # ===========================================================================
 # Callback management
-# Decompiled: add_task_call/del_task_call use LOCK_CALL_PRINT + set ops
+# add_task_call/del_task_call use LOCK_CALL_PRINT + set ops
 # ===========================================================================
 
 def add_task_call(call):
@@ -543,30 +533,27 @@ def add_task_call(call):
     with LOCK_CALL_PRINT:
         LIST_CALL_PRINT.add(call)
 
-
 def del_task_call(call):
     """Unregister an output callback. Uses discard() (no KeyError)."""
     with LOCK_CALL_PRINT:
         LIST_CALL_PRINT.discard(call)
 
-
 # ===========================================================================
 # Content/output query functions
-# Decompiled: all read from CONTENT_OUT_IN__TXT_CACHE module global
+# All read from CONTENT_OUT_IN__TXT_CACHE module global
 # ===========================================================================
 
 def getPrintContent():
     """Return the cached output from the last command.
 
-    Decompiled: simple getter for CONTENT_OUT_IN__TXT_CACHE.
+    Simple getter for CONTENT_OUT_IN__TXT_CACHE.
     """
     return CONTENT_OUT_IN__TXT_CACHE
-
 
 def isEmptyContent():
     """Check if cached output is whitespace-only.
 
-    Decompiled: checks len(content.strip()) == 0 AND len(content) > 0.
+    Checks len(content.strip()) == 0 AND len(content) > 0.
     Truth table:
         ''     -> False  (empty string is NOT "empty" — counter-intuitive)
         ' '    -> True
@@ -577,11 +564,10 @@ def isEmptyContent():
         return False
     return len(CONTENT_OUT_IN__TXT_CACHE.strip()) == 0
 
-
 def getContentFromRegex(regex):
     """Search cached output with regex, return LAST capturing group.
 
-    Decompiled @getContentFromRegex: uses re.search, returns m.group(m.lastindex).
+    Uses re.search, returns m.group(m.lastindex).
     Returns '' (not None) on no match.
     """
     if not CONTENT_OUT_IN__TXT_CACHE:
@@ -593,11 +579,10 @@ def getContentFromRegex(regex):
         return ''
     return m.group(m.lastindex)
 
-
 def getContentFromRegexA(regex):
     """Search cached output, return ALL matches via re.findall().
 
-    Decompiled: returns re.findall(regex, cache). Empty cache -> [].
+    Returns re.findall(regex, cache). Empty cache -> [].
     """
     if not CONTENT_OUT_IN__TXT_CACHE:
         return []
@@ -606,11 +591,10 @@ def getContentFromRegexA(regex):
         return []
     return result
 
-
 def getContentFromRegexAll(regex):
     """Search cached output, return FIRST element from re.findall().
 
-    Decompiled: despite name "All", returns only results[0].
+    Despite name "All", returns only results[0].
     getContentFromRegexA is the one that returns ALL matches.
     Empty/no-match -> [].
     """
@@ -621,11 +605,10 @@ def getContentFromRegexAll(regex):
         return []
     return results[0]
 
-
 def getContentFromRegexG(regex, group):
     """Search cached output, return specific capturing group.
 
-    Decompiled: group=0 means "last group" (same as getContentFromRegex).
+    group=0 means "last group" (same as getContentFromRegex).
     group=N returns m.group(N). 1-based indexing confirmed.
     """
     if not CONTENT_OUT_IN__TXT_CACHE:
@@ -642,11 +625,10 @@ def getContentFromRegexG(regex, group):
     except (IndexError, re.error):
         return ''
 
-
 def hasKeyword(keywords, line=None):
     """Check if keywords exist in cached output or a specific line.
 
-    Decompiled @0x198a4: uses re.search (confirmed: PyTuple_New(2) + PyObject_Call
+    @0x198a4: uses re.search (confirmed: PyTuple_New(2) + PyObject_Call
     pattern, NOT PySequence_Contains which would indicate `in`).
     Checks PyObject_Size on content first — empty content returns False.
     """
@@ -660,10 +642,9 @@ def hasKeyword(keywords, line=None):
         # known callers but guards against edge cases
         return keywords in text
 
-
 # ===========================================================================
 # Error detection
-# Decompiled: simple substring checks on the `lines` parameter
+# Simple substring checks on the `lines` parameter
 # Strings: "Nikola.D.OFFLINE", "timeout while waiting for reply",
 #           "UART:: write time-out"
 # ===========================================================================
@@ -674,13 +655,11 @@ def isPM3Offline(lines):
         return False
     return 'Nikola.D.OFFLINE' in lines
 
-
 def isCMDTimeout(lines):
     """Check for command timeout. Checks for 'timeout while waiting for reply'."""
     if not lines:
         return False
     return 'timeout while waiting for reply' in lines
-
 
 def isUARTTimeout(lines):
     """Check for UART timeout. Checks for 'UART:: write time-out'."""

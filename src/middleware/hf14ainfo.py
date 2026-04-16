@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -20,7 +28,6 @@ the original binary as documented in the spec.
 
 Ground truth:
     Spec:        docs/middleware-integration/2-hf14ainfo_hfsearch_lfsearch_spec.md (section 1)
-    Decompiled:  decompiled/hf14ainfo_ghidra_raw.txt
     Strings:     docs/v1090_strings/hf14ainfo_strings.txt
 
 API:
@@ -43,7 +50,7 @@ Functions read from executor.CONTENT_OUT_IN__TXT_CACHE.
 """
 
 # ---------------------------------------------------------------------------
-# Module-level constants -- from binary decompilation
+# Module-level constants -- from original binary
 # ---------------------------------------------------------------------------
 # STR@0x0001de26: 'hf 14a info'
 CMD = 'hf 14a info'
@@ -102,7 +109,6 @@ _KW_BCC0_INCORRECT = 'BCC0 incorrect'
 # STR@0x0001dd24
 _KW_PRNG_DETECTION = 'Prng detection'
 
-
 def has_static_nonce():
     """Check if the cached output indicates a static nonce card.
 
@@ -112,7 +118,6 @@ def has_static_nonce():
     """
     import executor
     return executor.hasKeyword(_KW_STATIC_NONCE)
-
 
 def has_prng_level():
     """Check if the cached output has a PRNG detection result.
@@ -124,7 +129,6 @@ def has_prng_level():
     """
     import executor
     return executor.hasKeyword(_KW_PRNG_DETECTION)
-
 
 def is_gen1a_magic():
     """Check if the tag is a Gen 1a magic card.
@@ -165,7 +169,6 @@ def is_gen1a_magic():
     executor.CONTENT_OUT_IN__TXT_CACHE = saved_cache
     return executor.hasKeyword(_KW_GEN1A)
 
-
 def get_prng_level():
     """Get the PRNG detection level string.
 
@@ -177,7 +180,6 @@ def get_prng_level():
     # STR@0x0001dbe4: getContentFromRegexG
     return executor.getContentFromRegexG(_RE_PRNG, 0).strip()
 
-
 def get_manufacturer():
     """Get the MANUFACTURER field string.
 
@@ -187,7 +189,6 @@ def get_manufacturer():
     """
     import executor
     return executor.getContentFromRegexG(_RE_MANUFACTURER, 0).strip()
-
 
 def get_uid():
     """Get the UID hex string with spaces removed.
@@ -199,7 +200,6 @@ def get_uid():
     import executor
     return executor.getContentFromRegexG(_RE_UID, 0).strip().replace(' ', '')
 
-
 def get_atqa():
     """Get the ATQA hex string with spaces removed.
 
@@ -209,7 +209,6 @@ def get_atqa():
     """
     import executor
     return executor.getContentFromRegexG(_RE_ATQA, 0).strip().replace(' ', '')
-
 
 def get_ats():
     """Get the ATS hex string with spaces removed.
@@ -221,7 +220,6 @@ def get_ats():
     import executor
     return executor.getContentFromRegexG(_RE_ATS, 0).strip().replace(' ', '')
 
-
 def get_sak():
     """Get the SAK hex string with spaces removed.
 
@@ -232,7 +230,6 @@ def get_sak():
     import executor
     return executor.getContentFromRegexG(_RE_SAK, 0).strip().replace(' ', '')
 
-
 def get_uid_length():
     """Get the UID length in bytes.
 
@@ -242,7 +239,6 @@ def get_uid_length():
     """
     uid = get_uid()
     return len(uid) // 2
-
 
 def is_maybe_mifare():
     """Check if the cached output indicates a potential MIFARE tag.
@@ -261,7 +257,6 @@ def is_maybe_mifare():
     if tag_type is None:
         return False
     return tag_type in tagtypes.getM1Types()
-
 
 def parser():
     """Parse hf 14a info output from executor cache.

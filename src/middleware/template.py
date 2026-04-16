@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -15,7 +23,7 @@
 """template — scan/read result display renderer.
 
 Reimplementation of template.so (Cython, ARM v7 LE).
-Ground truth: Ghidra decompilation of orig_so/lib/template.so
+Ground truth: Ghidra analysis of orig_so/lib/template.so
               (MD5: 1b92d5017a72e8defb8c88396e1bbb19)
 
 Renders tag info cards to the tkinter canvas after scan.so identifies a tag.
@@ -69,7 +77,7 @@ _HEX_RE = re.compile(r'[a-fA-F0-9 -]+')
 def __drawFinal(parent, family, frequency, display_name):
     """Render the common header block: family name, display name, frequency.
 
-    Signature from decompiled at 0x000266c0 (4 parameters).
+    Signature at 0x000266c0 (4 parameters).
     Clears previous template items, then draws:
       - Family name in mononoki 22, anchor=nw at (18, 48)
       - Display name in mononoki 14, anchor=nw at (18, 82) (if not None)
@@ -119,7 +127,7 @@ def __drawFinal(parent, family, frequency, display_name):
 def __drawDataLines(parent, lines, base_y=None, pady=None):
     """Render data lines below the header.
 
-    Decompiled at 0x00024ba8. Iterates over a list of data items,
+    Iterates over a list of data items,
     rendering each non-None item with create_text at incrementing y.
     """
     if lines is None:
@@ -147,7 +155,7 @@ def __drawDataLines(parent, lines, base_y=None, pady=None):
 def __drawFinalByData(data, parent):
     """Render header from data dict by looking up TYPE_TEMPLATE.
 
-    Decompiled at 0x00025a78. Gets the tag type from data['type'],
+    Gets the tag type from data['type'],
     looks up TYPE_TEMPLATE, and calls __drawFinal with the tuple values.
     """
     if data is None:
@@ -167,7 +175,7 @@ def __drawFinalByData(data, parent):
 # ---------------------------------------------------------------------------
 
 def __drawM1(data, parent):
-    """MIFARE Classic renderer. Decompiled at 0x00023e68.
+    """MIFARE Classic renderer.
 
     Used for tag types: 0, 1, 25, 26, 41, 42, 43, 44.
     Renders: family header, UID, SAK + ATQA line.
@@ -243,7 +251,7 @@ def __drawM1(data, parent):
 
 
 def __drawMFU(data, parent):
-    """MIFARE Ultralight / NTAG renderer. Decompiled at 0x000236b0.
+    """MIFARE Ultralight / NTAG renderer.
 
     Used for tag types: 2, 3, 4, 5, 6, 7.
     Renders: family header, UID, type-specific fields.
@@ -287,7 +295,7 @@ def __drawMFU(data, parent):
 
 
 def __drawID(data, parent):
-    """LF ID tag renderer. Decompiled at 0x00022880.
+    """LF ID tag renderer.
 
     Used for: 8-16, 19, 28-38, 45, 46 (LF ID tags + ISO15693).
 
@@ -333,7 +341,7 @@ def __drawID(data, parent):
             # Standard ID: prefix with 'UID: '
             display_line = 'UID: {}'.format(data_val)
         # Truncate long data['data'] strings: > 19 chars -> first 16 + '...'
-        # Decompiled: PyObject_Size check at 0x00022bcc, threshold 0x13 (19)
+        # PyObject_Size check at 0x00022bcc, threshold 0x13 (19)
         if display_line is not None and len(display_line) > 19:
             display_line = display_line[:16] + '...'
     elif uid_val:
@@ -405,7 +413,7 @@ def __drawID(data, parent):
 
 
 def __draw_iclass(data, parent):
-    """iCLASS renderer. Decompiled at 0x0001ea88.
+    """iCLASS renderer.
 
     Used for tag types: 17, 18, 47.
     Renders: family header, manufacturer, block 7, data lines.
@@ -487,7 +495,7 @@ def __draw_iclass(data, parent):
 
 
 def __drawT55xx(data, parent):
-    """T5577 renderer. Decompiled at 0x00021640.
+    """T5577 renderer.
 
     Used for tag type: 23.
     T5577 has display_name = None in TYPE_TEMPLATE.
@@ -546,7 +554,7 @@ def __drawT55xx(data, parent):
 
 
 def __drawEM4x05(data, parent):
-    """EM4305 renderer. Decompiled at 0x00021f60.
+    """EM4305 renderer.
 
     Used for tag type: 24.
     EM4305 has display_name = None in TYPE_TEMPLATE.
@@ -607,7 +615,7 @@ def __drawEM4x05(data, parent):
 
 
 def __drawLEGIC_MIM256(data, parent):
-    """LEGIC MIM256 renderer. Decompiled at 0x00020d20.
+    """LEGIC MIM256 renderer.
 
     Used for tag type: 20.
     """
@@ -661,7 +669,7 @@ def __drawLEGIC_MIM256(data, parent):
 
 
 def __drawFelica(data, parent):
-    """FeliCa renderer. Decompiled at 0x00020568.
+    """FeliCa renderer.
 
     Used for tag type: 21.
     """
@@ -692,7 +700,7 @@ def __drawFelica(data, parent):
 
 
 def __draw14B(data, parent):
-    """ISO14443-B / STR512 renderer. Decompiled at 0x0001fdb0.
+    """ISO14443-B / STR512 renderer.
 
     Used for tag type: 22.
     """
@@ -722,7 +730,7 @@ def __draw14B(data, parent):
 
 
 def __drawTopaz(data, parent):
-    """Topaz / DESFire / HF14A Other renderer. Decompiled at 0x0001f490.
+    """Topaz / DESFire / HF14A Other renderer.
 
     Used for tag types: 27, 39, 40.
     """
@@ -852,7 +860,7 @@ TYPE_TEMPLATE = {
 def draw(typ, data, parent):
     """Draw a tag info card on the canvas.
 
-    Signature from decompiled __pyx_pw_8template_29draw at 0x0001e1d0.
+    Signature from __pyx_pw_8template_29draw at 0x0001e1d0.
 
     Args:
         typ:    integer tag type ID (0-47)
@@ -860,7 +868,7 @@ def draw(typ, data, parent):
                 or None for header-only rendering
         parent: tkinter Canvas to draw on
 
-    Behavior from decompiled code:
+    Behavior from original code:
     1. Looks up typ in TYPE_TEMPLATE
     2. If not found: returns None (silent)
     3. If draw_func is None: returns None
@@ -892,7 +900,7 @@ def draw(typ, data, parent):
 def dedraw(parent):
     """Clear all template-drawn items from the canvas.
 
-    Signature from decompiled __pyx_pw_8template_31dedraw at 0x0001d710.
+    Signature from __pyx_pw_8template_31dedraw at 0x0001d710.
     Calls parent.delete() three times to remove:
       - Title/family text area
       - Frequency line
@@ -907,7 +915,7 @@ def dedraw(parent):
 def create_by_parent(parent, tag):
     """Create a display name string from tag type.
 
-    Signature from decompiled __pyx_pw_8template_1create_by_parent at 0x0001d248.
+    Signature from __pyx_pw_8template_1create_by_parent at 0x0001d248.
 
     Args:
         parent: tkinter Canvas (or widget)

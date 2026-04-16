@@ -3,7 +3,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -20,13 +28,14 @@ The IPK is a ZIP archive with a specific directory layout that the iCopy-X
 device can install.  This script:
 
   1. Copies our Python UI modules (src/lib/*.py) into lib/
-  2. Copies Python middleware modules (src/middleware/*.py) into lib/
-  3. Copies JSON screen definitions (src/screens/*.json) into screens/
-  4. Copies Python main modules (src/main/*.py) into main/
-  5. Includes build/ artifacts (PM3 client, lua.zip, install.so)
-  6. Includes resources (audio, fonts, images, firmware)
-  7. Includes plugins
-  8. Bundles everything into a .ipk (ZIP)
+  2. Copies JSON screen definitions (src/screens/*.json) into screens/
+  3. Copies middleware .so files from orig_so/lib/ — but EXCLUDES any .so
+     whose module has been replaced by a .py file (Python .so wins over .py
+     when both exist, so we must NOT ship the replaced .so)
+  4. Copies the main-level .so files from orig_so/main/
+  5. Includes the device_so/ files (install.so, version.so/version_universal.py,
+     proxmark3 binary)
+  6. Bundles everything into a .ipk (ZIP)
 
 Usage:
     python tools/build_ipk.py [--sn SERIAL] [--output FILE] [--dry-run]
@@ -48,7 +57,10 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_LIB = os.path.join(REPO_ROOT, "src", "lib")
 SRC_MIDDLEWARE = os.path.join(REPO_ROOT, "src", "middleware")
 SRC_SCREENS = os.path.join(REPO_ROOT, "src", "screens")
+ORIG_SO_LIB = os.path.join(REPO_ROOT, "orig_so", "lib")
+ORIG_SO_MAIN = os.path.join(REPO_ROOT, "orig_so", "main")
 BUILD_DIR = os.path.join(REPO_ROOT, "build")
+DEVICE_SO = os.path.join(REPO_ROOT, "device_so")  # legacy fallback
 RES_DIR = os.path.join(REPO_ROOT, "res")
 DATA_DIR = os.path.join(REPO_ROOT, "data")
 PLUGINS_DIR = os.path.join(REPO_ROOT, "plugins")
@@ -179,6 +191,25 @@ def collect_screen_jsons(src_screens_dir):
     return pairs
 
 
+def collect_kept_so(orig_lib_dir):
+    """Return list of (src_path, ipk_path) for .so files NOT replaced."""
+    pairs = []
+    if not os.path.isdir(orig_lib_dir):
+        print(f"WARNING: {orig_lib_dir} not found — no .so files will be included")
+        return pairs
+    for fname in sorted(os.listdir(orig_lib_dir)):
+        if not fname.endswith(".so"):
+            continue
+        module_name = fname[:-3]  # strip .so
+        if module_name in REPLACED_SO_MODULES:
+            continue
+        pairs.append((
+            os.path.join(orig_lib_dir, fname),
+            f"lib/{fname}",
+        ))
+    return pairs
+
+
 def collect_main_py(src_main_dir):
     """Return list of (src_path, ipk_path) for Python files in src/main/."""
     pairs = []
@@ -190,6 +221,24 @@ def collect_main_py(src_main_dir):
                 os.path.join(src_main_dir, fname),
                 f"main/{fname}",
             ))
+    return pairs
+
+
+def collect_main_so(orig_main_dir):
+    """Return list of (src_path, ipk_path) for main-level .so files NOT replaced."""
+    pairs = []
+    if not os.path.isdir(orig_main_dir):
+        return pairs
+    for fname in sorted(os.listdir(orig_main_dir)):
+        if not fname.endswith(".so"):
+            continue
+        module_name = fname[:-3]  # strip .so
+        if module_name in REPLACED_MAIN_MODULES:
+            continue
+        pairs.append((
+            os.path.join(orig_main_dir, fname),
+            f"main/{fname}",
+        ))
     return pairs
 
 
@@ -272,15 +321,26 @@ def collect_plugins(plugins_dir):
     return pairs
 
 
-def collect_pm3_artifacts(include_flash=True):
-    """Return list of (src_path, ipk_path) for PM3 binaries from build/.
+def collect_device_so(device_so_dir, serial_number, include_flash=True):
+    """Return list of (src_path, ipk_path) for device binaries.
 
-    Flash IPK: iceman PM3 client + Lua 5.4 scripts (from Docker build)
-    No-flash IPK: factory PM3 client + Lua 5.1 scripts (checked into repo)
-    Both ship as pm3/proxmark3 and pm3/lua.zip inside the IPK.
+    Looks for PM3 client binary and lua.zip in:
+      1. build/          (Docker pipeline output — preferred)
+      2. device_so/      (legacy fallback)
+
+    Ships proxmark3 binary and lua.zip (PM3 LUA scripts).
+
+    Lua version matching:
+      - Flash IPK (include_flash=True):  build/lua.zip (iceman Lua 5.4)
+      - No-flash IPK (include_flash=False): build/factory_lua.zip (factory Lua 5.1)
+      Both are shipped as pm3/lua.zip inside the IPK — the installer
+      extracts whatever is bundled.
     """
     pairs = []
 
+    # proxmark3 binary -> pm3/proxmark3
+    # Flash IPK: iceman client (build/proxmark3 from Docker)
+    # No-flash IPK: factory client (build/factory_proxmark3, checked into repo)
     if include_flash:
         pm3_build = os.path.join(BUILD_DIR, "proxmark3")
         if os.path.exists(pm3_build):
@@ -348,7 +408,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     When trojan=True, the IPK includes two extra ARM binaries required by
     the original firmware's DRM check:
       - lib/version.so   — universal bypass (mirrors running device's SN)
-      - main/install.so  — genuine file copier from build/
+      - main/install.so  — genuine file copier from device_so/
     This allows the IPK to be installed via USB on a device still running
     the original firmware.  See docs/HOWTO-JAILBREAK.md.
 
@@ -359,7 +419,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     existing vanilla PM3 firmware.
     """
     # Use an ordered dict keyed by ipk_path so later entries override earlier
-    # Use an ordered dict keyed by ipk_path so later entries override earlier.
+    # ones (e.g. device_so/install.so overrides orig_so/main/install.so).
     manifest_map = {}
 
     def _add(pairs):
@@ -374,18 +434,25 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     # 1. Python UI modules (src/lib/*.py -> lib/*.py)
     _add(collect_py_modules(SRC_LIB))
 
-    # 2. Python middleware modules (src/middleware/*.py -> lib/*.py)
+    # 1b. Python middleware modules (src/middleware/*.py -> lib/*.py)
     _add(collect_middleware_modules(SRC_MIDDLEWARE))
 
-    # 3. JSON screen definitions (src/screens/*.json -> screens/*.json)
+    # 2. JSON screen definitions (src/screens/*.json -> screens/*.json)
     _add(collect_screen_jsons(SRC_SCREENS))
 
-    # 4. Python main-level modules (src/main/*.py -> main/*.py)
+    # 3. Kept middleware .so files (orig_so/lib/*.so, minus replaced ones)
+    _add(collect_kept_so(ORIG_SO_LIB))
+
+    # 4a. Python main-level modules (src/main/*.py -> main/*.py)
     _add(collect_main_py(SRC_MAIN))
+
+    # 4b. Kept main-level .so files (orig_so/main/*.so, minus replaced ones)
+    _add(collect_main_so(ORIG_SO_MAIN))
 
     # 5. Resources (res/audio, res/font, res/img, res/firmware if flash enabled)
     resources = collect_resources(RES_DIR)
     if not include_flash:
+        # Strip firmware files from non-flash variant
         resources = [(s, p) for s, p in resources
                      if not p.startswith("res/firmware/")]
         print(f"  (--no-flash: excluded res/firmware/ from IPK)")
@@ -394,11 +461,11 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     # 6. Data files (data/conf.ini)
     _add(collect_data(DATA_DIR))
 
-    # 7. Plugins (plugins/*/ -> plugins/*/)
+    # 6b. Plugins (plugins/*/ -> plugins/*/)
     _add(collect_plugins(PLUGINS_DIR))
 
-    # 8. PM3 client + lua.zip from build/
-    _add(collect_pm3_artifacts(include_flash=include_flash))
+    # 7. Device binaries (device_so/) — added LAST so they override orig_so
+    _add(collect_device_so(DEVICE_SO, serial_number, include_flash=include_flash))
 
     # 8. Trojan mode: inject ARM binaries to pass original firmware DRM
     if trojan:
@@ -413,7 +480,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
         _add([(UNIVERSAL_VERSION_SO, "lib/version.so")])
 
         # Genuine install.so — original ARM file copier
-        genuine_install = os.path.join(BUILD_DIR, "install.so")
+        genuine_install = os.path.join(DEVICE_SO, "install.so")
         if not os.path.exists(genuine_install):
             print(f"ERROR: {genuine_install} not found.")
             return False
@@ -473,6 +540,15 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     print(f"  Plugins:         {plugin_count}")
     print(f"  Kept .so files:  {kept_so_count}")
     print(f"  Other:           {other_count}")
+    print(f"  Excluded .so:    {len(REPLACED_SO_MODULES)} (replaced by .py)")
+    print()
+
+    # Verify excluded .so files
+    print("Excluded .so modules (replaced by .py):")
+    for mod in sorted(REPLACED_SO_MODULES):
+        so_path = os.path.join(ORIG_SO_LIB, f"{mod}.so")
+        exists = os.path.exists(so_path)
+        print(f"  {mod}.so {'(found, excluded)' if exists else '(not present)'}")
     print()
 
     # Generate build version stamp

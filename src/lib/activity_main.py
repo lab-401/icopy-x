@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -27,8 +35,8 @@ AutoExceptCatchActivity, SnakeGameActivity, WarningT5XActivity,
 WarningT5X4X05KeyEnterActivity).
 
 Replaces relevant classes from actmain.so (252KB, 129 functions)
-and activity_main.so.  Each class matches the decompiled behavior
-documented in decompiled/SUMMARY.md and the UI mapping docs.
+and activity_main.so.  Each class matches the original behavior
+documented in the UI mapping docs.
 
 Import convention: ``from lib.activity_main import BacklightActivity`` etc.
 """
@@ -67,7 +75,7 @@ from lib._constants import (
 # Simulatable tag type IDs — derived from SIM_MAP (audit finding 3)
 # =====================================================================
 # Built dynamically from SIM_MAP type IDs rather than hardcoding.
-# SIM_MAP is the ground truth (decompiled from activity_main.so simulate_map).
+# SIM_MAP is the ground truth (from activity_main.so simulate_map).
 # Deferred initialization: set after SIM_MAP is defined (line ~4670).
 _SIMULATE_TYPES = frozenset()
 
@@ -550,7 +558,7 @@ class SettingsMenuActivity(BaseActivity):
 class SleepModeActivity(BaseActivity):
     """Sleep mode -- dims screen, any key wakes.
 
-    From decompiled actmain.so SleepModeActivity:
+    From actmain.so SleepModeActivity:
     - onCreate: sets backlight to 0, fills screen black, no title/buttons
     - onKeyEvent: any key restores backlight and finishes
     - onDestroy: restores previous backlight level
@@ -637,7 +645,7 @@ class SleepModeActivity(BaseActivity):
 class AboutActivity(BaseActivity):
     """Device information display -- 2 pages (info + update instructions).
 
-    From decompiled actmain.so AboutActivity and UI mapping docs:
+    From actmain.so AboutActivity and UI mapping docs:
 
     Page 0 (Device Info):
         - 6 lines from resources.itemmsg: aboutline1..aboutline6
@@ -878,7 +886,7 @@ class AboutActivity(BaseActivity):
     def _check_update(self):
         """Launch UpdateActivity for firmware update.
 
-        Ground truth (decompiled activity_update.so):
+        Ground truth (activity_update.so):
         OK from About page 2 pushes UpdateActivity which has its own
         UI: "Start" confirmation → progress → result.  The install
         must NOT run inline on AboutActivity — it blocks the UI thread
@@ -898,7 +906,7 @@ class AboutActivity(BaseActivity):
 class WarningDiskFullActivity(BaseActivity):
     """Disk full warning -- shows message, offers to clear dump files.
 
-    From decompiled actmain.so WarningDiskFullActivity:
+    From actmain.so WarningDiskFullActivity:
     - onCreate: setTitle("Warning"), show disk_full_tips, buttons Ignore/Clear
     - onKeyEvent: M1 = finish (ignore), M2/OK = startClear
     - startClear: uses shutil.rmtree on dump directories, shows clearing toast
@@ -909,7 +917,7 @@ class WarningDiskFullActivity(BaseActivity):
 
     ACT_NAME = 'warning_diskfull'
 
-    # Default path for USB storage (from decompiled constants)
+    # Default path for USB storage (from original constants)
     UPAN_PATH = '/mnt/upan'
     DUMP_DIRS = ['dump', 'dumps', 'data']
 
@@ -3510,7 +3518,7 @@ class SniffActivity(BaseActivity):
             FB captures sniff_20260403:
                 Decoding: "TraceLen: 9945" + "Decoding... 288/9945" + blue ProgressBar
                 Result: "TraceLen: 9945" + "UID: 2CADC272" + "Key1: FFFFFFFFFFFF"
-            Ghidra decompilation (sniff_ghidra_raw.txt line 4548):
+            Ghidra analysis (sniff_ghidra_raw.txt line 4548):
                 parserHfTraceLen() takes ZERO args — reads executor cache internally
             Original .so QEMU (TEST_TARGET=original):
                 State 5: content includes 'Decoding...\\n0/9945', 'UID: 2CADC272', 'Key1: FFFFFFFFFFFF'
@@ -4801,7 +4809,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         self.scan_infos  — bool/dict: scan result info dict (or False)
         self.place       — bool: True when in "place new tag" prompt state
 
-    Key behavior (from Ghidra ~900-line decompilation of onKeyEvent):
+    Key behavior (from Ghidra ~900-line analysis of onKeyEvent):
         isbusy() == True:
             PWR: finish (exit)
             All other keys: ignored
@@ -4889,7 +4897,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
     def onKeyEvent(self, key):
         """State-dependent key dispatch.
 
-        From Ghidra decompilation (~900 lines):
+        From Ghidra analysis (~900 lines):
             CHECK 1: isbusy() — if True, only PWR works (finish)
             CHECK 2: scan_found — determines branch (scan phase vs post-scan)
 

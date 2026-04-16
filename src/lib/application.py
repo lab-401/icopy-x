@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -18,8 +26,6 @@ Exports:
     setWindows(window)  — optional pre-configuration of the Tk root window
     startApp()          — create Tk root, init actstack, push MainActivity,
                           wire keymap, enter mainloop (blocks)
-
-Source: decompiled/application_ghidra_raw.txt (7361 lines, 2 public functions)
 
 String table (from Ghidra):
     setWindows: tkinter, platform, Windows, ctypes, windll, user32, shcore,
@@ -40,7 +46,6 @@ import platform as _platform
 _root = None
 _window_config = None
 
-
 def setWindows(window=None):
     """Configure window properties before startApp().
 
@@ -56,7 +61,7 @@ def setWindows(window=None):
             cursor    (str):   Cursor style ('' to hide)
             resizable (bool):  Window resizable, default False
 
-    Platform behaviour (from decompiled .so):
+    Platform behaviour (from the original .so):
         Windows: sets DPI awareness via ctypes.windll (shcore/user32)
         Linux/ARM: DPI setup is a no-op (device has fixed 240x240 LCD)
     """
@@ -80,7 +85,6 @@ def setWindows(window=None):
             except Exception:
                 pass
 
-
 def startApp():
     """Bootstrap and launch the iCopy-X application.
 
@@ -88,7 +92,7 @@ def startApp():
     pushes MainActivity, wires keymap auto-dispatch on stack changes,
     and enters mainloop.  Blocks until the application exits.
 
-    This reproduces the exact sequence from the decompiled startApp():
+    This reproduces the exact sequence from the original startApp():
         1. import tkinter → Tk() → configure geometry/font/cursor
         2. import actstack → actstack.init(root)
         3. import actmain → actstack.start_activity(actmain.MainActivity)

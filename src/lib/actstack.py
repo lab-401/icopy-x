@@ -1,7 +1,15 @@
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
-# Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
+# Initial author: ETOILE401 SAS & https://github.com/quantum-x/ as of April 16, 2026
+#
+# Since this date, each contribution is under the copyright of its respective author.
+#
+# Copyright of each contribution is tracked by the Git history. See the output of git shortlog -nse for a full list or git log --pretty=short --follow <path/to/sourcefile> |git shortlog -ne to track a specific file.
+#
+# A mailmap is maintained to map author and committer names and email addresses to canonical names and email addresses.
+# If by accident a copyright was removed from a file and is not directly deducible from the Git history, please submit a PR.
+#
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -17,9 +25,9 @@
 Provides the Activity base class, LifeCycle state machine, and the
 module-level navigation stack that manages activity push/pop transitions.
 
-Decompilation source: actstack.so (125KB, 93 functions, 15 Activity +
+Source: actstack.so (125KB, 93 functions, 15 Activity +
 9 LifeCycle methods).  Every lifecycle transition order matches the
-original firmware exactly as documented in decompiled/SUMMARY.md §2.
+original firmware.
 
 Import convention: ``from lib.actstack import Activity, start_activity``
 or (on-device) ``import actstack`` when ``lib/`` is on sys.path.
@@ -42,7 +50,7 @@ class LifeCycle:
     All state changes are protected by a threading.RLock so that
     concurrent readers (e.g. background tasks) see consistent values.
 
-    Internal attribute names match the decompiled binary:
+    Internal attribute names match the original binary:
         _life_created, _life_resumed, _life_paused, _life_destroyed
         _life_lock (RLock)
     """
@@ -97,7 +105,7 @@ class LifeCycle:
     def _set_life_in_lock(self, attr: str, value: bool):
         """Set a lifecycle flag under the RLock.
 
-        Matches the decompiled ``_set_life_in_lock(self, attr, value)``
+        Matches the original ``_set_life_in_lock(self, attr, value)``
         pattern which acquires ``_life_lock`` before writing.
         """
         with self._life_lock:
@@ -114,7 +122,7 @@ class Activity:
     Subclassed by BaseActivity (actbase.py) which adds UI rendering
     (title bar, button bar, busy state, battery bar).
 
-    Instance variables match the decompiled binary:
+    Instance variables match the original binary:
         _canvas  — tkinter Canvas instance (created per-activity)
         life     — LifeCycle instance
         _bundle  — bundle dict passed to onCreate
@@ -163,7 +171,7 @@ class Activity:
     def start(self, bundle=None):
         """Initialize and start the activity.
 
-        Lifecycle order (from decompiled Activity.start):
+        Lifecycle order (from original Activity.start):
             1. Create canvas (240x240, bg, highlightthickness=0, bd=0)
             2. Assign to self._canvas
             3. canvas.grid() — make visible
@@ -202,7 +210,7 @@ class Activity:
 
         Wraps the call in try/except; on exception calls onActExcept.
         Uses ``traceback.format_exc()`` for error reporting (matches
-        the decompiled ``catch_run`` wrapper).
+        the original ``catch_run`` wrapper).
         """
         activity = self  # closure reference
 
@@ -281,7 +289,7 @@ def _create_canvas():
 def start_activity(activity_cls, bundle=None):
     """Push a new activity onto the stack.
 
-    Lifecycle order (from decompiled start_activity):
+    Lifecycle order (from original start_activity):
         1. new_act = activity_cls(bundle)
         2. If stack not empty:
            a. prev_act = _ACTIVITY_STACK[-1]
@@ -306,7 +314,7 @@ def start_activity(activity_cls, bundle=None):
 def finish_activity():
     """Pop the current activity from the stack.
 
-    Lifecycle order (from decompiled finish_activity):
+    Lifecycle order (from original finish_activity):
         1. act = _ACTIVITY_STACK.pop()
         2. act.onPause()
         3. act.life.paused = True
@@ -362,7 +370,7 @@ def get_current_activity():
 def get_activity_pck():
     """Return the activity stack (list).
 
-    Named to match the decompiled export ``get_activity_pck``.
+    Named to match the original export ``get_activity_pck``.
     """
     return _ACTIVITY_STACK
 
@@ -379,7 +387,7 @@ def get_stack_size():
 
 # -- Registration stubs ------------------------------------------------
 # actbase.BaseActivity calls register(self) in __init__ and
-# unregister(self) in onDestroy.  The decompiled actstack.so does NOT
+# unregister(self) in onDestroy.  The original actstack.so does NOT
 # export these symbols — they are likely lightweight bookkeeping that
 # actbase performs via the stack list itself.  We provide no-op stubs
 # so that actbase can call them without error.
