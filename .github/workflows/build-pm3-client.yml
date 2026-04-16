@@ -10,27 +10,10 @@ on:
 
 jobs:
   build:
+    name: Cross-compile PM3 Client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install ARM cross-compiler
-        run: |
-          # Pin existing ubuntu sources to amd64 only, add armhf from ports
-          sudo dpkg --add-architecture armhf
-          . /etc/os-release
-          # Remove all existing sources and write clean ones
-          sudo rm -f /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources
-          sudo tee /etc/apt/sources.list > /dev/null <<SOURCES
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME} main restricted universe
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-updates main restricted universe
-          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-security main restricted universe
-          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME} main restricted universe
-          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-updates main restricted universe
-          SOURCES
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
-          arm-linux-gnueabihf-gcc --version | head -1
 
       - name: Resolve PM3 tag
         id: tag
@@ -44,41 +27,80 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Building PM3 client from: $TAG"
 
-      - name: Clone and patch PM3
+      - name: Cross-compile in xenial container (glibc 2.23 target)
+        env:
+          PM3_TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          git clone --depth 1 --branch ${{ steps.tag.outputs.tag }} https://github.com/RfidResearchGroup/proxmark3.git /tmp/pm3
-          cd /tmp/pm3
-          for p in ${{ github.workspace }}/tools/patches/pm3_*.patch; do
-            [ -f "$p" ] || continue
-            if git apply --check "$p" 2>/dev/null; then
-              git apply "$p" && echo "Applied: $(basename $p)"
-            else
-              echo "Skipped: $(basename $p)"
-            fi
-          done
-
-      - name: Build PM3 client
-        run: |
-          cd /tmp/pm3
-          make -j$(nproc) client \
-            PLATFORM=PM3ICOPYX \
-            CC=arm-linux-gnueabihf-gcc \
-            CXX=arm-linux-gnueabihf-g++ \
-            LD=arm-linux-gnueabihf-ld \
-            "AR=arm-linux-gnueabihf-ar rcs" \
-            RANLIB=arm-linux-gnueabihf-ranlib \
-            cpu_arch=arm \
-            SKIPQT=1 SKIPPYTHON=1 SKIPREVENGTEST=1 SKIPGD=1 SKIPBT=1 SKIPREADLINE=1
-          file client/proxmark3
-          echo "GLIBC max: $(objdump -T client/proxmark3 | grep -oP 'GLIBC_\d+\.\d+' | sort -t. -k2,2n | tail -1)"
-
-      - name: Package artifacts
-        run: |
+          # The iCopy-X runs Ubuntu 16.04 (glibc 2.23). We MUST build inside
+          # a xenial container so the binary links against glibc 2.23.
+          # GCC 7 from ubuntu-toolchain-r PPA supports latest PM3 C11 features.
           mkdir -p /tmp/pm3-out
-          cp /tmp/pm3/client/proxmark3 /tmp/pm3-out/
-          cd /tmp/pm3/client && zip -r /tmp/pm3-out/lua.zip luascripts/ lualibs/
+
+          docker run --rm \
+            -v /tmp/pm3-out:/out \
+            -v ${{ github.workspace }}/tools/patches:/patches:ro \
+            ubuntu:16.04 bash -c '
+            set -e
+
+            cat > /etc/apt/sources.list << SRCEOF
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial main restricted universe
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted universe
+          SRCEOF
+
+            dpkg --add-architecture armhf
+            apt-get update -qq
+            apt-get install -y -qq software-properties-common
+            add-apt-repository -y ppa:ubuntu-toolchain-r/test
+            apt-get update -qq
+            apt-get install -y -qq \
+              gcc-7-arm-linux-gnueabihf g++-7-arm-linux-gnueabihf \
+              make pkg-config git zip \
+              libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
+
+            update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-7 100
+            update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-7 100
+            echo "GCC: $(arm-linux-gnueabihf-gcc --version | head -1)"
+
+            git clone --depth 1 --branch '"$PM3_TAG"' https://github.com/RfidResearchGroup/proxmark3.git /tmp/pm3
+            cd /tmp/pm3
+
+            for p in /patches/pm3_*.patch; do
+              [ -f "$p" ] || continue
+              if git apply --check "$p" 2>/dev/null; then
+                git apply "$p" && echo "  Applied: $(basename $p)"
+              else
+                echo "  Skipped: $(basename $p)"
+              fi
+            done
+
+            export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig
+            export PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig
+
+            make -j$(nproc) client \
+              PLATFORM=PM3ICOPYX \
+              CC=arm-linux-gnueabihf-gcc \
+              CXX=arm-linux-gnueabihf-g++ \
+              LD=arm-linux-gnueabihf-ld \
+              "AR=arm-linux-gnueabihf-ar rcs" \
+              RANLIB=arm-linux-gnueabihf-ranlib \
+              cpu_arch=arm \
+              SKIPQT=1 SKIPPYTHON=1 SKIPREVENGTEST=1 SKIPGD=1 SKIPBT=1 SKIPREADLINE=1
+
+            cp client/proxmark3 /out/proxmark3
+            cd client && zip -r /out/lua.zip luascripts/ lualibs/
+            echo "Binary: $(file /out/proxmark3)"
+            echo "GLIBC max: $(objdump -T /out/proxmark3 | grep -oP "GLIBC_\d+\.\d+" | sort -t. -k2,2n | tail -1)"
+            echo "lua.zip: $(du -h /out/lua.zip | cut -f1)"
+          '
+
           echo "${{ steps.tag.outputs.tag }}" > /tmp/pm3-out/VERSION
-          ls -lh /tmp/pm3-out/
+          file /tmp/pm3-out/proxmark3
+          if ! file /tmp/pm3-out/proxmark3 | grep -qi "ARM"; then
+            echo "::error::Binary is NOT ARM!"
+            exit 1
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
