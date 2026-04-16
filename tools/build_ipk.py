@@ -33,8 +33,7 @@ device can install.  This script:
      whose module has been replaced by a .py file (Python .so wins over .py
      when both exist, so we must NOT ship the replaced .so)
   4. Copies the main-level .so files from orig_so/main/
-  5. Includes the device_so/ files (install.so, version.so/version_universal.py,
-     proxmark3 binary)
+  5. Includes build/ artifacts (PM3 client, lua.zip, install.so)
   6. Bundles everything into a .ipk (ZIP)
 
 Usage:
@@ -60,7 +59,6 @@ SRC_SCREENS = os.path.join(REPO_ROOT, "src", "screens")
 ORIG_SO_LIB = os.path.join(REPO_ROOT, "orig_so", "lib")
 ORIG_SO_MAIN = os.path.join(REPO_ROOT, "orig_so", "main")
 BUILD_DIR = os.path.join(REPO_ROOT, "build")
-DEVICE_SO = os.path.join(REPO_ROOT, "device_so")  # legacy fallback
 RES_DIR = os.path.join(REPO_ROOT, "res")
 DATA_DIR = os.path.join(REPO_ROOT, "data")
 PLUGINS_DIR = os.path.join(REPO_ROOT, "plugins")
@@ -321,12 +319,10 @@ def collect_plugins(plugins_dir):
     return pairs
 
 
-def collect_device_so(device_so_dir, serial_number, include_flash=True):
+def collect_build_binaries(serial_number, include_flash=True):
     """Return list of (src_path, ipk_path) for device binaries.
 
-    Looks for PM3 client binary and lua.zip in:
-      1. build/          (Docker pipeline output — preferred)
-      2. device_so/      (legacy fallback)
+    Looks for PM3 client binary and lua.zip in build/ (Docker pipeline output).
 
     Ships proxmark3 binary and lua.zip (PM3 LUA scripts).
 
@@ -408,7 +404,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     When trojan=True, the IPK includes two extra ARM binaries required by
     the original firmware's DRM check:
       - lib/version.so   — universal bypass (mirrors running device's SN)
-      - main/install.so  — genuine file copier from device_so/
+      - main/install.so  — genuine file copier from build/
     This allows the IPK to be installed via USB on a device still running
     the original firmware.  See docs/HOWTO-JAILBREAK.md.
 
@@ -419,7 +415,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     existing vanilla PM3 firmware.
     """
     # Use an ordered dict keyed by ipk_path so later entries override earlier
-    # ones (e.g. device_so/install.so overrides orig_so/main/install.so).
+    # ones (e.g. build/install.so overrides orig_so/main/install.so).
     manifest_map = {}
 
     def _add(pairs):
@@ -464,8 +460,8 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     # 6b. Plugins (plugins/*/ -> plugins/*/)
     _add(collect_plugins(PLUGINS_DIR))
 
-    # 7. Device binaries (device_so/) — added LAST so they override orig_so
-    _add(collect_device_so(DEVICE_SO, serial_number, include_flash=include_flash))
+    # 7. Device binaries (build/) — added LAST so they override orig_so
+    _add(collect_build_binaries(serial_number, include_flash=include_flash))
 
     # 8. Trojan mode: inject ARM binaries to pass original firmware DRM
     if trojan:
@@ -480,7 +476,7 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
         _add([(UNIVERSAL_VERSION_SO, "lib/version.so")])
 
         # Genuine install.so — original ARM file copier
-        genuine_install = os.path.join(DEVICE_SO, "install.so")
+        genuine_install = os.path.join(BUILD_DIR, "install.so")
         if not os.path.exists(genuine_install):
             print(f"ERROR: {genuine_install} not found.")
             return False
