@@ -77,12 +77,9 @@ jobs:
             # 2. Non-constant static initializer in cmdhfaliro.c
             sed -i "s/static const uint8_t protocol_marker\[\]/const uint8_t protocol_marker[]/" client/src/cmdhfaliro.c 2>/dev/null || true
             # 3. Enum case labels in cmdhfvas.c — replace enum refs with literal values
-            if [ -f client/src/cmdhfvas.c ] && grep -q "case VAS_STATUS" client/src/cmdhfvas.c; then
-              # Extract enum values and inline them
-              for sym in $(grep -oP "case \KVAS_STATUS_\w+" client/src/cmdhfvas.c | sort -u); do
-                val=$(grep -rP "^\s*${sym}\s*=" client/src/cmdhfvas.h client/include/ 2>/dev/null | grep -oP "0x[0-9A-Fa-f]+" | head -1)
-                [ -n "$val" ] && sed -i "s/case ${sym}:/case ${val}: \/\* ${sym} \*\//" client/src/cmdhfvas.c
-              done
+            # 3. static const used in switch cases — convert to #define
+            if [ -f client/src/cmdhfvas.c ]; then
+              sed -i "s/^static const uint16_t \(VAS_STATUS_[A-Z_]*\) = \(0x[0-9A-Fa-f]*\);/#define \1 \2/" client/src/cmdhfvas.c
             fi
             echo "GCC 5.4 compat fixups applied"
 
