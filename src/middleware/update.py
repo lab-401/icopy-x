@@ -15,6 +15,7 @@
 """Firmware update management — IPK search, validation, and installation.
 
 OSS reimplementation of update functions called by AboutActivity._check_update().
+Binary source: activity_update.so (search, checkPkg, unpkg, install methods)
 Archive reference: /home/qx/archive/ui/activities/update.py
 
 The AboutActivity calls these module-level functions:
@@ -212,6 +213,7 @@ def _fallback_install(callback=None):
     Copies extracted files to the new app directory. The device's
     ipk_starter.py will swap ipk_app_new → ipk_app_main on next boot.
 
+    Ground truth: archive/ui/activities/update.py _fallbackInstall()
     """
     dest_unpkg = '/home/pi/unpkg'
     dest_new = '/home/pi/ipk_app_new'
@@ -236,6 +238,7 @@ def _fallback_install(callback=None):
 
 # =====================================================================
 # Firmware component check functions (from original update.so)
+# Ground truth: V1090_MODULE_AUDIT.txt lines 2916+
 # =====================================================================
 
 def check_all():

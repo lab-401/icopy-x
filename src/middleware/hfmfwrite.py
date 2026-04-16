@@ -13,8 +13,13 @@
 ##########################################################################
 
 """hfmfwrite -- MIFARE Classic writer.
+
+Reimplemented from hfmfwrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 DRM gate (tagChk1) is BYPASSED — open-source implementation.
 
+Ground truth:
+    Decompiled:  decompiled/hfmfwrite_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hfmfwrite_strings.txt
     Spec:        docs/middleware-integration/6-write_spec.md (section 2)
     Trace:       docs/Real_Hardware_Intel/trace_write_activity_attrs_20260402.txt
 
@@ -375,6 +380,7 @@ def write_common(listener, infos, bundle):
     tagChk1(infos, bundle, {})
 
     # Step 1: Verify card present
+    # Ground truth: on legacy firmware, hf 14a info always detected the card
     # here because the field stayed active.  On iceman, the field may be off
     # and the first probe can fail.  Check the response content — if no UID
     # is found, the card isn't on the reader and we must not proceed to fchk
@@ -387,6 +393,7 @@ def write_common(listener, infos, bundle):
         return -1
 
     # Step 2: Gen1a detection
+    # Ground truth: Gen1a is confirmed ONLY when cgetblk 0 returns actual
     # block data WITHOUT error indicators.
     # Trace: standard card → "[#] wupC1 error\n[!!] Can't read block. error=-1"
     #        gen1a card   → "[+] Block 0: 2CADC272..." (actual block data)
@@ -411,6 +418,7 @@ def write_common(listener, infos, bundle):
         is_gen1a = True
 
     # Step 3: Key verification on TARGET card (only for standard path)
+    # Ground truth (trace_original_full_20260410.txt): the original firmware
     # ALWAYS runs fchk during write, even if keys are in the map from the
     # read phase.  The read-phase keys belong to the SOURCE card — the
     # TARGET card may have different keys.  Clear the map and re-check.
@@ -465,6 +473,7 @@ def write(listener, infos, bundle):
 def verify(infos, bundle):
     """Verify written card against source dump.
 
+    Ground truth (trace_write_activity_attrs_20260402.txt line 225-231,
     QEMU original trace — no rdbl/rdsc commands after cgetblk 0):
         verify() issues hf 14a info twice — once as a pre-check and once
         to extract the UID for comparison — then hf mf cgetblk 0.

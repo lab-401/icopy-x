@@ -15,9 +15,15 @@
 """Erase tag middleware — MF1 (Gen1a + standard) and T5577.
 
 Reimplements the erase logic from activity_main.so WipeTagActivity:
+    wipe_m1         (activity_main_strings.txt:21185)
+    wipe_magic_m1   (activity_main_strings.txt:21025)
+    wipe_std_m1     (activity_main_strings.txt:21073)
+    wipe_t5577      (activity_main_strings.txt:21101)
 
+Ground truth:
     Trace: docs/Real_Hardware_Intel/trace_erase_flow_20260330.txt
-    UI spec:
+    UI spec: docs/UI_Mapping/13_erase_tag/README.md
+    Binary: decompiled/activity_main_ghidra_raw.txt
 
 This module does NOT touch UI. It returns a result string that the
 activity uses to show the appropriate toast. Progress is reported
@@ -321,6 +327,7 @@ def erase_t5577():
 
     Binary source: WipeTagActivity.wipe_t5577
     Trace: trace_erase_flow_20260330.txt
+    Spec: docs/UI_Mapping/13_erase_tag/README.md lines 173-178
 
     Fallback chain:
         1. lf t55xx wipe (no password)

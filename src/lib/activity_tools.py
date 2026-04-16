@@ -16,6 +16,7 @@
 
 Source: activity_tools.so (DiagnosisActivity, ScreenTestActivity, ButtonTestActivity,
 SoundTestActivity, HFReaderTestActivity, LfReaderTestActivity, UsbPortTestActivity)
+Spec: docs/UI_Mapping/09_diagnosis/README.md
 
 Two-level menu architecture:
   Level 1 (ITEMS_MAIN): BigTextListView with "User diagnosis" / "Factory diagnosis"
@@ -80,7 +81,7 @@ COLOR_FAIL = COLOR_ACCENT
 class DiagnosisActivity(BaseActivity):
     """Hardware self-test coordinator.
 
-    Real device flow (from screenshots +
+    Real device flow (from screenshots + decompiled .so):
       1. ITEMS_MAIN: ListView with "User diagnosis" / "Factory diagnosis"
          No button labels. OK selects.
       2. TIPS: Canvas text "Press start button to start diagnosis."
@@ -177,6 +178,7 @@ class DiagnosisActivity(BaseActivity):
             self._main_listview.hide()
 
         # Show tips text.
+        # Ground truth: original state dump — font=monospace 15, (120,120),
         # fill=#1C6AEB, anchor=center.
         tips = resources.get_str('start_diagnosis_tips')
         canvas.delete(self._testing_tag)
@@ -194,6 +196,7 @@ class DiagnosisActivity(BaseActivity):
         self.setRightButton(resources.get_str('start'))
 
     # Path for flash memory test file — must exist before mem spiffs load.
+    # Ground truth: trace_misc_flows_session2_20260330.txt line 73.524
     _FLASH_TEST_FILE = '/tmp/test_pm3_mem.nikola'
 
     def _run_all_tests(self):
@@ -201,6 +204,7 @@ class DiagnosisActivity(BaseActivity):
 
         Source: diagnosis_menu_3..6 — shows "Testing with: \\n{name}"
         for each test. No buttons during testing.
+        Ground truth: trace_misc_flows_session2_20260330.txt (timing,
         command sequence, response parsing).
         Original .so state dump: font=monospace 15, text at (120, 120).
         """
@@ -216,6 +220,7 @@ class DiagnosisActivity(BaseActivity):
             canvas = self.getCanvas()
 
             # Ensure flash test file exists (2 bytes "NK").
+            # Ground truth: diagnosis_common.sh line 116.
             try:
                 import os
                 if not os.path.exists(self._FLASH_TEST_FILE):
@@ -228,6 +233,7 @@ class DiagnosisActivity(BaseActivity):
                 test_name = resources.get_str(name_key)
 
                 # Show "Testing with: \n{name}" on canvas.
+                # Ground truth: original state dump — font 15, fill=#1C6AEB,
                 # text='Testing with: \n{name}', (120, 120), anchor=center.
                 if canvas is not None:
                     def _show_testing(name=test_name):
@@ -247,12 +253,14 @@ class DiagnosisActivity(BaseActivity):
                         pass
 
                 # Execute test — no artificial delay.
+                # Ground truth: real device trace shows <0.1s between commands.
                 passed = False
                 value_str = ''
                 try:
                     import executor
                     if parse_type == 'flash':
                         # Flash memory: load + wipe.
+                        # Ground truth: trace shows exact command:
                         #   mem spiffs load f /tmp/test_pm3_mem.nikola o test_pm3_mem.nikola
                         ret = executor.startPM3Task(
                             'mem spiffs load f %s o test_pm3_mem.nikola'
@@ -320,6 +328,7 @@ class DiagnosisActivity(BaseActivity):
         Format: "HF Voltage  : √ (37V)" or "LF reader   : X"
         Title: "Diagnosis 1/1"
 
+        Ground truth positions (from original .so state dump):
           x = LIST_TEXT_X_NO_ICON (19)
           y = CONTENT_Y0 + i * LIST_ITEM_H + LIST_ITEM_H // 2
             = 60, 100, 140, 180, 220
@@ -341,6 +350,7 @@ class DiagnosisActivity(BaseActivity):
         for i, (name, passed, value_str) in enumerate(self._test_results):
             mark = '\u221a' if passed else 'X'  # √ or X
             # Preserve trailing spaces in name for column alignment.
+            # Ground truth: original .so text='HF Voltage  : √ (37V)'
             line = '%s: %s' % (name, mark)
             if value_str:
                 line += ' %s' % value_str
@@ -433,6 +443,8 @@ class ScreenTestActivity(BaseActivity):
     Cycles through test colors: blue -> green -> white -> green -> black.
     User manually confirms pass/fail via M1 (Fail) / M2 (Pass).
 
+    Binary source: activity_tools.so ScreenTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'screen_test'
@@ -563,6 +575,8 @@ class ButtonTestActivity(BaseActivity):
     Displays button state indicators. All buttons must be pressed within
     timeout. Result: all pressed = Pass, timeout = Fail.
 
+    Binary source: activity_tools.so ButtonTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'button_test'
@@ -675,6 +689,8 @@ class SoundTestActivity(BaseActivity):
 
     Plays audio.playStartExma() and asks user to confirm pass/fail.
 
+    Binary source: activity_tools.so SoundTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'sound_test'
@@ -750,6 +766,8 @@ class HFReaderTestActivity(BaseActivity):
 
     Shows tips, runs PM3 command, reports pass/fail.
 
+    Binary source: activity_tools.so HFReaderTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'hf_reader_test'
@@ -837,6 +855,8 @@ class HFReaderTestActivity(BaseActivity):
 class LfReaderTestActivity(BaseActivity):
     """LF antenna reader test via 'lf sea' + optional 'lf em 410x_watch'.
 
+    Binary source: activity_tools.so LfReaderTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'lf_reader_test'
@@ -947,6 +967,8 @@ class UsbPortTestActivity(BaseActivity):
 
     Checks for USB OTG connection at OS level.
 
+    Binary source: activity_tools.so UsbPortTestActivity
+    Spec: docs/UI_Mapping/09_diagnosis/README.md section 9
     """
 
     ACT_NAME = 'usb_port_test'

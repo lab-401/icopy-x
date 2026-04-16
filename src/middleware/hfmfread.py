@@ -13,9 +13,14 @@
 ##########################################################################
 
 """hfmfread -- MIFARE Classic block/sector reader.
+
+Reimplemented from hfmfread.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 Full implementation — all exported functions for read AND write flows.
 
-    Audit:       docs/
+Ground truth:
+    Decompiled:  decompiled/hfmfread_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hfmfread_strings.txt
+    Audit:       docs/V1090_MODULE_AUDIT.txt
     Spec:        docs/middleware-integration/5-read_spec.md (section 2)
 """
 

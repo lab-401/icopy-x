@@ -18,7 +18,7 @@ Exports:
     main()  — orchestrate full application startup: mount storage, prepare
               PM3, start RemoteTaskManager, launch UI via application.startApp()
 
-
+Source: strings extracted from orig_so/main/main.so (57KB ARM ELF)
 
 String table (from binary):
     application, rftask, gadget_linux, os, subprocess, RemoteTaskManager,
@@ -45,6 +45,7 @@ def _bootstrap_gd32():
     ~4 seconds of power-on.  This function runs BEFORE any other init
     (PM3, gadget, etc.) to beat the timeout.
 
+    Ground truth: logic analyser trace from
     https://github.com/iCopy-X-Community/icopyx-teardown/blob/main/stm32_commands/README.md
 
     Boot sequence (exact order from trace):

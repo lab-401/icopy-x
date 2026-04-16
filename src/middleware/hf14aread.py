@@ -13,9 +13,13 @@
 ##########################################################################
 
 """hf14aread -- Generic ISO 14443A reader.
+
+Reimplemented from hf14aread.so (iCopy-X v1.0.90).
 For unknown/generic 14443A tags — saves infos to text file (no PM3 dump).
 
-    Audit:    docs/
+Ground truth:
+    Strings:  docs/v1090_strings/hf14aread_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import os

@@ -18,7 +18,9 @@ This module shadows iclassread.so and handles the iCLASS read flow
 using our hficlass.py middleware. The original .so has compatibility
 issues when combined with our Python middleware modules.
 
+Ground truth:
     Archive: archive/lib_transliterated/iclassread.py
+    Strings: docs/v1090_strings/iclassread_strings.txt
 
 API matches original:
     read(infos) -> dict
@@ -66,6 +68,7 @@ TIMEOUT = 30000
 _KW_DUMP_SUCCESS = 'saving dump file'
 
 # iclassread module state -- read.so accesses these after read() returns
+# Ground truth: read.so uses iclassread.FILE_READ, iclassread.KEY_READ
 # to build the callback dict {'bundle': {'file': FILE_READ, 'key': KEY_READ}}
 FILE_READ = ''
 KEY_READ = ''

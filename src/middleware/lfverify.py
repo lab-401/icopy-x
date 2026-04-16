@@ -13,8 +13,13 @@
 ##########################################################################
 
 """lfverify -- LF write verification.
+
+Reimplemented from lfverify.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Archive:    archive/lib_transliterated/lfverify.py
     Spec:       docs/middleware-integration/6-write_spec.md
+    Strings:    docs/v1090_strings/lfverify_strings.txt
 
 API:
     verify(typ, uid_par, raw_par) -> int
@@ -114,6 +119,7 @@ def verify_t55xx(file):
 def verify_em4x05(file):
     """Verify an EM4x05 tag against a dump file.
 
+    Ground truth: lfverify_strings.txt references verify4x05, readBlocks,
     data_hex, data2_hex, hex, rb, upper — reads blocks from tag, reads
     expected from binary dump file, compares hex-uppercased block data.
     """
@@ -172,6 +178,8 @@ def verify(typ, uid_par, raw_par):
     For clone types: scan_lfsea() + isTagFound() for tag presence, then
     lfread.READ[typ]() for tag-specific data, compare with uid_par/raw_par.
 
+    Ground truth:
+        lfverify_strings.txt: scan_lfsea, isTagFound, lfread, uid_e, raw_e, upper
         PM3 command log (original_current_ui write_lf_em410x_verify_fail):
             Each verify does: lf sea → lf em 410x_read → compare
     """

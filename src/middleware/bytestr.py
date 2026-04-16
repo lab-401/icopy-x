@@ -19,9 +19,10 @@ Exports:
     to_bytes(bytes_or_str)    — str/bytes → bytes (UTF-8 encode)
     to_str(bytes_or_str)      — bytes/str → str (UTF-8 decode)
 
+Source: decompiled/bytestr_ghidra_raw.txt + archive/lib_transliterated/bytestr.py
 Verified: QEMU extraction of original bytestr.so behaviour
 
-String table:
+String table (from Ghidra):
     bytesToHexString, to_bytes, to_str, bytes_or_str, encode, decode,
     value, utf-8, %02X,
 

@@ -13,8 +13,13 @@
 ##########################################################################
 
 """lfem4x05 -- EM4x05 tag operations (info, dump, read, write, verify).
+
+Reimplemented from lfem4x05.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Archive:    archive/lib_transliterated/lfem4x05.py
     Spec:       docs/middleware-integration/5-read_spec.md (section 10)
+    Strings:    docs/v1090_strings/lfem4x05_strings.txt
 
 API:
     CMD = 'lf em 4x05_info FFFFFFFF'
@@ -146,6 +151,7 @@ def info4X05(key=None):
         cmd = 'lf em 4x05_info %s' % key
         KEY_TEMP = key
     else:
+        # Ground truth: binary string constant CMD = 'lf em 4x05_info FFFFFFFF'
         # Original sends default key FFFFFFFF when no explicit key given.
         # Original PM3 trace confirms: first scan command is 'lf em 4x05_info FFFFFFFF'
         cmd = CMD
@@ -199,6 +205,7 @@ def readBlocks(key=None):
 def dump4X05(infos=None, key=None):
     """Dump EM4x05 tag data to file.
 
+    Ground truth (original PM3 log):
         lf em 4x05_info FFFFFFFF
         lf em 4x05_info
         lf em 4x05_dump f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
@@ -220,6 +227,7 @@ def dump4X05(infos=None, key=None):
             return -1
 
     # Build dump file path from serial number
+    # Ground truth (original PM3 log): lf em 4x05_dump f /mnt/upan/dump/em4x05/EM4305_AABBCCDD_4
     # appfiles.create_em4x05() adds the EM4305_ prefix and _N uniqueness suffix
     sn = ''
     if isinstance(infos, dict):
@@ -235,6 +243,7 @@ def dump4X05(infos=None, key=None):
         import os
         dump_path = os.path.join('/mnt/upan/dump/em4x05', 'EM4305_%s' % sn if sn else 'EM4305')
 
+    # Ground truth: binary format string ' f {}' (lfem4x05_strings.txt line 825)
     # Command: 'lf em 4x05_dump' + ' f {}'.format(path)
     cmd = 'lf em 4x05_dump' + ' f {}'.format(dump_path)
 
@@ -243,6 +252,7 @@ def dump4X05(infos=None, key=None):
         return -1
 
     # Extract actual file path from response and store in DUMP_TEMP
+    # Ground truth: response contains 'saved 64 bytes to binary file <path>'
     if executor.hasKeyword('saved 64 bytes to binary file'):
         path = executor.getContentFromRegexG(
             r'saved \d+ bytes to binary file\s*(.*)', 1)

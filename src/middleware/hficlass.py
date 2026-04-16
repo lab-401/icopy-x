@@ -13,6 +13,11 @@
 ##########################################################################
 
 """hficlass -- iCLASS tag identification and key checking.
+
+Reimplemented from hficlass.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Strings:    docs/v1090_strings/hficlass_strings.txt
     Spec:       docs/middleware-integration/3-scan_spec.md
     Analysis:   docs/HOW_TO_BUILD_FLOWS.md (section 12.5)
 
@@ -26,6 +31,7 @@ import re
 # ---------------------------------------------------------------------------
 # Constants — from binary string extraction
 # ---------------------------------------------------------------------------
+# Standard iCLASS Legacy keys (from hficlass_strings.txt)
 _KEY_LEGACY_1 = 'AFA785A7DAB33378'
 _KEY_LEGACY_2 = '2020666666668888'
 _KEY_LEGACY_3 = '6666202066668888'
@@ -77,6 +83,7 @@ def checkKey(typ_or_key, key=None, block=1, elite=False):
     if ret == -1:
         return False
 
+    # Ground truth (decompiled hficlass.so, string at 0x00022a2c):
     # Original .so uses getContentFromRegexG with pattern
     #   'block \d+ : ([a-fA-F0-9 ]+)'
     # This matches success output like "Block 01 : 12 FF FF FF 7F 1F FF 3C"
@@ -131,6 +138,7 @@ def readTagBlock(typ_or_key, block_or_key=None, key=None, elite=False):
     if not content or not content.strip():
         return ''
 
+    # Ground truth: PM3 iCLASS rdbl output contains 'block' keyword.
     # Note: [+] prefix is stripped by pm3_compat._pre_normalize on iceman,
     # so only check for 'block' presence.
     if 'block' in content.lower():
@@ -198,6 +206,7 @@ def chkKeys(infos):
         return result
 
     # Fallback: file-based key check via 'hf iclass chk'
+    # Ground truth: archive/lib_transliterated/hficlass.py line 254
     # Original .so falls back to 'hf iclass chk f <keyfile>' when rdbl fails
     cmd = 'hf iclass chk'
     ret = executor.startPM3Task(cmd, 30000)
@@ -259,6 +268,7 @@ def parser():
     csn = csn_raw.strip().replace(' ', '') if csn_raw else ''
 
     # Determine type and find key in a single pass via chkKeys().
+    # Ground truth: original .so parser calls chkKeys() once, which tries
     # legacy keys (chkKeys_1), then elite keys (chkKeys_2), then file-based
     # chk. This avoids duplicate PM3 calls.
     key_result = chkKeys({})

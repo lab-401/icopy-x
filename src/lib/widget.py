@@ -437,6 +437,7 @@ class ListView:
                 if name is None:
                     continue
                 # Normal: dark icons on light bg
+                # Ground truth: main_page_1_3_1.png — icons are dark grey
                 normal_key = (name, 'normal')
                 if normal_key not in self._icon_images:
                     img = images.load(name, rgb=ICON_RECOLOR_NORMAL)
@@ -875,6 +876,7 @@ class ProgressBar:
     def setTimer(self, timer_text: str):
         """Set timer text above the message line.
 
+        Ground truth (read_tag_reading_2.png): timer line "01'08''"
         renders above the action line "ChkDIC...0/32keys".
         Position: (x + width//2, y - 18), anchor='s', color=#1C6AEB.
         """
@@ -945,6 +947,7 @@ class ProgressBar:
             self._canvas.delete(self._tag_fill)
 
         # --- Timer text (above message line) ---
+        # Ground truth (read_tag_reading_2.png): "01'08''" above "ChkDIC...0/32keys"
         timer_items = self._canvas.find_withtag(self._tag_timer)
         if self._timer:
             if timer_items:
@@ -1286,6 +1289,7 @@ class Toast:
         ty = (H - toast_h) // 2
 
         # --- Build RGBA mask: dim + toast box + icon ---
+        # Ground truth (user-observed on original device): when the action bar
         # is visible, the dim overlay does NOT cover the buttons.
         from lib._constants import TAG_BTN_BG, BTN_BAR_Y0
         has_btn_bar = bool(self._canvas.find_withtag(TAG_BTN_BG))
@@ -1690,6 +1694,7 @@ class ConsoleView:
     Used by ConsolePrinterActivity for real-time PM3 command output,
     LUA script output, and Read key recovery progress.
 
+    Ground truth: lua_console_*.png — full-screen black background,
     white monospace text, no title/button bar.
 
     Key handling (from read_console_common.sh lines 27-35):
@@ -1801,11 +1806,13 @@ class ConsoleView:
 
     # -----------------------------------------------------------------
     # Zoom (font size control)
+    # Ground truth: read_console_common.sh — UP/M2=zoom in, DOWN/M1=zoom out
     # -----------------------------------------------------------------
 
     def textfontsizeup(self):
         """Increase font size (zoom in). Max 14.
 
+        Binary symbol: activity_main_strings.txt textfontsizeup
         """
         if self._font_size < self._FONT_SIZE_MAX:
             self._font_size += 1
@@ -1816,6 +1823,7 @@ class ConsoleView:
     def textfontsizedown(self):
         """Decrease font size (zoom out). Min 6.
 
+        Binary symbol: activity_main_strings.txt textfontsizedown
         """
         if self._font_size > self._FONT_SIZE_MIN:
             self._font_size -= 1
@@ -1869,6 +1877,7 @@ class ConsoleView:
 
     # -----------------------------------------------------------------
     # Horizontal scroll
+    # Ground truth: read_console_common.sh — RIGHT/LEFT = hscroll
     # -----------------------------------------------------------------
 
     def scrollRight(self):
@@ -1925,6 +1934,7 @@ class ConsoleView:
     def _redraw(self):
         """Clear and redraw background + visible lines.
 
+        Ground truth: lua_console_*.png — black background, white monospace.
         """
         self._canvas.delete(self._tag_line)
         self._canvas.delete(self._tag_bg)
@@ -2220,6 +2230,7 @@ class InputMethods:
 class SimFields:
     """Simulation input fields matching real device rendering.
 
+    Ground truth (FB captures simulation_multi_20260403):
       state_075 (AWID): gray boxes with "Format: 40 <", "FC: 2001", "CN: 13371337"
       state_005 (Nedap): "Subtype: 15 <", "Code: 999", "ID: 99999"
       state_050 (FDX-B): "Country: 999 <", "NC: 112233445566"
@@ -2467,6 +2478,7 @@ class SimFields:
                 tags=self._tag)
 
             # Edit cursor — bg highlight on active digit BEFORE text
+            # Ground truth: FB state_015 (Nedap "Code: 899") — "8" digit
             # has #C4C9C4 background, rest is #F8FCF8
             if is_editing:
                 val_left = input_x + self.INPUT_PAD_X

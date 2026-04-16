@@ -19,7 +19,7 @@ module-level navigation stack that manages activity push/pop transitions.
 
 Decompilation source: actstack.so (125KB, 93 functions, 15 Activity +
 9 LifeCycle methods).  Every lifecycle transition order matches the
-original firmware exactly
+original firmware exactly as documented in decompiled/SUMMARY.md §2.
 
 Import convention: ``from lib.actstack import Activity, start_activity``
 or (on-device) ``import actstack`` when ``lib/`` is on sys.path.
@@ -42,7 +42,7 @@ class LifeCycle:
     All state changes are protected by a threading.RLock so that
     concurrent readers (e.g. background tasks) see consistent values.
 
-    Internal attribute names match
+    Internal attribute names match the decompiled binary:
         _life_created, _life_resumed, _life_paused, _life_destroyed
         _life_lock (RLock)
     """
@@ -97,7 +97,7 @@ class LifeCycle:
     def _set_life_in_lock(self, attr: str, value: bool):
         """Set a lifecycle flag under the RLock.
 
-        Matches original implementation
+        Matches the decompiled ``_set_life_in_lock(self, attr, value)``
         pattern which acquires ``_life_lock`` before writing.
         """
         with self._life_lock:
@@ -114,7 +114,7 @@ class Activity:
     Subclassed by BaseActivity (actbase.py) which adds UI rendering
     (title bar, button bar, busy state, battery bar).
 
-    Instance variables match
+    Instance variables match the decompiled binary:
         _canvas  — tkinter Canvas instance (created per-activity)
         life     — LifeCycle instance
         _bundle  — bundle dict passed to onCreate
@@ -163,7 +163,7 @@ class Activity:
     def start(self, bundle=None):
         """Initialize and start the activity.
 
-        Lifecycle order:
+        Lifecycle order (from decompiled Activity.start):
             1. Create canvas (240x240, bg, highlightthickness=0, bd=0)
             2. Assign to self._canvas
             3. canvas.grid() — make visible
@@ -202,7 +202,7 @@ class Activity:
 
         Wraps the call in try/except; on exception calls onActExcept.
         Uses ``traceback.format_exc()`` for error reporting (matches
-        original ``catch_run`` wrapper).
+        the decompiled ``catch_run`` wrapper).
         """
         activity = self  # closure reference
 
@@ -281,7 +281,7 @@ def _create_canvas():
 def start_activity(activity_cls, bundle=None):
     """Push a new activity onto the stack.
 
-    Lifecycle order:
+    Lifecycle order (from decompiled start_activity):
         1. new_act = activity_cls(bundle)
         2. If stack not empty:
            a. prev_act = _ACTIVITY_STACK[-1]
@@ -306,7 +306,7 @@ def start_activity(activity_cls, bundle=None):
 def finish_activity():
     """Pop the current activity from the stack.
 
-    Lifecycle order:
+    Lifecycle order (from decompiled finish_activity):
         1. act = _ACTIVITY_STACK.pop()
         2. act.onPause()
         3. act.life.paused = True
@@ -345,6 +345,7 @@ def finish_activity():
         if prev_act._canvas is not None:
             prev_act._canvas.grid()
         # Pass result from finished activity to parent via onActivity()
+        # Ground truth: WarningM1Activity sets self._result before finish(),
         # parent ReadActivity receives it via onActivity(result).
         if result is not None:
             try:
@@ -361,7 +362,7 @@ def get_current_activity():
 def get_activity_pck():
     """Return the activity stack (list).
 
-    Named to match original export ``get_activity_pck``.
+    Named to match the decompiled export ``get_activity_pck``.
     """
     return _ACTIVITY_STACK
 
@@ -378,7 +379,7 @@ def get_stack_size():
 
 # -- Registration stubs ------------------------------------------------
 # actbase.BaseActivity calls register(self) in __init__ and
-# unregister(self) in onDestroy.  The original actstack.so does NOT
+# unregister(self) in onDestroy.  The decompiled actstack.so does NOT
 # export these symbols — they are likely lightweight bookkeeping that
 # actbase performs via the stack list itself.  We provide no-op stubs
 # so that actbase can call them without error.

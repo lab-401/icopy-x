@@ -15,6 +15,7 @@
 """template — scan/read result display renderer.
 
 Reimplementation of template.so (Cython, ARM v7 LE).
+Ground truth: Ghidra decompilation of orig_so/lib/template.so
               (MD5: 1b92d5017a72e8defb8c88396e1bbb19)
 
 Renders tag info cards to the tkinter canvas after scan.so identifies a tag.
@@ -58,6 +59,7 @@ _TAG_NAMESTR = 'tpl_namestr'  # display name / subtitle (must NOT contain 'title
 _TAG_FREQ = 'tpl_freq'
 _TAG_DATA = 'tpl_data'
 
+# Hex validation regex (from template_strings.txt)
 _HEX_RE = re.compile(r'[a-fA-F0-9 -]+')
 
 
@@ -67,7 +69,7 @@ _HEX_RE = re.compile(r'[a-fA-F0-9 -]+')
 def __drawFinal(parent, family, frequency, display_name):
     """Render the common header block: family name, display name, frequency.
 
-    Signature  0x000266c0 (4 parameters).
+    Signature from decompiled at 0x000266c0 (4 parameters).
     Clears previous template items, then draws:
       - Family name in mononoki 22, anchor=nw at (18, 48)
       - Display name in mononoki 14, anchor=nw at (18, 82) (if not None)
@@ -213,12 +215,14 @@ def __drawM1(data, parent):
         ats = data.get('ats', '')
         if ats:
             # DESFire-style: show ATS instead of ATQA (single space before ATS)
+            # Ground truth: ATS truncated to 6 chars + '+' when longer
             ats_display = ats
             if len(ats) > 6:
                 ats_display = ats[:6] + '+'
             sak_line = 'SAK: {} ATS: {}'.format(sak, ats_display)
         else:
             # Standard M1: double space before ATQA label
+            # Ground truth: original scan.so never puts nameStr in cache;
             # SAK line always shows "ATQA" (verified via original firmware
             # dump_detail_mf1_1k: "SAK: 08  ATQA: 0004")
             atqa = data.get('atqa', '')
@@ -287,6 +291,7 @@ def __drawID(data, parent):
 
     Used for: 8-16, 19, 28-38, 45, 46 (LF ID tags + ISO15693).
 
+    Ground truth (original_current_ui scenario_states.json):
         Renders header, then up to 2 data lines at fixed y positions:
         - y=128: UID/data line (from data['data'] or data['uid'])
         - y=151: Chipset line (default 'X' for 125KHZ tags)
@@ -328,11 +333,12 @@ def __drawID(data, parent):
             # Standard ID: prefix with 'UID: '
             display_line = 'UID: {}'.format(data_val)
         # Truncate long data['data'] strings: > 19 chars -> first 16 + '...'
-        #
+        # Decompiled: PyObject_Size check at 0x00022bcc, threshold 0x13 (19)
         if display_line is not None and len(display_line) > 19:
             display_line = display_line[:16] + '...'
     elif uid_val:
         # ISO15693 and similar: use 'uid' key directly
+        # Ground truth: NOT truncated (UID: E004010012345678 = 22 chars shown in full)
         display_line = 'UID: {}'.format(uid_val)
 
     if display_line is not None:
@@ -404,6 +410,7 @@ def __draw_iclass(data, parent):
     Used for tag types: 17, 18, 47.
     Renders: family header, manufacturer, block 7, data lines.
 
+    Ground truth: template.so strings show 'chip', 'Elite', 'Legacy',
     'ICLASS_ELITE', 'ICLASS_LEGACY'. The original template generates
     the chip/display_name dynamically from the tag type and mutates
     data['chip']. TYPE_TEMPLATE[18] has None for display_name; the
@@ -436,6 +443,7 @@ def __draw_iclass(data, parent):
     y = _DATA_START_Y
 
     # CSN / UID line
+    # Ground truth: scan_cache uses 'csn' key from hficlass.parser(),
     # NOT 'uid'. Fall back to 'uid' for compatibility.
     csn = data.get('csn', '') or data.get('uid', '')
     if csn:
@@ -484,6 +492,7 @@ def __drawT55xx(data, parent):
     Used for tag type: 23.
     T5577 has display_name = None in TYPE_TEMPLATE.
 
+    Ground truth (scan_t55xx_blank):
         content = [('T55x7', 82), ('Frequency: 125KHZ', 106),
                    ('Modulate: ASK', 128), ('B0: 00148040', 151)]
         cache = {chip: 'T55x7', modulate: 'ASK', b0: '00148040', ...}
@@ -542,7 +551,9 @@ def __drawEM4x05(data, parent):
     Used for tag type: 24.
     EM4305 has display_name = None in TYPE_TEMPLATE.
 
+    Ground truth (template.so strings):
         'SN: {}', 'CW: {}', 'chipset', 'Chipset: {}'
+    Ground truth (original screenshot read_lf_em4305_success state 5):
         EM4305 (family), EM4x05/EM4x69 (subtitle=chip),
         Frequency: 125KHZ, SN: AABBCCDD, CW: 600150E0
     """
@@ -662,6 +673,7 @@ def __drawFelica(data, parent):
     y = _DATA_START_Y
 
     # IDM line
+    # Ground truth: scan_cache uses 'idm' key from hffelica.parser()
     idm = data.get('idm', '') or data.get('uid', '')
     if idm:
         parent.create_text(
@@ -739,6 +751,7 @@ def __drawTopaz(data, parent):
         ats = data.get('ats', '')
         if ats:
             # DESFire-style: show ATS instead of ATQA (single space before ATS)
+            # Ground truth: ATS truncated to 6 chars + '+' when longer
             ats_display = ats
             if len(ats) > 6:
                 ats_display = ats[:6] + '+'
@@ -757,6 +770,7 @@ def __drawTopaz(data, parent):
         y += _DATA_LINE_H
     else:
         # No SAK — check for standalone ATQA (Topaz type 27)
+        # Ground truth: scan_topaz shows 'ATQA: C004' at y=151
         atqa = data.get('atqa', '')
         if atqa:
             parent.create_text(
@@ -777,6 +791,7 @@ def __drawTopaz(data, parent):
 # ---------------------------------------------------------------------------
 # TYPE_TEMPLATE — tag type ID -> (frequency, display_name, family, draw_func)
 # Complete 48 entries from spec section 2, cross-referenced with
+# template_strings.txt and QEMU extraction.
 # ---------------------------------------------------------------------------
 TYPE_TEMPLATE = {
     0:  ('13.56MHZ', 'M1 S70 4K (4B)',    'MIFARE',       __drawM1),
@@ -837,7 +852,7 @@ TYPE_TEMPLATE = {
 def draw(typ, data, parent):
     """Draw a tag info card on the canvas.
 
-    Signature  at 0x0001e1d0.
+    Signature from decompiled __pyx_pw_8template_29draw at 0x0001e1d0.
 
     Args:
         typ:    integer tag type ID (0-47)
@@ -845,7 +860,7 @@ def draw(typ, data, parent):
                 or None for header-only rendering
         parent: tkinter Canvas to draw on
 
-    Behavior
+    Behavior from decompiled code:
     1. Looks up typ in TYPE_TEMPLATE
     2. If not found: returns None (silent)
     3. If draw_func is None: returns None
@@ -877,7 +892,7 @@ def draw(typ, data, parent):
 def dedraw(parent):
     """Clear all template-drawn items from the canvas.
 
-    Signature  at 0x0001d710.
+    Signature from decompiled __pyx_pw_8template_31dedraw at 0x0001d710.
     Calls parent.delete() three times to remove:
       - Title/family text area
       - Frequency line
@@ -892,7 +907,7 @@ def dedraw(parent):
 def create_by_parent(parent, tag):
     """Create a display name string from tag type.
 
-    Signature  at 0x0001d248.
+    Signature from decompiled __pyx_pw_8template_1create_by_parent at 0x0001d248.
 
     Args:
         parent: tkinter Canvas (or widget)

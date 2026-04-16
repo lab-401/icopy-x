@@ -13,9 +13,13 @@
 ##########################################################################
 
 """tagtypes -- Tag type registry with DRM bypass.
+
+Reimplemented from tagtypes.so (iCopy-X v1.0.90).
 DRM (AES license verification) is BYPASSED — all types always readable.
 
-    Audit:    docs/ (lines 805-881)
+Ground truth:
+    Strings:  docs/v1090_strings/tagtypes_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt (lines 805-881)
     Launcher: tools/launcher_current.py (lines 233-260, DRM bypass fallback)
 
 API:

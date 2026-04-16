@@ -23,7 +23,7 @@ UART.  KeyEvent translates the raw code to a logical key constant
 PWR is dispatched to ``onKeyEvent()`` like all other keys.
 Each activity handles PWR in its own ``onKeyEvent()``.
 
-
+Source: decompiled keymap.so + hmi_driver.so SERIAL_KEY_MAP
 """
 
 import logging
@@ -119,6 +119,7 @@ class KeyEvent:
 
     PWR is dispatched to onKeyEvent like all other keys. Each activity
     handles PWR in its own onKeyEvent (finish, cancel, hide console, etc.).
+    Ground truth: original keymap.so's _run_shutdown runs 'sudo shutdown -t 0'
     (system shutdown), NOT activity pop. Activity pop is per-activity logic.
     """
 
@@ -180,6 +181,7 @@ class KeyEvent:
     def _run_shutdown(self):
         """Perform graceful system shutdown.
 
+        Source: keymap_strings.txt lines 623-636:
             _run_shutdown → shutdowning, stopscreen, sudo shutdown -t 0
         """
         try:

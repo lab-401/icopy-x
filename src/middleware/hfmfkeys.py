@@ -13,9 +13,14 @@
 ##########################################################################
 
 """hfmfkeys -- MIFARE Classic key management & recovery.
+
+Reimplemented from hfmfkeys.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 Full implementation — all exported functions for read AND write flows.
 
-    Audit:       docs/ (lines 454-512)
+Ground truth:
+    Decompiled:  decompiled/hfmfkeys_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hfmfkeys_strings.txt
+    Audit:       docs/V1090_MODULE_AUDIT.txt (lines 454-512)
     Trace:       docs/Real_Hardware_Intel/trace_write_activity_attrs_20260402.txt
 """
 
@@ -67,6 +72,7 @@ TMP_KEYS_DIR = '/tmp/.keys'
 TMP_KEYS_FILE = '/tmp/.keys/mf_tmp_keys.dic'
 
 # ---------------------------------------------------------------------------
+# Default key dictionary (from hfmfkeys_strings.txt lines 3083-3188)
 # ---------------------------------------------------------------------------
 DEFAULT_KEYS = [
     'FFFFFFFFFFFF', 'E00000000000', '000000000000', '111111111111',
@@ -373,6 +379,7 @@ def keys(size, infos, listener):
 # ---------------------------------------------------------------------------
 # Progress callbacks
 #
+# Ground truth: activity_read.py onReading() expects:
 #   {'m1_keys': True, 'seconds': N, 'action': 'ChkDIC'|'Darkside'|'Nested',
 #    'keyIndex': N, 'keyCountMax': 32, 'progress': N}
 # ---------------------------------------------------------------------------
@@ -383,6 +390,7 @@ _timer_elapsed = 0
 def _start_timer():
     """Start the 1-second elapsed-time counter thread.
 
+    Ground truth: original .so count_down drives periodic progress
     callbacks with elapsed seconds so the UI timer ("01'08''") updates
     every second even when no keys are being found.
     """

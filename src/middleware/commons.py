@@ -13,7 +13,12 @@
 ##########################################################################
 
 """commons -- Common utilities (byte/hex operations, file system helpers).
-    Audit:    docs/ (lines 267-282)
+
+Reimplemented from commons.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/commons_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt (lines 267-282)
 """
 
 import os

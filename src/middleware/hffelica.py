@@ -13,11 +13,19 @@
 ##########################################################################
 
 """hffelica -- FeliCa tag parser.
+
+Reimplemented from hffelica.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Strings:    docs/v1090_strings/hffelica_strings.txt
+    Decompiled: decompiled/hffelica_ghidra_raw.txt
+
 API:
     parser() -> dict
 """
 
-# Module-level constants
+# Module-level constants (from audit: V1090_MODULE_AUDIT.txt)
+CMD = 'hf felica reader'    # STR@hffelica_strings.txt
 TIMEOUT = 10000              # __pyx_int_10000
 
 # Detection keywords (from binary string table)
@@ -54,6 +62,7 @@ def parser():
         if idm_raw:
             # The regex captures everything after 'IDm', including ': 01 FE ...'
             # Strip whitespace but keep ':' prefix, remove internal spaces
+            # Ground truth: scan_cache idm = ':01FE010203040506'
             # PM3 output: 'IDm: 01 FE 01 02 03 04 05 06'
             # Captured by regex: ': 01 FE 01 02 03 04 05 06'
             # After strip().replace(' ',''): ':01FE010203040506'

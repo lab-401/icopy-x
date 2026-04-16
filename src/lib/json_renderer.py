@@ -78,8 +78,8 @@ class JsonRenderer:
     """Renders a JSON screen definition to a tkinter Canvas.
 
     All visual constants come from _constants.py which is sourced from:
-    -
-    -
+    - Ground truth: decompiled actbase.so, widget.so string tables
+    - Ground truth: real device screenshots pixel measurements
     """
 
     def __init__(self, canvas):
@@ -117,6 +117,7 @@ class JsonRenderer:
         c = self.canvas
 
         # Content area background
+        # Ground truth: real screenshots show white/light content area
         c.create_rectangle(0, CONTENT_Y0, SCREEN_W, BTN_BAR_Y0,
                            fill=BG_COLOR, outline='', tags='_jr_content_bg')
 
@@ -137,6 +138,7 @@ class JsonRenderer:
         renderer(content)
 
         # Button bar — only if buttons have text
+        # Ground truth: main_page_1_3_1.png has no bar, scan_tag_scanning_5.png does
         buttons = screen.get('buttons', {})
         left_btn = buttons.get('left')
         right_btn = buttons.get('right')
@@ -167,6 +169,7 @@ class JsonRenderer:
     def _render_template(self, content):
         """Render structured field display.
 
+        Ground truth pixel positions from scan_tag_scanning_5.png:
             y=52: header (bold 20px, black)
             y=86: subheader (bold 13px, dark grey)
             y=110, 132, 155: fields (regular 12px, grey)
@@ -179,18 +182,21 @@ class JsonRenderer:
         fields = content.get('fields', [])
 
         # Header — bold, large
+        # Ground truth: scan_tag_scanning_5.png y=52
         if header:
             c.create_text(10, 52, text=header, fill='black',
                           font=resources.get_bold_font(20), anchor='nw',
                           tags='_jr_content')
 
         # Subheader — bold, medium, dark grey
+        # Ground truth: scan_tag_scanning_5.png y=86
         if subheader:
             c.create_text(10, 86, text=subheader, fill='#3C3C3C',
                           font=resources.get_bold_font(13), anchor='nw',
                           tags='_jr_content')
 
         # Fields — regular, grey, starting at y=110 with 22px spacing
+        # Ground truth: scan_tag_scanning_5.png y=110, 132, 155
         font_body = resources.get_font(12)
         field_color = '#505050'
         y = 110
@@ -224,6 +230,7 @@ class JsonRenderer:
     def _render_progress(self, content):
         """Render progress bar.
 
+        Ground truth: scan_tag_scanning_2.png:
             Bar at y=210..229, x=20..220
             "Scanning..." text at y≈208, centered, blue
             No percentage counter (only in Erase flow)
@@ -284,6 +291,7 @@ class JsonRenderer:
     def _render_list(self, content):
         """Render list content (menu, plain, radio, checklist).
 
+        Ground truth: main_page_1_3_1.png — 5 items, 40px each,
         icons at x≈15, text at x=19 or x=50 (with icon).
         Selection = #EEEEEE highlight, text always black.
         """
@@ -531,6 +539,7 @@ class JsonRenderer:
     def _render_buttons(self, left=None, right=None):
         """Render button bar.
 
+        Ground truth: actbase_strings.txt line 1228 (#222222),
         line 1230 (white text). Only drawn when buttons have text.
 
         Buttons may be strings or objects with text+active.

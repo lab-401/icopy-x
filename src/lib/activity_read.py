@@ -13,17 +13,20 @@
 ##########################################################################
 
 """ReadActivity — Tag data reading with key recovery pipeline.
+
+Replaces the ReadActivity portion of activity_main.so.  Handles 40 tag
 types with different read strategies (MFC key recovery, UL direct read,
 iCLASS, LF, ISO15693, etc.).
 
 The .so modules (read.so, scan.so, template.so, executor.so) handle ALL
 RFID logic.  We orchestrate UI state transitions only.
 
+Ground truth (ALL code derives from these):
   - trace_read_flow_20260401.txt: Real device read flow (2 MFC 1K reads)
   - trace_autocopy_mf1k_standard.txt: AutoCopy with READER_START args
   - read_tag_*.png: Real device screenshots
   - QEMU probing: Reader() no-args, start(tag_type, bundle) 2 positional args
-  -
+  - read.so decompiled: Reader/AbsReader class hierarchy
 
 Key architecture finding from trace_read_flow_20260401.txt:
   - ReadListActivity IS-A ReadActivity on real device (inherits)
@@ -56,6 +59,7 @@ from lib._constants import (
 class ConsoleMixin:
     """Inline PM3 console view shared by ReadListActivity and AutoCopyActivity.
 
+    Ground truth: trace_console_flow_20260401.txt — console is an inline
     view within the activity. Stack doesn't change. RIGHT toggles on, PWR off.
 
     Requires: self.getCanvas(), SCREEN_W, SCREEN_H available.
@@ -122,6 +126,7 @@ class ConsoleMixin:
     def _handleConsoleKey(self, key):
         """Dispatch key to ConsoleView. Returns True if handled.
 
+        Ground truth (ConsolePrinterActivity.onKeyEvent, the canonical
         console key handler — activity_main.py lines 936-966):
             M1:    textfontsizedown (zoom out)
             M2:    textfontsizeup (zoom in)
@@ -161,6 +166,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
     Launched by ReadListActivity with bundle={'tag_type': int, 'tag_name': str}.
 
+    Ground truth: trace_read_flow_20260401.txt — complete real device trace.
     Screenshots: read_tag_scanning_*.png, read_tag_reading_*.png,
                  read_tag_no_tag_or_wrong_type_*.png
     """
@@ -187,6 +193,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onCreate(self, bundle):
         """Set up title, receive tag_type from bundle, start scan.
 
+        Ground truth: trace_read_flow_20260401.txt line 2 —
         START(ReadListActivity, None) → immediate hf 14a info.
         Screenshot: read_tag_scanning_1.png — title "Read Tag".
         """
@@ -213,6 +220,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
         If read.so pushed a Warning activity directly (PUSH path) and the
         user dismissed it, we need to show the appropriate toast.
+        Ground truth: PUSH-path tests (iclass_dump_fail, ultralight_card_select_fail,
         etc.) expect toast:Read Failed after Warning is dismissed.
         """
         super().onResume()
@@ -225,6 +233,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onActivity(self, result):
         """Receives result from child WarningM1Activity.
 
+        Ground truth: force-read test Phase 3 — WarningM1Activity finishes
         with result={'action': 'force'} → restart read with force=True.
         """
         if result is None or not isinstance(result, dict):
@@ -246,6 +255,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             except (ImportError, AttributeError):
                 pass
         elif action == 'write':
+            # Ground truth: full_read_write_trace_20260327.txt line 51 —
             # FINISH(WarningWriteActivity) → START(WriteActivity, bundle)
             # Bundle is the same read result (path or dict) passed through.
             try:
@@ -262,6 +272,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onKeyEvent(self, key):
         """State-dependent key routing.
 
+        Ground truth: trace_console_flow_20260401.txt — console is an
         inline view mode within ReadActivity, NOT a separate activity.
         Stack stays at same depth. RIGHT toggles console on, PWR toggles off.
 
@@ -348,11 +359,13 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
     # ================================================================
     # Scan phase
+    # Ground truth: ScanActivity pattern (QEMU-verified, scan flow PASS)
     # ================================================================
 
     def _startScan(self):
         """Start scan using Scanner() pattern.
 
+        Ground truth: scan flow post-mortem section 3.1.
         Screenshot: read_tag_scanning_1-3.png.
         """
         self._state = 'scanning'
@@ -366,6 +379,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             self._progress = ProgressBar(canvas)
             self._progress.setMessage(resources.get_str('scanning'))
             self._progress.show()
+            # Ground truth (original firmware): ProgressBar immediately
             # animates to 50% when entering scan, then advances based
             # on results, and completes to 100% before screen transition.
             self._progress.setProgress(50)
@@ -376,6 +390,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             self._scanner.call_progress = self.onScanning
             self._scanner.call_resulted = self.onScanFinish
             self._scanner.call_exception = self.onScanFinish
+            # Ground truth: activity_main.so strings show ReadListActivity.how2Scan
             # calls scanner.scan_type_asynchronous(tag_type), NOT scan_all.
             # Original PM3 traces confirm type-specific scanning:
             #   EM4305: lf em 4x05_info FFFFFFFF (no hf 14a info, no lf sea)
@@ -424,6 +439,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onScanFinish(self, result):
         """Callback from scan.so — scan complete.
 
+        Ground truth: trace_read_flow_20260401.txt lines 3-6 —
         hf 14a info → hf mf cgetblk 0 → scan cache set → fchks starts.
         After scan, read starts AUTOMATICALLY (no user button press).
 
@@ -461,25 +477,31 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
     # ================================================================
     # Read phase
+    # Ground truth: trace_read_flow_20260401.txt, trace_autocopy_mf1k_standard.txt
     # ================================================================
 
     def _startRead(self, force=False):
         """Start read using Reader().
 
+        Ground truth: trace_autocopy_mf1k_standard.txt line 16 —
         READER_START args=(1, {'infos': {scan_cache}, 'force': False})
         QEMU probe: Reader() no-args, start(tag_type, bundle) 2 positional args.
 
+        Ground truth: original .so states show "Reading..." text + blue
         ProgressBar (#1C6AEB) during the entire reading phase.
 
         Args:
             force: If True, force read with available keys (skip warning).
+                   Ground truth: force-read test Phase 3 triggers this
                    after WarningM1Activity returns action='force'.
         """
         self._state = 'reading'
         self.setbusy()
+        # Ground truth: read_tag_reading_2.png — no action bar during read.
         self.dismissButton()
 
         # Show "Reading..." progress bar during read phase.
+        # Ground truth: original firmware immediately fills to 50%,
         # then advances based on key recovery / sector reads.
         canvas = self.getCanvas()
         if canvas is not None:
@@ -506,6 +528,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             # call_reading receives onReading bound method.
             # read.so extracts __self__ to get the activity reference,
             # then calls showReadToast() directly on the activity.
+            # Ground truth: trace_read_flow_20260401.txt line 20 —
             # <bound method ReadActivity.onReading of ReadListActivity>
             self._reader.call_reading = self.onReading
             self._reader.call_exception = self._onReadException
@@ -517,7 +540,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             #    key. Handled in onReading() above.
             #
             # 2. LF/T55xx failures: read.so pushes Warning activities DIRECTLY
-            #    via actstack.start_activity.
+            #    via actstack.start_activity. Ground truth: trace_fail_read_flow.
             #
             # 3. Errors: call_exception fires. Handled in _onReadException().
             #
@@ -606,6 +629,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onReading(self, *args):
         """Callback from read.so — progress during reading.
 
+        Ground truth: trace_read_flow_20260401.txt lines 21-50 —
         HFMFREAD.callListener((sector, total, <bound method onReading>))
         Called with (sector_num, total_sectors, callback_ref) during read.
 
@@ -646,9 +670,11 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 # -3: partial key recovery (some keys found, not all)
                 # -4: key recovery method failed (e.g., darkside not vulnerable)
                 # Both mean recovery IS possible → push WarningM1Activity
+                # Ground truth: darkside_fail/timeout/card_lost → M1:Sniff
                 self._launchWarningKeys()
             elif ret_code == -2:
                 # -2: read operation failed (all reader types)
+                # Ground truth: 14 tests with ret=-2 ALL expect toast:Read Failed
                 # (tag_lost, all_sectors_fail, felica_fail, iclass_no_key, etc.)
                 self._showReadFailed()
             elif ret_code == -1:
@@ -656,6 +682,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 # Audit finding 7: this checks scan cache structure to
                 # determine HF vs LF. This reads scan.so's own data (not
                 # middleware) — the cache structure IS the ground truth.
+                # Ground truth: QEMU probe + real traces confirm:
                 #   HF cache has 'uid' (from hf 14a info), LF has 'data'+'raw'
                 # scan.getScanCache() has 'sak'/'atqa'
                 #   for HF tags (MFC, UL, NTAG, iCLASS, etc.) but not LF
@@ -674,6 +701,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 # LF scan cache has no type confirmation at all.
                 # HF scan cache has 'uid' (from hf 14a info / hf sea).
                 # LF scan cache has 'data'+'raw' (from lf sea), no 'uid'.
+                # Ground truth: UL cache=['uid','found','isMFU','type'],
                 #   MFC cache=['found','uid','len','sak','atqa',...],
                 #   LF cache=['data','raw','type','found']
                 if sc.get('uid'):
@@ -684,6 +712,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 self._showReadFailed()
             return
 
+        # Ground truth: onReading receives a dict from read.so:
         # {'m1_keys': True, 'seconds': 66, 'action': 'ChkDIC',
         #  'keyIndex': 0, 'keyCountMax': 32, 'progress': 0}
         #
@@ -750,9 +779,11 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def showReadToast(self, *args):
         """Called DIRECTLY by read.so on the activity when read completes.
 
+        Ground truth: trace_read_flow_20260401.txt — after readAllSector
         returns 1, the .so calls showReadToast() on the activity instance.
         The activity reference comes from call_reading bound method's __self__.
 
+        Binary symbol: activity_main_strings.txt line 21112 —
         ReadActivity.showReadToast
 
         Audit finding 6: The binary's showReadToast receives a resource key
@@ -777,6 +808,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def hideReadToast(self, *args):
         """Called by read.so to dismiss toast.
 
+        Binary symbol: activity_main_strings.txt line 21113 —
         ReadActivity.hideReadToast
         """
         if self._toast is not None:
@@ -785,6 +817,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def onData(self, *args):
         """Called by read.so with read data.
 
+        Binary symbol: activity_main_strings.txt line 21312 —
         ReadActivity.onData
         """
         self._reader = None
@@ -804,6 +837,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             print('[READ-EXC] %s' % str(args[0])[:300], flush=True)
         # Exception during read: if no progress updates were received,
         # the reader couldn't handle the tag → "Wrong type"
+        # Ground truth: read_wrong_type fires exception, expects Wrong type
         if self._got_progress:
             self._showReadFailed()
         else:
@@ -816,6 +850,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def _showTemplate(self):
         """Render card info via template.so.
 
+        Ground truth: read_tag_reading_1.png — MIFARE, M1 S50 1K (4B),
         Frequency: 13.56MHZ, UID, SAK, ATQA. template.so does ALL rendering.
         Scan flow lesson #2: NEVER invent display logic.
         """
@@ -849,6 +884,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def _showReadSuccess(self, partial=False):
         """Show read success toast with tag info template visible underneath.
 
+        Ground truth: ProgressBar completes to 100% before transitioning.
         Real device shows tag info summary behind the success toast.
         """
         self.setidle()
@@ -912,6 +948,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def _launchWarningKeys(self):
         """Push WarningM1Activity when keys are missing.
 
+        Ground truth: force-read test Phase 2 waits for M1:Sniff.
         WarningM1Activity presents options: Sniff, Enter, Force, PC-M.
         Result returns via onActivity() with action name.
         """
@@ -937,6 +974,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
     def _showConsole(self):
         """Show console — hide progress bar and status text underneath.
+        Ground truth: console-handover.md — console is always highest layer.
         """
         if self._progress is not None:
             self._progress.hide()
@@ -970,6 +1008,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def _launchWrite(self):
         """Launch WarningWriteActivity with read bundle.
 
+        Ground truth (from real device traces):
         - MFC: START(WarningWriteActivity, '/mnt/upan/dump/mf1/..._7.bin')
           (full_read_write_trace_20260327.txt line 49)
         - LF:  START(WarningWriteActivity, {'return':1, 'data':..., 'raw':...})
@@ -994,6 +1033,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
     def _clearContent(self):
         """Clear all content-area widgets.
 
+        Ground truth: scan flow post-mortem section 3.5 —
         must clear JSON renderer tags + template.so items.
         """
         if self._progress is not None:

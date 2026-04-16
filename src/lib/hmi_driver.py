@@ -41,7 +41,7 @@ Battery queries:
   Send "pctbat"    -> receive "#batpct:NNN"  (NNN = 0-100)
   Send "rcharge"   -> receive "#charge:0" or "#charge:1"
 
-
+Source: decompiled hmi_driver.c string table + archive/ui/hmi_driver.py prototype
 """
 
 import logging
@@ -139,7 +139,7 @@ def DCloseReadThread():
 def starthmi():
     """Full HMI initialization: open port, start read thread, boot sequence.
 
-    Boot sequence:
+    Boot sequence (from decompiled .so and logic analyser traces):
       1. Reuse early serial from _bootstrap_gd32() if available
       2. DOpenPort() (opens new connection only if no early serial)
       3. DOpenReadThread()
@@ -269,11 +269,13 @@ def _serial_key_handle(keycode):
         return
 
     # --- Shutdown command from GD32 (long power button press) ---
+    # Ground truth: logic analyser trace shows GD32 sends "SHUTDOWN H3!"
     # after a long press of the power button.  H3 must respond with:
     #   1. giveyoulcd   — hand LCD control back to GD32
     #   2. shutdowning  — acknowledge shutdown to GD32
     #   3. stopscreen   — turn off display
     #   4. sudo shutdown -t 0 — halt Linux
+    # Source: keymap_strings.txt lines 623-636 (_run_shutdown sequence)
     #         logic analyser: giveyoulcd → I'm alive → shutdowning
     if keycode == "SHUTDOWN H3!":
         logger.info("Shutdown command received from GD32")
@@ -389,6 +391,7 @@ def readbatpercent():
 def readbatvol():
     """Query battery voltage.
 
+    Ground truth: original hmi_driver.so sends "volbat" (not "readbatvol").
     GD32 responds with "#batvol:NNN".
     """
     _ser_write("volbat")
@@ -398,6 +401,7 @@ def readbatvol():
 def readvccvol():
     """Query VCC voltage.
 
+    Ground truth: original hmi_driver.so sends "volvcc" (not "readvccvol").
     GD32 responds with "#vccvol:NNN".
     """
     _ser_write("volvcc")
@@ -407,6 +411,7 @@ def readvccvol():
 def requestChargeState():
     """Query charging status. Returns bool.
 
+    Ground truth: original hmi_driver.so sends "charge" (not "rcharge").
     GD32 responds with "#charge:0" or "#charge:1".
     """
     _ser_write("charge")
@@ -572,6 +577,7 @@ def shutdowning():
 
     Sends "shutdowning" to GD32 (H3→GD32 direction).
     Note: "SHUTDOWN H3!" is the GD32→H3 command, NOT what H3 sends.
+    Source: hmi_driver_strings.txt line 2701 (__pyx_n_u_shutdowning),
             logic analyser trace: < shutdowning\\r\\n
     """
     _ser_write("shutdowning")
@@ -586,6 +592,7 @@ def _set_com(cmd):
     """Send command to GD32 MCU via serial.
 
     Used by TimeSyncActivity for RTC sync: 'TIME:YYYY-MM-DD HH:MM:SS'.
+    Binary source: hmi_driver.so _set_com
     """
     _ser_write(cmd)
 

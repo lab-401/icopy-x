@@ -15,6 +15,8 @@
 """Configuration persistence via conf.ini.
 
 OSS reimplementation of config.so.
+Binary source: config.so (Cython, configparser + os)
+Ground truth: V1090_MODULE_AUDIT.txt lines 314-326
 
 Functions:
     getConf()              — read all config as dict

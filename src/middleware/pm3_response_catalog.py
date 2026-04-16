@@ -21,6 +21,7 @@ normalization when running on RRG/Iceman firmware).
 Source of truth:
     OLD: iCopy-X-Community/icopyx-community-pm3 (factory FW, RRG 385d892f)
     NEW: rfidresearchgroup/proxmark3 (RRG/Iceman latest, v4.21128+)
+    Middleware: src/middleware/*.py (150+ hasKeyword, 45+ regex patterns)
 
 Architecture:
     This catalog is consumed by pm3_compat.translate_response() to

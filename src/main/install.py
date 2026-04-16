@@ -15,6 +15,8 @@
 """IPK installer — OSS replacement for install.so.
 
 Cython source: install.py (compiled to install.so by manufacturer)
+Binary source: device_so/install.so (98,188 bytes, ARM ELF)
+Ground truth: Ghidra decompilation + QEMU trace (2026-04-09)
 
 Original functions confirmed via QEMU ExtensionFileLoader:
   install_font(unpkg_path, callback)

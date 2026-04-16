@@ -22,7 +22,7 @@ In headless / QEMU environments where Pillow or tkinter may not be
 available, ``load()`` returns ``None`` gracefully.  The ListView
 already handles ``None`` icons.
 
-
+Source: decompiled images.so + widget.so ``setIcons`` pattern
 """
 
 import logging

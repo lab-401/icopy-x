@@ -14,6 +14,10 @@
 
 """rftask — PM3 subprocess manager with TCP command server.
 
+Replaces orig_so/main/rftask.so (160KB ARM ELF, Cython 0.29.21).
+
+Ground truth:
+    Binary strings: strings orig_so/main/rftask.so (full method table extracted)
     Archive ref:    /home/qx/archive/infra/rftask.py (484 lines, known working)
     Docs:           docs/ORIGINAL_ANALYSIS.md Section 3 (Executor/PM3 Communication)
     Caller:         src/main/main.py lines 58-79
@@ -28,7 +32,7 @@ Protocol (Nikola):
     Response: PM3 stdout lines, terminated by "Nikola.D: <int>" or "pm3 -->"
     Offline:  "Nikola.D.OFFLINE"
 
-
+Binary method table (from strings orig_so/main/rftask.so):
     RemoteTaskManager.__init__
     RemoteTaskManager.__init__.<locals>.HandleServer.__init__
     RemoteTaskManager.__init__.<locals>.HandleServer.handle
@@ -261,6 +265,7 @@ class RemoteTaskManager:
             self._set_has_tasking(False)
 
     # Interactive commands that run until Enter/button is pressed.
+    # Ground truth (trace_original_diagnosis_20260411.txt): the original
     # rftask.so terminates these by sending '\n' to PM3 stdin after the
     # first batch of samples (~0.5s).  Without this, tune runs forever.
     _INTERACTIVE_CMDS = frozenset({'hf tune', 'lf tune'})
@@ -450,6 +455,7 @@ class RemoteTaskManager:
         shell=True, stdin/stdout PIPE, stderr merged to stdout,
         close_fds=True, start_new_session=True.
 
+        Ground truth (from running original .so on real device):
             Process tree: python3 → sh → sudo → proxmark3
             The command string is passed whole to Popen(shell=True) which
             creates /bin/sh -c "sudo -s .../proxmark3 ...".  stderr is

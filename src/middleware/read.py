@@ -13,7 +13,13 @@
 ##########################################################################
 
 """read -- Tag read dispatcher.
-    Audit:       docs/ (line 151)
+
+Reimplemented from read.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Decompiled:  decompiled/read_ghidra_raw.txt
+    Strings:     docs/v1090_strings/read_strings.txt
+    Audit:       docs/V1090_MODULE_AUDIT.txt (line 151)
     Spec:        docs/middleware-integration/5-read_spec.md
 
 Architecture:
@@ -21,7 +27,7 @@ Architecture:
     based on tag type. Each reader sends PM3 commands, parses responses,
     saves dump files, and reports results via listener callback.
 
-Import chain:
+Import chain (from audit):
     appfiles, executor, felicaread, hf14aread, hf15read, hfmfkeys,
     hfmfread, hfmfuread, lfem4x05, lfread, lft55xx, os, platform,
     tagtypes, threading, traceback
@@ -115,6 +121,7 @@ def _read_mfc(infos, listener):
         hfmfkeys.keys(size, infos, listener)
         if not hfmfkeys.hasAllKeys(size) and not hfmfkeys.getAnyKey():
             # Zero keys found — key recovery completely failed
+            # Ground truth: activity_read.py:562-566 — ret_code -4 → WarningM1Activity (M1:Sniff)
             return (-4, '')
 
     data_list = hfmfread.readAllSector(size, infos, listener)

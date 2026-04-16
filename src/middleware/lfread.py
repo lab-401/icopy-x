@@ -13,6 +13,9 @@
 ##########################################################################
 
 """lfread -- LF tag reading for 20+ card types.
+
+Reimplemented from lfread.so (iCopy-X v1.0.90).
+Ground truth: archive/lib_transliterated/lfread.py
 """
 
 try:

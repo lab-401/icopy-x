@@ -15,6 +15,8 @@
 """Typed settings accessors wrapping config module.
 
 OSS reimplementation of settings.so.
+Binary source: settings.so (Cython)
+Ground truth: V1090_MODULE_AUDIT.txt lines 329-343
 
 Functions:
     getBacklight() / setBacklight(value)   — 0=Low, 1=Middle, 2=High
@@ -44,6 +46,7 @@ def getBacklight():
 def setBacklight(value):
     """Set backlight level (0-2) and apply to hardware.
 
+    Ground truth (trace_original_backlight_volume_20260410.txt):
     The original settings.so persists AND applies the hardware change.
     Every UP/DOWN navigation calls setBacklight() which both saves
     to conf.ini and sends the HMI serial command.
@@ -108,6 +111,7 @@ def setSleepTime(value):
 def fromLevelGetBacklight(level):
     """Convert UI backlight level to hardware brightness byte.
 
+    Ground truth (strace of original firmware, 2026-04-10):
     setbaklight sends B + chr(brightness) + A over serial.
     Observed: Low=B\\x14A (20), Middle=B2A (50), High=BdA (100).
 
@@ -126,6 +130,7 @@ def fromLevelGetBacklight(level):
 def fromLevelGetVolume(level):
     """Convert UI volume level to audio parameter.
 
+    Ground truth (trace_original_backlight_volume_20260410.txt):
     Level 0→0, Level 1→20, Level 2→50, Level 3→100
     Confirmed: playVolumeExam(20), setVolume(20) for level 1, etc.
 

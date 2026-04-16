@@ -19,7 +19,7 @@ SleepModeActivity, and WarningDiskFullActivity which are also defined
 in the original actmain.so (252KB, 129 functions, 43 methods across
 4 Activity classes).
 
-
+Source: decompiled/SUMMARY.md section 4, docs/UI_Mapping/00_main_menu/README.md
 """
 
 import logging
@@ -163,7 +163,7 @@ class MainActivity(BaseActivity):
     def onCreate(self, bundle=None):
         """Set up the main menu.
 
-        Startup sequence:
+        Startup sequence (from decompiled/SUMMARY.md and UI_Mapping):
             1. setTitle("Main Page")
             2. setLeftButton("") -- M1 empty on root (no back)
             3. setRightButton("") -- no button labels on real device
@@ -333,7 +333,7 @@ class MainActivity(BaseActivity):
     def gotoActByPos(self, pos):
         """Navigate to activity at list position (alias for _launchActivity).
 
-        Matches original implementation.
+        Matches the decompiled method signature.
         """
         self._launchActivity(pos)
 

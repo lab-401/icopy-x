@@ -15,6 +15,8 @@
 """Device version information.
 
 OSS reimplementation of version.so.
+Binary source: version.so (Cython)
+Ground truth: V1090_MODULE_AUDIT.txt, device_so/version_universal.py
 
 Provides device identification: type, hardware, HMI, OS, PM3, serial number.
 

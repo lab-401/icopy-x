@@ -19,6 +19,7 @@ Lab401 iCopy-X firmware to the new CLI-flag syntax used by the RRG/Iceman
 Proxmark3 client.  Also normalizes RRG response output back to the format
 expected by existing middleware regex patterns and keyword checks.
 
+Ground truth:
     /home/qx/archive/PM3_COMMAND_COMPAT.md -- full 54-command compatibility table
     src/middleware/pm3_response_catalog.py  -- complete response format diff catalog
     OLD source: iCopy-X-Community/icopyx-community-pm3 (factory FW, RRG 385d892f)
@@ -576,6 +577,7 @@ def translate(cmd):
 # translate_response() normalizes NEW output to look like OLD output
 # so middleware modules work without modification.
 #
+# Ground truth: pm3_response_catalog.py documents every breaking change.
 # ---------------------------------------------------------------------------
 
 # ===========================================================================

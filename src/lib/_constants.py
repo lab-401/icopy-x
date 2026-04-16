@@ -15,13 +15,14 @@
 """UI framework constants — layout, colors, fonts, keys, canvas tags.
 
 Every value is traceable to UI_SPEC.md (extracted from the real v1.0.90
-firmware running under QEMU) or to
+firmware running under QEMU) or to the decompiled actbase.c / widget.so
 binaries.  When a value appears in both UI_SPEC.md and the prototype
 code, UI_SPEC.md wins — it was measured from the real firmware.
 
 Source key:
     SPEC  = docs/UI_SPEC.md (QEMU-verified canvas items)
-    ACT   =  (string table)
+    ACT   = decompiled/actbase.c (string table)
+    WID   = decompiled/widget_ghidra_raw.txt (string table)
     API   = archive/root_old/qemu_api_dump_filtered.txt
 """
 
@@ -67,16 +68,18 @@ CONTENT_BG = '#F8FCF8'          # off-white — real device FB pixel (248,252,24
 BTN_BAR_Y0 = 200
 BTN_BAR_Y1 = 240
 BTN_BAR_H = 40
+BTN_BAR_BG = '#222222'            # Ground truth: actbase_strings.txt line 1228
 
 BTN_LEFT_X = 15
-BTN_LEFT_Y = 233                   #
+BTN_LEFT_Y = 233                   # Ground truth: real device comparison — 5px lower
 BTN_LEFT_ANCHOR = 'sw'
 
 BTN_RIGHT_X = 225
-BTN_RIGHT_Y = 233                  #
+BTN_RIGHT_Y = 233                  # Ground truth: real device comparison — 5px lower
 BTN_RIGHT_ANCHOR = 'se'
 
-BTN_TEXT_COLOR_DISABLED = '#808080'  #
+BTN_TEXT_COLOR = 'white'           # Ground truth: actbase_strings.txt line 1230
+BTN_TEXT_COLOR_DISABLED = '#808080'  # Ground truth: FB state_010 dimmed "Start" during sim
 
 # ═══════════════════════════════════════════════════
 # LISTVIEW                                     [SPEC §5.2, §12.6]
@@ -103,6 +106,7 @@ SELECT_TEXT_COLOR = 'black'    # selected item text is black
 NORMAL_TEXT_COLOR = 'black'    # SPEC: "Non-selected text is `black`"
 
 # Icon recolor mappings (images.load rgb parameter)
+# Ground truth: main_page_1_3_1.png — icons are dark grey on light bg.
 # Original icons are grey (102,102,102). On white bg, keep dark.
 ICON_RECOLOR_NORMAL = ((102, 102, 102), (80, 80, 80))      # grey→dark grey
 ICON_RECOLOR_SELECTED = ((102, 102, 102), (0, 0, 0))       # grey→black
@@ -121,6 +125,7 @@ CHECK_COLOR = CHECK_COLOR_CHECKED_FILL  # backward compat
 # ═══════════════════════════════════════════════════
 # PROGRESS BAR
 # ═══════════════════════════════════════════════════
+# Ground truth: scan_tag_scanning_2.png pixel measurement:
 #   Bar:  y=210..229 (20px tall), x=20..220 (200px wide)
 #   Text: "Scanning..." at y≈196, centered, blue (#1C6AEB)
 #   Bar is anchored to BOTTOM of screen (inside button bar zone)
@@ -217,7 +222,7 @@ INPUT_BG_COLOR = '#ffffff'
 INPUT_DATA_COLOR = '#000000'
 INPUT_HIGHLIGHT_COLOR = '#cccccc'
 INPUT_DEFAULT_MODE = 2
-INPUT_FIELD_BG = '#E5E5E5'      #
+INPUT_FIELD_BG = '#E5E5E5'      # Ground truth: Time Settings container background
 
 # ═══════════════════════════════════════════════════
 # TIME EDITOR                     [Real device screenshots time_settings_*.png]

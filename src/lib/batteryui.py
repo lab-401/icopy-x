@@ -18,7 +18,7 @@ Polls hmi_driver.readbatpercent() and hmi_driver.requestChargeState()
 on a background thread and pushes updates to all registered BatteryBar
 widgets via setBattery() / setCharging().
 
-
+Original .so API (from V1090_MODULE_AUDIT.txt):
     register(battery_bar)
     unregister(battery_bar)
     start()
@@ -37,7 +37,7 @@ String table analysis reveals:
 
 Import: hmi_driver, threading, audio (for playChargingAudio)
 
-
+Source: decompiled batteryui.so string table + Ghidra function list
 """
 
 import logging

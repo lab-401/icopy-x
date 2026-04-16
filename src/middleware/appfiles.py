@@ -13,7 +13,12 @@
 ##########################################################################
 
 """appfiles -- File/directory management for card dumps.
-    Audit:    docs/
+
+Reimplemented from appfiles.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/appfiles_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import os
@@ -316,6 +321,7 @@ def create_iclass(typ, csn):
 
     Original .so creates directory and returns next available path:
     /mnt/upan/dump/iclass/Iclass-{typ}_{csn}_{n}
+    Ground truth: trace_iclass_elite_read_20260401.txt line 7 —
     'hf iclass dump k ... f /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1 e'
     """
     mkdirs_on_icopy(PATH_DUMP_ICLASS)

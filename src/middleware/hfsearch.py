@@ -16,8 +16,9 @@
 
 Reimplements hfsearch.so (iCopy-X v1.0.90) parser() function.
 All constants, detection keywords, regex patterns, priority order,
-and return value shapes are  .
+and return value shapes are from the decompiled binary (Ghidra ARM).
 
+Ground truth: docs/middleware-integration/2-hf14ainfo_hfsearch_lfsearch_spec.md §2
 
 Binary: hfsearch.so (Cython 0.29.23, ARM:LE:32:v7)
     Source: C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\1\\tmprriqzsry\\hfsearch.py
@@ -78,7 +79,7 @@ def parser():
     Reads from executor.CONTENT_OUT_IN__TXT_CACHE (populated by prior
     startPM3Task('hf sea', 10000)).
 
-    Detection priority order:
+    Detection priority order (from decompiled binary §2.7):
         1. No known tag       -> {'found': False}
         2. iCLASS             -> {'found': True, 'isIclass': True}
         3. ISO15693           -> {'found': True, 'uid': ..., 'type': 19|46}

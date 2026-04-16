@@ -13,10 +13,15 @@
 ##########################################################################
 
 """hf14ainfo -- HF 14443A tag identification parser.
+
+Reimplemented from hf14ainfo.so (iCopy-X v1.0.90, Cython 0.29.21, ARM:LE:32:v7).
 All constants, function signatures, return values, and edge-case behaviors match
 the original binary as documented in the spec.
 
+Ground truth:
     Spec:        docs/middleware-integration/2-hf14ainfo_hfsearch_lfsearch_spec.md (section 1)
+    Decompiled:  decompiled/hf14ainfo_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hf14ainfo_strings.txt
 
 API:
     CMD = 'hf 14a info'
@@ -92,6 +97,7 @@ _KW_STATIC_NONCE = 'Static nonce: yes'
 _KW_MULTIPLE_TAGS = 'Multiple tags detected'
 # STR@0x0001daf8
 _KW_ANTICOLLISION = "Card doesn't support standard iso14443-3 anticollision"
+# hf14ainfo_strings.txt line 614
 _KW_BCC0_INCORRECT = 'BCC0 incorrect'
 # STR@0x0001dd24
 _KW_PRNG_DETECTION = 'Prng detection'
@@ -316,6 +322,7 @@ def parser():
 
     # -------------------------------------------------------------------
     # Case 3: BCC0 error
+    # Binary: hf14ainfo_strings.txt line 614
     # -------------------------------------------------------------------
     b_bcc_err = executor.hasKeyword(_KW_BCC0_INCORRECT)
     if b_bcc_err:

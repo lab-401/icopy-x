@@ -13,6 +13,12 @@
 ##########################################################################
 
 """hfmfuwrite -- MIFARE Ultralight / NTAG writer.
+
+Reimplemented from hfmfuwrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Decompiled:  decompiled/hfmfuwrite_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hfmfuwrite_strings.txt
     Spec:        docs/middleware-integration/6-write_spec.md (section 5)
 
 API:
@@ -54,6 +60,7 @@ except ImportError:
 def write_call(line):
     """Callback for per-line PM3 output during restore.
 
+    Ground truth (hfmfuwrite_strings.txt):
         __pyx_pw_10hfmfuwrite_1write_call
         __pyx_k_Can_t_select_card       = "Can't select card"
         __pyx_k_failed_to_write_block   = "failed to write block"
@@ -73,6 +80,7 @@ def write_call(line):
 def write(infos, file):
     """Write MIFARE Ultralight/NTAG data to a tag.
 
+    Ground truth (hfmfuwrite_strings.txt):
         __pyx_kp_u_hf_mfu_restore_s_e_f   = "hf mfu restore s e f {}"
         __pyx_kp_u_Can_t_select_card       = "Can't select card"
         __pyx_kp_u_failed_to_write_block   = "failed to write block"
@@ -101,6 +109,7 @@ def write(infos, file):
 
     # Execute with callback
     # Strings: __pyx_n_s_startPM3Task
+    # Ground truth timeouts (from real device traces):
     #   UL plain: 10888  (trace_dump_files_20260403)
     #   UL-EV1:   16888  (trace_original_full_20260410)
     # Larger tags (NTAG213/215/216) scale with page count.
@@ -141,6 +150,7 @@ def write(infos, file):
 def verify(infos, file=None):
     """Verify MIFARE Ultralight/NTAG data after writing.
 
+    Ground truth (hfmfuwrite_strings.txt):
         __pyx_n_s_scan_14a    = "scan_14a"
         __pyx_n_s_isTagFound  = "isTagFound"
         __pyx_n_s_stopPM3Task = "stopPM3Task"

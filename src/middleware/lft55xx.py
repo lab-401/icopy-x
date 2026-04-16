@@ -13,6 +13,11 @@
 ##########################################################################
 
 """lft55xx -- T55xx tag detection, dump, read, write, key check.
+
+Reimplemented from lft55xx.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Strings:    docs/v1090_strings/lft55xx_strings.txt
     Spec:       docs/middleware-integration/3-scan_spec.md (section 5.4)
     Analysis:   docs/ORIGINAL_ANALYSIS.md (T55xx Read section)
     Archive:    archive/lib_transliterated/lft55xx.py
@@ -49,6 +54,7 @@ CMD_DUMP_NO_KEY = 'lf t55xx dump'
 KEYWORD_CASE1 = 'Could not detect modulation automatically'
 TIMEOUT = 10000
 
+# Regex patterns — from lft55xx_strings.txt
 _RE_CHIP_TYPE = r'.*Chip Type.*:(.*)'
 _RE_MODULATE = r'.*Modulation.*:(.*)'
 _RE_BLOCK0 = r'Block0\s+:\s+0x([A-Fa-f0-9]+)'
@@ -384,6 +390,7 @@ def detectT55XX(key=None):
     parses response for Chip Type to confirm T55xx presence.
 
     Returns: 0 on success, negative integer on failure.
+    Ground truth: lfread.so::readT55XX does `ret < 0` on the return value
     of detectT55XX at line 209 (verified via TypeError when returning dict).
     detectT55XX MUST return an integer.  The parsed info dict is cached in
     DUMP_TEMP for callers (scan_t55xx, chkAndDumpT55xx, readT55XX) that
@@ -531,6 +538,7 @@ def chkAndDumpT55xx(listener):
     Called by lfread.so::readT55XX(listener).
 
     Returns: dict on success, negative integer on failure.
+    Ground truth: lfread.so::readT55XX calls detectT55XX (returns int),
     then calls chkAndDumpT55xx.  readT55XX checks isinstance(ret, dict)
     on chkAndDumpT55xx's return to determine success.
     detectT55XX returns int and caches info in DUMP_TEMP.

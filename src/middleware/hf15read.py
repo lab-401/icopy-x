@@ -13,7 +13,12 @@
 ##########################################################################
 
 """hf15read -- ISO 15693 reader.
-    Audit:    docs/
+
+Reimplemented from hf15read.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/hf15read_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import os

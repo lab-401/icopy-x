@@ -13,8 +13,13 @@
 ##########################################################################
 
 """write -- Tag write dispatcher.
+
+Reimplemented from write.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Archive:    archive/lib_transliterated/write.py
     Spec:       docs/middleware-integration/6-write_spec.md (section 1)
+    Strings:    docs/v1090_strings/write_strings.txt
 
 API:
     write(listener, infos, bundle, run_on_subthread=True)
@@ -257,6 +262,7 @@ def verify(listener, infos, bundle, run_on_subthread=True):
                 import lfverify
                 data = ''
                 raw = ''
+                # Ground truth: PM3 command log shows original lfverify reads
                 # tag-specific data. The BUNDLE from the read phase has the
                 # correct UID/data (from lfread), while the scan cache may
                 # have empty data due to lf sea compact format parsing.

@@ -16,6 +16,9 @@
 
 Transliterated from executor.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
+Ground truth:
+    Decompiled: decompiled/executor_ghidra_raw.txt (714K)
+    Strings:    docs/v1090_strings/executor_strings.txt
     Traces:     docs/Real_Hardware_Intel/trace_scan_flow_20260331.txt
                 docs/Real_Hardware_Intel/trace_lf_scan_flow_20260331.txt
     Spec:       docs/middleware-integration/1-executor_spec.md
@@ -27,7 +30,7 @@ Architecture:
 Module-level function library (no classes), matching original .so interface.
 
 Behavioral notes (from decompilation + QEMU verification):
-    - hasKeyword uses re.search (original: PyTuple_New(2) + PyObject_Call at 0x198a4)
+    - hasKeyword uses re.search (decompiled: PyTuple_New(2) + PyObject_Call at 0x198a4)
     - isEmptyContent: '' -> False, whitespace-only -> True (counter-intuitive)
     - getContentFromRegex returns LAST capturing group via m.lastindex
     - getContentFromRegexAll returns FIRST element of re.findall (despite name)
@@ -47,6 +50,7 @@ logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Optional dependency: hmi_driver (for reworkPM3All restart cycle)
+# Source: executor_strings.txt — "hmi_driver", "restartpm3"
 # ---------------------------------------------------------------------------
 try:
     import hmi_driver
@@ -63,7 +67,9 @@ except ImportError:
     pm3_compat = None
 
 # ---------------------------------------------------------------------------
+# Constants — from decompilation + executor_strings.txt
 # ---------------------------------------------------------------------------
+# executor_ghidra_raw.txt: 0x22B8 = 8888
 CODE_PM3_TASK_ERROR = -1
 PM3_REMOTE_ADDR = '127.0.0.1'
 PM3_REMOTE_CMD_PORT = 8888
@@ -90,13 +96,15 @@ _socket_instance = None
 # in the TCP socket buffer.  Checked at the start of startPM3Task.
 _pipeline_needs_cleanup = False
 
+# Nikola.D end-of-response regex — executor_strings.txt: "Nikola.D:"
 _RE_NIKOLA_END = re.compile(r'Nikola\.D:\s*-?\d+\s*$', re.MULTILINE)
+# Alternative end marker — executor_strings.txt: "pm3 -->"
 _RE_PROMPT_END = re.compile(r'pm3\s+-->\s*$', re.MULTILINE)
 
 
 # ===========================================================================
 # State management
-#
+# Decompiled: _set_running @0x16774, _set_stopped @0x167b8,
 #             _set_stopping @0x167fc, _wait_if_stopping @0x16840
 # ===========================================================================
 
@@ -393,7 +401,7 @@ def _send_plat(cmd, timeout=5888):
 
 # ===========================================================================
 # PM3 task execution
-#
+# Decompiled: startPM3Task @0x1af98 (28KB, Ghidra timeout — reconstructed
 #   from startPM3Plat/startPM3Ctrl which DID decompile + traces + archive)
 # Returns: 1=completed, -1=error (memory: project_startPM3Task_return.md)
 # ===========================================================================
@@ -424,6 +432,7 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
 
         result = _send_and_cache(cmd, timeout)
 
+        # Ground truth: when stopPM3Task() sets STOPPING, _send_and_cache
         # breaks its recv loop and returns partial/empty data.  This is NOT
         # a PM3 failure — do NOT rework.  Original trace shows ret=1 with
         # full simulation output after stop; reworking kills the connection
@@ -471,6 +480,7 @@ def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     Decompiled: uses Nikola.D.CTL channel, sets RUNNING/STOPPED state.
     Default timeout: 5888ms (from decompilation).
     Default ctrl_cmd='': original .so calls this without arguments from
+    PCModeActivity.startPCMode() (activity_main_strings.txt:29912).
     """
     _set_running(True)
     _set_stopped(False)
@@ -525,7 +535,7 @@ def reworkPM3All():
 
 # ===========================================================================
 # Callback management
-#
+# Decompiled: add_task_call/del_task_call use LOCK_CALL_PRINT + set ops
 # ===========================================================================
 
 def add_task_call(call):
@@ -542,7 +552,7 @@ def del_task_call(call):
 
 # ===========================================================================
 # Content/output query functions
-#
+# Decompiled: all read from CONTENT_OUT_IN__TXT_CACHE module global
 # ===========================================================================
 
 def getPrintContent():
@@ -653,7 +663,7 @@ def hasKeyword(keywords, line=None):
 
 # ===========================================================================
 # Error detection
-#
+# Decompiled: simple substring checks on the `lines` parameter
 # Strings: "Nikola.D.OFFLINE", "timeout while waiting for reply",
 #           "UART:: write time-out"
 # ===========================================================================

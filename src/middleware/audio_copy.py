@@ -18,10 +18,11 @@ Exports:
     playReadyForCopy(chk=False, infos=None) — play audio cue when AutoCopy
         has finished reading and is ready to write.
 
-Source: docs/ (lines 967-974),
+Source: docs/V1090_MODULE_AUDIT.txt (lines 967-974),
+        decompiled/audio_copy_ghidra_raw.txt (5040 lines),
         archive/lib_transliterated/audio_copy.py
 
-String table:
+String table (from Ghidra):
     playReadyForCopy, __audio_file_ext, __audio_dir, get_audio_typ,
     containermap, filesubid, contcons, audio, container, play
 

@@ -13,6 +13,12 @@
 ##########################################################################
 
 """hf15write -- ISO 15693 tag writer.
+
+Reimplemented from hf15write.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
+    Decompiled:  decompiled/hf15write_ghidra_raw.txt
+    Strings:     docs/v1090_strings/hf15write_strings.txt
     Spec:        docs/middleware-integration/6-write_spec.md (section 4)
 
 API:
@@ -44,6 +50,7 @@ except ImportError:
 def write(infos, file):
     """Write ISO 15693 data to a tag.
 
+    Ground truth (hf15write_strings.txt line 475):
         The keyword for csetuid success is stored as:
             "setting new UID \\(ok\\)"
         with regex-escaped parentheses (hasKeyword uses re.search).
@@ -98,6 +105,7 @@ def write(infos, file):
 def verify(infos, file):
     """Verify ISO 15693 tag data after writing.
 
+    Ground truth (hf15write_strings.txt):
         __pyx_n_s_scan_hfsea    = "scan_hfsea"
         __pyx_n_s_isTagFound    = "isTagFound"
         __pyx_n_s_set_infos_cache = "set_infos_cache"

@@ -13,7 +13,12 @@
 ##########################################################################
 
 """hfmfuinfo -- MIFARE Ultralight info helper.
-    Audit:    docs/
+
+Reimplemented from hfmfuinfo.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/hfmfuinfo_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import re

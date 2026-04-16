@@ -13,7 +13,12 @@
 ##########################################################################
 
 """felicaread -- FeliCa Lite reader.
-    Audit:    docs/
+
+Reimplemented from felicaread.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/felicaread_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import os

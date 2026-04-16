@@ -13,7 +13,13 @@
 ##########################################################################
 
 """mifare -- MIFARE Classic constants and utilities.
-    Audit:       docs/ (lines 186-211)
+
+Reimplemented from mifare.so (iCopy-X v1.0.90, C/C++ compiled, ARM 32-bit).
+
+Ground truth:
+    Decompiled:  decompiled/mifare_ghidra_raw.txt
+    Strings:     docs/v1090_strings/mifare_strings.txt
+    Audit:       docs/V1090_MODULE_AUDIT.txt (lines 186-211)
 
 This is a pure constants/utilities module.  No PM3 commands, no side effects.
 

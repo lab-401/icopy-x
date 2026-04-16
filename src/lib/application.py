@@ -19,8 +19,9 @@ Exports:
     startApp()          — create Tk root, init actstack, push MainActivity,
                           wire keymap, enter mainloop (blocks)
 
+Source: decompiled/application_ghidra_raw.txt (7361 lines, 2 public functions)
 
-String table:
+String table (from Ghidra):
     setWindows: tkinter, platform, Windows, ctypes, windll, user32, shcore,
                 SetProcessDpiAwareness, SetProcessDPIAware, geometry, 240x240,
                 resizable, scaling, mononoki, cursor, option_add, config, window
@@ -55,7 +56,7 @@ def setWindows(window=None):
             cursor    (str):   Cursor style ('' to hide)
             resizable (bool):  Window resizable, default False
 
-    Platform behaviour:
+    Platform behaviour (from decompiled .so):
         Windows: sets DPI awareness via ctypes.windll (shcore/user32)
         Linux/ARM: DPI setup is a no-op (device has fixed 240x240 LCD)
     """
@@ -87,7 +88,7 @@ def startApp():
     pushes MainActivity, wires keymap auto-dispatch on stack changes,
     and enters mainloop.  Blocks until the application exits.
 
-    This reproduces the exact sequence from
+    This reproduces the exact sequence from the decompiled startApp():
         1. import tkinter → Tk() → configure geometry/font/cursor
         2. import actstack → actstack.init(root)
         3. import actmain → actstack.start_activity(actmain.MainActivity)

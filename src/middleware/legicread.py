@@ -13,7 +13,12 @@
 ##########################################################################
 
 """legicread -- LEGIC MIM256 reader.
-    Audit:    docs/
+
+Reimplemented from legicread.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Strings:  docs/v1090_strings/legicread_strings.txt
+    Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
 import os

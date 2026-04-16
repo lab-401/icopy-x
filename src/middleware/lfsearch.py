@@ -13,7 +13,12 @@
 ##########################################################################
 
 """lfsearch -- LF tag search parser.
+
+Reimplemented from lfsearch.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Spec:       docs/middleware-integration/2-hf14ainfo_hfsearch_lfsearch_spec.md (section 3)
+    Strings:    docs/v1090_strings/lfsearch_strings.txt
     Archive:    archive/lib_transliterated/lfsearch.py (structural reference only)
 
 API:
@@ -158,6 +163,7 @@ def hasFCCN():
     Spec section 3.7 (hasFCCN):
         Calls parseFC(), returns bool(result)
 
+    Binary citation: lfsearch_strings.txt: hasFCCN
     """
     fc = parseFC()
     return bool(fc)
@@ -178,6 +184,7 @@ def getFCCN():
     if not fc and not cn:
         return 'FC,CN: X,X'
     # Clean FC: strip 0x prefix so int() parses as decimal
+    # Ground truth: original shows decimal FC values, not hex
     fc_clean = cleanHexStr(fc) if fc else ''
     try:
         fc_int = int(fc_clean)

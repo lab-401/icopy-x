@@ -13,9 +13,16 @@
 ##########################################################################
 
 """sniff -- Sniff trace parsing and PM3 sniff command dispatch.
-    Audit:    docs/ (lines 154-181)
+
+Reimplemented from sniff.so (iCopy-X v1.0.90).
+
+Ground truth:
+    Binary:   decompiled/sniff_ghidra_raw.txt (10,281 lines)
+    Strings:  docs/v1090_strings/sniff_strings.txt (1484 lines)
+    Audit:    docs/V1090_MODULE_AUDIT.txt (lines 154-181)
     Symbols:  18 exported functions (__pyx_mdef_5sniff_1 through _35)
 
+Complete exported API (from __pyx_mdef_5sniff_* in sniff_strings.txt:1467-1484):
     #1  sniff14AStart()
     #3  sniff14BStart()
     #5  sniffIClassAStart()
@@ -41,23 +48,31 @@ IMPORTS: executor, re
 import re
 
 # ── Constants from binary ────────────────────────────────────────────
+# sniff_strings.txt line 867
 PATTERN_LF_TRACE_LEN = r'Reading (\d+) bytes from device memory'
+# sniff_ghidra_raw.txt line 324, STR@0x0001c370
 # Legacy: "trace len = 1066", Iceman: "Recorded activity ( 1066 bytes )"
 PATTERN_HF_TRACE_LEN = r'(?:trace len = |Recorded activity \( )(\d+)'
+# sniff_strings.txt line 871
 PATTERN_T5577_OK_KEY = r'Default pwd write\s+\|\s+([A-Fa-f0-9]{8})\s\|'
+# sniff_strings.txt line 870
 PATTERN_T5577_WRITE_KEY = r'Default write\s+\|\s+([A-Fa-f0-9]{8})\s\|'
+# sniff_strings.txt line 869
 PATTERN_T5577_LEADING_KEY = r'Leading [0-9a-zA-Z]* pwd write\s+\|\s+([A-Fa-f0-9]{8})\s\|'
+# sniff_strings.txt line 893
 PATTERN_M1_KEY = r'key\s+([A-Fa-f0-9]+)'
 
 
 # ── Sniff start commands ──────────────────────────────────────────────
 # Each dispatches a PM3 command via executor.startPM3Task.
+# Ground truth: sniff_ghidra_raw.txt, trace_sniff_flow_20260403.txt
 
 def sniff14AStart():
     """Start ISO14443A sniff.
 
     Binary: __pyx_pw_5sniff_1sniff14AStart
     PM3 command: 'hf 14a sniff' (STR@0x0001c340)
+    Ground truth: trace_original_sniff_full_20260412.txt line 408:
         PM3> hf 14a sniff (timeout=8000)
     The sniff command is fire-and-forget — PM3 starts listening and
     returns the prompt immediately. timeout=8000 lets startPM3Task
@@ -113,8 +128,12 @@ def sniff125KStart():
 def sniffT5577Start():
     """Start T5577-specific LF sniff with config.
 
+    Binary: __pyx_pw_5sniff_11sniffT5577Start (sniff_strings.txt:1159)
     PM3 commands:
+        1. 'lf config a 0 t 20 s 10000' (sniff_strings.txt:874, timeout=5000)
+        2. 'lf t55xx sniff' (sniff_strings.txt:897, timeout=-1, blocks until done)
 
+    Ground truth:
         trace_sniff_t5577_enhanced_20260404.txt:
             lf config a 0 t 20 s 10000 (timeout=5000)
             lf t55xx sniff (timeout=-1)
@@ -133,6 +152,7 @@ def sniffT5577Start():
 def parserHfTraceLen():
     """Parse HF trace length from executor cache.
 
+    Binary: __pyx_pw_5sniff_25parserHfTraceLen (sniff_strings.txt:1155)
     Takes ZERO arguments.
     Reads executor.CONTENT_OUT_IN__TXT_CACHE internally.
     Uses regex: 'trace len = (\\d+)' (STR@0x0001c370)
@@ -153,9 +173,12 @@ def parserHfTraceLen():
 def parserLfTraceLen():
     """Parse LF trace length from executor cache.
 
+    Binary: __pyx_pw_5sniff_13parserLfTraceLen (sniff_strings.txt:1156)
     Takes ZERO arguments.
     Reads executor.CONTENT_OUT_IN__TXT_CACHE internally.
+    Uses regex: 'Reading (\\d+) bytes from device memory' (sniff_strings.txt:867)
 
+    Ground truth: T5577 fixtures all contain 'Reading N bytes from device memory'
     where N is the trace length (e.g., 42259, 38499, 24999).
 
     Returns:
@@ -180,6 +203,8 @@ parserTraceLen = parserHfTraceLen
 def parserT5577OkKeyForLine(line):
     """Extract password from a 'Default pwd write' trace line.
 
+    Binary: __pyx_pw_5sniff_17parserT5577OkKeyForLine (sniff_strings.txt:1148)
+    Regex: 'Default pwd write\\s+\\|\\s+([A-Fa-f0-9]{8})\\s\\|' (sniff_strings.txt:871)
 
     Example match:
         '[+] Default pwd write | 20206666 | 00148040 |  1  |...'
@@ -204,7 +229,9 @@ def parserT5577OkKeyForLine(line):
 def parserT5577LeadingKeyForLine(line):
     """Extract password from a 'Leading ... pwd write' trace line.
 
+    Binary: __pyx_pw_5sniff_19parserT5577LeadingKeyForLine (sniff_strings.txt:1147)
     Regex: 'Leading [0-9a-zA-Z]* pwd write\\s+\\|\\s+([A-Fa-f0-9]{8})\\s\\|'
+           (sniff_strings.txt:869)
 
     Args:
         line: Single trace line string.
@@ -223,6 +250,8 @@ def parserT5577LeadingKeyForLine(line):
 def parserT5577WriteKeyForLine(line):
     """Extract data from a 'Default write' (no password) trace line.
 
+    Binary: __pyx_pw_5sniff_21parserT5577WriteKeyForLine (sniff_strings.txt:1146)
+    Regex: 'Default write\\s+\\|\\s+([A-Fa-f0-9]{8})\\s\\|' (sniff_strings.txt:870)
 
     Example match:
         '[+] Default write | 00000000 | C02A4E07 |  1  |...'
@@ -249,11 +278,13 @@ def parserT5577WriteKeyForLine(line):
 def parserKeysForT5577(parser_fn):
     """Extract T5577 keys from executor cache using a line parser function.
 
+    Binary: __pyx_pw_5sniff_23parserKeysForT5577 (sniff_strings.txt:1145)
     Takes 1 argument: a parser function (e.g., parserT5577OkKeyForLine).
 
     Reads executor.CONTENT_OUT_IN__TXT_CACHE, splits into lines,
     applies parser_fn to each line, and collects non-empty results.
 
+    Ground truth (QEMU probe, post-mortem Section 2.3):
         parserKeysForT5577(parserT5577OkKeyForLine)
         → ['20206666', '20206666', ...] (list of hex password strings)
 
@@ -281,6 +312,7 @@ def parserKeysForT5577(parser_fn):
 def parserKeyForLine(line, regex):
     """Extract key from a trace line using regex.
 
+    Binary: __pyx_pw_5sniff_15parserKeyForLine (sniff_strings.txt:1149)
 
     Args:
         line: Single trace line string.
@@ -300,6 +332,8 @@ def parserKeyForLine(line, regex):
 def parserM1KeyForLine(line):
     """Extract MIFARE key from a single trace line.
 
+    Binary: __pyx_pw_5sniff_27parserM1KeyForLine (sniff_strings.txt:1162)
+    Regex: 'key\\s+([A-Fa-f0-9]+)' (sniff_strings.txt:893)
 
     Matches trace annotation lines containing 'key FFFFFFFFFFFF' pattern.
     Example: '... | key FFFFFFFFFFFF prng WEAK |' → 'FFFFFFFFFFFF'
@@ -321,6 +355,7 @@ def parserM1KeyForLine(line):
 def parserDataForSCA(line, src='Rdr', crc='ok', annotation=''):
     """Parse trace line for Side Channel Analysis data.
 
+    Binary: __pyx_pw_5sniff_29parserDataForSCA (sniff_strings.txt:1161)
 
     Parses structured trace output lines (from hf list / hf 14a list).
     Filters by source (Rdr/Tag), CRC status, and optional annotation.
@@ -365,6 +400,7 @@ def parserDataForSCA(line, src='Rdr', crc='ok', annotation=''):
 def parserUidForData(line):
     """Extract UID/CSN from trace data line.
 
+    Binary: __pyx_pw_5sniff_31parserUidForData (sniff_strings.txt:1158)
     Uses SELECT_UID marker (STR@0x0001c3a8) to identify UID response.
 
     Enhanced beyond original binary: also matches 'CSN' annotation
@@ -394,6 +430,7 @@ def parserUidForData(line):
 def parserUidForKeyIndex(index, lines):
     """Get UID associated with a key index from trace lines.
 
+    Binary: __pyx_pw_5sniff_33parserUidForKeyIndex (sniff_strings.txt:1144)
 
     Args:
         index: Key index (0-based).
@@ -417,6 +454,7 @@ def parserUidForKeyIndex(index, lines):
 def parserKeyForM1():
     """Extract MIFARE Classic keys from executor cache.
 
+    Binary: __pyx_pw_5sniff_35parserKeyForM1 (sniff_strings.txt:1143)
     Reads executor.CONTENT_OUT_IN__TXT_CACHE, parses trace lines
     to extract UID->key mappings from authentication exchanges.
 
@@ -453,6 +491,7 @@ def saveSniffData():
     """Save captured trace data to file.
 
     NOTE: This function does NOT exist in the original sniff.so binary
+    (confirmed: not in symbol table, sniff_ghidra_raw.txt).
     In the original firmware, SniffActivity.saveSniffData() is an
     activity method in activity_main.so that writes executor cache
     to /mnt/upan/trace/ directly.

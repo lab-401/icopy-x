@@ -13,8 +13,13 @@
 ##########################################################################
 
 """iclasswrite -- iClass writer (blocks, password, verify).
+
+Reimplemented from iclasswrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Archive:    archive/lib_transliterated/iclasswrite.py
     Spec:       docs/middleware-integration/6-write_spec.md (section on iclasswrite)
+    Strings:    docs/v1090_strings/iclasswrite_strings.txt
 
 API:
     readBlockHex(file, block, block_size=8) -> str

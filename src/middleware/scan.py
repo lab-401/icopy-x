@@ -16,6 +16,9 @@
 
 Transliterated from scan.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
+Ground truth:
+    Decompiled: decompiled/scan_ghidra_raw.txt
+    Strings:    docs/v1090_strings/scan_strings.txt
     Traces:     docs/Real_Hardware_Intel/trace_scan_flow_20260331.txt
                 docs/Real_Hardware_Intel/trace_lf_scan_flow_20260331.txt
     Spec:       docs/middleware-integration/3-scan_spec.md
@@ -234,12 +237,14 @@ def scan_14a():
             # Spec section 9.3: hf 14a info → hf mfu info → TYPE field
             if info.get('isUL'):
                 # Extract UID from hf 14a info BEFORE hf mfu info clobbers cache
+                # Ground truth: original_current_ui scan_mf_ultralight shows
                 # scan_cache = {found, isMFU, type, uid} with uid from hf14ainfo
                 ul_uid = hf14ainfo.get_uid()
 
                 ul_ret = executor.startPM3Task('hf mfu info', 8888)
                 if ul_ret != -1:
                     # Determine UL subtype from TYPE field
+                    # Priority order from hfmfuinfo_strings.txt
                     if executor.hasKeyword('NTAG 213'):
                         ul_type = tagtypes.NTAG213_144B
                     elif executor.hasKeyword('NTAG 215'):
@@ -374,6 +379,7 @@ def scan_t55xx():
     """Scan for T55xx tags.
 
     Delegates to lft55xx.detectT55XX() which sends 'lf t55xx detect'.
+    Ground truth: detectT55XX returns integer (0=success, negative=failure).
     Parsed info dict is cached in lft55xx.DUMP_TEMP (lft55xx.py:351).
 
     Returns a result dict with progress=3.
@@ -709,6 +715,7 @@ class Scanner:
             5. scan_em4x05 (progress=4)
             6. scan_felica (progress=5)
 
+        Ground truth: original_current_ui scan_em410x shows LF tag found at
         53% progress (state 4), confirming order is 14a→hfsea→lfsea.
 
         Between each step, _is_can_next is checked.
@@ -720,6 +727,7 @@ class Scanner:
             result = None
 
             # Progress values chosen to match original scan.so behaviour.
+            # Ground truth (original_current_ui captures):
             #   First scanning state: 23% fill (46px / 200px)
             #   After LF search:      53% fill (106px / 200px)
             # The callback fires BEFORE each scan step so the UI shows

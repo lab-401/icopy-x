@@ -15,6 +15,8 @@
 """USB gadget kernel module management.
 
 OSS reimplementation of gadget_linux.so.
+Binary source: gadget_linux.so (Cython, os + subprocess)
+Ground truth: V1090_MODULE_AUDIT.txt lines 1029-1044
 Archive reference: /home/qx/archive/lib_transliterated/gadget_linux.py
 
 Manages Linux USB gadget kernel modules for PC-Mode:
@@ -49,6 +51,7 @@ def usb_mass_storage():
     """Enable USB mass storage gadget mode.
 
     Loads g_mass_storage kernel module with the UPAN partition.
+    Ground truth: V1090_SO_STRINGS_RAW.txt — "sudo modprobe g_mass_storage"
     with "removable=1 stall=0" parameters.
     """
     partition = get_upan_partition()
@@ -66,6 +69,7 @@ def serial(kill=True):
     Args:
         kill: if True, remove existing serial module first (default True)
 
+    Ground truth: V1090_SO_STRINGS_RAW.txt — "sudo modprobe g_serial"
     """
     if kill:
         try:
@@ -85,6 +89,7 @@ def upan_and_serial():
     Loads g_acm_ms composite gadget (ACM serial + mass storage).
     This is the main function called by PCModeActivity.startPCMode().
 
+    Ground truth: gadget_linux.so string table (STR@0x0001d50c " file=",
     STR@0x0001d2d0 " removable=1 stall=0") + live device confirmation
     (/sys/module/g_acm_ms/parameters/: file=/dev/mmcblk0p4, removable=Y, stall=N)
     See: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt §2
@@ -139,6 +144,7 @@ def kill_all_module(auto_remount=True):
 def mount_upan_partition():
     """Mount the UPAN partition at /mnt/upan/.
 
+    Ground truth: V1090_SO_STRINGS_RAW.txt — "sudo mount -o rw "
     """
     logger.debug("gadget_linux: mount %s → %s", _UPAN_PARTITION, _MOUNT_POINT)
     try:
@@ -151,6 +157,7 @@ def mount_upan_partition():
 def umount_upan_partition():
     """Unmount the UPAN partition.
 
+    Ground truth: V1090_SO_STRINGS_RAW.txt — "sudo umount "
     """
     logger.debug("gadget_linux: umount %s", _MOUNT_POINT)
     try:

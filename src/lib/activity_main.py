@@ -25,8 +25,10 @@ KeyEnterM1Activity, UpdateActivity, OTAActivity, and hidden activities
 IClassSEActivity, WearableDeviceActivity, ReadFromHistoryActivity,
 AutoExceptCatchActivity, SnakeGameActivity, WarningT5XActivity,
 WarningT5X4X05KeyEnterActivity).
-and activity_main.so.  Each class Matches original implementation
-documented and the UI mapping docs.
+
+Replaces relevant classes from actmain.so (252KB, 129 functions)
+and activity_main.so.  Each class matches the decompiled behavior
+documented in decompiled/SUMMARY.md and the UI mapping docs.
 
 Import convention: ``from lib.activity_main import BacklightActivity`` etc.
 """
@@ -65,7 +67,7 @@ from lib._constants import (
 # Simulatable tag type IDs — derived from SIM_MAP (audit finding 3)
 # =====================================================================
 # Built dynamically from SIM_MAP type IDs rather than hardcoding.
-# SIM_MAP is the .
+# SIM_MAP is the ground truth (decompiled from activity_main.so simulate_map).
 # Deferred initialization: set after SIM_MAP is defined (line ~4670).
 _SIMULATE_TYPES = frozenset()
 
@@ -138,7 +140,9 @@ class BacklightActivity(BaseActivity):
     Uses CheckedListView with radio-style selection.
     3 levels, NO "Off" option.
 
+    Binary source: activity_main.so BacklightActivity
     Verified: QEMU screenshots, real device traces (20260330)
+    Spec: docs/UI_Mapping/08_backlight/README.md
 
     Key behavior (from binary):
         UP/DOWN: scroll through levels in CheckedListView + instant
@@ -196,6 +200,7 @@ class BacklightActivity(BaseActivity):
         self._listview.setSelection(self._original_level)
         self._listview.check(self._original_level)
         # Wire instant preview: brightness changes on each UP/DOWN
+        # Ground truth: UI_Mapping/10_backlight/README.md line 82-83
         self._listview.setOnSelectionChangeCall(self._on_preview)
         self._listview.show()
 
@@ -205,6 +210,7 @@ class BacklightActivity(BaseActivity):
     def _on_preview(self, new_idx):
         """Instant backlight preview on selection change (UP/DOWN).
 
+        Ground truth (trace_original_backlight_volume_20260410.txt):
         Original firmware calls settings.setBacklight(level) on EVERY
         UP/DOWN navigation. settings.setBacklight() both persists to
         conf.ini AND applies the hardware change via hmi_driver.
@@ -241,6 +247,7 @@ class BacklightActivity(BaseActivity):
     def _save(self):
         """Save selected level via settings.setBacklight(level).
 
+        Ground truth (trace_original_backlight_volume_20260410.txt):
             SETTINGS.setBacklight((1,))  — UI level only (0/1/2)
         settings.setBacklight() handles BOTH config persist AND
         hardware application via hmi_driver internally.
@@ -264,6 +271,7 @@ class BacklightActivity(BaseActivity):
     def _cancel(self):
         """Revert to original hardware level, finish.
 
+        Ground truth (trace_original_backlight_volume_20260410.txt):
             On PWR, original calls settings.getBacklight() then finish.
             The recovery sends the original UI level (0/1/2) back to
             settings.setBacklight() to revert hardware.
@@ -286,7 +294,9 @@ class VolumeActivity(BaseActivity):
     Uses CheckedListView with radio-style selection.
     4 levels, includes "Off" option.
 
+    Binary source: activity_main.so VolumeActivity
     Verified: QEMU screenshots, real device Session 1 trace
+    Spec: docs/UI_Mapping/10_volume/README.md
 
     Key behavior (from binary):
         UP/DOWN: scroll through levels in CheckedListView + instant
@@ -338,6 +348,7 @@ class VolumeActivity(BaseActivity):
         self._listview.setSelection(self._original_level)
         self._listview.check(self._original_level)
         # Wire instant audio preview: volume changes on each UP/DOWN
+        # Ground truth: volume_common.sh line 11, UI_Mapping/11_volume/README.md
         self._listview.setOnSelectionChangeCall(self._on_preview)
         self._listview.show()
 
@@ -346,6 +357,7 @@ class VolumeActivity(BaseActivity):
     def _on_preview(self, new_idx):
         """Instant volume preview on selection change (UP/DOWN).
 
+        Ground truth (trace_original_backlight_volume_20260410.txt):
         On each UP/DOWN, original calls audio.playVolumeExam(alsa_value)
         with the ALSA percentage (0/20/50/100). The actual setVolume +
         settings persist happen on OK, not on navigation.
@@ -538,7 +550,7 @@ class SettingsMenuActivity(BaseActivity):
 class SleepModeActivity(BaseActivity):
     """Sleep mode -- dims screen, any key wakes.
 
-    From
+    From decompiled actmain.so SleepModeActivity:
     - onCreate: sets backlight to 0, fills screen black, no title/buttons
     - onKeyEvent: any key restores backlight and finishes
     - onDestroy: restores previous backlight level
@@ -625,7 +637,7 @@ class SleepModeActivity(BaseActivity):
 class AboutActivity(BaseActivity):
     """Device information display -- 2 pages (info + update instructions).
 
-    From
+    From decompiled actmain.so AboutActivity and UI mapping docs:
 
     Page 0 (Device Info):
         - 6 lines from resources.itemmsg: aboutline1..aboutline6
@@ -661,6 +673,7 @@ class AboutActivity(BaseActivity):
     def onCreate(self, bundle):
         """Set up title, buttons, and device info.
 
+        Ground truth (QEMU 20260405): title is always "About" (no page
         indicator in the title -- the indicator is in the content area).
         Buttons are hidden.  A brief "Processing..." toast appears on
         entry while version data loads.
@@ -698,6 +711,7 @@ class AboutActivity(BaseActivity):
     def onKeyEvent(self, key):
         """Handle navigation keys.
 
+        Ground truth (QEMU 20260405):
         M1: no-op (buttons are hidden)
         M2/OK: launch UpdateActivity (only from page 2, index 1)
         PWR: finish
@@ -771,6 +785,7 @@ class AboutActivity(BaseActivity):
     def _show_page(self):
         """Render current page content plus a page indicator.
 
+        Ground truth (QEMU 20260405): content_text always has 3 items:
           [0] = page 0 text at (19, 140), fill=black, font=13, anchor=w
           [1] = page 1 text at (19, 140), fill=black, font=13, anchor=w
           [2] = page indicator at (165, 8), fill=white, font=11, anchor=nw
@@ -863,6 +878,7 @@ class AboutActivity(BaseActivity):
     def _check_update(self):
         """Launch UpdateActivity for firmware update.
 
+        Ground truth (decompiled activity_update.so):
         OK from About page 2 pushes UpdateActivity which has its own
         UI: "Start" confirmation → progress → result.  The install
         must NOT run inline on AboutActivity — it blocks the UI thread
@@ -882,7 +898,7 @@ class AboutActivity(BaseActivity):
 class WarningDiskFullActivity(BaseActivity):
     """Disk full warning -- shows message, offers to clear dump files.
 
-    From
+    From decompiled actmain.so WarningDiskFullActivity:
     - onCreate: setTitle("Warning"), show disk_full_tips, buttons Ignore/Clear
     - onKeyEvent: M1 = finish (ignore), M2/OK = startClear
     - startClear: uses shutil.rmtree on dump directories, shows clearing toast
@@ -893,7 +909,7 @@ class WarningDiskFullActivity(BaseActivity):
 
     ACT_NAME = 'warning_diskfull'
 
-    # Default path for USB storage
+    # Default path for USB storage (from decompiled constants)
     UPAN_PATH = '/mnt/upan'
     DUMP_DIRS = ['dump', 'dumps', 'data']
 
@@ -960,6 +976,7 @@ class WarningDiskFullActivity(BaseActivity):
 class ConsolePrinterActivity(BaseActivity):
     """Full-screen PM3 command output console.
 
+    Ground truth: lua_console_*.png — full-screen black background,
     white monospace text, NO title bar, NO button bar.
 
     Key handling (read_console_common.sh lines 27-35):
@@ -969,6 +986,7 @@ class ConsolePrinterActivity(BaseActivity):
         LEFT:      horizontal scroll left
         PWR:       exit console (finish activity)
 
+    Binary symbols: textfontsizeup, textfontsizedown, updatefontinfo,
     updatetextfont, update_progress, add_text, on_exec_print, clear
     """
 
@@ -977,6 +995,7 @@ class ConsolePrinterActivity(BaseActivity):
     def onCreate(self, bundle):
         """Set up full-screen console with executor PM3 output.
 
+        Ground truth: lua_console_*.png shows NO title bar, NO button bar.
         Full 240x240 black background with white monospace text.
 
         If bundle contains 'cmd', execute it via executor.startPM3Task.
@@ -1014,6 +1033,7 @@ class ConsolePrinterActivity(BaseActivity):
         self._autofit_done = False
 
         # Execute PM3 command from bundle if present
+        # Ground truth: trace_misc_flows_session2_20260330.txt line 31:
         #   PM3-TASK> script run hf_read timeout=-1
         cmd = (bundle or {}).get('cmd', '')
         if cmd:
@@ -1098,7 +1118,8 @@ class ScanActivity(BaseActivity):
     The scan.so module handles ALL RFID detection logic.
     We just orchestrate the UI states.
 
-    Verified:  (exhaustive)
+    Binary source: activity_main.so ScanActivity
+    Verified: docs/UI_Mapping/03_scan_tag/README.md (exhaustive)
     Spec: 48 scannable types, 6 states, 5 toast variants
 
     Key behavior (from binary onKeyEvent):
@@ -1151,6 +1172,7 @@ class ScanActivity(BaseActivity):
     def onCreate(self, bundle):
         """Start scanning immediately on entry.
 
+        Ground truth: scan_tag_scanning_1..5.png, trace_scan_flow_20260331.txt
         START(ScanActivity, None) → immediate PM3 commands.
         """
         self.setTitle(resources.get_str('scan_tag'))
@@ -1173,10 +1195,11 @@ class ScanActivity(BaseActivity):
     def onKeyEvent(self, key):
         """Handle keys based on current state.
 
-        From binary onKeyEvent -- see
+        From binary onKeyEvent -- see docs/UI_Mapping/03_scan_tag/README.md
         section 6 for complete key handler logic.
         """
         # PWR: always works, even during scanning.
+        # Ground truth (spec): "SCANNING state: PWR = cancel scan, exit activity"
         # Must abort any in-flight PM3 command before finishing.
         if key == KEY_PWR:
             # Dismiss toast if showing (but don't swallow the key)
@@ -1207,10 +1230,12 @@ class ScanActivity(BaseActivity):
             return
 
         # Result states: FOUND, NOT_FOUND, WRONG_TYPE, MULTI
+        # Ground truth (original trace line 84):
         #   FOUND state: M1="Rescan", M2="Simulate" → pushes SimulationActivity
         #   Other states: M1/M2="Rescan"
         if key == KEY_M2 and self._state == self.STATE_FOUND:
             # Simulate — push SimulationActivity with full scan cache
+            # Ground truth: original passes entire scan result dict as bundle
             # e.g. {'found':True,'uid':'5E5BCE4C','type':1,'len':4,'sak':'08',...}
             tag_type = -1
             if isinstance(self._scan_result, dict):
@@ -1323,6 +1348,7 @@ class ScanActivity(BaseActivity):
         self._scan_result = None
 
         # Render scanning screen via JSON
+        # Ground truth: original firmware immediately fills to 50%
         self._jr.set_state({'scan_progress': 50})
         self._jr.render({
             'content': {
@@ -1496,6 +1522,7 @@ class ScanActivity(BaseActivity):
     def _showFoundState(self, result):
         """Display tag info by delegating to template.so.
 
+        Ground truth: template.so (Cython .so on device) owns ALL scan
         result rendering.  It picks the right __drawXxx method based on
         tag type and formats every field (UID, SAK, ATQA, Frequency, …)
         using its internal string table.
@@ -1509,6 +1536,8 @@ class ScanActivity(BaseActivity):
 
         # template.so renders all tag info directly to the canvas.
         # API: template.draw(typ, data, canvas) — canvas is the parent.
+        # Ground truth: template.__drawFinal calls parent.create_text()
+        # Ground truth: trace_lf_scan_flow_20260331.txt shows template.so
         # reads executor.CONTENT_OUT_IN__TXT_CACHE for LF tag display data.
         canvas = self.getCanvas()
         if canvas is not None:
@@ -1520,6 +1549,7 @@ class ScanActivity(BaseActivity):
                 print('[TEMPLATE] draw failed: %s' % e, flush=True)
 
         # Set buttons: M1=Rescan, M2=Simulate always (active only if simulatable)
+        # Ground truth: original .so shows M2="Simulate" for ALL types,
         # with M2_active=False for non-simulatable types.
         self.setLeftButton(resources.get_str('rescan'))
         self.setRightButton(resources.get_str('simulate'), active=(tag_type in _SIMULATE_TYPES))
@@ -1527,11 +1557,14 @@ class ScanActivity(BaseActivity):
     def _showResultButtons(self):
         """Update M1/M2 buttons based on scan result.
 
+        Ground truth — real device screenshots:
           scan_tag_scanning_5.png (found MFC 1K): M1="Rescan" M2="Simulate"
           scan_tag_no_tag_found_2.png (not found): M1="Rescan" M2="Rescan"
 
+        Ground truth — QEMU API dump (qemu_api_dump_filtered.txt line 223):
           showButton(self, found, cansim=False)
 
+        Ground truth — activity_main_strings.txt:
           text_rescan, text_simulate
         """
         if self._state == self.STATE_FOUND:
@@ -1676,7 +1709,9 @@ class PCModeActivity(BaseActivity):
 
     4 states: IDLE -> STARTING -> RUNNING -> STOPPING -> finish()
 
+    Binary source: activity_main.so PCModeActivity
     Verified: QEMU walker screenshots
+    Spec: docs/UI_Mapping/07_pc_mode/README.md
 
     State machine:
         IDLE:     M1/M2/OK -> STARTING (run_press thread)
@@ -2009,7 +2044,8 @@ class TimeSyncActivity(BaseActivity):
         EDIT    — cursor on one of 6 fields, UP/DOWN change value,
                   LEFT/RIGHT move cursor. M2="Save", PWR=back to display.
 
-    Verified: QEMU screenshots,
+    Binary source: activity_main.so TimeSyncActivity
+    Verified: QEMU screenshots, docs/UI_Mapping/13_time_settings/README.md
 
     Screen layout:
         Title: "Time Settings" (resources key: time_sync)
@@ -2147,6 +2183,7 @@ class TimeSyncActivity(BaseActivity):
         else:
             self._values[field] = val + 1
         # Original .so sets day = max_days_in_month on year/month change
+        # Ground truth: April-09 + UP year → April-30 (not April-09)
         if field in ('year', 'month'):
             self._setDayToMonthMax()
         self._drawTimeFields()
@@ -2201,6 +2238,7 @@ class TimeSyncActivity(BaseActivity):
     def _setDayToMonthMax(self):
         """Set day to max days in current month/year.
 
+        Ground truth: original .so always sets day = max_days_in_month
         when year or month field changes (not just clamping down).
         Evidence: time_increment_field trace: April-09 + UP year → April-30.
         """
@@ -2256,6 +2294,7 @@ class TimeSyncActivity(BaseActivity):
     def _drawTimeFields(self):
         """Draw date/time editor via JsonRenderer time_editor content type.
 
+        Ground truth (QEMU 20260405): 11 text items + 2 background boxes.
         All rendering delegated to JsonRenderer._render_time_editor.
         """
         if not hasattr(self, '_jr'):
@@ -2303,7 +2342,8 @@ class LUAScriptCMDActivity(BaseActivity):
     Selecting a script launches ConsolePrinterActivity with
     'script run <filename>'.
 
-    Verified: QEMU screenshots,
+    Binary source: activity_main.so LUAScriptCMDActivity
+    Verified: QEMU screenshots, docs/UI_Mapping/14_lua_script/README.md
 
     Screen layout:
         Title: "LUA Script X/Y" (paginated)
@@ -2469,7 +2509,9 @@ class ReadListActivity(BaseActivity):
     When the user selects a type, launches ReadActivity with that type.
     Also serves as the base pattern for CardWalletActivity (Dump Files).
 
+    Binary source: activity_main.so ReadListActivity
     Verified: QEMU screenshots (Read Tag 1/8 .. 8/8), real device captures
+    Spec: docs/UI_Mapping/04_read_tag/V1090_READ_UI_STATES.md
     Data: tools/read_list_map.json (40 readable types)
 
     Key behavior (from binary onKeyEvent):
@@ -2549,6 +2591,7 @@ class ReadListActivity(BaseActivity):
             4. Create ListView with type names
         """
         self.setTitle(resources.get_str('read_tag'))
+        # Ground truth: read_tag_list_1_8.png shows NO button bar.
         # The list occupies the full content area with no M1/M2 buttons.
         self.dismissButton()
 
@@ -2684,6 +2727,10 @@ class ReadListActivity(BaseActivity):
 class WipeTagActivity(BaseActivity):
     """Erase tag data -- 2-item type selection + scan + erase operation.
 
+    Binary source: activity_main.so WipeTagActivity
+    Spec: docs/UI_Mapping/13_erase_tag/README.md
+    State table: docs/flows/erase/README.md lines 130-137
+    Screenshots: docs/Real_Hardware_Intel/Screenshots/erase_tag_*.png
 
     States:
         TYPE_SELECT -- Choose erase method: MF1 or T5577
@@ -2726,6 +2773,7 @@ class WipeTagActivity(BaseActivity):
     def onCreate(self, bundle):
         """Set up title, buttons, and 2-item erase type list.
 
+        Ground truth (screenshot erase_tag_menu_1.png):
             Title: "Erase Tag"
             List: "1. Erase MF1/L1/L2/L3", "2. Erase T5577"
             M1="Back", M2="Erase"
@@ -2741,11 +2789,13 @@ class WipeTagActivity(BaseActivity):
         self._toast = Toast(canvas)
 
         # ProgressBar for scanning/erasing phases
+        # Ground truth (screenshots menu_2..5): bar at bottom of content area
         from lib.widget import ProgressBar
         self._progress = ProgressBar(canvas)
 
         from lib.widget import ListView
         self._listview = ListView(canvas)
+        # Ground truth (screenshot menu_1): numbered items
         items = [
             '1. ' + resources.get_str('wipe_m1'),
             '2. ' + resources.get_str('wipe_t55xx'),
@@ -2756,6 +2806,7 @@ class WipeTagActivity(BaseActivity):
     def onKeyEvent(self, key):
         """State-dependent key dispatch.
 
+        Ground truth: state table docs/flows/erase/README.md lines 130-137
         TYPE_SELECT: UP/DOWN scroll, M2/OK start, M1/PWR back
         SCANNING/ERASING: PWR cancel+finish
         SUCCESS/FAILED/NO_KEYS: M1/M2/OK re-erase, PWR finish
@@ -2818,6 +2869,7 @@ class WipeTagActivity(BaseActivity):
     def _startErase(self):
         """Begin erase for selected type.
 
+        Ground truth: screenshots menu_2 (Scanning), menu_3 (ChkDIC)
         MF1: SCANNING state with ProgressBar → detect → ERASING
         T5577: direct to ERASING with ProgressBar "Processing..."
         """
@@ -2888,6 +2940,7 @@ class WipeTagActivity(BaseActivity):
     def _eraseMF1(self):
         """Erase MF1 tag — scan then erase with progress.
 
+        Middleware: src/middleware/erase.py (detect_mf1_tag, erase_mf1_detected)
         """
         def _do_erase():
             try:
@@ -2946,6 +2999,7 @@ class WipeTagActivity(BaseActivity):
     def _eraseT5577(self):
         """Erase T5577 tag — delegates to middleware erase module.
 
+        Middleware: src/middleware/erase.py (erase_t5577)
         """
         def _do_erase():
             try:
@@ -2974,6 +3028,7 @@ class WipeTagActivity(BaseActivity):
         Args:
             result: 'success', 'no_keys', 'no_tag', 'error', or 'failed'
 
+        Ground truth (screenshots menu_6, unknown_error):
             Result screens show M1="Erase", M2="Erase" buttons.
             State table: M1/M2/OK re-erase, PWR exits.
         """
@@ -3031,6 +3086,7 @@ class WipeTagActivity(BaseActivity):
                 )
 
         # Restore buttons: M1="Erase", M2="Erase"
+        # Ground truth: screenshots menu_6, unknown_error
         self.setLeftButton(resources.get_str('wipe'))
         self.setRightButton(resources.get_str('wipe'))
 
@@ -3050,6 +3106,8 @@ class SniffActivity(BaseActivity):
     Shows a 5-item list of sniff types. User selects one, starts sniff,
     views results after stop. Results can be saved to file.
 
+    Binary source: activity_main.so SniffActivity (19 methods)
+    Spec: docs/UI_Mapping/05_sniff/V1090_SNIFF_FLOW_COMPLETE.md
     Verified: QEMU screenshots ("Sniff TRF 1/1" with 5 items)
 
     5 sniff types (from sniff.so binary):
@@ -3094,6 +3152,7 @@ class SniffActivity(BaseActivity):
     STATE_RESULT = 'result'
 
     # Sniff type definitions: (resource_key, pm3_start_cmd, pm3_list_cmd, type_id)
+    # Ground truth: trace_sniff_flow_20260403.txt — real device PM3 commands
     SNIFF_TYPES = [
         ('sniff_item1', 'hf 14a sniff', 'hf list mf', '14a'),       # trace: hf list mf NOT hf 14a list
         ('sniff_item2', 'hf 14b sniff', 'hf list 14b', '14b'),
@@ -3103,6 +3162,7 @@ class SniffActivity(BaseActivity):
     ]
 
     # Instruction pages for HF types (Steps 1-4)
+    # Ground truth: sniff_trf_1_4_1.png through sniff_trf_4_4.png
     _HF_INSTRUCTIONS = ['sniffline1', 'sniffline2', 'sniffline3', 'sniffline4']
     # Single instruction page for T5577
     _T5577_INSTRUCTIONS = ['sniffline_t5577']
@@ -3183,6 +3243,7 @@ class SniffActivity(BaseActivity):
     def _onKeyTypeSelect(self, key):
         """Handle keys in TYPE_SELECT state.
 
+        Ground truth: sniff_common.sh — OK selects type → shows instruction screen.
         """
         if key == KEY_UP:
             if self._listview is not None:
@@ -3203,6 +3264,7 @@ class SniffActivity(BaseActivity):
     def _onKeyInstruction(self, key):
         """Handle keys in INSTRUCTION state.
 
+        Ground truth: sniff_trf_1_4_1.png — M1="Start", M2="Finish"
         sniff_common.sh line 161: M1 triggers startSniff()
         UP/DOWN navigate instruction pages (4 for HF, 1 for T5577)
         PWR: back to TYPE_SELECT
@@ -3220,6 +3282,7 @@ class SniffActivity(BaseActivity):
             self._startSniff()
         elif key == KEY_M2:
             # M2 = "Finish" — dimmed during instruction, but still handled
+            # Ground truth: sniff_trf_1_4_1.png shows "Finish" dimmed
             pass
         elif key == KEY_PWR:
             if self._handlePWR():
@@ -3229,6 +3292,7 @@ class SniffActivity(BaseActivity):
     def _showInstruction(self):
         """Show instruction screen after type selection.
 
+        Ground truth: sniff_trf_1_4_1.png through sniff_trf_4_4.png
         Title: "Sniff TRF N/4" (HF) or "Sniff TRF 1/1" (T5577)
         Content: Step-by-step sniff instructions
         Buttons: M1="Start", M2="Finish"
@@ -3247,6 +3311,7 @@ class SniffActivity(BaseActivity):
             self._listview.hide()
 
         # Set buttons: M1="Start" (active), M2="Finish" (INACTIVE)
+        # Ground truth: FB capture sniff_14a_instruction_step1.png — Finish is dimmed
         self.setLeftButton(resources.get_str('start'), active=True)
         self.setRightButton(resources.get_str('finish'), active=False)
 
@@ -3256,6 +3321,7 @@ class SniffActivity(BaseActivity):
     def _renderInstructionPage(self):
         """Render current instruction page with page indicator.
 
+        Ground truth: sniff_trf_1_4_1.png title "Sniff TRF 1/4"
         """
         total = len(self._instruction_pages)
         current = self._instruction_page + 1
@@ -3274,6 +3340,7 @@ class SniffActivity(BaseActivity):
         self._btlv.drawStr(resources.get_str(res_key))
 
         # Page arrows in button bar — only when multiple instruction pages
+        # Ground truth: FB state_006 (1/4) has ▼▲, state_039 (1/1) has none
         self.setButtonArrows(self._instruction_page, total)
 
     def _onKeySniffing(self, key):
@@ -3281,6 +3348,7 @@ class SniffActivity(BaseActivity):
 
         M2 = stop sniff + show result (HF types only in practice —
         T5577 auto-finishes via onData before M2 can be pressed).
+        Ground truth: trace_sniff_t5577_enhanced_20260404.txt — T5577 blocks
         until PM3 completes (timeout=-1), so M2 is never pressed during T5577.
         """
         if key == KEY_M2:
@@ -3291,6 +3359,7 @@ class SniffActivity(BaseActivity):
             self.finish()
         elif key == KEY_PWR:
             # PWR = stop sniff + back to type select
+            # Ground truth: sniff.json — PWR = "run:stopAndBack"
             # Do NOT use _handlePWR here: it would swallow PWR due to
             # the persistent toast + busy flag, blocking the user.
             self._stopSniff()
@@ -3299,6 +3368,7 @@ class SniffActivity(BaseActivity):
     def _onKeyResult(self, key):
         """Handle keys in RESULT state.
 
+        Ground truth: sniff_trf_1_4_2.png — M1="Start", M2="Save"
         UI Mapping: M1=restart sniff, M2/OK=save, UP/DOWN=scroll, PWR=back
         """
         if key == KEY_UP:
@@ -3334,6 +3404,7 @@ class SniffActivity(BaseActivity):
             3. Dispatch PM3 sniff command
             4. Set state to SNIFFING
 
+        Ground truth: sniff_trf_sniffing.png — toast overlays instruction text,
         M1="Start", M2="Finish", title keeps instruction page indicator.
         """
         self._state = self.STATE_SNIFFING
@@ -3348,10 +3419,12 @@ class SniffActivity(BaseActivity):
         self.clearButtonArrows()
 
         # Buttons: M1="Start" (INACTIVE), M2="Finish" (active)
+        # Ground truth: FB capture — Start dimmed during sniff, Finish bold
         self.setLeftButton(resources.get_str('start'), active=False)
         self.setRightButton(resources.get_str('finish'), active=True)
 
         # Show sniffing toast — persistent until Stop/Finish is pressed.
+        # Ground truth: sniff.json state "sniffing" has "timeout: 0" (persistent).
         if self._toast is not None:
             self._toast.show(resources.get_str('sniffing'), duration_ms=0)
 
@@ -3363,6 +3436,7 @@ class SniffActivity(BaseActivity):
     def _dispatchSniffCommand(self, cmd):
         """Dispatch sniff via sniff.so module functions.
 
+        Ground truth: trace_sniff_flow_20260403.txt
         sniff.so handles ALL PM3 commands internally:
         - sniff14AStart() sends hf 14a sniff (timeout=8000)
         - sniff125KStart() sends lf config + lf t55xx sniff
@@ -3410,6 +3484,7 @@ class SniffActivity(BaseActivity):
             2. Stop PM3 task
             3. Clear sniffing flag
 
+        Ground truth (trace_original_sniff_serial_20260412.txt lines 83.011-83.437):
             PRESSPM3> called → SERIAL_TX> b'presspm3' → PM3 stops cleanly
         """
         self._sniffing = False
@@ -3428,12 +3503,14 @@ class SniffActivity(BaseActivity):
     def _showResult(self):
         """Stop sniff and display trace results.
 
+        Ground truth:
             trace_sniff_enhanced_20260404.txt:
                 HF: hf list mf (timeout=-1, listener=YES(method)), 47 listener calls
                 T5577: lf t55xx sniff (listener=None), no parse command
             FB captures sniff_20260403:
                 Decoding: "TraceLen: 9945" + "Decoding... 288/9945" + blue ProgressBar
                 Result: "TraceLen: 9945" + "UID: 2CADC272" + "Key1: FFFFFFFFFFFF"
+            Ghidra decompilation (sniff_ghidra_raw.txt line 4548):
                 parserHfTraceLen() takes ZERO args — reads executor cache internally
             Original .so QEMU (TEST_TARGET=original):
                 State 5: content includes 'Decoding...\\n0/9945', 'UID: 2CADC272', 'Key1: FFFFFFFFFFFF'
@@ -3460,11 +3537,14 @@ class SniffActivity(BaseActivity):
 
             if type_id == '125k':
                 # T5577: no listener, no parse command — data in cache
+                # Ground truth: trace_sniff_t5577_enhanced_20260404.txt — listener=None
                 self._showT5577Result()
                 return
 
             # HF types: show Decoding + ProgressBar, issue parse with listener
+            # Ground truth: trace_sniff_enhanced_20260404.txt line 8:
             #   PM3> hf list mf (timeout=-1, listener=YES(method))
+            # Ground truth: FB sniff_14a_decoding_288_of_9945.png:
             #   "TraceLen: 9945" top, "Decoding... 288/9945" blue, blue ProgressBar
             if list_cmd is not None:
                 self._hf_list_cmd = list_cmd
@@ -3472,9 +3552,11 @@ class SniffActivity(BaseActivity):
                 self._decode_pb = None
 
                 # Remove button bar entirely during parse
+                # Ground truth: FB states 014-029 have NO button bar at all
                 self.dismissButton()
 
                 # Decoding display created lazily in listener callbacks.
+                # Ground truth (QEMU canvas trace):
                 #   Empty/failed trace: zero trace data lines → zero callbacks
                 #     with trace data → no Decoding created → straight to result
                 #   Data trace: listener fires per trace line → creates Decoding
@@ -3563,11 +3645,13 @@ class SniffActivity(BaseActivity):
     def _finishHfResult(self):
         """Render final HF result after parse command completes.
 
+        Ground truth (QEMU canvas trace):
             Empty trace: 'TraceLen: 0' at (120,120) centered — single item
             Data trace:  'TraceLen: 2298' at (19,60), 'UID: 8D2D6F67' at (19,100),
                          '  Key1: FFFFFFFFFFFF' at (19,140) — left-aligned, 40px spacing
         """
         # Clean up Decoding display and ProgressBar before rendering result.
+        # Ground truth: FB captures show clean result screens (no Decoding bleed).
         canvas = self.getCanvas()
         if canvas is not None:
             canvas.delete('sniff_decode_display')
@@ -3660,12 +3744,16 @@ class SniffActivity(BaseActivity):
     def _showT5577Result(self):
         """Display T5577 sniff results.
 
+        Ground truth:
             trace_sniff_t5577_enhanced_20260404.txt: listener=None, no parse command
             FB sniff_t5577_result_tracelen_42259.png: "TraceLen: 42259"
+            V1090_MODULE_AUDIT.txt line 159: parserLfTraceLen reads 'Reading (\\d+) bytes'
+            V1090_MODULE_AUDIT.txt line 166: parserKeysForT5577(parser_fun) takes a parser function
         """
         display_lines = []
 
         # Restore cache before calling parsers — stopPM3Task may clear it
+        # Ground truth: executor_strings.txt shows stopPM3Task references CONTENT_OUT_IN__TXT_CACHE
         # Try current cache first; if empty, use saved cache from onData
         try:
             import executor
@@ -3694,9 +3782,11 @@ class SniffActivity(BaseActivity):
         display_lines.append(resources.get_str('sniff_trace').format(trace_len))
 
         # Parse T5577 keys — takes a parser function as argument
+        # Ground truth (QEMU probe):
         #   parserKeysForT5577(parserT5577OkKeyForLine) => ['20206666', '20206666', ...]
         #   Returns list of raw hex strings. Activity formats as "  Key{n}: {hex} √"
         #   Original .so QEMU state: '  Key1: 20206666 √', '  Key2: 20206666 √', etc.
+        # Ground truth (QEMU cross-target comparison):
         #   Original only displays keys from "Default pwd write" lines
         #   (parserT5577OkKeyForLine). "Default write" (no pwd) lines are
         #   NOT displayed by the original showT5577Result.
@@ -3710,10 +3800,12 @@ class SniffActivity(BaseActivity):
             pass
 
         # Buttons: M1="Start" (active), M2="Save" (active only if data)
+        # Ground truth: FB state_059 — Save dimmed for empty trace
         self.setLeftButton(resources.get_str('start'), active=True)
         self.setRightButton(resources.get_str('save'), active=(trace_len > 0))
 
         # Title: keep instruction page indicator (e.g. "Sniff TRF 1/1" for T5577)
+        # Ground truth: FB state_042 shows "Sniff TRF 1/1" — unchanged from instruction
         # Title was set in _renderInstructionPage and is NOT changed here.
 
         # Render — same rules as HF result:
@@ -3760,6 +3852,7 @@ class SniffActivity(BaseActivity):
         """Return to TYPE_SELECT state.
 
         Restores the type list, resets buttons and title.
+        Ground truth: sniff_trf_list_1_1.png — no softkey labels in TYPE_SELECT
         """
         self._state = self.STATE_TYPE_SELECT
         self._sniffing = False
@@ -3798,16 +3891,20 @@ class SniffActivity(BaseActivity):
     def _saveSniffData(self):
         """Save trace data to file.
 
+        Ground truth:
             FB state_031: "Processing..." toast (14A save)
             FB state_032: "Trace file saved" toast (14A save)
             FB state_034: M2="Save" dimmed after save
             SimulationTraceActivity._saveSniffData (line 5592): same pattern
+            activity_main_strings.txt line 21479: text_processing referenced
         """
         # Show "Processing..." toast before save
+        # Ground truth: FB states 031, 043 — "Processing..." appears first
         if self._toast is not None:
             self._toast.show(resources.get_str('processing'), duration_ms=0)
 
         # Save trace data to /mnt/upan/trace/{type}_{N}.txt
+        # Ground truth (QEMU file trace): original .so writes executor cache
         # to /mnt/upan/trace/ with auto-incrementing sequence numbers.
         # File naming: 14a_1.txt, 14b_1.txt, iclass_1.txt, topaz_1.txt, t5577_1.txt
         try:
@@ -3837,6 +3934,7 @@ class SniffActivity(BaseActivity):
             self._toast.show(resources.get_str('trace_saved'))
 
         # M2="Save" becomes inactive after save
+        # Ground truth: FB state_034, state_045 — Save dimmed post-save
         self.setRightButton(resources.get_str('save'), active=False)
 
     def _nextIfShowing(self):
@@ -3852,9 +3950,11 @@ class SniffActivity(BaseActivity):
     def onData(self, cmd, data):
         """PM3 data callback — parse trace length or T5577 auto-finish.
 
+        Ground truth:
             trace_sniff_t5577_enhanced_20260404.txt: lf t55xx sniff (timeout=-1)
                 blocks until PM3 completes, then returns with data in cache.
                 T5577 always auto-finishes — no manual M2 stop.
+            activity_main_strings.txt line 21264: t5577_sniff_finished (resource toast)
 
         For T5577: sniffT5577Start() blocks until PM3 completes. When the
         background thread returns, _dispatchSniffCommand calls onData with
@@ -3872,7 +3972,9 @@ class SniffActivity(BaseActivity):
 
         # HF: parse trace length — parserTraceLen takes 0 args,
         # reads executor.CONTENT_OUT_IN__TXT_CACHE internally
+        # Ground truth: Ghidra sniff_ghidra_raw.txt line 4548
         # HF: determine if sniff captured data from the executor cache.
+        # Ground truth (QEMU canvas trace):
         #   Empty/failed sniff: cache is '\n' or contains "trace len = 0"
         #     → _trace_len_known=True, _trace_len=0 → skip Decoding
         #   Data sniff: cache is '\n' (sniff response has no trace data)
@@ -3914,6 +4016,8 @@ class WarningWriteActivity(BaseActivity):
     Shows source tag info + warning message before writing.
     Reached after successful Read/AutoCopy/DumpFiles flow.
 
+    Binary source: activity_main.so WarningWriteActivity
+    Spec: docs/UI_Mapping/15_write_tag/V1090_WRITE_FLOW_COMPLETE.md
 
     Bundle (from ReadActivity or CardWalletActivity):
         'infos': dict with tag type, UID, read data, keys, flags
@@ -3944,6 +4048,7 @@ class WarningWriteActivity(BaseActivity):
     def onCreate(self, bundle):
         """Show pre-write confirmation with tag info.
 
+        Ground truth (from traces — bundle varies by tag type):
         - MFC: bundle = dump file path string
           (full_read_write_trace_20260327.txt line 49)
         - LF:  bundle = {'return':1, 'data':..., 'raw':...}
@@ -3970,6 +4075,7 @@ class WarningWriteActivity(BaseActivity):
     def _draw_and_play(self):
         """Render "Data ready!" content via JSON UI schema.
 
+        Ground truth: data_ready.png — blue text, message at top,
         "TYPE:" centered, type display name in very large bold.
         Layout defined in src/screens/warning_write.json.
         Type display name from container.get_public_id() — NOT hardcoded.
@@ -3979,6 +4085,7 @@ class WarningWriteActivity(BaseActivity):
             return
 
         # Get display name from container.so — this is the .so doing the work.
+        # Ground truth: data_ready.png shows "M1-4b"; user confirms EM410x shows "ID1".
         tag_type_id = self._infos.get('type', 0)
         type_display = ''
         try:
@@ -4024,6 +4131,7 @@ class WarningWriteActivity(BaseActivity):
     def _confirm_write(self):
         """Finish with write confirmation result.
 
+        Ground truth: full_read_write_trace_20260327.txt line 50-51 —
         FINISH(WarningWriteActivity) → START(WriteActivity, same_bundle)
         """
         self._result = {
@@ -4045,6 +4153,8 @@ class WarningWriteActivity(BaseActivity):
 class WriteActivity(BaseActivity):
     """Tag data writing with verification.
 
+    Binary source: activity_main.so WriteActivity
+    Spec: docs/UI_Mapping/15_write_tag/V1090_WRITE_FLOW_COMPLETE.md
 
     Bundle (from WarningWriteActivity):
         'infos': dict with tag type, UID, read data, keys, flags
@@ -4090,6 +4200,7 @@ class WriteActivity(BaseActivity):
     def __init__(self, bundle=None):
         self._state = self.STATE_IDLE
         self._read_bundle = None
+        # Ground truth: trace_write_activity_attrs_20260402.txt —
         # write.so reads these PUBLIC attributes on the activity:
         self.infos = {}                    # .infos (NOT _infos)
         self.can_verify = False            # .can_verify (NOT _can_verify)
@@ -4114,6 +4225,7 @@ class WriteActivity(BaseActivity):
     def onCreate(self, bundle):
         """Set up title, buttons, progress bar, and toast area.
 
+        Ground truth: trace_write_activity_attrs_20260402.txt —
         original WriteActivity has ._bundle set to dump path,
         .infos set to scan cache, text_* resource strings, etc.
         """
@@ -4134,6 +4246,7 @@ class WriteActivity(BaseActivity):
             return
 
         # Render tag info template as the base canvas layer.
+        # Ground truth: original screenshots show tag info (name, type,
         # frequency, FC/CN, chipset, UID etc.) persisted behind progress
         # bar and toast overlays through ALL write/verify phases.
         tag_type = self.infos.get('type', -1)
@@ -4148,6 +4261,7 @@ class WriteActivity(BaseActivity):
         self._write_progressbar = ProgressBar(canvas)
         self._write_toast = Toast(canvas)
 
+        # Ground truth: trace_autocopy_mf1k_standard.txt —
         # WriteActivity auto-starts write immediately when given a bundle.
         # PM3 hf 14a info fires at the same timestamp as START(WriteActivity).
         if self._read_bundle:
@@ -4186,6 +4300,7 @@ class WriteActivity(BaseActivity):
         if not self._btn_enabled:
             return
 
+        # Ground truth: trace_write_activity_attrs_20260402.txt
         # IDLE state:      M1="Write",  M2="Verify"  → M1=startWrite, M2=startVerify
         # After completion: M1="Verify", M2="Rewrite" → M1=startVerify, M2=startWrite
         if self._state == self.STATE_IDLE:
@@ -4203,6 +4318,7 @@ class WriteActivity(BaseActivity):
     def setBtnEnable(self, enabled):
         """Enable/disable M1+M2 buttons.
 
+        Ground truth: write_tag_writing_1.png — during Writing/Verifying
         the button bar is completely hidden (no dark background, no text).
         When re-enabled, setLeftButton/setRightButton recreate the bar
         via _setupButtonBg().
@@ -4233,6 +4349,7 @@ class WriteActivity(BaseActivity):
         self.setBtnEnable(False)
         self.playWriting()
 
+        # Ground truth: trace_write_flow_20260402.txt
         # write.write(on_write_callback, scan_cache, read_bundle)
         # Returns -9999 immediately (write.so spawns its own thread).
         # Result delivered via on_write callback. NO extra Python thread needed.
@@ -4259,6 +4376,7 @@ class WriteActivity(BaseActivity):
         self.setBtnEnable(False)
         self.playVerifying()
 
+        # Ground truth: write.so spawns its own thread. Call directly.
         try:
             import write as write_mod
             write_mod.verify(self.on_verify, self.infos, self._read_bundle)
@@ -4301,6 +4419,7 @@ class WriteActivity(BaseActivity):
     def playWriting(self):
         """Show "Writing..." progress bar animation.
 
+        Ground truth: binary symbol WriteActivity.playWriting (no underscore).
         write.so calls activity.playWriting() via callback.__self__.
         write_tag_writing_1.png: no button bar visible during writing.
         """
@@ -4316,6 +4435,7 @@ class WriteActivity(BaseActivity):
     def playVerifying(self):
         """Show "Verifying..." progress bar animation.
 
+        Ground truth: binary symbol WriteActivity.playVerifying (no underscore).
         write.so calls activity.playVerifying() via callback.__self__.
         write_tag_writing_1.png: no button bar visible during verifying.
         """
@@ -4331,9 +4451,11 @@ class WriteActivity(BaseActivity):
     def on_write(self, *args):
         """Callback from write.so — progress updates AND completion.
 
+        Ground truth: trace with DRM fixed shows write.so calls on_write
         with progress dicts {'max': 64, 'progress': N} during write,
         then completion dict {'success': True/False, ...} at the end.
         Same pattern as read.so's onReading callback.
+        Binary symbol: activity_main_strings.txt line 21220.
         """
         data = args[0] if args else {}
         if not isinstance(data, dict):
@@ -4372,6 +4494,7 @@ class WriteActivity(BaseActivity):
         """Callback from write.so — progress updates AND completion.
 
         Same pattern as on_write.
+        Binary symbol: activity_main_strings.txt line 21184.
         """
         data = args[0] if args else {}
         if not isinstance(data, dict):
@@ -4398,6 +4521,7 @@ class WriteActivity(BaseActivity):
     def _onWriteComplete(self, result):
         """Handle write completion — show success/fail toast, update buttons.
 
+        Ground truth: trace_write_flow_20260402.txt —
         on_write callback receives result string from write.so.
         """
         if self._write_progressbar is not None:
@@ -4442,6 +4566,7 @@ class WriteActivity(BaseActivity):
     def _playWriteSuccess(self):
         """Show "Write successful!" toast.
 
+        Ground truth: write_tag_writing_3.png → success toast with check icon.
         """
         if self._write_toast is not None:
             self._write_toast.show(resources.get_str('write_success'),
@@ -4451,6 +4576,7 @@ class WriteActivity(BaseActivity):
     def _playWriteFail(self):
         """Show "Write failed!" toast.
 
+        Ground truth: write_tag_write_failed.png → failure toast with error icon.
         """
         print('[WRITE-TOAST] _playWriteFail called, _write_toast=%s' % (self._write_toast is not None), flush=True)
         if self._write_toast is not None:
@@ -4462,6 +4588,7 @@ class WriteActivity(BaseActivity):
     def _playVerifySuccess(self):
         """Show "Verification successful!" toast.
 
+        Ground truth: binary playVerifiSuccess() → check icon, persistent.
         """
         if self._write_toast is not None:
             self._write_toast.show(resources.get_str('verify_success'),
@@ -4471,6 +4598,7 @@ class WriteActivity(BaseActivity):
     def _playVerifyFail(self):
         """Show "Verification failed!" toast.
 
+        Ground truth: binary playVerifiFail() → error icon, persistent.
         """
         if self._write_toast is not None:
             self._write_toast.show(resources.get_str('verify_failed'),
@@ -4488,11 +4616,13 @@ class WriteActivity(BaseActivity):
         return self._btn_enabled
 
     def callServer(self, *args, **kwargs):
-        """Stub."""
+        """Stub — original binary has this method.
+        Ground truth: trace_write_activity_attrs_20260402.txt line 34."""
         pass
 
     def save_log(self, *args, **kwargs):
-        """Stub."""
+        """Stub — original binary has this method.
+        Ground truth: trace_write_activity_attrs_20260402.txt line 59."""
         pass
 
 
@@ -4507,6 +4637,8 @@ class WarningM1Activity(BaseActivity):
     UP/DOWN navigates between pages. Each page offers a different
     recovery option.
 
+    Binary source: activity_main.so WarningM1Activity
+    Spec: docs/UI_Mapping/04_read_tag/V1090_MIFARE_BRANCH_STRINGS.md
 
     Pages:
         Page 0: "Sniff for Keys" — options 1 & 2 (sniff + enter manually)
@@ -4535,6 +4667,7 @@ class WarningM1Activity(BaseActivity):
     ACT_NAME = 'warning_m1'
 
     # 2 pages, each with 2 options (M1 = left option, M2 = right option)
+    # Ground truth: force-read test expects M1:Sniff on page 0,
     # M1:Force on page 1. Test sends DOWN then M1 for Force Read.
     PAGE_MAX = 1
 
@@ -4580,6 +4713,7 @@ class WarningM1Activity(BaseActivity):
     def _showPage(self):
         """Render current page content and update M1/M2 buttons.
 
+        Ground truth: force-read test expects M1=Sniff on page 0,
         M1=Force on page 1 (after DOWN). Each page shows 2 options
         as M1/M2 button labels + descriptive text in content area.
         Page 0: missing_keys_msg1 (options 1 & 2)
@@ -4603,6 +4737,7 @@ class WarningM1Activity(BaseActivity):
     def onKeyEvent(self, key):
         """Handle navigation and action keys.
 
+        Ground truth: force-read test sends DOWN then M1 for Force.
         UP/DOWN navigate pages, M1 = left action, M2/OK = right action,
         PWR = cancel.
         """
@@ -4656,8 +4791,9 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
     After successful read, prompts to place new card.
     After write + optional verify, shows success/fail result.
 
-    Verified:  (exhaustive)
-
+    Binary source: activity_main.so AutoCopyActivity
+    Verified: docs/UI_Mapping/01_auto_copy/README.md (exhaustive)
+              docs/UI_Mapping/01_auto_copy/V1090_AUTOCOPY_FLOW_COMPLETE.md
     Spec: 16+ states, linear pipeline with error exits at each stage
 
     Instance variables (from binary attribute access strings):
@@ -4665,7 +4801,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         self.scan_infos  — bool/dict: scan result info dict (or False)
         self.place       — bool: True when in "place new tag" prompt state
 
-    Key behavior:
+    Key behavior (from Ghidra ~900-line decompilation of onKeyEvent):
         isbusy() == True:
             PWR: finish (exit)
             All other keys: ignored
@@ -4753,17 +4889,18 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
     def onKeyEvent(self, key):
         """State-dependent key dispatch.
 
-
+        From Ghidra decompilation (~900 lines):
             CHECK 1: isbusy() — if True, only PWR works (finish)
             CHECK 2: scan_found — determines branch (scan phase vs post-scan)
 
-        Reconstructed from  section 6.
+        Reconstructed from docs/UI_Mapping/01_auto_copy/README.md section 6.
         """
         # Console mode: all keys go to ConsoleView (from ConsoleMixin)
         if self._handleConsoleKey(key):
             return
 
         # PWR: always works, even when busy.
+        # Ground truth (Ghidra): "isbusy() — if True, only PWR works (finish)"
         # Original binary allows PWR to exit during scan/read/write.
         # Must abort any in-flight PM3 command before finishing.
         if key == KEY_PWR:
@@ -4791,6 +4928,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
             return
 
         # During reading: RIGHT shows console (same as ReadListActivity)
+        # Ground truth: read_mf1k_console_during_read test, activity_read.py:194-196
         if self._state == self.STATE_READING and key == KEY_RIGHT:
             self._showConsole()
             return
@@ -4803,6 +4941,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
             # Post-scan phase: tag was found, in read/write territory
             if self._state == self.STATE_PLACE_CARD:
                 # Place card prompt: M2/OK = push WarningWriteActivity, M1 = reread
+                # Ground truth: trace_autocopy_mf1k_standard.txt line 111-114
                 # M2 → START(WarningWriteActivity, read_bundle)
                 if key in (KEY_M2, KEY_OK):
                     self._launchWrite()
@@ -4917,6 +5056,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
             self._progressbar.setMessage(resources.get_str('scanning'))
             self._progressbar.setProgress(0)
             self._progressbar.show()
+            # Ground truth: original firmware immediately fills to 50%
             self._progressbar.setProgress(50)
 
         # Play scanning audio
@@ -5066,6 +5206,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         self._scan_result = result
 
         # Use scan.so's own predicate functions to determine scan outcome.
+        # Ground truth: activity_main.so string table references only
         # isTagMulti and isTagFound (lines 21937-21938, 25582-25583, 29694, 29780).
         # Live trace: trace_autocopy_multitag_wrongtype_20260402.txt line 6-7
         # confirms multi-tag collision sets internal state queried by isTagMulti().
@@ -5109,6 +5250,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
 
         From binary: after scan success, immediately starts reading.
         Uses same Reader() pattern as ReadListActivity.
+        Ground truth: trace_autocopy_mf1k_standard.txt line 16 —
         READER_START args=(1, {'infos': {scan_cache}, 'force': False})
         """
         self._state = self.STATE_READING
@@ -5125,6 +5267,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
             self._progressbar.setMessage(resources.get_str('reading'))
             self._progressbar.setProgress(0)
             self._progressbar.show()
+            # Ground truth: original firmware immediately fills to 50%
             self._progressbar.setProgress(50)
 
         self._start_fake_progress(start=50, ceiling=80)
@@ -5208,6 +5351,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         Same pattern as ReadListActivity.onReading:
         - Progress dicts: update progress bar
         - Completion dict (has 'success' key): handle read result
+        Ground truth: trace_autocopy_mf1k_standard.txt lines 25-105
         """
         if not args:
             return
@@ -5341,6 +5485,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
 
     # Read failure UI is handled by Warning activities pushed by read.so
     # or by this activity via actstack.start_activity(WarningM1Activity).
+    # Ground truth: read flow tests use M1:Sniff trigger for all key
     # failure states (darkside_fail, nested_fail, hardnested, etc.).
 
     def _showReadPartialSuccess(self):
@@ -5446,6 +5591,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
     def _launchWrite(self):
         """Push WarningWriteActivity with read bundle.
 
+        Ground truth: trace_autocopy_mf1k_standard.txt line 111-114 —
         START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_9C750884_1.bin')
         autocopy_mf4k_mf1k7b_t55_trace_20260329.txt lines 13, 552, 715 —
         all three tag types push WarningWriteActivity then WriteActivity.
@@ -5459,6 +5605,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
     def onActivity(self, result):
         """Handle results from child activities (WarningWriteActivity, WriteActivity).
 
+        Ground truth: trace_autocopy_mf1k_standard.txt lines 115-119 —
         FINISH(WarningWriteActivity) → START(WriteActivity, same_bundle)
         Called by actstack.finish_activity() when child finishes with result.
         """
@@ -5468,6 +5615,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         action = result.get('action')
         if action == 'write':
             # WarningWriteActivity confirmed — push WriteActivity
+            # Ground truth: trace_autocopy_mf1k_standard.txt lines 115-119
             try:
                 actstack.start_activity(WriteActivity,
                                         result.get('read_bundle'))
@@ -5475,6 +5623,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
                 print('[AUTOCOPY] startWriteActivity error: %s' % e, flush=True)
         elif action == 'force':
             # WarningM1Activity: force-read with partial keys
+            # Ground truth: ReadListActivity.onActivity (activity_read.py:121-122)
             self._startRead(force=True)
         elif action == 'sniff':
             # WarningM1Activity: sniff for keys
@@ -5703,6 +5852,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
         return self._btn_enabled
 
 
+
 # =====================================================================
 # A-21: SimulationActivity
 # =====================================================================
@@ -5729,6 +5879,7 @@ SIM_MAP = [
 # QEMU-verified defaults from real .so binary (sim_common.sh lines 203-210).
 # These MUST match what the binary's draw_* methods render.
 # Effective max = min(doc_max, 10^field_digits - 1) for decimal fields.
+# Ground truth: UI Mapping §4.5-4.12, FB state_032 (Nedap Subtype > 15),
 # field length from QEMU-verified defaults (sim_common.sh lines 203-210).
 SIM_FIELDS = {
     'hf_4b':     [('UID:', '12345678',         'hex', 8)],
@@ -5765,6 +5916,8 @@ _SIMULATE_TYPES = frozenset(entry[1] for entry in SIM_MAP)
 class SimulationActivity(BaseActivity):
     """Tag emulation. Select type -> enter UID/params -> simulate.
 
+    Binary source: activity_main.so SimulationActivity (52 methods)
+    Spec: docs/UI_Mapping/06_simulation/README.md
     """
     ACT_NAME = 'simulation'
     STATE_LIST = 'list_view'
@@ -5792,6 +5945,7 @@ class SimulationActivity(BaseActivity):
             return
         self._toast = Toast(canvas)
         if bundle and isinstance(bundle, dict):
+            # Ground truth (original trace lines 50, 84):
             #   Scan/Dump callers pass full scan cache dict:
             #     {'uid':'DAEFB416','type':1,'len':4,'sak':'08',...}
             #   Simulation auto-starts immediately (0.45s after START).
@@ -5829,6 +5983,7 @@ class SimulationActivity(BaseActivity):
     def _showListUI(self):
         """Show 16-type list with numbered items.
 
+        Ground truth (FB captures simulation_20260403):
           state_002: "1. M1 S50 1k" through "5. FM11RF005SH"
           state_047: "6. Em410x ID" through "10. G-Prox II ID"
           state_055: "11. Viking ID" through "15. Jablotron ID"
@@ -5855,6 +6010,7 @@ class SimulationActivity(BaseActivity):
         self._listview.setItems(items)
         self._listview._on_page_change = self._onPageChange
         self._listview.show()
+        # Ground truth (FB state_002): list view has NO button bar.
         # dismissButton() removes text AND background bar.
         # setLeftButton('') only removes text, leaving the dark bar visible.
         self.dismissButton()
@@ -5863,6 +6019,7 @@ class SimulationActivity(BaseActivity):
     def _showSimUi(self):
         """Show input fields for selected type with type name + field labels.
 
+        Ground truth (FB captures simulation_20260403):
           state_003: "M1 S50 1k" blue text + "UID:" label + input cells
           state_004: Stop/Start buttons
           state_025: "Ultralight" + "UID:" label + 14 hex cells
@@ -5902,6 +6059,7 @@ class SimulationActivity(BaseActivity):
         self._sim_fields = SimFields(canvas, y_start=78)
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
+            # Ground truth (original trace line 52): when entering from
             # Scan/Dump, the UID from the scan cache replaces the first
             # field's default.  Original: PM3> hf 14a sim t 1 u DAEFB416
             # OSS bug: was using default '12345678' instead.
@@ -5930,6 +6088,7 @@ class SimulationActivity(BaseActivity):
     def _validateInputs(self, draw_key, values):
         """Validate input fields against max values.
 
+        Ground truth: chk_max_comm (generic), chk_ioid_input, chk_gproxid_input,
         chk_pyramid_input, chk_nedap_input (type-specific).
         FB state_032: "Input invalid: 'Subtype' greater than 15"
         """
@@ -5975,20 +6134,24 @@ class SimulationActivity(BaseActivity):
     def _startSim(self, cmd):
         """Start PM3 simulation.
 
+        Ground truth (FB state_010): buttons remain Stop/Start during sim.
         """
         self._state = self.STATE_SIMULATING
         self._sim_stopping = False
         self.setbusy()
         self.setLeftButton(resources.get_str('stop'))
         self.setRightButton(resources.get_str('start'), active=False)
+        # Ground truth: original device toast persists during entire simulation
         # until Stop is pressed. duration_ms=0 = persistent (no auto-dismiss).
         if self._toast:
             self._toast.show(resources.get_str('simulating'), duration_ms=0)
         # Start PM3 simulation on background thread.
+        # Ground truth: trace_scan_flow_20260331.txt line 73:
         #   PM3> hf 14a sim t 1 u 3AF73501  (timeout=-1)
         # Both HF and LF use timeout=-1 (audit finding 5: no ground truth
         # for LF 30000 value). LF commands self-terminate. HF runs until
         # stopPM3Task(). The .so binary's startSim uses the same timeout
+        # for both (documented at activity_main_strings.txt line 21110).
         timeout = -1
         import threading
         def _run_sim():
@@ -6004,9 +6167,11 @@ class SimulationActivity(BaseActivity):
         self._sim_stopping = True
         self.setidle()
         # Show Processing... toast during stop
+        # Ground truth: binary text_processing (line 21479),
         # FB states 045 (Nedap) + 086 (AWID) show "Processing..." on stop
         if self._toast:
             self._toast.show(resources.get_str('processing'), duration_ms=0)
+        # Ground truth (activity_main_strings.txt:22200 near stopSim/sim_stopping):
         # Original .so calls hmi_driver.presspm3() BEFORE stopPM3Task().
         # presspm3 sends "presspm3" via GD32 serial, which physically presses
         # the PM3 button, causing the simulation to stop cleanly and output
@@ -6038,6 +6203,7 @@ class SimulationActivity(BaseActivity):
         self.setidle()
         # Guard: if _stopSim() already handled the HF stop sequence,
         # don't call _on14ASimStop again from the bg thread.
+        # Ground truth: original trace shows only ONE SimulationTraceActivity
         # push per stop. OSS trace showed double push → crash.
         if self._sim_stopping:
             return
@@ -6049,6 +6215,7 @@ class SimulationActivity(BaseActivity):
     def _on14ASimStop(self):
         """Fetch trace and push SimulationTraceActivity for HF sim.
 
+        Ground truth:
           trace_oss_simulate_original_fw_20260412.txt lines 21-24:
             START(SimulationTraceActivity, None)
             PM3> hf 14a list (timeout=18888)
@@ -6104,6 +6271,7 @@ class SimulationActivity(BaseActivity):
     def onResume(self):
         """Restore UI when returning from SimulationTraceActivity.
 
+        Ground truth (original trace lines 27-31): after exiting trace view,
         SimulationActivity shows sim UI with Stop (inactive) / Start buttons.
         """
         super().onResume()
@@ -6121,6 +6289,7 @@ class SimulationActivity(BaseActivity):
     def _onKeyList(self, key):
         """List view key handlers.
 
+        Ground truth: activity_main_strings.txt lines 22199/22210 —
         binary has prevPage/nextPage methods. RIGHT/LEFT change pages.
         """
         if key == KEY_UP:
@@ -6155,6 +6324,7 @@ class SimulationActivity(BaseActivity):
     def _onKeySimUi(self, key):
         """Sim UI key handlers — delegates to SimFields widget.
 
+        Ground truth (FB captures + test infrastructure):
           UP/DOWN not editing: move focus arrow between fields
           OK: enter/exit edit mode on focused field
           UP/DOWN editing: change digit at cursor
@@ -6207,6 +6377,7 @@ class SimulationActivity(BaseActivity):
     def _onKeySimulating(self, key):
         """M1="Stop" stops simulation. PWR also stops.
 
+        Ground truth: FB state_010 shows M1="Stop", M2="Start" during sim.
         M1 is the stop action. M2 is labeled "Start" (inactive during sim).
         Audit finding 10+11: M1 stops, not M2.
         """
@@ -6339,6 +6510,7 @@ class SimulationActivity(BaseActivity):
 class SimulationTraceActivity(BaseActivity):
     """Trace viewer for captured HF simulation data.
 
+    Ground truth (FB captures simulation_20260403):
       state_015: title="Trace", "TraceLen: 1119", Cancel/Save buttons
       state_063: "TraceLen: 0" — Save button inactive
       state_040: "Trace file saved" toast, Save becomes inactive
@@ -6381,6 +6553,7 @@ class SimulationTraceActivity(BaseActivity):
     def _showResult(self):
         """Display "TraceLen: N" centered on screen.
 
+        Ground truth (FB state_015): single line "TraceLen: 1119" centered.
         Uses resources.get_str('sniff_trace').format(N) = "TraceLen: N"
         """
         if self._toast:
@@ -6400,6 +6573,7 @@ class SimulationTraceActivity(BaseActivity):
     def _updateSaveButton(self):
         """Enable/disable Save based on trace_len and saved state.
 
+        Ground truth: TraceLen=0 → Save inactive. After save → Save inactive.
         """
         if self._trace_len > 0 and not self._saved:
             self.setRightButton(resources.get_str('save'))
@@ -6410,6 +6584,7 @@ class SimulationTraceActivity(BaseActivity):
     def _saveSniffData(self):
         """Save trace data via sniff.saveSniffData().
 
+        Ground truth (FB state_040): "Trace file saved" toast after save.
         Binary: SimulationTraceActivity.saveSniffData (line 20635).
         Audit finding 8: must call actual save, not just show toast.
         """
@@ -6498,6 +6673,8 @@ DUMP_TYPE_ORDER = [
 class CardWalletActivity(BaseActivity):
     """Dump file browser: Type List -> File List -> push ReadFromHistoryActivity.
 
+    Binary source: activity_main.so CardWalletActivity (16 methods)
+    Ground truth: HANDOVER.md, trace_dump_files_20260403.txt
     """
     ACT_NAME = 'dump_files'
     MODE_TYPE_LIST = 'type_list'
@@ -6551,6 +6728,7 @@ class CardWalletActivity(BaseActivity):
         canvas = self.getCanvas()
         if canvas is None:
             return
+        # Ground truth (user report + binary strings listdir/isdir in showDumps):
         # Original firmware ONLY shows tag types that have at least one dump
         # file in their directory.  Types with empty/missing dirs are hidden.
         # Numbers are 1-indexed and right-aligned (leading space for single digits).
@@ -6620,6 +6798,7 @@ class CardWalletActivity(BaseActivity):
         display_items = self._buildFileDisplayList()
         from lib.widget import ListView
         self._listview = ListView(canvas)
+        # Ground truth (dump_files screenshots): 4 items per page so the
         # last item doesn't overlap the button bar (content area = 160px,
         # 4 × 40px = 160px exactly).  Other ListViews use the default 5.
         self._listview.setDisplayItemMax(4)
@@ -6648,6 +6827,7 @@ class CardWalletActivity(BaseActivity):
         """Transform raw dump filename to display format.
 
         Original firmware displays formatted names, not raw filenames.
+        Ground truth (original QEMU test results):
           MF1:    M1-1K-4B_DAEFB416_1.bin   → 1K-4B-DAEFB416(1)
           T55xx:  T55xx_00148040_..._1.bin   → 00148040(1)
           MFU:    M0-UL_04DDEEFF001122_1.bin → 04DDEEFF001122(1)
@@ -6921,6 +7101,7 @@ class KeyEnterM1Activity(BaseActivity):
 class UpdateActivity(BaseActivity):
     """Firmware update installation with per-step ProgressBar.
 
+    Ground truth (install.py callback values + test expected states):
       Step 1: install_font     — "检查字体" / "Font will install..." (30→100)
       Step 2: install_lua_dep  — "目录已经存在" / "LUA dep..." (30→100)
       Step 3: install_app      — "App installing..." (38→100)
@@ -7084,6 +7265,7 @@ class FWUpdateActivity(BaseActivity):
       STATE_FLASHING  — Flash in progress, all keys blocked
       STATE_DONE      — Toast showing result
 
+    Ground truth: middleware/pm3_flash.py (flash engine),
     project_pm3_flash_safety.md (ABSOLUTE: never flash bootrom).
     """
     ACT_NAME = 'fw_update'
@@ -7575,6 +7757,8 @@ class WearableDeviceActivity(BaseActivity):
 class ReadFromHistoryActivity(BaseActivity):
     """Tag Info view for dump files — parses filename, shows info, launches sim/write.
 
+    Binary source: activity_main.so ReadFromHistoryActivity
+    Ground truth: HANDOVER.md, trace_dump_files_20260403.txt
 
     Bundle: file path string WITH extension (e.g., '/mnt/upan/dump/mf1/M1-1K-4B_DAEFB416_1.bin')
     """
@@ -7730,6 +7914,7 @@ class ReadFromHistoryActivity(BaseActivity):
 
         Values use native Python types (int for type, bool for found,
         plain strings without quotes for uid/data).
+        Ground truth: ScanActivity._onScanResult shows scan.so returns
         {'found': True, 'type': 1, 'uid': 'B7785E50', ...}
         """
         dtk = self._dump_type_key
@@ -7785,6 +7970,7 @@ class ReadFromHistoryActivity(BaseActivity):
     def _renderInfo(self):
         """Render tag info using template.so — same renderer as ScanActivity.
 
+        Ground truth: ScanActivity._showFoundState uses template.draw()
         which picks the correct __drawXxx method per tag type and formats
         UID, SAK, ATQA, Frequency, etc. using its internal string table.
         """
@@ -7844,6 +8030,7 @@ class ReadFromHistoryActivity(BaseActivity):
     # SIMULATE DISPATCH
     # ------------------------------------------------------------------
     def _sim_for_info(self):
+        # Ground truth (original trace line 50):
         #   START(SimulationActivity, {'uid':'DAEFB416','len':4,'sak':'08',
         #         'atqa':'0004','found':True,'type':1})
         # The original passes the full scan cache dict as bundle.

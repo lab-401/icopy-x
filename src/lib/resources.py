@@ -446,7 +446,7 @@ def get_font(size=13, *args):
 
 
 def get_bold_font(size=13, *args):
-    """Return bold font spec.
+    """Return bold font spec. Ground truth: real device screenshots
     show bold text for scan result header/subheader."""
     return (_FONT_EN, size, 'bold')
 

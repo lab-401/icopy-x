@@ -13,6 +13,8 @@
 ##########################################################################
 
 """BaseActivity — Activity with UI rendering capabilities.
+
+Replaces actbase.so (108KB, 72 functions, 20 BaseActivity methods).
 Extends Activity (lifecycle management from actstack.py) with:
   - Title bar rendering (setTitle)
   - Button bar rendering (setLeftButton, setRightButton, dismiss, disable)
@@ -21,7 +23,8 @@ Extends Activity (lifecycle management from actstack.py) with:
   - Lifecycle overrides (onResume/onPause show/hide battery)
 
 Every pixel coordinate, color, font, and canvas tag matches the original
-firmware
+firmware as documented in decompiled/SUMMARY.md section 1 and verified
+against decompiled/actbase.c string table.
 
 Import convention: ``from lib.actbase import BaseActivity``
 """
@@ -71,7 +74,7 @@ class BaseActivity(Activity):
     This is the base class for ALL user-facing activities.
     Extends Activity (lifecycle) with canvas rendering.
 
-    Instance variables:
+    Instance variables (from decompiled __init__):
         _is_busy        — Boolean busy flag (thread-safe via _lock_busy)
         _lock_busy      — threading.Lock for busy state
         _is_title_inited  — True after first setTitle call
@@ -94,7 +97,7 @@ class BaseActivity(Activity):
         self._battery_bar = None
         self.event_ret = False
         self.resumed = False
-        # Register with actstack (Matches original implementation.register(self))
+        # Register with actstack (matches decompiled: actstack.register(self))
         actstack.register(self)
 
     # ==================================================================
@@ -189,6 +192,7 @@ class BaseActivity(Activity):
             font=font_spec, tags=(TAG_TITLE, TAG_TITLE_TEXT),
         )
         # Page indicator as separate widget to the right of title text
+        # Ground truth (FB simulation_20260403 state_002): "1/4" superscript
         # immediately right of "Simulation", smaller font, lighter color
         if page_text:
             page_font = _get_page_font()
@@ -218,6 +222,7 @@ class BaseActivity(Activity):
     def setLeftButton(self, text, color=None, active=True):
         """Render M1 (left) button text.
 
+        Ground truth: actbase_strings.txt: setLeftButton, _setupButtonBg.
         Real screenshots: button bar is dark (#222222) with white text,
         but ONLY drawn when there is actual button text.
 
@@ -250,6 +255,7 @@ class BaseActivity(Activity):
     def setRightButton(self, text, color=None, active=True):
         """Render M2 (right) button text.
 
+        Ground truth: same as setLeftButton — bar only when text present.
 
         Args:
             text: Button label. Empty string hides the button.
@@ -307,7 +313,7 @@ class BaseActivity(Activity):
                 Default False: hidden buttons suppress their keys.
 
         If neither left nor right is specified, removes both buttons AND
-        the background (Matches original implementation.
+        the background (matches decompiled dismissButton).
         """
         canvas = self.getCanvas()
         if canvas is None:
@@ -366,6 +372,7 @@ class BaseActivity(Activity):
             up.png      — last page (can scroll up)
             down_up.png — middle page (can scroll both ways)
 
+        Ground truth: FB state_006 — arrows between "Start" and "Finish"
         on instruction pages 1/4 through 4/4.
         FB state_039 — no arrows on T5577 single page (1/1).
 
@@ -413,7 +420,7 @@ class BaseActivity(Activity):
         Returns:
             tuple: ('mononoki 16', 228)
 
-        The
+        The decompiled code computes Y from canvas height and linespace
         metrics.  On the 240px display this resolves to BTN_LEFT_Y (228).
         """
         font_spec = '%s %d' % (FONT_BUTTON[0], FONT_BUTTON[1])
@@ -460,7 +467,7 @@ class BaseActivity(Activity):
     def _setbusy(self, state):
         """Internal: set busy flag under lock.
 
-        Uses threading.Lock (not RLock) matching the original implementation.
+        Uses threading.Lock (not RLock) matching the decompiled binary.
 
         Args:
             state: bool — new busy state.
@@ -525,7 +532,7 @@ class BaseActivity(Activity):
     def onResume(self):
         """Override: show battery bar, set resumed=True.
 
-        Matches original implementation
+        Matches decompiled onResume: checks resumed flag, calls
         _battery_bar.show().
         """
         self.resumed = True
@@ -534,7 +541,7 @@ class BaseActivity(Activity):
     def onPause(self):
         """Override: hide battery bar, dismiss toast, set resumed=False.
 
-        Matches original implementation
+        Matches decompiled onPause: mirrors onResume, calls
         _battery_bar.hide().  Toast dismissal ensures no stale toasts
         persist when navigating back through the activity stack.
         """
@@ -551,7 +558,7 @@ class BaseActivity(Activity):
     def onDestroy(self):
         """Override: unregister from actstack.
 
-        Matches original implementation.unregister(self).
+        Matches decompiled: actstack.unregister(self).
         """
         actstack.unregister(self)
 
@@ -616,7 +623,7 @@ class BaseActivity(Activity):
         """Return unique ID string for canvas tag prefixing.
 
         Format: 'ID:{classname}-{id}'
-        Matches original implementation.
+        Matches decompiled: returns "ID:{}-{}" format string.
 
         Returns:
             str: Unique identifier like 'ID:BaseActivity-140234567890'
@@ -647,5 +654,6 @@ def _get_title_font():
 def _get_page_font():
     """Return font spec for page indicator (smaller than title).
 
+    Ground truth: original .so canvas item shows font='monospace 11'.
     """
     return 'monospace 11'

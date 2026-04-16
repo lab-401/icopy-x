@@ -14,6 +14,7 @@
 
 # container.py — reimplementation of container.so get_public_id()
 #
+# Ground truth: QEMU-extracted mapping from real container.so for all 48 tag types.
 # The function maps (type, uid_len) → short display name shown on WarningWriteActivity.
 
 # Mapping: type_id → display name

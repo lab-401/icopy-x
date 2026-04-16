@@ -15,6 +15,8 @@
 """Audio playback and volume control.
 
 OSS reimplementation of audio.so.
+Binary source: audio.so (Cython, pygame + subprocess)
+Ground truth: V1090_MODULE_AUDIT.txt lines 913-961
 
 The original module uses pygame.mixer for audio playback and
 subprocess calls to amixer for system volume control.
@@ -38,12 +40,14 @@ _initialized = False
 _mixer_available = False  # True if pygame.mixer initialized successfully
 
 # Volume percentage map: UI level -> ALSA percentage string
+# Ground truth: settings.fromLevelGetVolume() returns 0/30/65/100
 _VOLUME_PCT = {0: '0%', 1: '30%', 2: '65%', 3: '100%'}
 
 # Audio file base path (real device)
 _AUDIO_BASE = '/home/pi/ipk_app_main/res/audio'
 
 # Volume preview file — audio.so uses res/audio/11.4.wav
+# (string literal found in audio_strings.txt line 1670)
 _VOLUME_EXAM_FILE = '11.4.wav'
 
 
@@ -77,6 +81,7 @@ def init():
 def setVolume(v):
     """Set system volume via ALSA amixer.
 
+    Ground truth (trace_original_backlight_volume_20260410.txt):
     audio.setVolume receives the ALSA percentage directly (0/20/50/100),
     NOT the UI level index. The caller (VolumeActivity) converts via
     settings.fromLevelGetVolume() before calling.
@@ -139,6 +144,7 @@ def playVolumeExam(v=100, chk=False):
 def setKeyAudioEnable(enable):
     """Enable or disable key press click sounds.
 
+    Ground truth: VolumeActivity sets False when level=0 (Off),
     True for all other levels.
 
     Args:
@@ -206,6 +212,7 @@ def get_framerate(name):
 
 
 # === Sound effect functions (all no-ops in QEMU) ===
+# Ground truth: V1090_MODULE_AUDIT.txt lines 920-953
 
 def playCancel(chk=False): logger.debug("audio.playCancel()")
 def playChargingAudio(chk=False): logger.debug("audio.playChargingAudio()")

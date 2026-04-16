@@ -19,10 +19,12 @@ Exports:
     Classes: TaskState, SendTask, ReceiveTask, YModemCommon, YModemSTM32
     Functions: bytesToHexString(bs), call(v1, v2, v3)
 
-Source: docs/ (lines 1076-1142),
+Source: docs/V1090_MODULE_AUDIT.txt (lines 1076-1142),
+        decompiled/ymodem_ghidra_raw.txt (40045 lines),
         archive/lib_transliterated/ymodem.py,
+        docs/v1090_strings/ymodem_strings.txt
 
-Error strings:
+Error strings (from Ghidra @ 0x0003b094-0x0003bc80):
     "wait_for_header() -> Expected 0x01(SOH)/0x02(STX)/0x18(CAN), but got "
     "send error, expected CRC or CAN, but got "
     "send error, expected ACK or CAN, but got "
@@ -55,7 +57,7 @@ except ImportError:
     hmi_driver = None
 
 # ═══════════════════════════════════════════════════════════════════════════
-# Protocol constants — EXACT from module audit +
+# Protocol constants — EXACT from module audit + Ghidra verification
 # ═══════════════════════════════════════════════════════════════════════════
 
 SOH = b'\x01'   # Start of 128-byte data packet
@@ -82,7 +84,7 @@ class TaskState:
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SendTask — data tracking for send operations
-# Source:  lines 1107-1116
+# Source: V1090_MODULE_AUDIT.txt lines 1107-1116
 # ═══════════════════════════════════════════════════════════════════════════
 
 class SendTask:
@@ -127,7 +129,7 @@ class SendTask:
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ReceiveTask — data tracking for receive operations
-# Source:  lines 1093-1106
+# Source: V1090_MODULE_AUDIT.txt lines 1093-1106
 # ═══════════════════════════════════════════════════════════════════════════
 
 class ReceiveTask:
@@ -180,8 +182,8 @@ class ReceiveTask:
 
 # ═══════════════════════════════════════════════════════════════════════════
 # YModemCommon — full YMODEM protocol implementation
-# Source:  lines 1119-1132
-#
+# Source: V1090_MODULE_AUDIT.txt lines 1119-1132
+# Ghidra functions at 0x0002c1c4 (send), 0x0002fd38 (send_file),
 #   0x000364ac (recv_file), 0x000234d0 (wait_for_header),
 #   0x00023d44 (wait_for_next), 0x0002b660 (wait_for_eot)
 # ═══════════════════════════════════════════════════════════════════════════
@@ -204,7 +206,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # CRC-16/XMODEM — polynomial 0x1021, init 0
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_25calc_crc_direct @ 0x0002ad60
     # -------------------------------------------------------------------
 
     @staticmethod
@@ -226,7 +228,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # Packet header builders
-    #
+    # Ghidra: _make_data_packet_header @ 0x00022f94 (via string ref)
     #         _make_edge_packet_header @ 0x00022f94
     # -------------------------------------------------------------------
 
@@ -246,7 +248,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # Checksum methods
-    #
+    # Ghidra: _make_send_checksum @ 0x00033684
     #         _verify_recv_checksum @ 0x0003aee0
     # -------------------------------------------------------------------
 
@@ -268,7 +270,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # abort — send CAN bytes to cancel transfer
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_3abort @ 0x00024778
     # -------------------------------------------------------------------
 
     def abort(self, count=2):
@@ -278,7 +280,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # wait_for_header — wait for SOH/STX/CAN from receiver
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_11wait_for_header @ 0x000234d0
     # Error: "wait_for_header() -> Expected 0x01(SOH)/0x02(STX)/0x18(CAN), but got "
     # -------------------------------------------------------------------
 
@@ -311,7 +313,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # wait_for_next — wait for a specific byte
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_7wait_for_next @ 0x00023d44
     # -------------------------------------------------------------------
 
     def wait_for_next(self, ch):
@@ -337,7 +339,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # wait_for_eot — wait for EOT (end of transmission)
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_13wait_for_eot @ 0x0002b660
     # Error: "Expected 0x04(EOT), but got "
     # State: WAIT_FOR_EOT
     # -------------------------------------------------------------------
@@ -364,7 +366,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # send — send data stream via YMODEM protocol
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_9send @ 0x0002c1c4
     #         __pyx_gb_6ymodem_12YModemCommon_4send_2generator @ 0x0001fa44
     # Errors: "send error, expected CRC or CAN, but got "
     #         "send error, expected ACK or CAN, but got "
@@ -612,7 +614,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # send_file — file wrapper around send()
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_5send_file @ 0x0002fd38
     # -------------------------------------------------------------------
 
     def send_file(self, file_path, retry=20, callback=None):
@@ -638,7 +640,7 @@ class YModemCommon:
 
     # -------------------------------------------------------------------
     # recv_file — receive a file via YMODEM
-    #
+    # Ghidra: __pyx_pw_6ymodem_12YModemCommon_15recv_file @ 0x000364ac
     # Error: "recv_file() -> Expected 0x01(SOH)/0x02(STX)/0x18(CAN), but got "
     # States: FIRST_PACKET_RECEIVED, IS_FIRST_PACKET, WAIT_FOR_END_PACKET
     # -------------------------------------------------------------------
@@ -822,10 +824,10 @@ class YModemCommon:
 
 # ═══════════════════════════════════════════════════════════════════════════
 # YModemSTM32 — STM32/GD32 bootloader YMODEM variant
-# Source:  lines 1133-1140
+# Source: V1090_MODULE_AUDIT.txt lines 1133-1140
 # Standalone class (does NOT inherit YModemCommon per module audit)
 # Focused on sending firmware to STM32/GD32 bootloaders.
-#
+# Ghidra: __pyx_pw_6ymodem_11YModemSTM32_5send @ 0x00025e8c
 # ═══════════════════════════════════════════════════════════════════════════
 
 class YModemSTM32:
@@ -849,7 +851,7 @@ class YModemSTM32:
 
     # -------------------------------------------------------------------
     # CRC calculation — instance method with seed for incremental computation
-    #
+    # Ghidra: __pyx_pw_6ymodem_11YModemSTM32_13calc_crc @ 0x00020bd4
     # -------------------------------------------------------------------
 
     def calc_crc(self, data, crc=0):
@@ -869,7 +871,7 @@ class YModemSTM32:
 
     # -------------------------------------------------------------------
     # Packet header builder
-    #
+    # Ghidra: __pyx_pw_6ymodem_11YModemSTM32_7_make_send_header @ 0x00034750
     # Confirmed: checks packet_size == 128 (0x80) or 1024 (0x400)
     # -------------------------------------------------------------------
 
@@ -885,7 +887,7 @@ class YModemSTM32:
 
     # -------------------------------------------------------------------
     # Checksum methods
-    #
+    # Ghidra: __pyx_pw_6ymodem_11YModemSTM32_9_make_send_checksum @ 0x00032fd0
     #         __pyx_pw_6ymodem_11YModemSTM32_11_verify_recv_checksum @ 0x00021e00
     # -------------------------------------------------------------------
 
@@ -904,7 +906,7 @@ class YModemSTM32:
 
     # -------------------------------------------------------------------
     # abort
-    #
+    # Ghidra: __pyx_pw_6ymodem_11YModemSTM32_3abort @ 0x00024fd8
     # -------------------------------------------------------------------
 
     def abort(self, count=2):
@@ -914,7 +916,7 @@ class YModemSTM32:
 
     # -------------------------------------------------------------------
     # send — STM32 bootloader firmware transfer
-    #
+    # Ghidra: __pyx_pw_6ymodem_11YModemSTM32_5send @ 0x00025e8c
     # -------------------------------------------------------------------
 
     def send(self, file_stream, file_name, file_size, retry=20,
@@ -1142,7 +1144,7 @@ class YModemSTM32:
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Module-level utility functions
-# Source:  lines 1088-1090
+# Source: V1090_MODULE_AUDIT.txt lines 1088-1090
 # ═══════════════════════════════════════════════════════════════════════════
 
 def bytesToHexString(bs):

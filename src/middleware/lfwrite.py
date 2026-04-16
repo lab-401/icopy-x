@@ -13,8 +13,13 @@
 ##########################################################################
 
 """lfwrite -- LF cloning/writing for various card types.
+
+Reimplemented from lfwrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
+
+Ground truth:
     Archive:    archive/lib_transliterated/lfwrite.py
     Spec:       docs/middleware-integration/6-write_spec.md (section 3)
+    Strings:    docs/v1090_strings/lfwrite_strings.txt
 
 API:
     write(listener, typ, infos, raw_par, key=None) -> int
@@ -90,6 +95,7 @@ except ImportError:
             NEXWATCH_ID = 45
 
 # ---------------------------------------------------------------------------
+# Constants -- EXACT from QEMU extraction (lfwrite_strings.txt)
 # ---------------------------------------------------------------------------
 TIMEOUT = 10000
 
@@ -240,6 +246,7 @@ def write_b0_need(typ, key=None):
 def write_raw(typ, raw, key=None):
     """Write raw data to T5577, with optional Block0 config.
 
+    Ground truth (awid_write_trace_20260328.txt lines 19-26):
     Data blocks 1..N are written FIRST, then config block 0 LAST.
     Block 0 sets modulation/bit-rate — writing it last avoids the
     tag re-modulating mid-sequence while data blocks are incomplete.
@@ -269,6 +276,7 @@ def write_raw(typ, raw, key=None):
 def write_dump_t55xx(file, key=None):
     """Restore T5577 dump from file, then verify by reading blocks back.
 
+    Ground truth: PM3 command log (original_current_ui write_t55xx_block_fail)
     shows the original lfwrite.so sends:
         1. lf t55xx restore f <file>
         2. lf t55xx detect
@@ -428,12 +436,14 @@ DUMP_WRITE_MAP = {
 def check_detect(key=None, listener=None):
     """Detect T55xx tag before write, wipe if password-protected.
 
+    Ground truth (trace_original_write_newtag_20260410.txt lines 18-21):
     Original firmware sequence on write:
         1. lf t55xx wipe p 20206666
         2. lf t55xx detect
         3. If detect OK → proceed to write
         4. If detect FAIL → detect p 20206666 → if still fail → chk (brute force)
 
+    Ground truth (trace_original_backlight_volume_20260410.txt lines 52-59):
     On a broken/unresponsive tag, the original firmware:
         1. wipe p 20206666
         2. detect → fail
@@ -508,6 +518,7 @@ def _notify_listener(listener, message):
 def _inline_verify(typ):
     """Post-clone inline verify: lf sea + tag-specific read.
 
+    Ground truth: PM3 command log (original_current_ui write_lf_em410x_verify_fail)
     shows the original lfwrite.so does lf sea + lf em 410x_read after cloning,
     before returning success. This consumes sequential fixture responses in the
     correct order. Result is not checked — it's a best-effort inline verify.
@@ -525,6 +536,7 @@ def _inline_verify(typ):
 def write(listener, typ, infos, raw_par, key=None):
     """Write/clone a tag based on type.
 
+    Ground truth: lfwrite_strings.txt + archive/lib_transliterated/lfwrite.py
     Dispatch:
     1. If typ in DUMP_WRITE_MAP: write dump
     2. detect + wipe if needed
