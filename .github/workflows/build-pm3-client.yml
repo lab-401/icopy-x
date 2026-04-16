@@ -16,19 +16,18 @@ jobs:
 
       - name: Install ARM cross-compiler
         run: |
-          # Pin ALL existing sources to amd64 (noble sources don't carry armhf)
+          # Pin existing ubuntu sources to amd64 only, add armhf from ports
           sudo dpkg --add-architecture armhf
-          sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list 2>/dev/null || true
-          sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list.d/*.list 2>/dev/null || true
-          # Noble (24.04) uses deb822 .sources format — pin those too
-          for f in /etc/apt/sources.list.d/*.sources; do
-            [ -f "$f" ] || continue
-            sudo grep -q 'Architectures:' "$f" || sudo sed -i '/^Types:/a Architectures: amd64' "$f"
-          done
-          # Add armhf from ports (use same release as runner)
           . /etc/os-release
-          echo "deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME} main restricted universe" | sudo tee /etc/apt/sources.list.d/armhf-ports.list
-          echo "deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-updates main restricted universe" | sudo tee -a /etc/apt/sources.list.d/armhf-ports.list
+          # Remove all existing sources and write clean ones
+          sudo rm -f /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources
+          sudo tee /etc/apt/sources.list > /dev/null <<SOURCES
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME} main restricted universe
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-updates main restricted universe
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-security main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME} main restricted universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-updates main restricted universe
+          SOURCES
           sudo apt-get update -qq
           sudo apt-get install -y -qq gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
           arm-linux-gnueabihf-gcc --version | head -1
