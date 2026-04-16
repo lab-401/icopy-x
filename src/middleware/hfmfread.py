@@ -351,15 +351,33 @@ def readBlocks(sector, keyA, keyB, infos):
     return result if isinstance(result, list) else None
 
 def readIfIsGen1a(infos):
-    """Check if card is Gen1a via hf mf cgetblk --blk 0."""
+    """Check if card is Gen1a via hf mf cgetblk --blk 0.
+
+    Detection is firmware-agnostic:
+      - Trust the scan cache if it already confirmed Gen1a (scan ran
+        the same cgetblk probe and got a successful response).
+      - Otherwise run the probe here and check for a 'data:' line
+        with spaced hex (iceman) or continuous hex (legacy factory).
+    """
+    # 1) Trust the scan cache when it's already confirmed Gen1a — the scan
+    #    layer ran the same cgetblk probe and got a successful response.
+    if isinstance(infos, dict) and infos.get('gen1a') in (True, 'True', 'true', 1, '1'):
+        return True
+
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5888)
     if ret == -1:
         return None
     if executor.hasKeyword('wupC1 error') or executor.hasKeyword("Can't read block"):
         return None
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = _RE_BLOCK_DATA.search(text)
-    if m:
+    # 2) Active probe: positive response is a 'data:' (or 'Block 0:' / iceman
+    #    table 'N |') line followed by hex, with spaces (iceman sprint_hex)
+    #    or without (legacy factory). The naive 32-continuous-hex regex
+    #    missed iceman's spaced 'data: 3A F7 ...' format.
+    if re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text):
+        return True
+    # Fallback: original compact-hex form, still accepted.
+    if _RE_BLOCK_DATA.search(text):
         return True
     return None
 

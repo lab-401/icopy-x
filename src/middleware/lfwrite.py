@@ -558,6 +558,14 @@ def write(listener, typ, infos, raw_par, key=None):
     if not infos:
         return -9
 
+    # Fresh rework budget for this write — previous flows' rework state
+    # should not pre-brick this one.
+    if executor is not None:
+        try:
+            executor.resetReworkCount()
+        except AttributeError:
+            pass
+
     # Dump-based write (T55xx dump, EM4305 dump)
     if typ in DUMP_WRITE_MAP:
         file_path = infos.get('file', '')

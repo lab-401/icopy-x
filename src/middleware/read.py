@@ -280,6 +280,13 @@ class Reader:
         self._reading = True
         self._stop_label = False
 
+        # Fresh rework budget for this read — previous flows should not
+        # pre-brick this one.
+        try:
+            executor.resetReworkCount()
+        except (AttributeError, NameError):
+            pass
+
         def _run():
             try:
                 ret, bundle = _dispatch_read(tag_type, infos, listener)

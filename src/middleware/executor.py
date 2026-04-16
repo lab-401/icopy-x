@@ -145,6 +145,14 @@ _socket_instance = None
 # in the TCP socket buffer.  Checked at the start of startPM3Task.
 _pipeline_needs_cleanup = False
 
+# Cumulative rework tracking — fast-fail when PM3 is genuinely unresponsive.
+# Incremented on every reworkPM3All(), reset on any successful command.
+# When the count reaches MAX_CONSECUTIVE_REWORKS, subsequent startPM3Task
+# calls skip reworks and return -1 immediately so flow state machines can
+# abort gracefully instead of cascading through every fallback command.
+MAX_CONSECUTIVE_REWORKS = 3
+_consecutive_reworks = 0
+
 # Nikola.D end-of-response regex — executor_strings.txt: "Nikola.D:"
 _RE_NIKOLA_END = re.compile(r'Nikola\.D:\s*-?\d+\s*$', re.MULTILINE)
 # Alternative end marker — executor_strings.txt: "pm3 -->"
@@ -451,10 +459,18 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     Trace: all PM3 traces show (cmd, timeout, rework) pattern
     Returns: 1=completed, -1=error (NOT the Nikola.D value)
     """
-    global CONTENT_OUT_IN__TXT_CACHE
+    global CONTENT_OUT_IN__TXT_CACHE, _consecutive_reworks
 
     _wait_if_stopping()
     _ensure_pipeline_ready()
+
+    # Fast-fail when PM3 has already been reworked MAX_CONSECUTIVE_REWORKS
+    # times without a successful command in between — the tag is almost
+    # certainly absent or unresponsive and further reworks just extend the
+    # "Writing..." UI state.  The flow's state machine gets -1 and aborts.
+    if _consecutive_reworks >= MAX_CONSECUTIVE_REWORKS:
+        CONTENT_OUT_IN__TXT_CACHE = 'PM3 unresponsive after %d reworks' % _consecutive_reworks
+        return CODE_PM3_TASK_ERROR
 
     if listener is not None:
         add_task_call(listener)
@@ -479,9 +495,15 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
 
         if result and not isPM3Offline(result) and not isCMDTimeout(result):
             success = True
+            _consecutive_reworks = 0  # reset counter on any good response
             break
 
         if attempt < rework_max:
+            if _consecutive_reworks + 1 >= MAX_CONSECUTIVE_REWORKS:
+                # One more rework would hit the cap — do the rework so the
+                # notification fires, then stop attempting.
+                reworkPM3All()
+                break
             reworkPM3All()
 
     _set_running(False)
@@ -547,7 +569,9 @@ def reworkPM3All():
     Calls hmi_driver.restartpm3(), closes socket, sleeps 3s, reconnects.
     Strings: "restartpm3", "hmi_driver"
     """
-    global _socket_instance
+    global _socket_instance, _consecutive_reworks
+
+    _consecutive_reworks += 1
 
     if hmi_driver is not None:
         try:
@@ -564,6 +588,16 @@ def reworkPM3All():
 
     time.sleep(3)
     connect2PM3()
+
+def resetReworkCount():
+    """Reset the consecutive-rework counter.
+
+    Called by flows that want a fresh budget (e.g. at the start of a new
+    write/read activity).  The counter also resets automatically whenever
+    a PM3 command returns a valid, non-timeout response.
+    """
+    global _consecutive_reworks
+    _consecutive_reworks = 0
 
 # ===========================================================================
 # Callback management

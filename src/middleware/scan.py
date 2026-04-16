@@ -704,6 +704,13 @@ class Scanner:
         """
         self._raise_on_multi_scan()
         self._set_run_label(True)
+        # Fresh rework budget for this scan — previous flows should not
+        # pre-brick this one.
+        try:
+            import executor as _exec
+            _exec.resetReworkCount()
+        except (ImportError, AttributeError):
+            pass
         try:
             result = None
 
@@ -792,6 +799,11 @@ class Scanner:
         """
         self._raise_on_multi_scan()
         self._set_run_label(True)
+        try:
+            import executor as _exec
+            _exec.resetReworkCount()
+        except (ImportError, AttributeError):
+            pass
         try:
             import tagtypes
             result = None

@@ -459,6 +459,12 @@ def write(listener, infos, bundle):
         int: 1=success, -1=failure
     """
     try:
+        # Fresh rework budget for this write — previous flows should not
+        # pre-brick this one.
+        try:
+            executor.resetReworkCount()
+        except AttributeError:
+            pass
         return write_common(listener, infos, bundle)
     except Exception:
         return -1
