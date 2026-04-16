@@ -99,7 +99,7 @@
             "screen": {
                 "title": "Erase Tag",
                 "content": {"type": "empty"},
-                "toast": {"text": "Unknown error", "icon": "error", "timeout": 0},
+                "toast": {"text": "Erase Failed: ACL Locked Sectors", "icon": "error", "timeout": 0},
                 "buttons": {"left": "Erase", "right": "Erase"},
                 "keys": {
                     "M1": "run:startErase",
