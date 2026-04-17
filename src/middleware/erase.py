@@ -32,6 +32,41 @@ Ground truth:
     Trace: docs/Real_Hardware_Intel/trace_erase_flow_20260330.txt
     UI spec: docs/UI_Mapping/13_erase_tag/README.md
 
+Iceman source citations (P3.4 compat-flip refactor):
+    hf mf wrbl     success  -> cmdhfmf.c:1389/9677/9760 `Write ( ok )`
+                   failure  -> cmdhfmf.c:1394/9680/9766 `Write ( fail )`
+                   (iceman emits NO `isOk:` tokens anywhere - grep
+                    /tmp/rrg-pm3/client/src/ returns zero matches.
+                    Matrix divergence_matrix.md:817/821 resolves OQ1.)
+    hf mf cwipe    success  -> cmdhfmf.c:5896 `Card wiped successfully`
+                   failure  -> cmdhfmf.c:5892 `Can't wipe card. error %d`
+    hf mf cgetblk  Gen1a ok -> cmdhfmf.c:6177 mf_print_block_one
+                               (cmdhfmf.c:570/589/603 sprint_hex grid
+                                `  N | XX XX ... | ascii`); adapter
+                                pm3_compat.py:1252 _normalize_rdbl_response
+                                rewrites to `data: XX XX ...` on current
+                                device iceman build, middleware tolerates
+                                both shapes via alternation.
+                   non-Gen1a -> cmdhfmf.c:6171 `Can't read block. error=%d`
+                                + armsrc/mifarecmd.c `wupC1 error`.
+    hf mf fchk     key table-> cmdhfmf.c printKeyTable (4-column `|`
+                                bordered shape on device build).
+                   0 keys   -> substring `found 0/N keys` on no-hit.
+    hf 14a info    UID/SAK/ATQA colon form -> cmdhf14a.c:653-655/770-774
+                                (iceman emits `UID:`, `SAK:`, `ATQA:`
+                                 identical to legacy, space-hex).
+    lf t55xx wipe  -> cmdlft55xx.c:3229 CmdT55xxWipe. Returns
+                      PM3_SUCCESS on success (no distinct text sentinel);
+                      middleware checks only startPM3Task return.
+    lf t55xx detect success -> cmdlft55xx.c:1837 `Chip type......... T55x7`
+                               (lowercase `type`, 9 dots, iceman emission).
+                   failure  -> cmdlft55xx.c:1307 `Could not detect
+                               modulation automatically. Try setting it
+                               manually with 'lf t55xx config'`
+                               (identical to legacy after prefix strip).
+    lf t55xx chk   -> cmdlft55xx.c:3338 CmdT55xxChkPwds brute force;
+                      middleware checks only startPM3Task return.
+
 This module does NOT touch UI. It returns a result string that the
 activity uses to show the appropriate toast. Progress is reported
 via an optional callback so the activity can update its ProgressBar.
@@ -40,11 +75,35 @@ Results:
     'success'  — erase completed
     'no_keys'  — MF1 standard: no sector keys found
     'no_tag'   — hf 14a info timeout (no tag on reader)
-    'error'    — MF1: cwipe timeout or wrbl isOk:00
+    'error'    — MF1: cwipe timeout or wrbl `Write ( fail )`
     'failed'   — T5577: all wipe strategies exhausted
 """
 
 import re
+
+# ---------------------------------------------------------------------------
+# Keyword / regex constants (iceman-native, post P3.4 compat-flip)
+# ---------------------------------------------------------------------------
+# hf mf wrbl success -- iceman cmdhfmf.c:1389/9677/9760
+_KW_WRBL_SUCCESS = r'Write \( ok \)'
+# hf mf cgetblk Gen1a positive probe -- matches either iceman raw grid
+# (`  0 | XX XX ... | ascii`) or adapter-normalised `data: XX XX ...`.
+# Legacy alternation `isOk:01` dropped per Option B: iceman emits no
+# `isOk:` tokens in any read path (matrix divergence_matrix.md:817).
+_RE_CGETBLK_BLOCK_DATA = re.compile(
+    r'(?:Block\s*0\s*:|data:|^\s*\d+\s*\|)\s*[A-Fa-f0-9 ]{16,}',
+    re.MULTILINE)
+# hf mf cgetblk non-Gen1a negative probe -- iceman cmdhfmf.c:6171 /
+# armsrc/mifarecmd.c wupC1 error emissions.
+_KW_CGETBLK_NO_MAGIC_A = 'wupC1 error'
+_KW_CGETBLK_NO_MAGIC_B = "Can't read block"
+# lf t55xx detect positive chip-type line. Iceman cmdlft55xx.c:1837
+# emits `Chip type......... T55x7` (lowercase `type`, 9+ dots).
+# Adapter pm3_compat.py:1571 _normalize_t55xx_config rewrites to
+# `     Chip Type      : T55x7` (capital T, colon) for legacy-shape
+# consumers. Middleware accepts both shapes; adapter removal in
+# Phase 4 leaves the iceman `Chip type` alternative live.
+_RE_T55XX_CHIP_OK = re.compile(r'Chip\s+[Tt]ype')
 
 # =====================================================================
 # MF1 — Tag Detection (separate from erase for SCANNING state)
@@ -70,13 +129,16 @@ def detect_mf1_tag():
 
     # Step 2: Test Gen1a magic (trace line 10)
     # Gen1a is confirmed when cgetblk returns actual block data without errors.
-    # Legacy firmware included 'isOk:01'; iceman returns 'data: XX XX ...' format.
-    import re as _re
+    # Iceman cmdhfmf.c:6177 emits mf_print_block_one grid (`  N | XX XX ...| ascii`);
+    # adapter pm3_compat.py:1252 _normalize_rdbl_response rewrites to
+    # `data: XX XX ...`. _RE_CGETBLK_BLOCK_DATA tolerates either shape.
+    # Legacy alternation `isOk:01` dropped -- iceman has zero `isOk:`
+    # emissions (matrix divergence_matrix.md:817).
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5888)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-    has_error = ('wupC1 error' in cache or "Can't read block" in cache)
-    has_block_data = bool(_re.search(
-        r'(?:Block\s*0\s*:|data:|isOk:01)\s*[A-Fa-f0-9 ]{16,}', cache))
+    has_error = (_KW_CGETBLK_NO_MAGIC_A in cache or
+                 _KW_CGETBLK_NO_MAGIC_B in cache)
+    has_block_data = bool(_RE_CGETBLK_BLOCK_DATA.search(cache))
     is_gen1a = has_block_data and not has_error
 
     return {'info_cache': info_cache, 'is_gen1a': is_gen1a}
@@ -280,12 +342,17 @@ def _erase_std_m1(info_cache, on_progress=None):
         kb = keys_b.get(sec, default_key_b)
 
         written = False
-        # Try Key A up to 3 times
+        # Try Key A up to 3 times.
+        # Iceman success sentinel: `Write ( ok )` (cmdhfmf.c:1389/9677/9760).
+        # Legacy alternation `isOk:01` dropped per Option B compat-flip --
+        # iceman firmware emits ZERO `isOk:` tokens anywhere in the write
+        # path (matrix divergence_matrix.md:817 grep confirmation).
+        # Cross-module parity with hfmfwrite._KW_WRBL_SUCCESS (P3.3 refactor).
         for _attempt in range(3):
             ret = executor.startPM3Task(
                 'hf mf wrbl --blk %d -a -k %s -d %s --force' % (block, ka, data), 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
+            if re.search(_KW_WRBL_SUCCESS, wr_cache):
                 written = True
                 break
         # Fallback to Key B
@@ -293,7 +360,7 @@ def _erase_std_m1(info_cache, on_progress=None):
             ret = executor.startPM3Task(
                 'hf mf wrbl --blk %d -b -k %s -d %s --force' % (block, kb, data), 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
+            if re.search(_KW_WRBL_SUCCESS, wr_cache):
                 written = True
         if not written:
             return 'error'
@@ -310,12 +377,13 @@ def _erase_std_m1(info_cache, on_progress=None):
         kb = keys_b.get(sec, default_key_b)
 
         written = False
+        # Iceman `Write ( ok )` success sentinel -- cmdhfmf.c:1389/9677/9760.
         for _attempt in range(3):
             ret = executor.startPM3Task(
                 'hf mf wrbl --blk %d -a -k %s -d %s --force' % (block, ka, transport_trailer),
                 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
+            if re.search(_KW_WRBL_SUCCESS, wr_cache):
                 written = True
                 break
         if not written:
@@ -323,7 +391,7 @@ def _erase_std_m1(info_cache, on_progress=None):
                 'hf mf wrbl --blk %d -b -k %s -d %s --force' % (block, kb, transport_trailer),
                 5888)
             wr_cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-            if 'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache:
+            if re.search(_KW_WRBL_SUCCESS, wr_cache):
                 written = True
         # Trailer write failures are non-fatal (card may have restricted access)
         write_count += 1
@@ -354,28 +422,36 @@ def erase_t5577():
     """
     import executor
 
-    # Step 1: Wipe without password
+    # Step 1: Wipe without password.
+    # Iceman cmdlft55xx.c:3229 CmdT55xxWipe -- returns PM3_SUCCESS with
+    # no distinct text sentinel; startPM3Task return is the only signal.
     ret = executor.startPM3Task('lf t55xx wipe', 5000)
     if ret == -1:
         return 'failed'
 
-    # Step 2: Verify with detect (timeout=10000, from trace)
+    # Step 2: Verify with detect (timeout=10000, from trace).
+    # Iceman success emission: cmdlft55xx.c:1837
+    #   `Chip type......... T55x7` (lowercase `type`, 9 dots).
+    # Adapter pm3_compat.py:1571 _normalize_t55xx_config rewrites to
+    #   `     Chip Type      : T55x7` (capital T, colon).
+    # `_RE_T55XX_CHIP_OK = r'Chip\s+[Tt]ype'` tolerates BOTH shapes --
+    # iceman lowercase direct OR adapter-converted capital form.
     ret = executor.startPM3Task('lf t55xx detect', 10000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-    if 'Chip Type' in cache:
+    if _RE_T55XX_CHIP_OK.search(cache):
         return 'success'
 
     # Step 3: Try with DRM password 20206666
     executor.startPM3Task('lf t55xx wipe -p 20206666', 5000)
     ret = executor.startPM3Task('lf t55xx detect', 10000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-    if 'Chip Type' in cache:
+    if _RE_T55XX_CHIP_OK.search(cache):
         return 'success'
 
     # Step 4: Try detect with password (timeout=10000, from trace)
     ret = executor.startPM3Task('lf t55xx detect -p 20206666', 10000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
-    if 'Chip Type' in cache:
+    if _RE_T55XX_CHIP_OK.search(cache):
         return 'success'
 
     # Step 5: Password brute force (last resort)
