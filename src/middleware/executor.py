@@ -590,14 +590,21 @@ def reworkPM3All():
     connect2PM3()
 
 def resetReworkCount():
-    """Reset the consecutive-rework counter.
+    """Reset the consecutive-rework counter and request pipeline cleanup.
 
     Called by flows that want a fresh budget (e.g. at the start of a new
-    write/read activity).  The counter also resets automatically whenever
-    a PM3 command returns a valid, non-timeout response.
+    scan/read/write/erase activity).  The counter also resets automatically
+    whenever a PM3 command returns a valid, non-timeout response.
+
+    Additionally sets _pipeline_needs_cleanup so the next startPM3Task runs
+    _ensure_pipeline_ready(), which closes and reconnects the TCP socket.
+    This clears any stale responses queued in the buffer from a previous
+    rework cascade or long-running command that got aborted without a
+    stopPM3Task (e.g. when the user exits to the main menu during a chk).
     """
-    global _consecutive_reworks
+    global _consecutive_reworks, _pipeline_needs_cleanup
     _consecutive_reworks = 0
+    _pipeline_needs_cleanup = True
 
 # ===========================================================================
 # Callback management

@@ -80,7 +80,7 @@ REGEX_CARD_ID = r'(?:Card|ID|id|CARD|ID|UID|uid|Uid)\s*:*\s*([xX0-9a-fA-F ]+)'
 REGEX_EM410X = r'EM TAG ID\s+:[\s]+([xX0-9a-fA-F]+)'
 REGEX_HID = r'HID Prox - ([xX0-9a-fA-F]+)'
 REGEX_PROX_ID_XSF = r'(XSF\(.*?\).*?:[xX0-9a-fA-F]+)'
-REGEX_RAW = r'.*(?:Raw|Raw|RAW|hex|HEX|Hex)\s*:*\s*([xX0-9a-fA-F ]+)'
+REGEX_RAW = r'.*(?:Raw|RAW|raw|hex|HEX|Hex)\s*:*\s*([xX0-9a-fA-F ]+)'
 
 # ---------------------------------------------------------------------------
 # Internal regex patterns -- from binary string extraction (spec section 3.4)
