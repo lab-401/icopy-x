@@ -223,6 +223,20 @@ def list_split(items, n):
 # fchks — fast dictionary key check
 # PM3: hf mf fchk {size_param} {keyfile}  (timeout=600000)
 # ---------------------------------------------------------------------------
+# Iceman-native key-table row (this device's installed build). Matrix
+# section `hf mf fchk` (divergence_matrix.md L711-736) confirms iceman
+# emits the 4-column `|`-bordered `| Sec | key A | res | key B | res |`
+# shape on this device (20/20 of 22 iceman table-header samples match).
+# Verified via iceman_output.json `hf mf fchk` samples — dominant shape
+# line `| 000 | 484558414354   | 1 | a22ae129c013   | 1 |`.
+#
+# TODO(Phase 4 / firmware bump): /tmp/rrg-pm3 HEAD at cmdhfmf.c:4966-5060
+# (printKeyTable) emits a different 5-column `+`-separated shape. If the
+# device ever upgrades to HEAD iceman, swap this regex to match the new
+# `-----+-----+---...` separators and ` 000 | 003 | FFFFFFFFFFFF | 1 |`
+# row pattern. `pm3_compat.py:1160-1192` `_normalize_fchk_table` already
+# contains the reverse rewrite for legacy-direction; activate it on
+# firmware-bump.
 _RE_KEY_TABLE = re.compile(
     r'\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|'
 )
@@ -265,14 +279,22 @@ def fchks(infos, size, with_call=True):
 # These send PM3 commands and parse responses.
 # ---------------------------------------------------------------------------
 def darkside():
-    """Darkside attack. PM3: hf mf darkside."""
+    """Darkside attack. PM3: hf mf darkside.
+
+    Iceman-native key emission: ``Found valid key [ %012X ]`` from
+    /tmp/rrg-pm3/client/src/cmdhfmf.c:1275 (capital "Found", bracketed,
+    uppercase hex via PRIX64). Matrix section `hf mf darkside`
+    (divergence_matrix.md L687-707).
+    """
     ret = executor.startPM3Task('hf mf darkside', 120000)
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    # Iceman PM3 uses lowercase "found valid key" in nested output and mixed
-    # case across commands — match case-insensitively to cover both.
-    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text, re.IGNORECASE)
+    # Iceman bracketed form (cmdhfmf.c:1275). re.IGNORECASE to tolerate the
+    # nested-attack lowercase "found" variant (mifarehost.c:686) when this
+    # helper is reused from tests; not needed for darkside proper.
+    m = re.search(r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]',
+                  text, re.IGNORECASE)
     if m:
         key = m.group(1).upper()
         putKey2Map(0, A, key)
@@ -288,7 +310,14 @@ def onNestedCall(lines):
     pass
 
 def nestedOneKey(known, target, retryMax=5):
-    """Nested attack for a single key."""
+    """Nested attack for a single key.
+
+    Iceman-native emission: ``Target block %4u key type %c -- found valid
+    key [ %012X ]`` from /tmp/rrg-pm3/client/src/mifare/mifarehost.c:686
+    (lowercase "found", bracketed hex). Matrix `hf mf nested`
+    (divergence_matrix.md L740-759); iceman_output.json samples 3-8
+    confirm exact shape on the device.
+    """
     known_sector = getSectorFromTK(known)
     known_type = getTypeFromTK(known)
     known_key = getKey4Map(known_sector, known_type)
@@ -303,7 +332,10 @@ def nestedOneKey(known, target, retryMax=5):
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*[:\[]\s*([A-Fa-f0-9]{12})', text, re.IGNORECASE)
+    # Iceman bracketed form (mifarehost.c:686 — lowercase "found"). darkside
+    # tail (cmdhfmf.c:1275 — capital "Found") also matches via IGNORECASE.
+    m = re.search(r'found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]',
+                  text, re.IGNORECASE)
     if m:
         putKey2Map(target_sector, target_type, m.group(1).upper())
         return 1
