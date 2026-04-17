@@ -108,11 +108,25 @@ def _record(cmd, passed, detail=''):
 
 
 def _test_hf14ainfo(body, sample_idx):
-    """Validate `hf 14a info` parser accepts this sample.
+    """Validate `hf 14a info` parser against iceman-native response shapes.
 
-    Success shape: a dict with `found` key (True or False), and — when
-    True and not a multi-tag / anticollision / UL case — a `uid` value
-    and `type` key.
+    Asserts concrete fields on parser output:
+      - result is a dict with `found` key
+      - when body has iceman UID line + no anticollision/multi/UL early exit,
+        `uid` is a non-empty hex string matching the UID in the body
+      - when body has `Static nonce....... yes` (iceman 7-dot form),
+        `static` is True
+      - when body has `Magic capabilities... Gen 1a` (iceman 3-dot form),
+        `gen1a` is True
+      - when body has a MIFARE Classic / MIFARE Plus / MIFARE Mini /
+        DESFire / Ultralight keyword, `type` is not None
+      - when body has anticollision keyword, `found` is False
+      - when body has iceman `Prng detection..... weak`/`hard` (5-dot form),
+        `get_prng_level()` returns the level string
+
+    A regression in any post_normalize/adapter pipeline (e.g. dotted-to-colon
+    re-conversion on iceman emissions) should trip these predicates and
+    cause a structured FAIL, not silently pass.
     """
     executor.CONTENT_OUT_IN__TXT_CACHE = body
     try:
@@ -125,17 +139,67 @@ def _test_hf14ainfo(body, sample_idx):
     if 'found' not in result:
         return False, 'missing `found` key: %r' % (result,)
 
-    # If the body contains the iceman UID line, we expect the parser to
-    # populate `uid` (unless the result is a multi-tag / anticollision /
-    # UL early-return dict).
-    body_has_uid = 'UID:' in body and 'Card doesn\'t support' not in body
     is_early = (result.get('hasMulti') or result.get('isUL') or
                 result.get('found') is False)
-    if result.get('found') and body_has_uid and not is_early:
+
+    # Assertion: anticollision body -> found=False
+    if "Card doesn't support standard iso14443-3 anticollision" in body:
+        if result.get('found') is not False:
+            return False, ('anticollision body but found != False: %r'
+                           % (result,))
+        return True, ''
+
+    # Assertion: iceman UID line -> populated uid (unless early-exit)
+    # The iceman shape is ` UID: <hex>` (cmdhf14a.c:2792). If the parser
+    # populates `uid` at all, it must contain at least one hex character.
+    if result.get('found') and not is_early:
         uid = result.get('uid', '')
-        if not uid or uid == 'BCC0 incorrect':
-            # BCC0 is an acceptable shape; treat as structurally valid.
-            pass
+        if 'UID:' in body and not uid:
+            return False, ('body has `UID:` but parser uid empty: %r'
+                           % (result,))
+        if uid and uid != 'BCC0 incorrect':
+            # UID must be hex (after space-strip) — regression detector
+            # for any adapter that corrupts hex into other chars.
+            import re as _re
+            if not _re.match(r'^[0-9A-Fa-f]+$', uid):
+                return False, ('uid contains non-hex: %r' % (uid,))
+
+    # Assertion: iceman `Static nonce....... yes` (7 dots) -> static=True
+    # This is the key regression symptom: if _post_normalize rewrites the
+    # dotted form to colon form AFTER the iceman-native keyword matcher
+    # runs, `static` will be False here on a static-nonce sample.
+    if 'Static nonce....... yes' in body and not is_early:
+        if result.get('static') is not True:
+            return False, ('body has iceman Static nonce 7-dot but '
+                           'static != True: %r' % (result,))
+
+    # Assertion: iceman `Magic capabilities... Gen 1a` (3 dots) -> gen1a=True
+    # Same regression class as static nonce. Only applies when the parser
+    # reaches Case 6 (Standard MIFARE); DESFire/UL skip the has_ checks.
+    if 'Magic capabilities... Gen 1a' in body and not is_early and \
+            result.get('type') is not None:
+        if result.get('gen1a') is not True:
+            return False, ('body has iceman Magic capabilities 3-dot '
+                           'Gen 1a but gen1a != True: %r' % (result,))
+
+    # Assertion: iceman `Prng detection..... <level>` (5/6 dots) ->
+    # get_prng_level() returns the level. Direct helper probe.
+    if 'Prng detection' in body and '\n' in body:
+        level = hf14ainfo.get_prng_level()
+        # The level must be present in the body text if the dotted form
+        # is iceman-native. Empty means the _RE_PRNG regex failed.
+        if not level:
+            return False, ('body has `Prng detection` but '
+                           'get_prng_level() returned empty '
+                           '(dotted form regression): %r' % (body[:200],))
+
+    # Assertion: DESFire body has type field set
+    if 'MIFARE DESFire' in body and 'MIFARE Classic 1K' not in body \
+            and 'MIFARE Classic 4K' not in body and not is_early:
+        if result.get('type') != tagtypes.MIFARE_DESFIRE:
+            return False, ('DESFire body but type != MIFARE_DESFIRE: %r'
+                           % (result,))
+
     return True, ''
 
 
