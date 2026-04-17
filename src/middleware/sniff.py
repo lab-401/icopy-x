@@ -24,10 +24,21 @@
 
 Reimplemented from sniff.so (iCopy-X v1.0.90).
 
+Post compat-flip (Phase 3) — iceman-native command forms & regex shapes.
+
 Ground truth:
     Strings:  docs/v1090_strings/sniff_strings.txt (1484 lines)
     Audit:    docs/V1090_MODULE_AUDIT.txt (lines 154-181)
     Symbols:  18 exported functions (__pyx_mdef_5sniff_1 through _35)
+    Source:   /tmp/rrg-pm3/client/src/cmdhf14a.c:1079  `hf 14a sniff`
+              /tmp/rrg-pm3/client/src/cmdhf14b.c:1038  `hf 14b sniff`
+              /tmp/rrg-pm3/client/src/cmdhficlass.c:931 `hf iclass sniff`
+              /tmp/rrg-pm3/client/src/cmdhftopaz.c:829  `hf topaz sniff`
+              /tmp/rrg-pm3/client/src/cmdlf.c:955       `lf sniff`
+              /tmp/rrg-pm3/client/src/cmdlf.c:626       `lf config` (CLIParser: -a/-t/-s)
+              /tmp/rrg-pm3/client/src/cmdlft55xx.c:4336 `lf t55xx sniff`
+              /tmp/rrg-pm3/client/src/cmdtrace.c:1181   "Recorded activity ( N bytes )"
+              /tmp/rrg-pm3/client/src/cmddata.c:1873    "Reading N bytes from device memory"
 
 Complete exported API (from __pyx_mdef_5sniff_* in sniff_strings.txt:1467-1484):
     #1  sniff14AStart()
@@ -54,11 +65,15 @@ IMPORTS: executor, re
 
 import re
 
-# ── Constants from binary ────────────────────────────────────────────
-# sniff_strings.txt line 867
+# ── Iceman-native regex constants ─────────────────────────────────────
+# sniff_strings.txt line 867; iceman cmddata.c:1873
+#   `PrintAndLogEx(INFO, "Reading %u bytes from device memory", n)`
 PATTERN_LF_TRACE_LEN = r'Reading (\d+) bytes from device memory'
-# sniff_ghidra_raw.txt line 324, STR@0x0001c370
-# Legacy: "trace len = 1066", Iceman: "Recorded activity ( 1066 bytes )"
+# Iceman cmdtrace.c:1181/:1425
+#   `PrintAndLogEx(SUCCESS, "Recorded activity ( %u bytes )", gs_traceLen)`
+# Alternation also tolerates the legacy `trace len = N` shape so the
+# regex still yields the correct integer during the Phase-4 transition
+# window (legacy firmware still served by pm3_compat adapter).
 PATTERN_HF_TRACE_LEN = r'(?:trace len = |Recorded activity \( )(\d+)'
 # sniff_strings.txt line 871
 PATTERN_T5577_OK_KEY = r'Default pwd write\s+\|\s+([A-Fa-f0-9]{8})\s\|'
