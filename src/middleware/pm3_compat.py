@@ -135,9 +135,11 @@ def strip_ansi(text):
 # share the same command spelling; the workaround is purely hardware.
 # ---------------------------------------------------------------------------
 
+# When LEGACY_COMPAT is False the blocker is harmless as an empty set
+# (still consulted in translate() but the flag-check short-circuits earlier).
 _BLOCKED_CMDS_ICEMAN = frozenset({
     'hf iclass info',  # hangs due to FPGA chip mismatch on iCopy-X
-})
+}) if LEGACY_COMPAT else frozenset()
 
 
 # ---------------------------------------------------------------------------
@@ -151,6 +153,9 @@ _BLOCKED_CMDS_ICEMAN = frozenset({
 # Rules are tried in order; first match wins.  Patterns are anchored to
 # iceman-native command syntax so they never match a command that has
 # already been translated down to legacy form (idempotent).
+#
+# When LEGACY_COMPAT is False the table is built as an empty list — the
+# module becomes fully inert with no rule lookups, no normalizer registry.
 # ---------------------------------------------------------------------------
 
 def _reverse_mf_rdbl(m):
@@ -234,7 +239,7 @@ def _reverse_t55xx_read_page1(m):
     return 'lf t55xx read b %s p %s o 1' % (m.group(1), m.group(2))
 
 
-_COMMAND_TRANSLATION_RULES = [
+_COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
     # -----------------------------------------------------------------------
     # Flow 1: Scan — reverse rules (iceman → factory)
     # -----------------------------------------------------------------------
@@ -539,10 +544,18 @@ def detect_pm3_version():
     Uses pm3_flash.get_running_version() which sends 'hw version' to PM3
     and parses the output.
 
+    When LEGACY_COMPAT is False, this short-circuits to None without
+    sending any command.  The module becomes fully inert.
+
     Returns:
-        PM3_VERSION_ORIGINAL or PM3_VERSION_ICEMAN, or None on failure.
+        PM3_VERSION_ORIGINAL or PM3_VERSION_ICEMAN, or None on failure
+        or when LEGACY_COMPAT is disabled.
     """
     global _current_version
+
+    if not LEGACY_COMPAT:
+        _current_version = None
+        return None
 
     if pm3_flash is None:
         logger.warning("detect_pm3_version: pm3_flash module not available")
@@ -1111,7 +1124,11 @@ def _normalize_felica_reader(text):
 
 # Maps command prefixes to lists of normalizer functions.
 # Multiple normalizers can be applied per command.
-_RESPONSE_NORMALIZERS = {
+#
+# When LEGACY_COMPAT is False the dict is empty — translate_response()
+# has no prefix to match, and the module is fully inert without any
+# normalizer registry to traverse.
+_RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'hf mf fchk': [_normalize_fchk_table],
     'hf mf chk': [_normalize_fchk_table],
     'hf mf nested': [_normalize_fchk_table],
