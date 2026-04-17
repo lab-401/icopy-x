@@ -78,7 +78,7 @@ ICLASS_L_WRITE_BLOCK = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 TIMEOUT = 10000
 
 # Regex for key calculation result
-_RE_XOR_DIV_KEY = r'Xor div key\s*[:.]+\s*([0-9A-Fa-f ]+)'
+_RE_XOR_DIV_KEY = r'Xor div key\s*:\s*([0-9A-Fa-f ]+)'
 
 
 # ===========================================================================
