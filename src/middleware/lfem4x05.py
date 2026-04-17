@@ -56,11 +56,42 @@ DUMP_TEMP = None
 KEY_TEMP = None
 
 # ---------------------------------------------------------------------------
-# Internal regex patterns -- EXACT from binary strings extraction
-# ---------------------------------------------------------------------------
-_RE_CHIP = r'.*Chip Type.*\|(.*)'
-_RE_CONFIG = r'.*ConfigWord:(.*)\(.*'
-_RE_SERIAL = r'.*Serial.*:(.*)'
+# Internal regex patterns -- iceman-native (P3.5 refactor, 2026-04-17).
+#
+# Iceman source: /tmp/rrg-pm3/client/src/cmdlfem4x05.c:869-873
+# (printEM4x05Info — called by CmdEM4x05Info for `lf em 4x05 info`):
+#     PrintAndLogEx(SUCCESS, "Chip type..... %s", em_get_card_str(block0));
+#     PrintAndLogEx(SUCCESS, "Serialno...... %08X", serial);
+#     PrintAndLogEx(SUCCESS, "Block0........ %08x", block0);
+#     PrintAndLogEx(SUCCESS, "Cap type...... ...");
+#     PrintAndLogEx(SUCCESS, "Custum code... ...");
+#
+# Legacy source: colon-separated with pipe for chip type:
+#     " Chip Type:   9 | EM4305"        # pipe with decimal id-then-name
+#     "  Serial #: 1A2B3C4D"
+#     " ConfigWord: 00080040 (xx)"       # parenthesised descriptor
+#
+# Matrix section: divergence_matrix.md L1016-1053.
+# Divergence type: FORMAT (Chip Type/Serialno) + STRUCTURAL (ConfigWord).
+#
+# Notes:
+#   - Iceman `printEM4x05Info` has NO `ConfigWord:` field.  Config is
+#     folded into `Block0........` (cmdlfem4x05.c:873).  The legacy
+#     structural field is fully removed in iceman.  The `_RE_CONFIG`
+#     pattern below falls back to `Block0` so callers still get a hex
+#     value into `result['cw']` for downstream UI, but the semantic
+#     content differs (was "config word", now "block 0 raw").
+#     See gap log P3.5 "lf em 4x05 info ConfigWord structural removal".
+#   - `Chip type` is lowercase `type` in iceman (cmdlfem4x05.c:869) — no
+#     other callsite in iceman CmdEM4x05Info emits `Chip Type` with
+#     capital T.  Use `[Tt]` to tolerate legacy case on adapter path.
+#
+# `_normalize_em4x05_info` (pm3_compat.py:1594) rewrites iceman →
+# legacy (injects pipe-id, colon-separator, parenthetical) and is
+# INVERSE of the new middleware.  Phase 4 must disable.  Gap log P3.5.
+_RE_CHIP = r'Chip [Tt]ype\.+\s+(\S+)'
+_RE_CONFIG = r'Block0\.+\s+([A-Fa-f0-9]+)'
+_RE_SERIAL = r'Serialno\.+\s+([A-Fa-f0-9]+)'
 
 
 # ===========================================================================
@@ -100,7 +131,15 @@ def parser():
         except (ImportError, AttributeError):
             em4305_id = 24
 
-    if not executor.hasKeyword('Chip Type'):
+    # Iceman-native detection keyword (P3.5 refactor):
+    #   `Chip type` (lowercase `type`) — iceman cmdlfem4x05.c:869 literal.
+    # Legacy emitted `Chip Type:` (capital T).  hasKeyword uses re.search
+    # which is case-sensitive by default; bare substring `Chip type` will
+    # miss the legacy output.  `_normalize_em4x05_info` (pm3_compat.py:1594)
+    # rewrites iceman → legacy so the PRE-refactor keyword worked on
+    # adapter-processed iceman bodies; post-refactor we require raw iceman
+    # shape.  Phase 4 reconciliation disables the normalizer. Gap log P3.5.
+    if not executor.hasKeyword('Chip type'):
         return {'found': False}
 
     result = {
@@ -259,11 +298,21 @@ def dump4X05(infos=None, key=None):
     if ret == -1:
         return -1
 
-    # Extract actual file path from response and store in DUMP_TEMP
-    # Ground truth: response contains 'saved 64 bytes to binary file <path>'
-    if executor.hasKeyword('saved 64 bytes to binary file'):
+    # Iceman-native save sentinel (P3.5 refactor):
+    #
+    # Iceman `pm3_save_dump()` / `fileSaveBIN()` at
+    # /tmp/rrg-pm3/client/src/fileutils.c:293:
+    #     PrintAndLogEx(SUCCESS, "Saved %zu bytes to binary file `%s`", ...)
+    # Capital `S`.  Legacy emitted `saved %d bytes to binary file %s`
+    # (lowercase).  `_normalize_save_messages` in pm3_compat.py lowercases
+    # `Saved` → `saved` for backward compat.  Middleware now targets
+    # iceman capital; Phase 4 disables the normalizer.  Gap log P3.5.
+    #
+    # Regex captures both cases `[Ss]aved` so adapter-processed bodies
+    # still parse during the Option B transition period.  Matrix L1492-96.
+    if executor.hasKeyword(r'[Ss]aved \d+ bytes to binary file'):
         path = executor.getContentFromRegexG(
-            r'saved \d+ bytes to binary file\s*(.*)', 1)
+            r'[Ss]aved \d+ bytes to binary file\s*(.*)', 1)
         if path:
             DUMP_TEMP = path.strip()
         else:
