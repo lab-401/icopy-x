@@ -58,55 +58,95 @@ CMD = 'hf 14a info'
 TIMEOUT = 5000
 
 # ---------------------------------------------------------------------------
-# Regex patterns -- EXACT from binary string extraction
+# Regex patterns -- iceman-native shapes
+# Matrix section: `hf 14a info` (divergence_matrix.md L105-141).
+# Source: /tmp/rrg-pm3/client/src/cmdhf14a.c:2709+ (infoHF14A delegate).
 # ---------------------------------------------------------------------------
-# STR@0x0001df68: '.*UID:(.*)\n'
-_RE_UID = r'.*UID:(.*)\n'
-# STR@0x0001df78: '.*ATQA:(.*)\n'
-_RE_ATQA = r'.*ATQA:(.*)\n'
-# STR@0x0001df88: '.*SAK:(.*)\[.*\n'
-_RE_SAK = r'.*SAK:(.*)\[.*\n'
-# STR@0x0001dc88: '.*Prng detection: (.*)\n'
-_RE_PRNG = r'.*Prng detection: (.*)\n'
-# STR@0x0001dfa0: '.*ATS:(.*)'
-_RE_ATS = r'.*ATS:(.*)'
-# STR@0x0001dde4: '.*MANUFACTURER:(.*)'
-_RE_MANUFACTURER = r'.*MANUFACTURER:(.*)'
+# Iceman UID line: `" UID: " _GREEN_("%s") " %s", ..., get_uid_type(&card)`
+# (cmdhf14a.c:2792) — emits UID bytes followed by an optional type annotation
+# like `( ONUID, re-used )`. Non-greedy capture of space-separated hex pairs
+# stops naturally at `(` or end-of-line, avoiding the annotation.
+# Phase 4 compat adapter `_RE_UID_ANNOTATION` (pm3_compat.py:1074) also
+# strips the annotation on iceman→middleware path; this regex is resilient
+# to both. Matrix L122.
+_RE_UID = r'UID:\s+((?:[0-9A-Fa-f]{2}\s+)+)'
+
+# Iceman ATQA line: `"ATQA: " _GREEN_("%02X %02X")` (cmdhf14a.c:2793).
+# Uppercase hex per iceman convention — `[0-9A-Fa-f]` keeps regex
+# case-agnostic at the character class level. Matrix L123 (hex case).
+_RE_ATQA = r'ATQA:\s+([0-9A-Fa-f]{2}\s[0-9A-Fa-f]{2})'
+
+# Iceman SAK line: `" SAK: " _GREEN_("%02X [%" PRIu64 "]")` (cmdhf14a.c:2794)
+# — single hex byte followed by `[select_status]`.
+_RE_SAK = r'SAK:\s+([0-9A-Fa-f]{2})\s*\['
+
+# Iceman PRNG line: `"Prng detection..... " _GREEN_("weak")` (cmdhf14a.c:3326)
+# — 5 dots + space on success, `"Prng detection...... " _RED_("fail")` (6 dots)
+# on failure. Dotted-variable form captured via `\.+`. Matrix L126.
+_RE_PRNG = r'Prng detection\.+\s+(\w+)'
+
+# Iceman ATS line: `"ATS: " _YELLOW_("%s")"[ %02X %02X ]"` (cmdhf14a.c:3016)
+# — hex payload before `[crc-bracket]`. Non-greedy capture stops at `[`.
+_RE_ATS = r'ATS:\s+([0-9A-Fa-f\s]+?)(?=\[|\n|$)'
+
+# Iceman drops the `MANUFACTURER:` label entirely (cmdhf14a.c:2837 emits
+# `" " _YELLOW_("%s"), getTagInfo(card.uid[0])` — just an indented name).
+# Legacy cmdhf14a.c:1657 emits `"MANUFACTURER: " _YELLOW_("%s")`.
+# This regex matches legacy shape only. Phase 4 compat adapter
+# `_normalize_manufacturer` (pm3_compat.py:1755 target) must inject the
+# `MANUFACTURER:` prefix on iceman output for the middleware classifier
+# to populate the `manufacturer` key. In pure iceman (no adapter),
+# `manufacturer` simply remains None. Matrix L124/L136.
+# TODO(Phase 4): wire `_normalize_manufacturer` in pm3_compat.py.
+_RE_MANUFACTURER = r'MANUFACTURER:\s*(.*)'
 
 # ---------------------------------------------------------------------------
-# Detection keyword strings -- EXACT from binary string extraction
+# Detection keyword strings -- iceman-native shapes
 # ---------------------------------------------------------------------------
-# STR@0x0001dc38
+# MIFARE type keywords: iceman emits these as substrings inside
+# `"Possible types:"` block via getTagInfo lookup — IDENTICAL in both
+# firmwares post prefix-strip. No divergence. Matrix L870.
 _KW_MIFARE_CLASSIC_1K = 'MIFARE Classic 1K'
-# STR@0x0001dc24
 _KW_MIFARE_CLASSIC_4K = 'MIFARE Classic 4K'
-# STR@0x0001dd64
 _KW_MIFARE_CLASSIC = 'MIFARE Classic'
-# STR@0x0001de5c
 _KW_MIFARE_MINI = 'MIFARE Mini'
-# STR@0x0001de50
 _KW_MIFARE_PLUS = 'MIFARE Plus'
-# STR@0x0001dd34
 _KW_MIFARE_PLUS_4K = 'MIFARE Plus 4K'
-# STR@0x0001dc10
 _KW_MIFARE_ULTRALIGHT = 'MIFARE Ultralight'
-# STR@0x0001dd44
 _KW_MIFARE_DESFIRE = 'MIFARE DESFire'
-# STR@0x0001df9c
 _KW_NTAG = 'NTAG'
-# STR@0x0001db94
-_KW_GEN1A = 'Magic capabilities : Gen 1a'
-# STR@0x0001db70
-_KW_GEN2_CUID = 'Magic capabilities : Gen 2 / CUID'
-# STR@0x0001dc74
-_KW_STATIC_NONCE = 'Static nonce: yes'
-# STR@0x0001dbcc
+
+# Iceman magic-capabilities: `"Magic capabilities... " _GREEN_("Gen 1a")`
+# (mifare/mifarehost.c:1710) — 3 dots + space. Matrix L128 (source cite
+# re-verified against /tmp/rrg-pm3/client/src/mifare/mifarehost.c).
+_KW_GEN1A = 'Magic capabilities... Gen 1a'
+
+# `"Magic capabilities... " _GREEN_("Gen 2 / CUID")` (mifarehost.c:1718).
+_KW_GEN2_CUID = 'Magic capabilities... Gen 2 / CUID'
+
+# Iceman static nonce: `"Static nonce....... " _YELLOW_("yes")`
+# (cmdhf14a.c:3319) — 7 dots + space. Matrix L127.
+_KW_STATIC_NONCE = 'Static nonce....... yes'
+
+# Iceman cmdhf14a.c does not emit a single-line "Multiple tags detected"
+# string; legacy v1090 firmware kept the string. Substring match survives
+# as neutral keyword (not emitted by iceman today). Retained per matrix
+# scope — middleware parser() checks as Case 1 precedence test.
 _KW_MULTIPLE_TAGS = 'Multiple tags detected'
-# STR@0x0001daf8
+
+# Iceman cmdhf14a.c:2746 emits this identical string. IDENTICAL.
 _KW_ANTICOLLISION = "Card doesn't support standard iso14443-3 anticollision"
-# hf14ainfo_strings.txt line 614
+
+# `BCC0 incorrect` is NOT emitted by either iceman or legacy PM3 source
+# (grep of both trees yields zero matches). Retained as legacy iCopy-X
+# firmware-patch vestige; remains dormant under pure iceman. No Phase 4
+# adapter required — emission absent on both sides.
 _KW_BCC0_INCORRECT = 'BCC0 incorrect'
-# STR@0x0001dd24
+
+# Iceman `Prng detection` substring appears in both dotted `Prng
+# detection..... weak` (success) and `Prng detection...... fail` (failure)
+# forms (cmdhf14a.c:3326-3330). Substring match `'Prng detection'` works
+# for all iceman shapes.
 _KW_PRNG_DETECTION = 'Prng detection'
 
 def has_static_nonce():
