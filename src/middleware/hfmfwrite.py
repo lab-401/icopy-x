@@ -133,14 +133,25 @@ def read_blocks_4file(infos, file):
 
 # ---------------------------------------------------------------------------
 # write_block / start_wrbl_cmd — per-block write
-# Strings: __pyx_k_hf_mf_wrbl, __pyx_k_isOk_01
-# Trace: hf mf wrbl 60 A ffffffffffff 00000000...
+# Iceman source: /tmp/rrg-pm3/client/src/cmdhfmf.c:1389
+#   PrintAndLogEx(SUCCESS, "Write ( " _GREEN_("ok") " )");
+#   PrintAndLogEx(FAILED,  "Write ( " _RED_("fail") " )");
+# Iceman has ZERO `isOk:` emissions in the write path (grep-verified matrix
+# v2 L817). Prior regex alternation `r'isOk:01|Write \( ok \)'` carried the
+# legacy sentinel forward for `_normalize_wrbl_response` adapter output.
+# Post-flip: target iceman-native `Write ( ok )` substring directly.
 # ---------------------------------------------------------------------------
+# Iceman-native success keyword for `hf mf wrbl`.
+# Matrix: divergence_matrix.md L815/L845 — iceman-form emission.
+# Source: /tmp/rrg-pm3/client/src/cmdhfmf.c:1389, :9677, :9760 (three
+# `Write ( ok )` emission sites — all three use identical literal).
+_KW_WRBL_SUCCESS = r'Write \( ok \)'
+
 def start_wrbl_cmd(block, typ, key, data):
     """Build the wrbl command string.
 
-    Strings: __pyx_k_start_wrbl_cmd
-    Format: 'hf mf wrbl --blk {block} -a/-b -k {key} -d {data} --force'
+    Iceman form (cmdhfmf.c:1280 CmdHF14AMfWrBl CLI):
+        `hf mf wrbl --blk <N> -a|-b -k <KEY> -d <DATA> [--force]`
     """
     return 'hf mf wrbl --blk {} {} -k {} -d {} --force'.format(
         block, '-a' if typ == 'A' else '-b', key, data)
@@ -148,14 +159,13 @@ def start_wrbl_cmd(block, typ, key, data):
 def write_block(block, typ, key, data):
     """Write a single block.
 
-    Strings: __pyx_k_write_block, __pyx_k_isOk_01
-    Returns 1 on success (isOk:01), -1 on failure.
+    Returns 1 on success (iceman `Write ( ok )`), -1 on failure.
     """
     cmd = start_wrbl_cmd(block, typ, key, data)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
-    if executor.hasKeyword(r'isOk:01|Write \( ok \)'):
+    if executor.hasKeyword(_KW_WRBL_SUCCESS):
         return 1
     return -1
 
@@ -173,22 +183,16 @@ def call_progress(listener, progress, max_val):
         pass
 
 # ---------------------------------------------------------------------------
-# gen1afreeze — lock Gen1a magic card
-# Strings: __pyx_k_gen1afreeze
-# Spec §2.7: 5 raw commands
+# gen1afreeze — lock Gen1a magic card (5 iceman-native `hf 14a raw` calls)
+# Matrix: divergence_matrix.md L172-189 `hf 14a raw`.
+# Iceman CLI: /tmp/rrg-pm3/client/src/cmdhf14a.c:1547/1670 — keep-field
+#   flag is `-k` (iceman) vs legacy `-p` (pm3_compat.py:243 translator,
+#   :550 reverse translator).
+# Middleware sends iceman syntax verbatim; response is discarded
+# (fire-and-forget sequence, matrix L189).
 # ---------------------------------------------------------------------------
 def gen1afreeze():
-    """Execute Gen1a freeze sequence (5 raw commands).
-
-    Strings:
-        __pyx_k_hf_14a_raw_p_a_b_7_40
-        __pyx_k_hf_14a_raw_c_p_a_e000
-        __pyx_k_hf_14a_raw_c_p_a_e100
-        __pyx_k_hf_14a_raw_c_a_5000
-        __pyx_k_hf_14a_raw_p_a_43
-        __pyx_k_hf_14a_raw_c_p_a_850000000000000000000000000000 08
-    """
-    # Compat flip: -p (keep-field-on) renamed to -k in iceman
+    """Execute Gen1a freeze sequence (5 raw commands, iceman-native `-k`)."""
     commands = [
         'hf 14a raw -k -a -b 7 40',
         'hf 14a raw -c -k -a 43',
@@ -392,11 +396,16 @@ def write_common(listener, infos, bundle):
         return -1
 
     # Step 2: Gen1a detection
-    # Ground truth: Gen1a is confirmed ONLY when cgetblk 0 returns actual
-    # block data WITHOUT error indicators.
-    # Trace: standard card → "[#] wupC1 error\n[!!] Can't read block. error=-1"
-    #        gen1a card   → "[+] Block 0: 2CADC272..." (actual block data)
-    # Non-gen1a fixtures may contain: "isOk:00", "Can't set magic card block"
+    # Iceman-native Gen1a probe shapes (verified against
+    # /tmp/rrg-pm3/armsrc/mifarecmd.c:103-116 and cmdhfmf.c:6171):
+    #   standard card -> `wupC1 error` + `Can't read block. error=-1`
+    #   gen1a card    -> `data: XX XX ... <16 bytes>` (matrix L605 iceman
+    #                    format). Legacy `[+] Block 0: HEX` shape handled
+    #                    via adapter `_normalize_rdbl_response`
+    #                    (pm3_compat.py:1241-1268) before reaching here.
+    # NOTE: the `isOk:00` alternative is a legacy synth — iceman has zero
+    # `isOk:` emissions (matrix v2 L817 grep-verified). Kept as defensive
+    # fallback for any legacy-shaped adapter output still in the pipeline.
     import re as _re
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
@@ -405,10 +414,9 @@ def write_common(listener, infos, bundle):
         text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
         has_error = (executor.hasKeyword('wupC1 error') or
                      executor.hasKeyword("Can't read block") or
-                     executor.hasKeyword("Can't set magic") or
-                     executor.hasKeyword('isOk:00'))
-        # Positive detection: "Block 0:" or "data:" followed by hex data
-        # RRG PM3 v385d892 outputs "data: XX XX XX ..." for cgetblk
+                     executor.hasKeyword("Can't set magic"))
+        # Positive detection: iceman `data: XX XX ...` shape (matrix L605).
+        # `Block 0:` alt handled by adapter _normalize_rdbl_response.
         has_block_data = bool(_re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text))
         if has_block_data and not has_error:
             is_gen1a = True
