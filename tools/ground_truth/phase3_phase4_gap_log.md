@@ -260,9 +260,73 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 
 ---
 
-## P3.3+ (placeholder)
+## P3.3 Write HF flow
 
-_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2 entries above._
+### Entry: hf mf wrbl success-keyword flip (Write(ok) vs isOk:01)
+
+- **Middleware now iceman-native**:
+  - `hfmfwrite._KW_WRBL_SUCCESS = r'Write \( ok \)'` (hfmfwrite.py) — iceman `cmdhfmf.c:1389`, `:9677`, `:9760` emit `PrintAndLogEx(SUCCESS, "Write ( " _GREEN_("ok") " )")`. Three identical emission sites — all use the `Write ( ok )` literal.
+  - Previously `r'isOk:01|Write \( ok \)'` — alternation carried the legacy sentinel forward for post-adapter keyword match. Dropped per Option B (iceman-native only).
+  - Matrix v2 OQ1 RESOLVED (divergence_matrix.md L821): iceman has ZERO `isOk:` emissions in the write path (grep of `/tmp/rrg-pm3/client/src/` yields zero matches for `isOk:`).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1216-1234` `_normalize_wrbl_response()` rewrites iceman `"Write ( ok )"` → legacy `"isOk:01"` and `"Write ( fail )"` → legacy `"isOk:00"`. Also catches bare `( ok )` / `( fail )` regex forms for `hf mf restore` table rows.
+  - Wired for `hf mf wrbl` at `pm3_compat.py:1826` (`_RESPONSE_NORMALIZERS['hf mf wrbl'] = [_normalize_wrbl_response]`). Also wired for `hf mf rdsc` at `:1828` (dead weight there — no rdsc line contains those tokens) and `hf mf restore` at `:1835`.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `hfmfwrite.write_block()` returns -1 for EVERY successful per-block write: adapter rewrites iceman `Write ( ok )` → `isOk:01` before middleware sees it; iceman-native keyword `Write \( ok \)` no longer finds either literal.
+  - Cascading failures: `write_with_standard()` accumulates `write_fail=True` → returns -1 → Write flow UI shows "Write Failed!" on every MF1K/MF2K/MF4K write even when PM3 actually wrote successfully.
+  - Observable in test: `tests/phase3_trace_parity/test_write_hf_flow.py` — all 10 live `hf mf wrbl` samples carry adapter-normalised `isOk:00` tokens (the trace was captured post-adapter). Test asserts iceman-native keyword correctly MISSES these (expected during transition). 2 synthetic iceman-native samples (`Write ( ok )` / `Write ( fail )`) exercise the post-Phase-4 target shape and PASS.
+- **Phase 4 action**:
+  - REMOVE `_normalize_wrbl_response` from `_RESPONSE_NORMALIZERS['hf mf wrbl']` (`pm3_compat.py:1826`).
+  - REMOVE same normaliser from `_RESPONSE_NORMALIZERS['hf mf rdsc']` (`pm3_compat.py:1828`, already flagged in P3.2 as dead weight).
+  - KEEP `_normalize_wrbl_response` reachable via `_RESPONSE_NORMALIZERS['hf mf restore']` (`pm3_compat.py:1835`) — that path rewrites legacy→iceman for the rarely-used `hf mf restore` table view. Revisit during matrix rebuild.
+  - Re-capture iceman_output.json after adapter disable; the 10 currently-normalised `isOk:00` samples should flip to `Write ( fail )` / `Write ( ok )` shape.
+
+### Entry: hf 14a raw gen1afreeze -k flag (dormant)
+
+- **Middleware now iceman-native**:
+  - `hfmfwrite.gen1afreeze()` (hfmfwrite.py:188-201) issues 5 literal `hf 14a raw ... -k ...` commands; iceman `cmdhf14a.c:1547/1670` defines `-k` as "keep signal field ON after receive". Matrix L188 cites iceman CLI form explicitly.
+  - No regex / keyword parse — response is discarded (fire-and-forget per matrix L189).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:235-243` `_translate_14a_raw` (legacy→iceman forward): rewrites `-p` → `-k`. Activated only when middleware sends legacy-shape `-p` — middleware now sends iceman `-k` directly, so this translator is dormant.
+  - `pm3_compat.py:547-550` `_reverse_14a_raw` (iceman→legacy): rewrites `-k` → `-p`. Applies ONLY when `_current_version == PM3_VERSION_ORIGINAL` (legacy firmware). On iceman firmware, dormant.
+- **Live symptom (iceman FW)**: NONE. Middleware emits iceman syntax; `_translate_14a_raw` never fires (pattern matches only `-p` form); `_reverse_14a_raw` never fires (gated on legacy firmware). Dormant both directions.
+- **Phase 4 action**:
+  - No change required. `_reverse_14a_raw` remains useful if the PM3 binary is ever flashed back to legacy. Document as LEGACY-FW-only adapter in the systemic-divergence section.
+
+### Entry: hf mfu restore Done!/Finish restore (matrix v2 C4 correction)
+
+- **Middleware now iceman-native**:
+  - `hfmfuwrite._KW_RESTORE_SUCCESS = r'Done!'` (hfmfuwrite.py) — iceman `cmdhfmfu.c:4218` emits `PrintAndLogEx(INFO, "Done!")` inside `CmdHF14AMfURestore` (function body spans L3936-4220). The exclamation mark is part of the literal.
+  - Previously `"Done"` (no exclamation) — substring match worked on iceman but would ALSO false-match any legacy line containing the word "Done" (e.g. progress messages). Tightened to iceman literal.
+  - `hfmfuwrite._KW_SELECT_FAIL = "Can't select card"` — identical on both firmwares per matrix L924.
+  - `hfmfuwrite._KW_WRITE_FAIL = "failed to write block"` — iceman write-loop per-block failure string (grep confirmed in cmdhfmfu.c).
+- **Adapter still running iceman→legacy**:
+  - NONE wired in `_RESPONSE_NORMALIZERS` for `hf mfu restore` at the current `pm3_compat.py`. Matrix v2 C4 + matrix L928 explicitly flag the MISSING adapter: legacy `cmdhfmfu.c:2343` emits `PrintAndLogEx(INFO, "Finish restore")` only — NO `Done` token anywhere in legacy path.
+  - No `_normalize_hfmfu_restore` function exists; matrix L928 recommends adding one that injects `"Done!"` when `"Finish restore"` is present, OR broadening the middleware regex to `r'(Done!?\|Finish restore)'`.
+- **Live symptom (legacy FW, hypothetical)**:
+  - `hfmfuwrite.write()` returns -1 for EVERY successful legacy restore: legacy emits `Finish restore`; iceman-native keyword `Done!` doesn't match; middleware treats as silent failure; UI shows "Write Failed!" on every MFU/NTAG legacy-firmware restore.
+  - On iceman FW (current target): NONE — iceman emits `Done!` natively and middleware matches.
+- **Phase 4 action**:
+  - Add `_normalize_hfmfu_restore(text)` to `pm3_compat.py`: `text.replace('Finish restore', 'Done!')` when legacy-direction active.
+  - Wire at `_RESPONSE_NORMALIZERS['hf mfu restore'] = [_normalize_hfmfu_restore]`.
+  - Alternative: broaden middleware to `r'(Done!?\|Finish restore)'` — but that's middleware-touching legacy, which violates Option B. Adapter route is the correct Phase 4 action.
+
+### Entry: P3.3 dormant / identical-both-firmwares (informational)
+
+Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
+
+- `hf mf cload` success keyword `'Card loaded'` (hfmfwrite.py:223) — iceman `cmdhfmf.c:6134` `"Card loaded %d blocks from %s"` / legacy `"Card loaded %d blocks from <file>"`: COSMETIC divergence only (backtick-quoting on path). Substring `'Card loaded'` matches both (matrix L643 SAFE). No action.
+- `hf mf cload` failure keyword `"Can't set magic"` (hfmfwrite.py:221,241) — iceman `cmdhfmf.c:6061/6108/9028` all emit `"Can't set magic card block: %d"`. Substring matches iceman directly.
+- `hf mf cgetblk` probe keywords (hfmfwrite.py:410-416) — `wupC1 error` emitted by iceman armsrc `mifarecmd.c:103/116/2921`; `Can't read block. error=%d` emitted by iceman `cmdhfmf.c:6171/6230/8828`. Both iceman-native substrings. `isOk:00` alternative KEPT as defensive fallback — matrix v2 L817 confirms iceman has zero `isOk:` emissions so this branch is dormant under iceman, but remains harmless and protects against any adapter-synth path. Phase 4 can drop if the alternative clause is proven dead across all normalisers.
+- `hf mf csetuid` (hfmfwrite.py:241) — 0 trace samples on either firmware per matrix L656. Command-translate via `_translate_mf_csetuid` (pm3_compat.py:196) + reverse `_reverse_mf_csetuid` (:553). Middleware emits iceman syntax; translators dormant when sending iceman-native form. Matrix L664 notes `_RE_UID` at hfmfwrite.py:513 targets legacy UID diff-line shape (`"Old UID : %s"`) — iceman emits `"Old UID... %s"` (dotted). No UID diff parsing currently in verify (UID extracted from `hf 14a info` instead). DORMANT; Phase 4 re-audit if UID diff line ever becomes load-bearing.
+- `hf 14a info` UID regex `r'UID:\s*([\dA-Fa-f ]+)'` (hfmfwrite.py:521,523) — iceman `hf 14a info` emits `" UID: 7A F2 EC B2"` (space-colon-space-hex). Regex matches iceman directly. IDENTICAL TO P3.1 SCAN refactor's _RE_UID alternation (hf14ainfo.py).
+- `hfmfuwrite.verify()` path — uses `scan.scan_14a()` + `scan.isTagFound()`. Both iceman-native via the P3.1 scan refactor. No direct PM3-command emission in this code path.
+
+---
+
+## P3.4+ (placeholder)
+
+_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3 entries above._
 
 ---
 
