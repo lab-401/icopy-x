@@ -54,6 +54,18 @@ Each entry:
   - KEEP `_normalize_manufacturer` active under iceman (inverse of dot normalizers — this one INJECTS, not strips). Middleware regex targets legacy shape deliberately so the iceman-native flow relies on the adapter.
   - Alternative: broaden `_RE_MANUFACTURER` in middleware to `r'(?:MANUFACTURER:\s*|^\s{4,})(\S.+)'` multiline — trickier to avoid false positives on other indented lines.
   - Decision deferred: once Phase 4 runs, pick one path; log which.
+- **RESOLVED (Phase 4 close-out)**: `_normalize_manufacturer` DELETED in
+  `f314b39` — overriding the "KEEP" recommendation above. Rationale:
+  the Phase 4 gate flip (`translate_response` runs only on
+  ORIGINAL/legacy FW) would have made the label-injection adapter
+  run on the wrong firmware (legacy already emits
+  `MANUFACTURER:` via cmdhf14a.c natively). Broadening the middleware
+  regex to match iceman's bare-indented emission was rejected for
+  false-positive risk on other indented lines. Accepted Option B
+  transition breakage: on iceman FW `get_manufacturer()` returns
+  empty and Scan→Simulate manufacturer prepop silently loses that
+  field. Logged as known degradation, not a regression. Future
+  middleware regex broaden can lift this if needed.
 
 ### Entry: hf sea ISO15693 UID regression (post fix)
 
@@ -103,6 +115,21 @@ Each entry:
   - REMOVE `_RE_DOTTED_SEPARATOR.sub` from `_post_normalize()` (`pm3_compat.py:1122`) — generic stripper kills all iceman dotted forms including FDX-B Animal ID and Chipset.
   - REMOVE `_RE_ANIMAL_ID_COLON.sub` from `_post_normalize()` (`pm3_compat.py:1127`) — stripper for legacy→iceman that's irrelevant after flip.
   - Verify after removal: iceman `lf sea` responses hit middleware verbatim; no other consumer outside P3.1 depends on the legacy-shaped field conversions (cross-check P3.2 LF Read flow).
+- **RESOLVED (Phase 4 close-out)**: `_normalize_lf_no_data` DELETED in
+  `f314b39`. Overriding the "KEEP conditionally" recommendation.
+  Analysis of the empty-response path under Phase 4:
+  - On ORIGINAL FW: legacy cmdlf.c emits `No data found!` natively;
+    `lfsearch._KW_NO_DATA = 'No data found'` still matches Check 1.
+    No synthesis needed — the body already carries the keyword.
+  - On ICEMAN FW: iceman drops the emission; `hasKeyword('No data
+    found')` returns False so Check 1 fails. Checks 2-24 all fall
+    through (no iceman field-emissions present on a no-tag response)
+    and Check 25 default fallback returns `{'found': False}`. Same
+    semantic outcome as an explicit no-data gate.
+  - Works via fallthrough rather than explicit empty-body indicator.
+    Acceptable but brittle if a future iceman build starts emitting
+    a partial field-line on no-tag paths — then a Phase 5 iceman-native
+    empty-response indicator would be needed. Not a Phase 4 defect.
 
 ### Entry: P3.1 dormant / absent-emission keywords (informational)
 
@@ -737,6 +764,184 @@ _Add entries per subsequent flow refactor. Structure: same 4-section format as P
 ---
 
 _This log is the authoritative list of "work Phase 4 owes to close the compat-flip transition." When Phase 4 resolves an entry, mark it RESOLVED with the reconciling commit SHA._
+
+---
+
+## Phase 4 disposition
+
+_Consolidated roll-up of gap-log entries against Phase 4 commits. Each
+P3.X entry resolved or explicitly deferred. Source of truth remains
+(a) post-refactor middleware code, (b) `/tmp/rrg-pm3/client/src/`,
+(c) this gap log._
+
+### P3.1 Scan flow
+
+- **hf 14a info dotted-field regressions** — RESOLVED by `f314b39`
+  (deleted `_normalize_magic_capabilities`) + `2e10134` (replaced
+  generic `_RE_DOTTED_SEPARATOR` strip with targeted legacy→iceman
+  `_post_normalize` inverters: `Prng detection:` / `Static nonce:` /
+  `Magic capabilities :` / `Xor div key :`). Middleware regex now
+  targets iceman-native dotted forms; adapter on ORIGINAL FW injects
+  dots so legacy bodies pass middleware.
+- **hf 14a info MANUFACTURER label injection** — RESOLVED (accepted
+  Option B degradation) by `f314b39` (deleted `_normalize_manufacturer`).
+  `hf14ainfo._RE_MANUFACTURER` still targets legacy `MANUFACTURER:`
+  shape; on iceman FW `get_manufacturer()` returns empty and the
+  Scan→Simulate prepop loses the manufacturer field. Accepted because
+  iceman emits a bare-indented line with no label — broadening the
+  middleware regex would false-match other indented lines. Logged as
+  known degradation, not a defect.
+- **hf sea ISO15693 UID regression (post fix)** — RESOLVED by `f314b39`
+  (deleted `_normalize_iso15693_manufacturer`) + `2e10134` (replaced
+  generic `_RE_ISO_SPACE` with targeted `_RE_LEGACY_ISO_NOSPACE`
+  legacy→iceman space injection).
+- **lf sea dotted-separator + keyword-shape regressions** — RESOLVED
+  by `f314b39` (deleted `_normalize_lf_no_data`, `_normalize_hid_prox`,
+  `_normalize_awid_card_number`, `_normalize_indala_uid`,
+  `_normalize_lf_keyword_case`, `_normalize_gallagher_fields`,
+  `_normalize_securakey_fc_hex`) + `2e10134` (inverted
+  `_normalize_em410x_id` / `_normalize_chipset_detection` /
+  `_normalize_fdxb_animal_id` to legacy→iceman direction).
+  `_normalize_lf_no_data` delete is safe because iceman emits no
+  `No data found!` keyword — on iceman the empty-response path hits
+  lfsearch.parser() Check 25 default fallback `{'found': False}`. On
+  legacy FW the adapter no longer runs the normalizer but the
+  `No data found!` keyword arrives natively and lfsearch Check 1
+  matches. Verified via `tests/phase4_inversion/test_legacy_path.py`.
+- **P3.1 dormant / absent-emission keywords** — informational only; no
+  action required.
+
+### P3.2 Read HF flow
+
+- **hf mf darkside / hf mf nested key-extraction regression** — RESOLVED
+  by `f314b39` (deleted `_normalize_darkside_key`). Middleware
+  `hfmfkeys.darkside/nestedOneKey` regex already targets iceman
+  bracketed `Found valid key [ %012X ]` form emitted by both forks.
+- **hf mf rdbl / hf mf rdsc / hf mf cgetblk block-data regression (dormant)**
+  — RESOLVED by `f314b39` (deleted `_normalize_rdbl_response`).
+  Middleware `hfmfread._RE_BLOCK_DATA_LINE` targets iceman-native
+  `data:` form which both current device build and legacy emit.
+- **hf mf fchk key-table regression (dormant)** — RESOLVED by `957ac95`
+  (deleted `_normalize_fchk_table` function + 4 dispatch entries).
+  Under Phase 4 gate (`translate_response` runs only on ORIGINAL FW),
+  the HEAD-iceman 5-col → 4-col rewrite could never fire; legacy FW
+  emits 4-col verbatim. If a HEAD iceman flash happens in future,
+  reinstate as a separate forward-compat path keyed on iceman-HEAD
+  detection (not on ORIGINAL-FW gate).
+- **hf mfu dump / hf mfu info passthrough** — informational; no action.
+- **P3.2 dormant keywords** — informational; no action.
+
+### P3.3 Write HF flow
+
+- **hf mf wrbl success-keyword flip** — RESOLVED by `2e10134` (inverted
+  `_normalize_wrbl_response` to legacy→iceman: `isOk:01` → `Write ( ok )`,
+  `isOk:00` → `Write ( fail )`).
+- **hf 14a raw gen1afreeze -k flag (dormant)** — no action required.
+- **hf mfu restore Done!/Finish restore** — passthrough on iceman;
+  no adapter needed.
+- **P3.3 dormant / identical-both-firmwares** — informational.
+- **erase.py cross-module wrbl split-brain** — already marked RESOLVED
+  by P3.4 before Phase 4.
+
+### P3.4 Erase flow
+
+- **erase.py hf mf wrbl split-brain resolution** — subsumed by P3.3
+  `_normalize_wrbl_response` inversion (`2e10134`).
+- **erase.py hf mf cgetblk Gen1a probe** — informational; no action.
+- **erase.py hf mf cwipe / lf t55xx wipe / chk / fchk / hf 14a info** —
+  passthrough; no action.
+- **erase.py lf t55xx detect success sentinel** — RESOLVED by `2e10134`
+  (inverted `_normalize_t55xx_config`: legacy `Chip Type : X` →
+  iceman `Chip type......... X`; lowercase tolerance delivered by
+  middleware `_RE_CHIP_TYPE = r'Chip [Tt]ype\.+\s+(\S+)'`).
+
+### P3.5 Read LF flow
+
+- **lft55xx.py — detect-output dotted-field regressions** — RESOLVED by
+  `2e10134` (inverted `_normalize_t55xx_config` for colon/pipe → dotted).
+- **lft55xx.py — dumpT55XX success sentinel flip** — RESOLVED by
+  `2e10134` (inverted `_normalize_save_messages`: legacy lowercase
+  `saved N bytes` → iceman capital `Saved N bytes`). Wired for
+  `lf t55xx dump` (strict `Saved` regex in lft55xx.py:557); `28eb8b6`
+  trimmed redundant em4x05_dump wiring where middleware tolerates
+  `[Ss]aved`.
+- **lft55xx.py — chkT55xx `Found valid password` bracket shape** —
+  RESOLVED by `2e10134` (inverted `_normalize_t55xx_chk_password` to
+  legacy bare hex → iceman bracketed `[ %08X ]`).
+- **lfem4x05.py — info-output dotted fields + Chip type lowercase** —
+  RESOLVED by `2e10134` (inverted `_normalize_em4x05_info`:
+  `Chip Type:` / `ConfigWord:` / `Serial #:` → iceman dotted
+  `Chip type.....` / `Block0........` / `Serialno......`).
+- **lfem4x05.py — dump save sentinel flip** — RESOLVED by `2e10134`
+  (same `_normalize_save_messages` as T55xx). Em4x05 dispatch entry
+  removed in `28eb8b6` because lfem4x05.py:313 already uses the
+  tolerant `[Ss]aved` regex.
+- **lfread.py — per-tag reader FC/CN shape mismatches** — informational
+  coverage gap; not a Phase 4 defect. Deferred per lfread.READ
+  dispatch-table audit.
+- **Matrix corrections surfaced during P3.5 audit** — doc reconciliation
+  deferred (see "Documentation debt" section below).
+
+### P3.6 Write LF flow
+
+- **lf <tag> clone commands** — iceman-canonical send-side; no action.
+- **lf t55xx write / restore / em 4x05 write / read** — iceman-canonical;
+  inline verify regex tightened in Phase 3.
+- **lf sea (short-prefix alias)** — identical both firmwares; no action.
+- **P3.6 dormant / identical-both-firmwares** — informational.
+
+### P3.7 iCLASS flow
+
+- **hf iclass rdbl block-read regex regression** — RESOLVED by `2e10134`
+  (inverted `_normalize_iclass_rdbl`: legacy `block NN : <hex>` →
+  iceman `block N/0xNN : <hex>`).
+- **hf iclass wrbl success-keyword regression** — RESOLVED by `2e10134`
+  (inverted `_normalize_iclass_wrbl`: legacy `Wrote block NN successful`
+  → iceman `Wrote block N / 0xNN ( ok )`).
+- **hf iclass calcnewkey 4-dot Xor div key regression** — RESOLVED by
+  `2e10134` (targeted `_RE_LEGACY_XOR_DIV_KEY_COLON` inverter in
+  `_post_normalize`: legacy `Xor div key :` → iceman `Xor div key....`).
+- **hf iclass info CSN extraction** — passthrough; no action.
+- **hf iclass dump success-keyword (identical both firmwares)** —
+  passthrough; no action.
+- **P3.7 dormant / API-preservation** — informational.
+
+### P3.8 ISO15693 / FeliCa / Legic / Sniff flow
+
+- **hf 15 restore success-sentinel flip** — RESOLVED by `2e10134`
+  (inverted `_normalize_hf15_restore`: legacy `done` → iceman `Done!`).
+- **hf 15 csetuid success-regex** — RESOLVED by `2e10134` (inverted
+  `_normalize_hf15_csetuid`: legacy `setting new UID (ok)` → iceman
+  `Setting new UID ( ok )`).
+- **hf felica reader sentinel flip** — RESOLVED by `2e10134` (inverted
+  `_normalize_felica_reader`: legacy `IDm  <hex>` → iceman `IDm: <hex>`).
+- **hf 15 dump / hf felica litedump / hf legic dump passthrough** —
+  no action.
+- **sniff HF/LF trace-len patterns** — iceman-canonical; no action.
+- **sniff command forms** — iceman-canonical; no action.
+- **P3.8 dormant / identical-both-firmwares** — informational.
+
+### Cross-cutting Phase 4 close-out items
+
+- **`_TRANSLATION_RULES` (forward direction) deletion** — `62e0fcd`.
+  Middleware is iceman-native so nothing emits legacy CLI-flag input.
+- **`_REVERSE_TRANSLATION_RULES` rename to `_COMMAND_TRANSLATION_RULES`**
+  — `ba4008b`. Single-direction dispatch consistent with Phase 4 gate.
+- **`translate_response` gate flip (iceman → original)** — `8382c35`.
+- **`LEGACY_COMPAT=False` makes module fully inert** — `6f41735`.
+  Empty rule table, empty normalizer registry, zero regex compilation.
+- **Phase 4 inversion test suite** — `2fc75b3` (`test_deletion.py`
+  proves iceman-FW middleware works without pm3_compat at all) +
+  `00933c1` (`test_legacy_path.py` 20 legacy→iceman byte-accurate
+  fixtures + 4 iceman pass-through fixtures).
+- **`needs_translation()` tightened to ORIGINAL-only** — `e782ff6`.
+  Iceman FW `translate()` / `translate_response()` are no-ops;
+  `_BLOCKED_CMDS_ICEMAN` substitution is handled inside `translate()`
+  without consulting `needs_translation()`.
+- **UI parity tests inverted to match reverse direction** — `f3673c2`.
+  99 forward-direction assertions replaced with reverse-direction
+  (iceman → factory) assertions on ORIGINAL FW; direction-independent
+  cases (idempotency, passthrough) retained.
 
 ---
 
