@@ -267,3 +267,20 @@ _Add entries per subsequent flow refactor. Structure: same 4-section format as P
 ---
 
 _This log is the authoritative list of "work Phase 4 owes to close the compat-flip transition." When Phase 4 resolves an entry, mark it RESOLVED with the reconciling commit SHA._
+
+---
+
+## Documentation debt (matrix vs refactor)
+
+**Status:** Logged for Phase 4 reconciliation — non-blocking for Phase 3 progression.
+
+P3.1, P3.2, P3.7 Challenger + Auditor reports have consistently surfaced matrix rows that are stale relative to the refactored middleware. Specifically:
+
+- **L702 / L779 / L801** (`hf mf rdbl` / `hf mf rdsc` / `hf mf cgetblk` sections) — matrix still documents legacy alternation regexes; middleware is now iceman-native with `data:` / bracketed-key shapes.
+- **L1361 / L1363** (`hf iclass calcnewkey` section) — matrix claims iceman emits colon separator; iceman source `cmdhficlass.c:5419` emits `Xor div key.... ` (4 dots). Gap log + middleware regex already corrected; matrix text not yet edited.
+- **L128** (`hf 14a info` Magic capabilities) — already corrected in matrix v4 (5 dots → 3).
+- **L978** (`hf search` HID Prox) — already corrected in matrix v4 (`HID Prox -` → `raw:`).
+
+All matrix-stale rows are **already correctly refactored in the middleware code and gap-logged**. The source of truth for any Phase 4 reconciliation work is: (a) the actual middleware code; (b) the iceman source at `/tmp/rrg-pm3/client/src/`; (c) this gap log. Matrix file itself is a snapshot artefact — it will be re-synchronised as a consolidated commit during Phase 4 close-out or dropped in favour of the gap log + code comments.
+
+**Phase 4 action:** Either rebuild the matrix from post-Phase-3 middleware + iceman source, or deprecate the matrix file and promote the gap log + per-command code citations as the single source of truth.
