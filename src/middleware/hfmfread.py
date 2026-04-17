@@ -277,33 +277,33 @@ def parseAllKeyFromDataFile(infos, file):
 # ---------------------------------------------------------------------------
 # Block / sector reading via PM3
 # ---------------------------------------------------------------------------
-_RE_BLOCK_DATA = re.compile(r'[A-Fa-f0-9]{32}')
-# PM3 "data:" line format: "data: 7A F2 EC B2 D6 88 04 00 ..." (sprint_hex)
+# Iceman-native block data emission. The device's installed iceman build
+# routes `hf mf rdbl`, `hf mf rdsc`, `hf mf cgetblk` through
+# `mf_print_block_one` / helpers in /tmp/rrg-pm3/client/src/cmdhfmf.c:565-606
+# (referenced from rdbl@L1461, rdsc@L1547, cgetblk@L6177). Per iceman_output.
+# json (hf mf rdsc / hf mf cgetblk samples) this device emits the `data: %s`
+# sprint_hex form on each block line, NOT the newer `%3d | %s` grid shape
+# from /tmp/rrg-pm3 HEAD. Matrix section `hf mf cgetblk` (divergence_matrix.
+# md L595-605), `hf mf rdsc` (L785-805), Systemic #4 (L1471-1479).
+#
+# Primary iceman regex:
+#   _RE_BLOCK_DATA_LINE — `data: XX XX ... XX\n` (16 spaced hex pairs).
+#                         Matches the device's iceman "data:" emission
+#                         consumed by read/erase callers verbatim.
 _RE_BLOCK_DATA_LINE = re.compile(
     r'data:\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})')
-# PM3 spaced format: "  N | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX"
-_RE_BLOCK_SPACED = re.compile(
-    r'\s*\d+\s*\|\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})'
-)
+
 
 def _parse_blocks_from_text(text):
-    """Extract 32-char hex block strings from PM3 output.
+    """Extract 32-char hex block strings from iceman PM3 output.
 
-    Handles three PM3 output formats:
-      1. Compact: 32 consecutive hex chars (e.g. "7AF2ECB2D6880400...")
-      2. data: line: "data: 7A F2 EC B2 ..." (sprint_hex, space-separated)
-      3. Table: "  N | 7A F2 EC B2 ..." (pipe-separated)
+    Iceman-native shape on this device: ``data: XX XX XX XX ... XX``
+    (16 space-separated hex pairs per block) emitted from
+    ``mf_print_block_one`` via sprint_hex/sprint_hex_ascii (cmdhfmf.c:572/
+    L601/L603). Each matched line yields one 32-char hex block.
     """
-    blocks = _RE_BLOCK_DATA.findall(text)
-    if blocks:
-        return blocks
-    # data: prefix lines (both old and new PM3 firmware use sprint_hex)
+    blocks = []
     for m in _RE_BLOCK_DATA_LINE.finditer(text):
-        blocks.append(m.group(1).replace(' ', ''))
-    if blocks:
-        return blocks
-    # Fallback: parse table format (e.g. "  0 | 00 00 00 ... 00")
-    for m in _RE_BLOCK_SPACED.finditer(text):
         blocks.append(m.group(1).replace(' ', ''))
     return blocks
 
@@ -353,11 +353,17 @@ def readBlocks(sector, keyA, keyB, infos):
 def readIfIsGen1a(infos):
     """Check if card is Gen1a via hf mf cgetblk --blk 0.
 
-    Detection is firmware-agnostic:
-      - Trust the scan cache if it already confirmed Gen1a (scan ran
-        the same cgetblk probe and got a successful response).
-      - Otherwise run the probe here and check for a 'data:' line
-        with spaced hex (iceman) or continuous hex (legacy factory).
+    Trust-then-probe detection against iceman PM3:
+      1. Trust the scan cache if it already confirmed Gen1a (scan ran
+         the same cgetblk probe and got a successful response).
+      2. Otherwise run the probe and check for the iceman-native
+         ``data:`` line (mf_print_block_one via sprint_hex) OR the
+         iceman error keywords ``wupC1 error`` / ``Can't read block``
+         (ARM Dbprintf + cmdhfmf.c:6171 PrintAndLogEx).
+
+    Matrix section `hf mf cgetblk` (divergence_matrix.md L595-605):
+    iceman success = `"data: 3A F7 35 01 ..."`, failure = `"wupC1 error\\n
+    Can't read block. error=-1"`.
     """
     # 1) Trust the scan cache when it's already confirmed Gen1a — the scan
     #    layer ran the same cgetblk probe and got a successful response.
@@ -370,14 +376,9 @@ def readIfIsGen1a(infos):
     if executor.hasKeyword('wupC1 error') or executor.hasKeyword("Can't read block"):
         return None
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    # 2) Active probe: positive response is a 'data:' (or 'Block 0:' / iceman
-    #    table 'N |') line followed by hex, with spaces (iceman sprint_hex)
-    #    or without (legacy factory). The naive 32-continuous-hex regex
-    #    missed iceman's spaced 'data: 3A F7 ...' format.
-    if re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text):
-        return True
-    # Fallback: original compact-hex form, still accepted.
-    if _RE_BLOCK_DATA.search(text):
+    # 2) Active probe: positive response is iceman's ``data: XX XX ...``
+    #    line (cmdhfmf.c:603 sprint_hex_ascii via mf_print_block_one).
+    if _RE_BLOCK_DATA_LINE.search(text):
         return True
     return None
 
