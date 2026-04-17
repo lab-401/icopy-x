@@ -127,364 +127,17 @@ def strip_ansi(text):
 
 
 # ---------------------------------------------------------------------------
-# Translation rules
+# iceman-FW hardware workarounds.
 #
-# Each rule: (compiled_regex, replacement)
-#   replacement is either a string template (for re.sub) or a callable
-#   that takes the match object and returns the translated command.
-#
-# Rules are tried in order; first match wins.  Order matters: more specific
-# patterns must come before less specific ones (e.g. 'hf mf wrbl' before
-# 'hf mf rdbl', 'nested o' before bare 'nested').
+# Commands that hang on iceman firmware on iCopy-X hardware (FPGA chip
+# mismatch reported by hw version).  Substituted with `hw ping` to avoid
+# device hang.  These are NOT translations — the middleware and iceman
+# share the same command spelling; the workaround is purely hardware.
 # ---------------------------------------------------------------------------
 
-def _translate_mf_fchk(m):
-    """hf mf fchk {size} {keyfile} -> hf mf fchk {--size_flag} -f {keyfile}"""
-    return 'hf mf fchk %s -f %s' % (_size_flag(m.group(1)), m.group(2))
-
-
-def _translate_mf_nested(m):
-    """hf mf nested o {blk} {A/B} {key} {tblk} {ttype}"""
-    blk = m.group(1)
-    kt = _key_type_flag(m.group(2))
-    key = m.group(3)
-    tblk = m.group(4)
-    tkt = _target_key_type_flag(m.group(5))
-    return 'hf mf nested --1k --blk %s %s -k %s --tblk %s %s' % (blk, kt, key, tblk, tkt)
-
-
-def _translate_mf_nested_sized(m):
-    """hf mf nested {size} {blk} {A/B} {key} {tblk} {ttype}"""
-    size = m.group(1)
-    blk = m.group(2)
-    kt = _key_type_flag(m.group(3))
-    key = m.group(4)
-    tblk = m.group(5)
-    tkt = _target_key_type_flag(m.group(6))
-    return 'hf mf nested %s --blk %s %s -k %s --tblk %s %s' % (
-        _size_flag(size), blk, kt, key, tblk, tkt)
-
-
-def _translate_mf_staticnested(m):
-    """hf mf staticnested {size} {blk} {A/B} {key}"""
-    return 'hf mf staticnested %s --blk %s %s -k %s' % (
-        _size_flag(m.group(1)), m.group(2),
-        _key_type_flag(m.group(3)), m.group(4))
-
-
-def _translate_mf_wrbl(m):
-    """hf mf wrbl {blk} {A/B} {key} {data}"""
-    # Always add --force: iceman requires it for block 0 (manufacturer)
-    # and sector trailers with strict access conditions.  Legacy PM3
-    # had no such checks — --force restores legacy behavior.
-    return 'hf mf wrbl --blk %s %s -k %s -d %s --force' % (
-        m.group(1), _key_type_flag(m.group(2)), m.group(3), m.group(4))
-
-
-def _translate_mf_rdbl(m):
-    """hf mf rdbl {blk} {A/B} {key}"""
-    return 'hf mf rdbl --blk %s %s -k %s' % (
-        m.group(1), _key_type_flag(m.group(2)), m.group(3))
-
-
-def _translate_mf_rdsc(m):
-    """hf mf rdsc {sec} {A/B} {key}"""
-    return 'hf mf rdsc -s %s %s -k %s' % (
-        m.group(1), _key_type_flag(m.group(2)), m.group(3))
-
-
-def _translate_mf_csetuid(m):
-    """hf mf csetuid {uid} {sak} {atqa} w"""
-    uid = m.group(1)
-    sak = m.group(2)
-    atqa = m.group(3)
-    # 'w' suffix is optional in capture
-    has_w = m.group(4) is not None
-    result = 'hf mf csetuid -u %s -s %s -a %s' % (uid, sak, atqa)
-    if has_w:
-        result += ' -w'
-    return result
-
-
-def _translate_mf_csave(m):
-    """hf mf csave {type} o {file}"""
-    return 'hf mf csave --1k -f %s' % m.group(2)
-
-
-def _translate_em410x_write(m):
-    """lf em 410x_write {id} 1 -> lf em 410x clone --id {id}"""
-    return 'lf em 410x clone --id %s' % m.group(1)
-
-
-def _translate_em4x05_info_pwd(m):
-    """lf em 4x05_info {pwd} -> lf em 4x05 info -p {pwd}"""
-    return 'lf em 4x05 info -p %s' % m.group(1)
-
-
-def _translate_em4x05_read(m):
-    """lf em 4x05_read {blk} {key} -> lf em 4x05 read -a {blk} -p {key}"""
-    return 'lf em 4x05 read -a %s -p %s' % (m.group(1), m.group(2))
-
-
-def _translate_em4x05_write(m):
-    """lf em 4x05_write {blk} {data} {key} -> lf em 4x05 write -a {blk} -d {data} -p {key}"""
-    return 'lf em 4x05 write -a %s -d %s -p %s' % (
-        m.group(1), m.group(2), m.group(3))
-
-
-def _translate_14a_raw(m):
-    """hf 14a raw ... -p ... -> hf 14a raw ... -k ...
-    Replace -p (keep-field-on) with -k. Must not touch other flags."""
-    cmd = m.group(0)
-    # Replace only the -p flag that means keep-field-on.
-    # -p appears as a standalone flag (not followed by a value argument).
-    # Use word-boundary-like matching: -p followed by space or end-of-string,
-    # and preceded by space or start-of-string.
-    return re.sub(r'(?<=\s)-p(?=\s|$)', '-k', cmd)
-
-
-# Commands that hang on iceman firmware and must be blocked.
-# These are supplementary commands — the scan flow has all the data it needs
-# before calling them.  'hf iclass info' hangs due to FPGA chip mismatch
-# reported by hw version on iCopy-X hardware.
 _BLOCKED_CMDS_ICEMAN = frozenset({
-    'hf iclass info',
+    'hf iclass info',  # hangs due to FPGA chip mismatch on iCopy-X
 })
-
-# Build the rule table.  Each entry is (compiled_regex, replacement).
-# replacement: str -> re.sub template; callable -> called with match object.
-#
-# IMPORTANT for idempotency: patterns are written to match OLD syntax only.
-# Already-translated commands (containing --blk, -k, -f etc.) will NOT match
-# these patterns because the positional structure differs.
-
-_TRANSLATION_RULES = [
-    # -----------------------------------------------------------------------
-    # Category 3: NAME CHANGES (must come first — change command name)
-    # -----------------------------------------------------------------------
-
-    # lf em 410x_write {id} 1 -> lf em 410x clone --id {id}
-    (re.compile(r'^lf em 410x_write\s+(\S+)(?:\s+1)?$'), _translate_em410x_write),
-
-    # lf em 410x_read -> lf em 410x reader
-    (re.compile(r'^lf em 410x_read$'), 'lf em 410x reader'),
-
-    # lf {type} read -> lf {type} reader (19 LF protocols renamed in iceman)
-    # Also: lf fdx read -> lf fdxb reader (namespace + verb change)
-    (re.compile(r'^lf fdx read$'), 'lf fdxb reader'),
-    (re.compile(r'^(lf (?:hid|indala|awid|io|gproxii|securakey|viking|pyramid|'
-                r'gallagher|jablotron|keri|nedap|noralsy|pac|paradox|presco|'
-                r'visa2000|nexwatch)) read$'), r'\1 reader'),
-
-    # lf em 410x_sim {id} -> lf em 410x sim --id {id}
-    (re.compile(r'^lf em 410x_sim\s+(\S+)$'), r'lf em 410x sim --id \1'),
-
-    # lf em 410x_watch -> lf em 410x watch
-    (re.compile(r'^lf em 410x_watch$'), 'lf em 410x watch'),
-
-    # lf em 4x05_write {blk} {data} {key} -> lf em 4x05 write -b {blk} -d {data} -p {key}
-    (re.compile(r'^lf em 4x05_write\s+(\S+)\s+(\S+)\s+(\S+)$'), _translate_em4x05_write),
-
-    # lf em 4x05_read {blk} {key} -> lf em 4x05 read -b {blk} -p {key}
-    (re.compile(r'^lf em 4x05_read\s+(\S+)\s+(\S+)$'), _translate_em4x05_read),
-
-    # lf em 4x05_info {pwd} -> lf em 4x05 info -p {pwd}
-    (re.compile(r'^lf em 4x05_info\s+(\S+)$'), _translate_em4x05_info_pwd),
-
-    # lf em 4x05_info (no args) -> lf em 4x05 info
-    (re.compile(r'^lf em 4x05_info$'), 'lf em 4x05 info'),
-
-    # lf em 4x05_dump f {file} -> lf em 4x05 dump -f {file}
-    (re.compile(r'^lf em 4x05_dump\s+f\s+(\S+)$'), r'lf em 4x05 dump -f \1'),
-
-    # lf em 4x05_dump (no args) -> lf em 4x05 dump
-    (re.compile(r'^lf em 4x05_dump$'), 'lf em 4x05 dump'),
-
-    # lf em 4x05_read {blk} (no key) -> lf em 4x05 read -b {blk}
-    # lf em 4x05_read {blk} (no key) -> lf em 4x05 read -a {blk}
-    (re.compile(r'^lf em 4x05_read\s+(\S+)$'), r'lf em 4x05 read -a \1'),
-
-    # -----------------------------------------------------------------------
-    # Category 2: ARGUMENT CHANGES -- complex (must come before simpler)
-    # -----------------------------------------------------------------------
-
-    # hf mf nested o {blk} {A/B} {key} {tblk} {ttype}  (one-sector mode)
-    (re.compile(r'^hf mf nested\s+o\s+(\S+)\s+([AB])\s+(\S+)\s+(\S+)\s+([AB])$'),
-     _translate_mf_nested),
-
-    # hf mf nested {size} {blk} {A/B} {key} {tblk} {ttype}  (size-code mode)
-    # hfmfkeys.py sends: 'hf mf nested 1 0 A FFFFFFFFFFFF 4 A'
-    (re.compile(r'^hf mf nested\s+([0-9]+)\s+(\S+)\s+([AB])\s+(\S+)\s+(\S+)\s+([AB])$'),
-     _translate_mf_nested_sized),
-
-    # hf mf staticnested {size} {blk} {A/B} {key}
-    (re.compile(r'^hf mf staticnested\s+(\S+)\s+(\S+)\s+([AB])\s+(\S+)$'),
-     _translate_mf_staticnested),
-
-    # hf mf fchk {size} {keyfile}
-    (re.compile(r'^hf mf fchk\s+([0-9]+)\s+(\S+)$'), _translate_mf_fchk),
-
-    # hf mf wrbl {blk} {A/B} {key} {data}  (must come before rdbl)
-    (re.compile(r'^hf mf wrbl\s+(\S+)\s+([AB])\s+(\S+)\s+(\S+)$'), _translate_mf_wrbl),
-
-    # hf mf rdbl {blk} {A/B} {key}
-    (re.compile(r'^hf mf rdbl\s+(\S+)\s+([AB])\s+(\S+)$'), _translate_mf_rdbl),
-
-    # hf mf rdsc {sec} {A/B} {key}
-    (re.compile(r'^hf mf rdsc\s+(\S+)\s+([AB])\s+(\S+)$'), _translate_mf_rdsc),
-
-    # hf mf csetuid {uid} {sak} {atqa} [w]
-    (re.compile(r'^hf mf csetuid\s+(\S+)\s+(\S+)\s+(\S+)(?:\s+(w))?$'), _translate_mf_csetuid),
-
-    # hf mf csetblk {blk} {data}
-    (re.compile(r'^hf mf csetblk\s+(\S+)\s+(\S+)$'), r'hf mf csetblk --blk \1 -d \2'),
-
-    # hf mf cgetblk {blk}
-    (re.compile(r'^hf mf cgetblk\s+(\S+)$'), r'hf mf cgetblk --blk \1'),
-
-    # hf mf cload b {file}
-    (re.compile(r'^hf mf cload\s+b\s+(\S+)$'), r'hf mf cload -f \1'),
-
-    # hf mf csave {type} o {file}
-    (re.compile(r'^hf mf csave\s+(\S+)\s+o\s+(\S+)$'), _translate_mf_csave),
-
-    # hf mf dump (bare, no args) -> hf mf dump --1k
-    (re.compile(r'^hf mf dump$'), 'hf mf dump --1k'),
-
-    # hf mf restore (bare, no args) -> hf mf restore --1k
-    (re.compile(r'^hf mf restore$'), 'hf mf restore --1k'),
-
-    # -----------------------------------------------------------------------
-    # Category 2: ARGUMENT CHANGES -- simple flag prefix additions
-    # -----------------------------------------------------------------------
-
-    # hf mfu dump f {file} -> hf mfu dump -f {file}
-    (re.compile(r'^hf mfu dump\s+f\s+(\S+)$'), r'hf mfu dump -f \1'),
-
-    # hf mfu restore s e f {file} -> hf mfu restore -s -e -f {file}
-    (re.compile(r'^hf mfu restore\s+s\s+e\s+f\s+(\S+)$'), r'hf mfu restore -s -e -f \1'),
-
-    # hf 15 dump f {path} -> hf 15 dump -f {path}
-    (re.compile(r'^hf 15 dump\s+f\s+(\S+)$'), r'hf 15 dump -f \1'),
-
-    # hf 15 restore f {file} -> hf 15 restore -f {file}
-    (re.compile(r'^hf 15 restore\s+f\s+(\S+)$'), r'hf 15 restore -f \1'),
-
-    # hf 15 csetuid {uid} -> hf 15 csetuid -u {uid}
-    (re.compile(r'^hf 15 csetuid\s+(\S+)$'), r'hf 15 csetuid -u \1'),
-
-    # hf iclass dump k {key} f {path} [e] -> hf iclass dump -k {key} -f {path} [--elite]
-    # 3-arg form (with file path) — MUST come before 1-arg/2-arg forms
-    (re.compile(r'^hf iclass dump\s+k\s+(\S+)\s+f\s+(\S+)\s+e$'),
-     r'hf iclass dump -k \1 -f \2 --elite'),
-    (re.compile(r'^hf iclass dump\s+k\s+(\S+)\s+f\s+(\S+)$'),
-     r'hf iclass dump -k \1 -f \2'),
-    # hf iclass dump k {key} [e] -> hf iclass dump -k {key} [--elite]
-    (re.compile(r'^hf iclass dump\s+k\s+(\S+)\s+e$'), r'hf iclass dump -k \1 --elite'),
-    (re.compile(r'^hf iclass dump\s+k\s+(\S+)$'), r'hf iclass dump -k \1'),
-
-    # hf iclass chk f {file} -> hf iclass chk -f {file}
-    (re.compile(r'^hf iclass chk\s+f\s+(\S+)$'), r'hf iclass chk -f \1'),
-    # hf iclass chk (bare, no args) -> hf iclass chk --vb6kdf
-    (re.compile(r'^hf iclass chk$'), 'hf iclass chk --vb6kdf'),
-
-    # hf iclass rdbl b {blk} k {key} [e] -> hf iclass rdbl --blk {blk} -k {key} [--elite]
-    (re.compile(r'^hf iclass rdbl\s+b\s+(\S+)\s+k\s+(\S+)\s+e$'),
-     r'hf iclass rdbl --blk \1 -k \2 --elite'),
-    (re.compile(r'^hf iclass rdbl\s+b\s+(\S+)\s+k\s+(\S+)$'),
-     r'hf iclass rdbl --blk \1 -k \2'),
-
-    # hf iclass wrbl -b {blk} ... -> hf iclass wrbl --blk {blk} ...
-    # iclasswrite.py already uses flag syntax but -b is wrong (no short flag defined)
-    (re.compile(r'^(hf iclass wrbl)\s+-b\s+(\S+)\s+(.+)$'), r'\1 --blk \2 \3'),
-
-    # hf iclass calcnewkey o {old} n {new} [--elite] -> --old {old} --new {new} [--elite]
-    (re.compile(r'^hf iclass calcnewkey\s+o\s+(\S+)\s+n\s+(\S+)\s+(--elite)$'),
-     r'hf iclass calcnewkey --old \1 --new \2 --elite'),
-    (re.compile(r'^hf iclass calcnewkey\s+o\s+(\S+)\s+n\s+(\S+)$'),
-     r'hf iclass calcnewkey --old \1 --new \2'),
-
-    # lf t55xx detect p {pwd} -> lf t55xx detect -p {pwd}
-    (re.compile(r'^lf t55xx detect\s+p\s+(\S+)$'), r'lf t55xx detect -p \1'),
-
-    # lf t55xx dump f {file} p {key} -> lf t55xx dump -f {file} -p {key}  (3-arg, before 2-arg)
-    (re.compile(r'^lf t55xx dump\s+f\s+(\S+)\s+p\s+(\S+)$'), r'lf t55xx dump -f \1 -p \2'),
-
-    # lf t55xx dump f {file} -> lf t55xx dump -f {file}
-    (re.compile(r'^lf t55xx dump\s+f\s+(\S+)$'), r'lf t55xx dump -f \1'),
-
-    # lf t55xx read b {blk} p {key} o {page} -> lf t55xx read -b {blk} -p {key} --page1
-    (re.compile(r'^lf t55xx read\s+b\s+(\S+)\s+p\s+(\S+)\s+o\s+(\S+)$'),
-     r'lf t55xx read -b \1 -p \2 --page1'),
-
-    # lf t55xx read b {blk} p {key} -> lf t55xx read -b {blk} -p {key}  (before single-arg)
-    (re.compile(r'^lf t55xx read\s+b\s+(\S+)\s+p\s+(\S+)$'), r'lf t55xx read -b \1 -p \2'),
-
-    # lf t55xx read b {blk} -> lf t55xx read -b {blk}
-    (re.compile(r'^lf t55xx read\s+b\s+(\S+)$'), r'lf t55xx read -b \1'),
-
-    # lf t55xx write b {blk} d {data} p {key} -> ... -b -d -p  (3-arg, before 2-arg)
-    (re.compile(r'^lf t55xx write\s+b\s+(\S+)\s+d\s+(\S+)\s+p\s+(\S+)$'),
-     r'lf t55xx write -b \1 -d \2 -p \3'),
-
-    # lf t55xx write b {blk} d {data} -> lf t55xx write -b {blk} -d {data}
-    (re.compile(r'^lf t55xx write\s+b\s+(\S+)\s+d\s+(\S+)$'), r'lf t55xx write -b \1 -d \2'),
-
-    # lf t55xx wipe p {key} -> lf t55xx wipe -p {key}
-    (re.compile(r'^lf t55xx wipe\s+p\s+(\S+)$'), r'lf t55xx wipe -p \1'),
-
-    # lf t55xx restore f {file} -> lf t55xx restore -f {file}
-    (re.compile(r'^lf t55xx restore\s+f\s+(\S+)$'), r'lf t55xx restore -f \1'),
-
-    # lf t55xx chk f {file} -> lf t55xx chk -f {file}
-    (re.compile(r'^lf t55xx chk\s+f\s+(\S+)$'), r'lf t55xx chk -f \1'),
-
-    # lf hid clone {raw} -> lf hid clone -r {raw}
-    (re.compile(r'^lf hid clone\s+(\S+)$'), r'lf hid clone -r \1'),
-
-    # lf indala clone {type} -r {raw} -> lf indala clone -r {raw}
-    (re.compile(r'^lf indala clone\s+\S+\s+-r\s+(\S+)$'), r'lf indala clone -r \1'),
-
-    # lf fdx clone c {C} n {N} -> lf fdxb clone --country {C} --national {N}
-    # Command renamed from 'lf fdx' to 'lf fdxb' in iceman, flags also changed.
-    (re.compile(r'^lf fdx clone\s+c\s+(\S+)\s+n\s+(\S+)$'),
-     r'lf fdxb clone --country \1 --national \2'),
-
-    # lf {type} clone b {raw} -> lf {type} clone -r {raw}
-    # Covers: securakey, gallagher, pac, paradox
-    (re.compile(r'^(lf (?:securakey|gallagher|pac|paradox) clone)\s+b\s+(\S+)$'), r'\1 -r \2'),
-
-    # lf nexwatch clone r {raw} -> lf nexwatch clone -r {raw}
-    (re.compile(r'^lf nexwatch clone\s+r\s+(\S+)$'), r'lf nexwatch clone -r \1'),
-
-    # data save f {file} -> data save -f {file}
-    (re.compile(r'^data save\s+f\s+(\S+)$'), r'data save -f \1'),
-
-    # hf 14a raw ... -p ... -> hf 14a raw ... -k ...
-    # This is a flag rename, not a structural change.  Match the whole command
-    # only when it contains the -p flag (standalone, not part of another word).
-    (re.compile(r'^hf 14a raw\s+.*(?<=\s)-p(?=\s|$).*$'), _translate_14a_raw),
-
-    # hf 14a sim t {type} u {uid} -> hf 14a sim -t {type} -u {uid}
-    # Simulation command — positional t/u became flags in iceman.
-    (re.compile(r'^hf 14a sim\s+t\s+(\S+)\s+u\s+(\S+)$'), r'hf 14a sim -t \1 -u \2'),
-
-    # hf list {protocol} -> hf list -t {protocol}
-    # Trace listing — positional protocol became -t flag in iceman.
-    (re.compile(r'^hf list\s+(\S+)$'), r'hf list -t \1'),
-    (re.compile(r'^lf list\s+(\S+)$'), r'lf list -t \1'),
-
-    # lf config a {avg} t {trig} s {skip} -> lf config -a {avg} -t {trig} -s {skip}
-    # T5577 sniff configuration — positional args became flags.
-    (re.compile(r'^lf config\s+a\s+(\S+)\s+t\s+(\S+)\s+s\s+(\S+)$'),
-     r'lf config -a \1 -t \2 -s \3'),
-
-    # mem spiffs load f {src} o {dest} -> mem spiffs upload -s {src} -d {dest}
-    # Diagnosis flash memory test — 'load' renamed to 'upload' in iceman,
-    # positional f/o became -s/-d flags.
-    (re.compile(r'^mem spiffs load\s+f\s+(\S+)\s+o\s+(\S+)$'),
-     r'mem spiffs upload -s \1 -d \2'),
-]
 
 
 # ---------------------------------------------------------------------------
@@ -954,19 +607,20 @@ def needs_translation():
 
 
 def translate(cmd):
-    """Translate PM3 command syntax for the current firmware version.
+    """Translate iceman-native PM3 command to legacy factory syntax.
 
-    Bidirectional translation:
-      - On iceman: forward rules (factory→iceman) for un-migrated modules
-      - On original: reverse rules (iceman→factory) for migrated modules
+    After Phase 4 flip, middleware is iceman-native.  translate() runs
+    only on legacy factory firmware, converting iceman CLI-flag commands
+    DOWN to the positional-arg syntax legacy PM3 understands.
 
-    Each direction is idempotent: forward patterns only match factory syntax,
-    reverse patterns only match iceman syntax.  No double-translation possible.
+    On iceman firmware this function is a pass-through no-op except for
+    the _BLOCKED_CMDS_ICEMAN hardware workaround (FPGA chip mismatch
+    makes `hf iclass info` hang on iCopy-X hardware — substitute `hw ping`).
 
     When LEGACY_COMPAT is False, this is a no-op.
 
     Args:
-        cmd: PM3 command string
+        cmd: PM3 command string (iceman-native syntax)
 
     Returns:
         Translated command string.
@@ -977,45 +631,34 @@ def translate(cmd):
     if not LEGACY_COMPAT:
         return cmd
 
-    if _current_version not in (PM3_VERSION_ICEMAN, PM3_VERSION_ORIGINAL):
-        return cmd
-
     stripped = cmd.strip()
 
+    # Hardware workaround: block iceman commands that hang on iCopy-X.
+    # Applies only when running iceman FW (legacy FW doesn't have this issue).
     if _current_version == PM3_VERSION_ICEMAN:
-        # Block commands that hang on iceman (FPGA mismatch / hardware issue).
         if stripped in _BLOCKED_CMDS_ICEMAN:
             logger.info("translate: blocked '%s' (known to hang on iceman)", stripped)
             return 'hw ping'
+        return cmd
 
-        # Forward rules: factory→iceman for un-migrated modules still
-        # sending old positional syntax.  As flows are migrated to iceman
-        # syntax, their commands no longer match these patterns and pass
-        # through unchanged (correct for iceman).
-        for pattern, replacement in _TRANSLATION_RULES:
-            m = pattern.match(stripped)
-            if m:
-                if callable(replacement):
-                    result = replacement(m)
-                else:
-                    result = m.expand(replacement)
-                logger.debug("translate: fwd '%s' -> '%s'", stripped, result)
-                return result
+    if _current_version != PM3_VERSION_ORIGINAL:
+        return cmd
 
-    elif _current_version == PM3_VERSION_ORIGINAL:
-        # Reverse rules: iceman→factory for migrated modules sending
-        # new CLI-flag syntax.  Factory firmware needs old positional commands.
-        for pattern, replacement in _REVERSE_TRANSLATION_RULES:
-            m = pattern.match(stripped)
-            if m:
-                if callable(replacement):
-                    result = replacement(m)
-                else:
-                    result = m.expand(replacement)
-                logger.debug("translate: rev '%s' -> '%s'", stripped, result)
-                return result
+    # Legacy (factory) firmware: convert iceman CLI-flag syntax to legacy
+    # positional form.  Middleware emits iceman form; factory PM3 needs
+    # old positional commands.
+    for pattern, replacement in _REVERSE_TRANSLATION_RULES:
+        m = pattern.match(stripped)
+        if m:
+            if callable(replacement):
+                result = replacement(m)
+            else:
+                result = m.expand(replacement)
+            logger.debug("translate: '%s' -> '%s'", stripped, result)
+            return result
 
-    # No rule matched or version unknown — pass through unchanged
+    # No rule matched — pass through (iceman-native command works on
+    # legacy for commands where syntax is identical).
     return cmd
 
 
