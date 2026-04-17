@@ -24,9 +24,19 @@
 
 Reimplemented from legicread.so (iCopy-X v1.0.90).
 
+Post compat-flip (Phase 3) — iceman-native command form.
+
 Ground truth:
     Strings:  docs/v1090_strings/legicread_strings.txt
     Audit:    docs/V1090_MODULE_AUDIT.txt
+    Source:   /tmp/rrg-pm3/client/src/cmdhflegic.c:871 `CmdLegicDump`
+
+Middleware flow:
+    - Issue `hf legic dump` (identical CLI on iceman and legacy).
+    - Iceman `pm3_save_dump` writes `<filename>.bin` and emits
+      "Saved <n> bytes to binary file '<path>'".
+    - Iceman does NOT emit a "Done!" sentinel for legic dump; the middleware
+      relies solely on `startPM3Task` return code + file existence on disk.
 """
 
 import os

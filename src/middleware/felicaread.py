@@ -24,9 +24,21 @@
 
 Reimplemented from felicaread.so (iCopy-X v1.0.90).
 
+Post compat-flip (Phase 3) — iceman-native command form.
+
 Ground truth:
     Strings:  docs/v1090_strings/felicaread_strings.txt
     Audit:    docs/V1090_MODULE_AUDIT.txt
+    Source:   /tmp/rrg-pm3/client/src/cmdhffelica.c:5056 `CmdHFFelicaDumpLite`
+
+Middleware flow:
+    - Issue `hf felica litedump` (identical CLI on iceman and legacy; the
+      dispatch table entry `{"litedump", ...}` is unchanged between forks).
+    - Iceman prints a trace block via `print_hex_break`; legacy writes a
+      dump file. This middleware only checks `startPM3Task` return code
+      and reports the target path (file write itself happens inside PM3
+      when legacy handler runs; iceman behaves differently — see matrix
+      L390-406 for the trace-vs-file gap).
 """
 
 import os
