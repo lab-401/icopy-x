@@ -568,10 +568,19 @@ def reworkPM3All():
 
     Calls hmi_driver.restartpm3(), closes socket, sleeps 3s, reconnects.
     Strings: "restartpm3", "hmi_driver"
+
+    Clears CONTENT_OUT_IN__TXT_CACHE (2026-04-17): without this, a stale
+    response from the previous PM3 session lingers in the cache and later
+    callers reading via getPrintContent/hasKeyword/getContentFromRegex*
+    see phantom output. Observed during PC-mode teardown — the PM3 Raw
+    plugin returned a previous tag's "Felica select failed" response on
+    a fresh scan of a different tag. Rework implies cache-is-stale by
+    definition, so clear before reconnect.
     """
-    global _socket_instance, _consecutive_reworks
+    global _socket_instance, _consecutive_reworks, CONTENT_OUT_IN__TXT_CACHE
 
     _consecutive_reworks += 1
+    CONTENT_OUT_IN__TXT_CACHE = ''
 
     if hmi_driver is not None:
         try:
