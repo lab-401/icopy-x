@@ -73,32 +73,101 @@ TIMEOUT = 10000
 COUNT = 0
 
 # ---------------------------------------------------------------------------
-# Public regex patterns -- from binary string extraction (spec section 3.3)
+# Public regex patterns -- iceman-native shapes
+# Source: /tmp/rrg-pm3/client/src/cmdlf*.c per-protocol demod output.
+# Matrix section: `lf search` (divergence_matrix.md L958-988).
 # ---------------------------------------------------------------------------
-REGEX_ANIMAL = r'.*ID\s+([xX0-9A-Fa-f\-]{2,})'
-REGEX_CARD_ID = r'(?:Card|ID|id|CARD|ID|UID|uid|Uid)\s*:*\s*([xX0-9a-fA-F ]+)'
-REGEX_EM410X = r'EM TAG ID\s+:[\s]+([xX0-9a-fA-F]+)'
-REGEX_HID = r'HID Prox - ([xX0-9a-fA-F]+)'
+# Iceman FDX-B demodFDXB @ cmdlffdxb.c:572/578 emits dotted form
+#   "Animal ID........... <country>-<national>" (decimal, 9-11 dots).
+# Matrix L980; source_strings.md "lf fdxb" sections.
+REGEX_ANIMAL = r'Animal ID\.+\s+([0-9\-]+)'
+
+# Iceman per-tag demod labels: Viking "Card <hex>" (cmdlfviking.c:57, no colon),
+# Jablotron/Noralsy/Paradox "Card: <u>" or "ID: <hex>" (cmdlfjablotron.c:98,
+# cmdlfparadox.c:224). Tolerant to both `Card `/`Card:` within iceman native forms.
+# Matrix L988; source_strings.md lf viking/jablotron/noralsy/paradox.
+REGEX_CARD_ID = r'(?:Card|ID|UID)[\s:]+([xX0-9a-fA-F ]+)'
+
+# Iceman EM410x demodEM410x @ cmdlfem410x.c:115 emits "EM 410x ID <hex>" —
+# iceman dropped the legacy "EM TAG ID :" label entirely.
+# Matrix L977; source_strings.md "lf em 410x" section.
+REGEX_EM410X = r'EM 410x(?:\s+XL)?\s+ID\s+([0-9A-Fa-f]+)'
+
+# Iceman HID demodHID @ cmdlfhid.c:235 emits "raw: <hex>" (lowercase `raw`).
+# Iceman removed the legacy "HID Prox - <hex>" emission entirely; grep of
+# /tmp/rrg-pm3/client/src/ for "HID Prox -" yields zero results.
+# Matrix L978 claim of iceman `HID Prox -` is incorrect; verified by source.
+# Used only in Check 3 which first gates on 'Valid HID Prox ID' keyword, so
+# bare `raw:` will be bounded to the HID demod output.
+REGEX_HID = r'raw:\s+([0-9A-Fa-f]+)'
+
+# Iceman IO Prox demodIOProx @ cmdlfio.c:156 emits
+#   "IO Prox - XSF(%02d)%02x:%05d, Raw: ..."
+# decimal card number after colon. Matches iceman natively.
 REGEX_PROX_ID_XSF = r'(XSF\(.*?\).*?:[xX0-9a-fA-F]+)'
-REGEX_RAW = r'.*(?:Raw|RAW|raw|hex|HEX|Hex)\s*:*\s*([xX0-9a-fA-F ]+)'
+
+# Iceman per-tag demod consistently emits ", Raw: <hex>" (capital Raw+colon)
+# (cmdlfjablotron.c:98, cmdlfviking.c:57, cmdlfawid.c:248, cmdlfnoralsy.c:106,
+# cmdlfparadox.c:224, cmdlfsecurakey.c:113, cmdlfpresco.c:114, ...); HID demod
+# uses lowercase "raw:" (cmdlfhid.c:235). Drop legacy `Hex|HEX|hex` alternates
+# never emitted by iceman. Matrix L988.
+REGEX_RAW = r'(?:Raw|raw):\s*([xX0-9a-fA-F ]+)'
 
 # ---------------------------------------------------------------------------
-# Internal regex patterns -- from binary string extraction (spec section 3.4)
+# Internal regex patterns -- iceman-native shapes
 # ---------------------------------------------------------------------------
-_RE_FC = r'FC:*\s+([xX0-9a-fA-F]+)'
-_RE_CN = r'(CN|Card|Card ID):*\s+(\d+)'
-_RE_LEN = r'(len|Len|LEN|format|Format):*\s+(\d+)'
-_RE_CHIPSET = r'Chipset detection:\s(.*)'
-_RE_SUBTYPE = r'subtype:*\s+(\d+)'
-_RE_CUSTOMER_CODE = r'customer code:*\s+(\d+)'
+# Iceman AWID/Pyramid/Paradox/KERI emit `FC: %d` (cmdlfawid.c:248,
+# cmdlfpyramid.c:161, cmdlfparadox.c:224, cmdlfkeri.c:181); Securakey emits
+# `FC: 0x%X` (cmdlfsecurakey.c:113). Colon is uniform post-iceman. Drop
+# `:*` tolerance. Matrix L981-982.
+_RE_FC = r'FC:\s+([xX0-9a-fA-F]+)'
+
+# Iceman per-tag demod uses: `Card: %u` (Jablotron/Noralsy/Paradox/AWID
+# cmdlfjablotron.c:98, cmdlfnoralsy.c:106, cmdlfparadox.c:224, cmdlfawid.c:248),
+# `Card %X` (Viking cmdlfviking.c:57 — space, no colon), `CN: %u` (COTAG
+# cmdlfcotag.c:76). Tolerant colon-or-space required for iceman natively since
+# Viking is the outlier. Matrix L988.
+_RE_CN = r'(CN|Card(?:\s+No\.)?|Card ID)[\s:]+(\d+)'
+
+# Iceman AWID/Pyramid/Securakey emit `- len: %d` (cmdlfawid.c:248,
+# cmdlfpyramid.c:161, cmdlfsecurakey.c:113) — lowercase only. Drop `Len|LEN|
+# format|Format` alternates never emitted by iceman. Matrix L988.
+_RE_LEN = r'len:\s+(\d+)'
+
+# Iceman chipset-detection in cmdlf.c:1601-1655 emits dotted `Chipset... <name>`
+# (3 dots); legacy emits `Chipset detection: <name>`. Matrix L986; compat
+# adapter `_normalize_chipset_detection` handles legacy→iceman reshaping.
+_RE_CHIPSET = r'Chipset\.+\s+(.*)'
+
+# Iceman NEDAP @ cmdlfnedap.c:146/410/520 emits
+#   `" subtype: %1u customer code: %u / 0x%03X"` — both colons.
+_RE_SUBTYPE = r'subtype:\s+(\d+)'
+_RE_CUSTOMER_CODE = r'customer code:\s+(\d+)'
 
 # ---------------------------------------------------------------------------
-# Detection keywords -- from binary string extraction (spec section 3.5)
+# Detection keywords -- iceman-native
 # ---------------------------------------------------------------------------
+# Iceman cmdlf.c:2210 emits `"No known 125/134 kHz tags found!"` — IDENTICAL
+# to legacy. Matrix L976 (v3 re-verification).
 _KW_NO_KNOWN = 'No known 125/134 kHz tags found!'
+
+# Legacy cmdlf.c:1441/1510 emits `"No data found!"`; iceman REMOVED this
+# emission (empty response on no-tag). The compat adapter
+# `_normalize_lf_no_data` synthesises this marker on iceman empty response
+# so middleware can use a single keyword across both firmwares.
+# TODO(Phase 4): confirm `_normalize_lf_no_data` active for `lf sea`.
+# Matrix L975.
 _KW_NO_DATA = 'No data found!'
-_KW_CHIPSET_DETECTION = 'Chipset detection'
-_KW_CHIPSET_EM4X05 = 'Chipset detection: EM4x05 / EM4x69'
+
+# Iceman emits `Chipset...` (dotted, cmdlf.c:1601-1655); legacy emits
+# `Chipset detection:`. Phase 4 compat adapter `_normalize_chipset_detection`
+# (pm3_compat.py:1313) reshapes legacy to iceman form. Matrix L986.
+_KW_CHIPSET_DETECTION = 'Chipset...'
+
+# Iceman EM4x05/EM4x69 detection emits `"Chipset... EM4x05 / EM4x69"`.
+# Used only as a marker for chipset classification in Check 24 logic; the
+# `'EM' in chipset_str` substring match handles both cases.
+_KW_CHIPSET_EM4X05 = 'Chipset... EM4x05 / EM4x69'
 
 
 # ===========================================================================
@@ -152,14 +221,12 @@ def parseCN():
 
 
 def parseLen():
-    """Extract len/format from cached output.
+    """Extract len from cached output.
 
-    Spec section 3.7 (parseLen):
-        executor.getContentFromRegexG(_RE_LEN, 2), then .strip()
-
-    Binary citation: __pyx_pw_8lfsearch_19parseLen @0x0001a0bc
+    Iceman `len:` is lowercase with colon (cmdlfawid.c:248 etc.); _RE_LEN is
+    `r'len:\\s+(\\d+)'` — single capture group. Group=1.
     """
-    result = executor.getContentFromRegexG(_RE_LEN, 2)
+    result = executor.getContentFromRegexG(_RE_LEN, 1)
     if result:
         return result.strip()
     return ''
