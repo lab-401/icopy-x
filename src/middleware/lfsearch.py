@@ -382,6 +382,14 @@ def parser():
         xsf = getXsf()
         if xsf:
             seaObj['data'] = xsf
+            # Decompose "XSF(VN)FC:CN" into sim-field-friendly keys so
+            # scan→simulate prepopulation picks them up per-field.
+            # Example: "XSF(00)00:00273" → vn=00, fc=00, cn=273
+            m = re.match(r'XSF\(\s*([0-9A-Fa-f]+)\s*\)\s*([0-9A-Fa-f]+)\s*:\s*([0-9]+)', xsf)
+            if m:
+                seaObj['vn'] = m.group(1)
+                seaObj['fc'] = m.group(2)
+                seaObj['cn'] = m.group(3)
         else:
             seaObj['data'] = None
         setRAW(seaObj)

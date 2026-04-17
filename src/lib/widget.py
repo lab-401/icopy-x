@@ -1223,6 +1223,30 @@ class Toast:
         except Exception:
             pass
 
+        # Defensive: some activities redraw widgets every keypress
+        # (e.g. SimulationActivity's SimFields creates new canvas items
+        # when focus moves or edit mode toggles).  Each new item lands at
+        # the top of the z-order and covers the toast.  Re-raise on a
+        # 50 ms poll while the toast is showing so the toast stays on top
+        # regardless of what other widgets draw.  Polling ends when the
+        # toast is cancelled (self._showing flips to False in _clear).
+        def _reraise_loop():
+            if not self._showing:
+                return
+            try:
+                self._canvas.tag_raise(self._tag_mask)
+                self._canvas.tag_raise(self._tag_text)
+            except Exception:
+                pass
+            try:
+                self._canvas.after(50, _reraise_loop)
+            except Exception:
+                pass
+        try:
+            self._canvas.after(50, _reraise_loop)
+        except Exception:
+            pass
+
         if duration_ms and duration_ms > 0:
             self._timer_id = self._canvas.after(duration_ms, self.cancel)
 

@@ -6088,6 +6088,7 @@ class SimulationActivity(BaseActivity):
             'Format:': ('len',),
             'Country:': ('country',),
             'NC:':  ('nc',),
+            'Version:': ('vn',),   # IO Prox XSF version field
         }
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
@@ -6235,7 +6236,17 @@ class SimulationActivity(BaseActivity):
         if self._sim_entry and self._sim_entry[2] == 'HF':
             self._on14ASimStop()
         else:
+            # LF sims redraw the sim UI in-place; dismiss the transient
+            # "Processing..." toast once the UI is back (HF path hands off
+            # to SimulationTraceActivity which shows its own toast, so
+            # only LF needs the explicit cancel).  Without this the toast
+            # stays visible forever over the sim fields.
             self._showSimUi()
+            if self._toast:
+                try:
+                    self._toast.cancel()
+                except Exception:
+                    pass
 
     def _onSim(self, result=None):
         self.setidle()
@@ -6384,6 +6395,9 @@ class SimulationActivity(BaseActivity):
             if sf and sf.editing:
                 sf.exitEdit()
                 self._editing = False
+            elif self._defbundle is not None:
+                # Entered from scan/dump — M1 pops back to caller, not list.
+                self.finish()
             else:
                 self._showListUI()
         elif key == KEY_M2:
@@ -6392,7 +6406,11 @@ class SimulationActivity(BaseActivity):
         elif key == KEY_PWR:
             if self._handlePWR():
                 return
-            self._showListUI()
+            if self._defbundle is not None:
+                # Entered from scan/dump — PWR pops back to caller, not list.
+                self.finish()
+            else:
+                self._showListUI()
         elif key == KEY_UP:
             if sf:
                 if sf.editing:
