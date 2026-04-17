@@ -285,3 +285,49 @@ No DISAGREEs. All 7 v3 corrections verified against the cited source files and a
 
 **PASS** — all Challenger v2 + Auditor v2 findings with evidence are applied. Matrix is production-ready for Phase 3 middleware rewrite. No further loops needed.
 
+---
+
+## v4 additions (2026-04-17) — Fixer v2 P3.1 byproducts
+
+Three matrix-data errors surfaced during P3.1 Scan flow refactor (Auditor + Challenger both verified independently). Fixes applied:
+
+### V4-1 — Matrix L128 `hf 14a info` Magic capabilities dot count (5 → 3)
+
+**Finding:** Matrix row claimed iceman emits `"Magic capabilities..... Gen 1a"` (5 dots). Source disproves — iceman emits 3 dots.
+
+**Evidence:**
+- `grep -n "Magic capabilities" /tmp/rrg-pm3/client/src/mifare/mifarehost.c` yields 13 matches (L1710/1714/1718/1722/1726/1730/1734/1738/1742/1746/1750/1754/1758/1762), ALL emitting `"Magic capabilities... " _GREEN_("...")` — **exactly 3 dots**.
+- `mifare/mifarehost.c:1710`: `PrintAndLogEx(SUCCESS, "Magic capabilities... " _GREEN_("Gen 1a"));`
+- Cross-check: `/tmp/rrg-pm3/client/src/cmdhf14b.c:487` emits `"Magic capabilities........ most likely"` (8 dots) — a DIFFERENT context (hf 14b info, not hf 14a info), not relevant to the L128 row.
+- Normalizer `_RE_MAGIC_DOTTED = re.compile(r'Magic capabilities\.{3,}\s+')` at `pm3_compat.py:1273` uses `\.{3,}` — tolerant to 3+ dots, so the adapter works regardless of the dot count. The matrix field description was the only error.
+
+**Action:** Matrix L128 iceman column updated: `"Magic capabilities..... Gen 1a"` (5 dots) → `"Magic capabilities... Gen 1a"` (3 dots) with source cite `mifare/mifarehost.c:1710`. Middleware-parse column updated: `hf14ainfo.py:122` now carries `_KW_GEN1A = 'Magic capabilities... Gen 1a'` (iceman-native, post commit 57b01cf).
+
+### V4-2 — Matrix L978 `lf search` HID Prox emission (iceman does NOT emit `HID Prox -`)
+
+**Finding:** Matrix row claimed iceman emits `"HID Prox - <hex>"`. Source disproves — iceman emits only `raw: %08x%08x%08x` (lowercase).
+
+**Evidence:**
+- `grep -n "HID Prox -" /tmp/rrg-pm3/client/src/` yields ZERO matches. Cross-verify: `grep -rn "\"HID Prox\b\|raw: " /tmp/rrg-pm3/client/src/cmdlfhid.c` confirms:
+  - L235: `PrintAndLogEx(INFO, "raw: " _GREEN_("%08x%08x%08x"), hi2, hi, lo);` — lowercase `raw:`, no `HID Prox -` prefix.
+  - L239: `PrintAndLogEx(DEBUG, "raw: " _GREEN_("%08x%08x%08x"), hi2, hi, lo);` — debug-level.
+- Legacy (`/tmp/factory_pm3/client/src/cmdlfhid.c`) still emits `HID Prox - <hex>`. iceman dropped it entirely when wiegand_print_card() replaced the raw-hex emission.
+- Normalizer `_normalize_hid_prox` at `pm3_compat.py:1352` detects `Valid HID Prox ID` + missing `HID Prox -` and PREPENDS a synthetic legacy line from the iceman `raw:` match (`_RE_HID_RAW = r'raw:\s*([0-9A-Fa-f]+)'`, pm3_compat.py:1346). The matrix row's "iceman emits `HID Prox - <hex>`" claim came from trace samples that were already adapter-normalized — a circular evidence error.
+
+**Action:** Matrix L978 iceman column updated: `"HID Prox - <hex>"` → `"raw: %08x%08x%08x"` with source cite `cmdlfhid.c:235`. Type column: COSMETIC → STRUCTURAL (emission removed, not just cosmetically reformatted). Middleware-parse column: `REGEX_HID=r'HID Prox - ([xX0-9a-fA-F]+)'` → `r'raw:\s+([0-9A-Fa-f]+)'` (lfsearch.py:102, post commit e30c878, iceman-native).
+
+### V4-3 — `iceman_output.json` caveat (samples are post-adapter, not raw iceman)
+
+**Finding:** Samples in `tools/ground_truth/iceman_output.json` were captured after the current `pm3_compat.py` adapter ran, so they carry legacy-shape conversions. Treating these as "raw iceman" produces circular evidence (the matrix claims iceman emits a shape the adapter has already produced from a different iceman shape).
+
+**Evidence:**
+- Sample 0 of `hf 14a info` contains `"Prng detection: weak"` (colon form). Iceman source `cmdhf14a.c:3326` emits `"Prng detection..... " _GREEN_("weak")` (5 dots). The colon form in the sample is the output of `_RE_DOTTED_SEPARATOR.sub(r'\1: ', text)` at `pm3_compat.py:1122`.
+- Sample of `hf sea` ISO15693 contains `"Valid ISO15693"` (no space). Iceman source `cmdhf.c:198` emits `"Valid " _GREEN_("ISO 15693 tag") " found\n"` (WITH space). The no-space form is output of `_RE_ISO_SPACE.sub(r'ISO\1', text)` at `pm3_compat.py:1134`.
+- `tests/phase3_trace_parity/test_scan_flow.py` introduced a synthetic `_ICEMAN_NATIVE_SAMPLES` list at L291-350 with pure-iceman-source shape bodies to compensate. All 15 synthetic samples PASS post-P3.1 refactor; 6 of 10 live `hf 14a info` iceman_output.json samples FAIL the Prng detection predicate (expected per Option B gap-log entry — see `phase3_phase4_gap_log.md#P31-Scan-flow`).
+
+**Action:** Top-level CAVEAT added to `divergence_matrix.md` Summary section (v4). Re-capture of `iceman_output.json` is a Phase 4 task once `_post_normalize` normalizers are disabled. Until then, source `/tmp/rrg-pm3/client/src/` + synthetic samples are the authoritative pure-iceman references.
+
+### v4 disposition
+
+**APPLIED** — 2 per-command row corrections (L128, L978) + 1 Summary-section caveat + v4 header-note. Evidence verified by direct source grep of `/tmp/rrg-pm3/client/src/`. No live device required. All three items were independently surfaced by Refactorer, Auditor, and Challenger and cross-verified here.
+
