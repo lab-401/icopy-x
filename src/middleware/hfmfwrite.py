@@ -407,9 +407,6 @@ def write_common(listener, infos, bundle):
     #                    format). Legacy `[+] Block 0: HEX` shape handled
     #                    via adapter `_normalize_rdbl_response`
     #                    (pm3_compat.py:1241-1268) before reaching here.
-    # NOTE: the `isOk:00` alternative is a legacy synth — iceman has zero
-    # `isOk:` emissions (matrix v2 L817 grep-verified). Kept as defensive
-    # fallback for any legacy-shaped adapter output still in the pipeline.
     import re as _re
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
