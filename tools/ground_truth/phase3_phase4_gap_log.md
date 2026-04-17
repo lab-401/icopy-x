@@ -322,12 +322,13 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 - `hf 14a info` UID regex `r'UID:\s*([\dA-Fa-f ]+)'` (hfmfwrite.py:521,523) — iceman `hf 14a info` emits `" UID: 7A F2 EC B2"` (space-colon-space-hex). Regex matches iceman directly. IDENTICAL TO P3.1 SCAN refactor's _RE_UID alternation (hf14ainfo.py).
 - `hfmfuwrite.verify()` path — uses `scan.scan_14a()` + `scan.isTagFound()`. Both iceman-native via the P3.1 scan refactor. No direct PM3-command emission in this code path.
 
-### Entry: erase.py cross-module wrbl split-brain
+### Entry: erase.py cross-module wrbl split-brain — **RESOLVED by P3.4**
 
 - **Finding**: `src/middleware/erase.py` lines 79, 288, 296, 318, 326 still use the legacy alternation pattern `'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache` (and the Gen1a block-0 regex at :79 still includes `isOk:01` in the alternation group). `hfmfwrite.py` is now iceman-strict (`_KW_WRBL_SUCCESS = r'Write \( ok \)'`) after P3.3 refactor. The two modules parse the SAME `hf mf wrbl` PM3 response with DIFFERENT expectations — a split-brain state: erase still tolerates adapter-synth `isOk:01`, write does not.
 - **Raised during**: P3.3 Challenger + Auditor review (cross-module consistency check).
 - **Scope boundary**: erase.py is P3.4's scope (scheduled next flow refactor). No edit made during P3.3 fixer — logged here for traceability only.
 - **Phase 4 action**: NONE beyond P3.4 completing. When P3.4 refactors erase.py to iceman-native, all five alternation sites (79/288/296/318/326) collapse to the iceman literal `Write ( ok )` and this entry resolves by construction.
+- **Status**: **RESOLVED by P3.4 refactor** (commit `refactor(erase): erase.py → iceman-native patterns`). Erase.py now declares `_KW_WRBL_SUCCESS = r'Write \( ok \)'` at module scope (identical constant to `hfmfwrite._KW_WRBL_SUCCESS`); all five call sites use `re.search(_KW_WRBL_SUCCESS, wr_cache)`; `_RE_CGETBLK_BLOCK_DATA` dropped `isOk:01` from alternation. See "P3.4 Erase flow → erase.py hf mf wrbl split-brain resolution" below for the full Phase-4 reconciliation plan (one adapter-removal closes both hfmfwrite.py and erase.py).
 
 ---
 
@@ -444,9 +445,100 @@ No live symptom but documented for Phase 4 audit cross-check:
 
 ---
 
-## P3.4+ (placeholder)
+## P3.4 Erase flow
 
-_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3/P3.7/P3.8 entries above._
+### Entry: erase.py hf mf wrbl split-brain resolution (cross-module parity with P3.3)
+
+- **Middleware now iceman-native**:
+  - `erase._KW_WRBL_SUCCESS = r'Write \( ok \)'` (erase.py:88) — iceman `cmdhfmf.c:1389`, `:9677`, `:9760` emit `PrintAndLogEx(SUCCESS, "Write ( " _GREEN_("ok") " )")`. Three identical emission sites — all use the `Write ( ok )` literal. Matches the constant exported by `hfmfwrite._KW_WRBL_SUCCESS` (P3.3 refactor) — the two modules now agree on the post-flip success sentinel.
+  - Five prior call sites (erase.py legacy L288, L296, L318, L326 in `_erase_std_m1` + L79 Gen1a probe alternation group) all carried the alternation `'isOk:01' in cache or 'Write ( ok )' in cache`. Post-refactor all five collapse to `re.search(_KW_WRBL_SUCCESS, wr_cache)`.
+  - erase.py:79 Gen1a probe `_RE_CGETBLK_BLOCK_DATA` now drops `isOk:01` from the alternation group; iceman `cmdhfmf.c:6171` has zero `isOk:` emissions anywhere in the cgetblk path (matrix L817 grep confirmation).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1216-1234` `_normalize_wrbl_response()` rewrites iceman `"Write ( ok )"` → legacy `"isOk:01"` and `"Write ( fail )"` → legacy `"isOk:00"`. Wired for `hf mf wrbl` at `pm3_compat.py:1826` (`_RESPONSE_NORMALIZERS['hf mf wrbl'] = [_normalize_wrbl_response]`). SAME adapter flagged in P3.3 — one removal Phase 4 line item unblocks both hfmfwrite.py and erase.py.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `erase._erase_std_m1()` returns `'error'` on the FIRST block write of every standard MF1K/MF4K erase: adapter rewrites iceman `Write ( ok )` → `isOk:01` before middleware sees it; iceman-native regex `Write \( ok \)` no longer finds either literal; both the 3× Key A retry and the Key B fallback trip `not written` → `return 'error'`.
+  - Cascading failure: Erase flow UI shows "Erase Failed!" on every standard MF1K/MF4K card even when PM3 actually wrote every block successfully. Gen1a magic cards unaffected (they use `hf mf cwipe`, which has no `Write ( ok )` sentinel — see separate entry below).
+  - Observable in test: `tests/phase3_trace_parity/test_erase_flow.py` — all 10 live `hf mf wrbl` samples carry adapter-normalised `isOk:00` tokens (trace captured post-adapter). Test `_test_hf_mf_wrbl` asserts iceman-native regex correctly MISSES these during transition; 2 synthetic iceman-native samples (`Write ( ok )` / `Write ( fail )`) exercise the post-Phase-4 target shape and PASS.
+- **Phase 4 action**:
+  - REMOVE `_normalize_wrbl_response` from `_RESPONSE_NORMALIZERS['hf mf wrbl']` (`pm3_compat.py:1826`). Same removal resolves P3.3 (`hfmfwrite.py`) and P3.4 (`erase.py`) simultaneously.
+  - After adapter disable, iceman raw `Write ( ok )` / `Write ( fail )` reach both middleware modules verbatim; both use the identical regex constant.
+  - **RESOLVES the P3.3 cross-module entry** ("erase.py cross-module wrbl split-brain", gap log L325-330) by construction: the alternation is gone from erase.py.
+
+### Entry: erase.py hf mf cgetblk Gen1a probe regex — alternation tightening
+
+- **Middleware now iceman-native**:
+  - `erase._RE_CGETBLK_BLOCK_DATA = re.compile(r'(?:Block\s*0\s*:|data:|^\s*\d+\s*\|)\s*[A-Fa-f0-9 ]{16,}', re.MULTILINE)` (erase.py:93) — matches three shapes:
+    - Iceman raw grid `  0 | XX XX ...| ascii` (cmdhfmf.c:570 `mf_print_block_one` block-0 branch, 3-space indent + `%3d | hex | ascii`);
+    - Adapter-normalised `data: XX XX ...` (pm3_compat.py:1252 `_normalize_rdbl_response` rewrite, wired at `:1829` for `hf mf cgetblk`);
+    - Device-trace-specific `Block 0: XX XX ...` synth shape (retained for backward compat).
+  - Previous regex included `isOk:01` as a fourth alternation branch — iceman has zero `isOk:` emissions in any read path (matrix L817), so the branch was dead weight. Dropped per Option B.
+  - Negative probe keywords `'wupC1 error'` and `"Can't read block"` are iceman-native verbatim (`armsrc/mifarecmd.c:103/116/2921` emits `wupC1 error`; `cmdhfmf.c:6171` emits `Can't read block. error=%d`). No adapter normalization needed.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1252-1268` `_normalize_rdbl_response()` rewrites iceman grid form `  N | hex | ascii` → `data: hex`. Wired for `hf mf cgetblk` at `pm3_compat.py:1829`. Currently DORMANT on the device's installed iceman build (which emits the grid shape verbatim with no adapter hit), but activates on a HEAD iceman flash. Same flagged-dormant adapter in P3.2 entry "hf mf rdbl / hf mf rdsc / hf mf cgetblk block-data regression".
+- **Live symptom (iceman FW)**:
+  - NONE — the alternation regex above tolerates both iceman raw and adapter-converted shapes. Test confirms 10/10 live `hf mf cgetblk` samples (all `wupC1 error` / `data: ...` bodies) classify correctly. Synthetic raw-grid `  0 | hex | ascii` and adapter-converted `data: hex` samples both PASS.
+- **Phase 4 action**:
+  - No adapter change required for erase.py alone. The P3.2 optional cleanup (remove `_normalize_wrbl_response` from `hf mf rdsc` wiring at pm3_compat.py:1828) still applies.
+  - Optional middleware simplification: drop `^\s*\d+\s*\|` grid branch from `_RE_CGETBLK_BLOCK_DATA` once the device firmware guaranteed-converges on one shape (adapter on → `data:` only; adapter off → grid only). Currently keeping both guards against firmware-bump regressions.
+
+### Entry: erase.py hf mf cwipe success — iceman-native text emission (no middleware regex consumer)
+
+- **Middleware now iceman-native**:
+  - `erase._erase_magic_m1()` checks only `ret = executor.startPM3Task('hf mf cwipe', 28888)` — `ret == -1` means timeout; otherwise assumed success. No keyword / regex parse of the body.
+  - Iceman source: `cmdhfmf.c:5896` `PrintAndLogEx(SUCCESS, "Card wiped successfully")` on success; `:5892` `PrintAndLogEx(ERR, "Can't wipe card. error %d", res)` + `return PM3_ESOFT` on hardware failure. The `PM3_ESOFT` return is what `startPM3Task` sees — `ret != -1` for timeout-only semantics, so a hardware error still reads as success to erase.py.
+- **Adapter still running iceman→legacy**:
+  - `_RESPONSE_NORMALIZERS['hf mf cwipe']` — not explicitly wired (checked pm3_compat.py:1820-1860 range). Generic post-normalize dot-stripper `_RE_DOTTED_SEPARATOR` (pm3_compat.py:1070/1122) has no load-bearing dotted fields in the cwipe output. No adapter interference.
+- **Live symptom**:
+  - PARTIAL: if iceman's `mf_chinese_wipe()` returns a non-zero error code (`cmdhfmf.c:5891-5894`), cwipe emits `Can't wipe card. error %d` to the user log and returns `PM3_ESOFT` — middleware reads that as success, flow reports "Erase success" to UI, but card is actually NOT wiped. No regression introduced by P3.4 refactor — the pre-refactor middleware had the same behavior. Matrix L640-645 (implied by `hf mf cwipe` entry) makes this the activity-layer's responsibility to verify with a follow-up `hf mf cgetblk`. No Phase 4 action required at the erase.py layer.
+- **Phase 4 action**:
+  - NO-OP for erase.py. Consider strengthening the check to `hasKeyword('Card wiped successfully')` as a post-Phase-4 enhancement, but this is middleware-touching-legacy detection work — out of compat-flip scope.
+
+### Entry: erase.py lf t55xx detect success sentinel — iceman `Chip type` lowercase tolerance
+
+- **Middleware now iceman-native**:
+  - `erase._RE_T55XX_CHIP_OK = re.compile(r'Chip\s+[Tt]ype')` (erase.py:106) — case-insensitive on `type` character, whitespace-flexible between `Chip` and `Type`. Matches both:
+    - Iceman raw `Chip type......... T55x7` (`cmdlft55xx.c:1837` — lowercase `t`, 9 dots);
+    - Adapter-normalized `     Chip Type      : T55x7` (pm3_compat.py:1572 `_normalize_t55xx_config` rewrite — capital `T`, colon).
+  - Previously: `'Chip Type' in cache` — literal substring, capital T ONLY. Iceman emits lowercase, so without the adapter the legacy-style check would miss iceman FW responses entirely. Alternation tolerance added via the regex character class.
+  - Negative sentinel `Could not detect modulation automatically` (`cmdlft55xx.c:1307`) is identical across both firmwares after prefix strip (legacy emits `[!] Could not detect...`, iceman emits same without prefix; executor.hasKeyword strips prefix).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1563-1581` `_normalize_t55xx_config()` + `_RE_T55XX_CHIP_NEW = re.compile(r'^\s*Chip type\.{3,}\s+(.*?)$', re.MULTILINE | re.IGNORECASE)` rewrites iceman `Chip type......... T55x7` → `     Chip Type      : T55x7`. Wired for `lf t55xx detect` at `pm3_compat.py:1861` (`_RESPONSE_NORMALIZERS['lf t55xx detect'] = [_normalize_t55xx_config]`).
+  - Generic `_RE_DOTTED_SEPARATOR` (pm3_compat.py:1070/1122) runs in `_post_normalize` AFTER `_normalize_t55xx_config`, but the normalizer has already consumed the dotted form — no double-rewrite impact.
+- **Live symptom (iceman FW, with current adapter)**:
+  - NONE — adapter converts `Chip type` → `Chip Type`; erase regex tolerates both cases. Test confirms 10/10 live `lf t55xx detect` samples classify correctly (all are `Could not detect` or `No known` bodies; success-path synthetic samples PASS for both shapes).
+- **Phase 4 action**:
+  - Once `_normalize_t55xx_config` is disabled in Phase 4, iceman raw `Chip type` reaches erase.py verbatim; `_RE_T55XX_CHIP_OK` continues to match via the `[Tt]` character class. No regression on adapter removal.
+  - Cross-reference: same `_normalize_t55xx_config` adapter affects `lft55xx.py:430/687` (P3.5 Read LF scope — separate refactor pass).
+
+### Entry: erase.py lf t55xx wipe / lf t55xx chk — return-only semantics (no middleware regex)
+
+- **Middleware now iceman-native**:
+  - `erase.erase_t5577()` calls `lf t55xx wipe` (`:358`), `lf t55xx wipe -p 20206666` (`:371`), `lf t55xx chk -f <file>` (`:395`). For all three commands the middleware checks only `ret = executor.startPM3Task(...)` return code; no body text is parsed.
+  - Iceman source: `cmdlft55xx.c:3229` `CmdT55xxWipe` returns `PM3_SUCCESS` on completion (internal writeblock errors reported via `PrintAndLogEx(WARNING, "Warning: error writing blk %d", blk)` at `:3306/3313` but do NOT alter the return code); `cmdlft55xx.c:3338` `CmdT55xxChkPwds` returns `PM3_SUCCESS` after brute force regardless of match (success-match logged via `PrintAndLogEx(SUCCESS, "Found valid password...")`, but again not load-bearing for erase's startPM3Task return).
+  - The activity layer uses the follow-up `lf t55xx detect` sentinel (previous entry) as the actual success-check — wipe/chk are "attempt" steps, not verified steps.
+- **Adapter still running iceman→legacy**:
+  - `_RESPONSE_NORMALIZERS['lf t55xx wipe'] = []` (pm3_compat.py:1865) — empty, no interference.
+  - `_RESPONSE_NORMALIZERS['lf t55xx chk'] = [_normalize_t55xx_chk_password]` (pm3_compat.py L1869 per Grep) — rewrites the `Found valid password: [ <hex> ]` bracket line to colon form. erase.py does NOT consume the password; normalizer is dead weight for erase but still runs. No live impact.
+  - Forward/reverse command translators (pm3_compat.py:434/642 `lf t55xx wipe p` ↔ `lf t55xx wipe -p`; `:439/648` `lf t55xx chk -f` ↔ `lf t55xx chk f`) wired both directions; middleware now emits iceman form (`-p`, `-f`) directly.
+- **Live symptom**: NONE — all three commands are return-code-only paths.
+- **Phase 4 action**: NO-OP. Informational entry. `_normalize_t55xx_chk_password` remains wired for any downstream middleware that eventually consumes the password (e.g., a future password-aware erase flow).
+
+### Entry: erase.py hf mf fchk / hf 14a info — passthrough (identical iceman shape)
+
+- **Middleware now iceman-native**:
+  - `erase._erase_std_m1()` uses these regexes on the response bodies:
+    - `r'found\s+(\d+)/(\d+)\s+keys'` — iceman `cmdhfmf.c` fchk emits the literal `found N/M keys` line on completion (both firmwares identical; no adapter needed).
+    - `r'\|\s*(\d+)\s*\|\s*([0-9a-fA-F]{12})\s*\|\s*(\d)\s*\|\s*([0-9a-fA-F]{12})\s*\|\s*(\d)\s*\|'` — 4-column pipe-bordered key table from iceman `printKeyTable`. P3.2 gap log ("hf mf fchk key-table regression (dormant)") confirms the device's installed iceman emits this shape verbatim (no adapter hit); a HEAD iceman flash would trigger the `_normalize_fchk_table()` adapter at pm3_compat.py:1160 to rewrite 5-column → 4-column.
+    - `r'SAK:\s*([0-9a-fA-F]+)'`, `r'UID:\s*([0-9A-Fa-f ]+)'`, `r'ATQA:\s*([0-9A-Fa-f ]+)'` — hf 14a info colon form, iceman `cmdhf14a.c:653-655/770-774` emits these verbatim (identical to legacy after prefix strip).
+- **Adapter still running iceman→legacy**: none on the critical erase paths. `_normalize_fchk_table` is dormant on the device build. `hf 14a info` has `_normalize_manufacturer` + `_normalize_magic_capabilities` wired (pm3_compat.py:1836) — neither affects the SAK/UID/ATQA parse.
+- **Live symptom**: NONE — 10/10 live samples for both commands classify correctly.
+- **Phase 4 action**: NO-OP. Cross-reference with P3.2 dormant entries.
+
+---
+
+## P3.5+ (placeholder)
+
+_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3/P3.4/P3.7/P3.8 entries above._
 
 ---
 
