@@ -132,17 +132,30 @@ _RE_FC = r'FC:\s+([xX0-9a-fA-F]+)'
 
 # Iceman per-tag demod uses: `Card: %u` (Jablotron/Noralsy/Paradox/AWID
 # cmdlfjablotron.c:98, cmdlfnoralsy.c:106, cmdlfparadox.c:224, cmdlfawid.c:248),
-# `Card %X` (Viking cmdlfviking.c:57 — space, no colon), `CN: %u` (COTAG
-# cmdlfcotag.c:76). Tolerant colon-or-space required for iceman natively since
-# Viking is the outlier. Matrix L988.
+# `Card %X` (Viking cmdlfviking.c:57 — space, no colon, HEX), `CN: %u` (COTAG
+# cmdlfcotag.c:76).  Tolerant colon-or-space required for iceman natively since
+# Viking is the outlier.  Matrix L988.
 # `Card ID` alternate dropped: the only iceman `lf sea`-reachable emission
 # of "Card ID" is cmdlfidteck.c:129 ("IDTECK Tag Found: Card ID %u ..."),
 # but IDTECK is NOT handled by lfsearch.parser() (no tagtypes constant, no
-# Check N block) and flows through a chipset-detection fallback. saflok
+# Check N block) and flows through a chipset-detection fallback.  saflok
 # `Card ID: %u` (cmdhfsaflok.c:1035) is a HF flow, unreachable by lf sea.
 # Removing the alternate keeps _RE_CN scoped to the lfsearch flows that
-# actually use it. Grep verified 2026-04-17.
-_RE_CN = r'(CN|Card(?:\s+No\.)?)[\s:]+(\d+)'
+# actually use it.  Grep verified 2026-04-17.
+#
+# Capture class widened to `[0-9A-Fa-f]+` (hex-tolerant) so Viking's
+# `Card %08X` (cmdlfviking.c:57) captures correctly if this regex is
+# ever invoked on a Viking body.  Routing-wise Viking uses
+# `readCardIdAndRaw` / `REGEX_CARD_ID` (hex-tolerant by design), and
+# `lfsearch.parser()` Check 7 uses `setUID(seaObj)` with `REGEX_CARD_ID`,
+# so `_RE_CN` is not exercised for Viking today — but the widened class
+# avoids future bit-rot if a tag that emits hex CN is ever routed
+# through `readFCCNAndRaw` / `setUID2FCCN`.  `getFCCN()` already handles
+# non-decimal CN gracefully: `int(cn)` falls back to `cn` verbatim on
+# `ValueError` (lfsearch.py:285-288).  Decimal tags (AWID, Pyramid,
+# Paradox, Securakey, GProx-II, KERI) still capture correctly because
+# `[0-9A-Fa-f]+` is a superset of `\d+`.
+_RE_CN = r'(CN|Card(?:\s+No\.)?)[\s:]+([0-9A-Fa-f]+)'
 
 # Iceman AWID/Pyramid/Securakey emit `- len: %d` (cmdlfawid.c:248,
 # cmdlfpyramid.c:161, cmdlfsecurakey.c:113) — lowercase only. Drop `Len|LEN|

@@ -555,6 +555,18 @@ _ICEMAN_NATIVE_SAMPLES = [
          and not lfsearch.parseCN()
          and _re.search(lfsearch.REGEX_RAW, body) is None
      )),
+
+    # -------- _RE_CN accepts decimal (AWID) ---------------------------
+    ('_RE_CN decimal', 'iceman AWID Card decimal',
+     'AWID - len: 26 FC: 37 Card: 33133 - Wiegand: ... Raw: deadbeef\n',
+     lambda body: _re.search(lfsearch._RE_CN, body).group(2) == '33133'),
+
+    # -------- _RE_CN accepts hex (Viking) -----------------------------
+    ('_RE_CN hex', 'iceman Viking Card hex',
+     # cmdlfviking.c:57 emits `Viking - Card %08X, Raw: ...`.  Pre-fix
+     # _RE_CN = `(\\d+)` missed hex; post-fix `([0-9A-Fa-f]+)` captures.
+     'Viking - Card DEADBEEF, Raw: F200010DEADBEEF0\n',
+     lambda body: _re.search(lfsearch._RE_CN, body).group(2) == 'DEADBEEF'),
 ]
 
 

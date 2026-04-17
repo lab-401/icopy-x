@@ -174,7 +174,7 @@ def readFCCNAndRaw(cmd, uid_index=0, raw_index=0):
 
     Iceman-native FC/CN regex lives in lfsearch.py:
       _RE_FC = r'FC:\\s+([xX0-9a-fA-F]+)'
-      _RE_CN = r'(CN|Card(?:\\s+No\\.)?)[\\s:]+(\\d+)'
+      _RE_CN = r'(CN|Card(?:\\s+No\\.)?)[\\s:]+([0-9A-Fa-f]+)' (hex-tolerant)
 
     Per matrix L1213 + iceman source audit: Keri/Gallagher/Nedap/Presco/
     NexWatch emit alternative field labels; lfsearch._RE_FC won't match
