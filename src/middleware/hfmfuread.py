@@ -75,8 +75,29 @@ def createFileNamePreByType(typ):
 def read(infos):
     """Read MIFARE Ultralight/NTAG tag.
 
-    PM3: hf mfu dump f {path}  (timeout=30000)
-    Returns: {'return': 0/1, 'file': path} on success, {'return': -1} on failure.
+    PM3: ``hf mfu dump -f {path}``  (timeout=30000)
+
+    Iceman-native success signals (this device's build, per iceman_output.
+    json `hf mfu dump f` samples 1-3):
+      - full dump: ``saved N bytes to binary file <path>`` + JSON sibling
+        (cmdhfmfu.c:3766 via pm3_save_dump) — verified by .bin existence
+        on host filesystem rather than text parsing.
+      - partial dump: ``Partial dump created. (%d of %d blocks)``
+        (/tmp/rrg-pm3/client/src/cmdhfmfu.c:3769). Emission IDENTICAL on
+        legacy (matrix section `hf mfu dump`, divergence_matrix.md L900).
+
+    Iceman-native failure signal: ``Can't select card.`` from the 14443a
+    reader helper at /tmp/rrg-pm3/client/src/cmdhf14a.c:1817
+    (PrintAndLogEx WARNING). On iceman HEAD the `ul_select()` path
+    (cmdhfmfu.c:386-409) logs only at DEBUG so this keyword is dormant
+    for HEAD; however the device's installed iceman build still routes
+    a select-failure through the 14a reader helper in some error paths.
+    Kept as a defensive check — TODO(Phase 4) audit: if the device's
+    older iceman truly never emits this for `hf mfu dump`, drop the
+    keyword check and rely solely on .bin existence.
+
+    Returns: ``{'return': 0, 'file': path}`` on success, ``{'return': -1,
+    'file': ''}`` on failure.
     """
     global FILE_MFU_READ
 
@@ -107,6 +128,9 @@ def read(infos):
     if ret == -1:
         return {'return': -1, 'file': ''}
 
+    # Iceman / legacy 14a-select failure — cmdhf14a.c:1817. Emission is
+    # identical on both firmwares after the executor strips the `[!]`
+    # prefix; see matrix `hf mfu dump` L900.
     if executor.hasKeyword("Can't select card"):
         return {'return': -1, 'file': ''}
 
@@ -115,6 +139,7 @@ def read(infos):
         FILE_MFU_READ = bin_path
         return {'return': 0, 'file': bin_path}
 
+    # Iceman-native partial-dump emission (cmdhfmfu.c:3769).
     if executor.hasKeyword('Partial dump created'):
         FILE_MFU_READ = bin_path
         return {'return': 0, 'file': bin_path}
