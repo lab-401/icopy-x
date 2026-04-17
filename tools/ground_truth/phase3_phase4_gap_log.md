@@ -541,11 +541,11 @@ No live symptom but documented for Phase 4 audit cross-check:
 ### Entry: lf <tag> clone commands — iceman-canonical send-side (zero SEND divergence)
 
 - **Middleware now iceman-native** (inline citations added in `lfwrite.py`):
-  - `write_em410x()` (lfwrite.py L157) → `lf em 410x clone --id <hex>`. CLI spec: `cmdlfem410x.c:625` CLIParserInit "lf em 410x clone", argtable `arg_str1(NULL, "id", ...)`. Dispatch `cmdlfem410x.c:896`.
-  - `write_hid()` (lfwrite.py L173) → `lf hid clone -r <hex>` (short of `--raw`). CLI spec: `cmdlfhid.c:400` CmdHIDClone / CLIParserInit "lf hid clone", argtable `arg_str0("r", "raw", ...)`. Dispatch `cmdlfhid.c:724`.
-  - `write_indala()` (lfwrite.py L189) → `lf indala clone -r <hex>`. CLI spec: `cmdlfindala.c:786` CmdIndalaClone / CLIParserInit "lf indala clone", argtable `arg_str0("r", "raw", ...)`. Dispatch `cmdlfindala.c:1103`.
-  - `write_fdx_par()` (lfwrite.py L204) → `lf fdxb clone --country <dec> --national <dec>`. CLI spec: `cmdlffdxb.c:712` CLIParserInit "lf fdxb clone", argtable `arg_u64_1("c", "country", ...) + arg_u64_1("n", "national", ...)`. Dispatch `cmdlffdxb.c:909`. Namespace change: iceman `fdxb` (B-suffix) vs legacy `fdx`.
-  - `RAW_CLONE_MAP` (lfwrite.py L138-143) → `lf <tag> clone -r <hex>` for securakey/gallagher/pac/paradox/nexwatch. All five CLI specs verified via `arg_str0/1("r", "raw", ...)`:
+  - `write_em410x()` (lfwrite.py L175) → `lf em 410x clone --id <hex>`. CLI spec: `cmdlfem410x.c:625` CLIParserInit "lf em 410x clone", argtable `arg_str1(NULL, "id", ...)`. Dispatch `cmdlfem410x.c:896`.
+  - `write_hid()` (lfwrite.py L192) → `lf hid clone -r <hex>` (short of `--raw`). CLI spec: `cmdlfhid.c:400` CmdHIDClone / CLIParserInit "lf hid clone", argtable `arg_str0("r", "raw", ...)`. Dispatch `cmdlfhid.c:724`.
+  - `write_indala()` (lfwrite.py L208) → `lf indala clone -r <hex>`. CLI spec: `cmdlfindala.c:786` CmdIndalaClone / CLIParserInit "lf indala clone", argtable `arg_str0("r", "raw", ...)`. Dispatch `cmdlfindala.c:1103`.
+  - `write_fdx_par()` (lfwrite.py L223) → `lf fdxb clone --country <dec> --national <dec>`. CLI spec: `cmdlffdxb.c:712` CLIParserInit "lf fdxb clone", argtable `arg_u64_1("c", "country", ...) + arg_u64_1("n", "national", ...)`. Dispatch `cmdlffdxb.c:909`. Namespace change: iceman `fdxb` (B-suffix) vs legacy `fdx`.
+  - `RAW_CLONE_MAP` (lfwrite.py L159-165) → `lf <tag> clone -r <hex>` for securakey/gallagher/pac/paradox/nexwatch. All five CLI specs verified via `arg_str0/1("r", "raw", ...)`:
     - `cmdlfsecurakey.c:172/301`
     - `cmdlfgallagher.c:175/387`
     - `cmdlfpac.c:225/402`
@@ -563,8 +563,8 @@ No live symptom but documented for Phase 4 audit cross-check:
 ### Entry: lf t55xx write / lf t55xx restore — iceman-canonical, response not parsed
 
 - **Middleware now iceman-native**:
-  - `write_raw_t55xx()` (lfwrite.py L249), `write_b0_need()` (lfwrite.py L257), `write_raw()` (lfwrite.py L276): all emit `lf t55xx write -b <N> -d <hex> [-p <hex>]`. CLI spec: `cmdlft55xx.c:1853` CmdT55xxWriteBlock / CLIParserInit "lf t55xx write", argtable `arg_int1("b", "blk", ...) + arg_str0("d", "data", ...) + arg_str0("p", "pwd", ...)`. Dispatch `cmdlft55xx.c:4794`. Iceman emits info line `Writing page %d  block: %02d  data: 0x%08X [pwd: 0x%08X]` at `cmdlft55xx.c:1932` — middleware does NOT parse this (relies on PM3 task return code).
-  - `write_dump_t55xx()` (lfwrite.py L311): emits `lf t55xx restore -f <path>`. CLI spec: `cmdlft55xx.c:2775` CmdT55xxRestore / CLIParserInit "lf t55xx restore", argtable `arg_str0("f", "file", ...) + arg_str0("p", "pwd", ...)`. Dispatch `cmdlft55xx.c:4790`. Iceman emits `Done!` (`cmdlft55xx.c:2771`) on success; middleware does NOT parse this (return code only + dump-file compare).
+  - `write_raw_t55xx()` (lfwrite.py L276), `write_b0_need()` (lfwrite.py L295), `write_raw()` (lfwrite.py L317): all emit `lf t55xx write -b <N> -d <hex> [-p <hex>]`. CLI spec: `cmdlft55xx.c:1853` CmdT55xxWriteBlock / CLIParserInit "lf t55xx write", argtable `arg_int1("b", "blk", ...) + arg_str0("d", "data", ...) + arg_str0("p", "pwd", ...)`. Dispatch `cmdlft55xx.c:4794`. Iceman emits info line `Writing page %d  block: %02d  data: 0x%08X [pwd: 0x%08X]` at `cmdlft55xx.c:1932` — middleware does NOT parse this (relies on PM3 task return code).
+  - `write_dump_t55xx()` (lfwrite.py L351): emits `lf t55xx restore -f <path>`. CLI spec: `cmdlft55xx.c:2653` CmdT55xxRestore / CLIParserInit "lf t55xx restore" at `:2655`, argtable `arg_str0("f", "file", ...) + arg_str0("p", "pwd", ...)`. Dispatch `cmdlft55xx.c:4790`. Iceman emits `Done!` (`cmdlft55xx.c:2771`) on success; middleware does NOT parse this (return code only + dump-file compare).  (Note: an orphaned v1 of `CmdT55xxRestore` inside a `/* ... */` comment block starts at `:2774` — cite the live function at `:2653`, not `:2775`.)  Post-P3.6 fix: verify regex in `write_dump_t55xx` updated to match iceman `%02d | 0x%08X | %s` row shape at `cmdlft55xx.c:1831` (previous `(?:blk|block)\s*\d+\s*\|` pattern never matched iceman output; bare `\b[A-Fa-f0-9]{8}\b` fallback removed to avoid false-matching password/config hex tokens).
 - **Adapter still running iceman→legacy**:
   - `pm3_compat.py` trace-prefix canonicalisation (matrix Appendix B L1554-1555) strips `lf t55xx restore f` → `lf t55xx restore` and `lf t55xx write` has no prefix stripping (already bare). No behavioural impact on iceman forward path.
   - `_normalize_t55xx_config` runs on the `lf t55xx detect` response (P3.5 lft55xx scope), not on the write response — no interaction with P3.6 middleware.
@@ -574,14 +574,15 @@ No live symptom but documented for Phase 4 audit cross-check:
 ### Entry: lf em 4x05 write / lf em 4x05 read — inline verify regex tightened
 
 - **Middleware now iceman-native**:
-  - `write_block_em4x05()` (lfwrite.py L384) → `lf em 4x05 write -a <dec> -d <hex> -p <hex>`. CLI spec: `cmdlfem4x05.c:1399` CmdEM4x05Write / CLIParserInit "lf em 4x05 write", argtable `arg_int0("a", "addr", ...) + arg_str1("d", "data", ...) + arg_str0("p", "pwd", ...)`.
-  - `write_dump_em4x05()` (lfwrite.py L413) inline verify loop → `lf em 4x05 read -a <dec> [-p <hex>]` + response regex. CLI spec: `cmdlfem4x05.c:1352` CmdEM4x05Read / CLIParserInit "lf em 4x05 read", argtable `arg_int1("a", "addr", ...) + arg_str0("p", "pwd", ...)`.
-  - **Regex tightening (P3.6 fix)**: previously `re.search(r'\|\s*([A-Fa-f0-9]+)\s*', content)` (lfwrite.py L430 pre-P3.6). This loose form matched ANY pipe-separated hex substring (could false-match unrelated pipe-tokens in the cache). Tightened to iceman-canonical targeting cmdlfem4x05.c:1391 emission `Address %02d | %08X - %s`:
+  - `write_block_em4x05()` (lfwrite.py L453) → `lf em 4x05 write -a <dec> -d <hex> -p <hex>`. CLI spec: `cmdlfem4x05.c:1399` CmdEM4x05Write / CLIParserInit "lf em 4x05 write", argtable `arg_int0("a", "addr", ...) + arg_str1("d", "data", ...) + arg_str0("p", "pwd", ...)`.
+  - `write_dump_em4x05()` (lfwrite.py L476) inline verify loop → `lf em 4x05 read -a <dec> [-p <hex>]` + response regex. CLI spec: `cmdlfem4x05.c:1352` CmdEM4x05Read / CLIParserInit "lf em 4x05 read", argtable `arg_int1("a", "addr", ...) + arg_str0("p", "pwd", ...)`.
+  - **Regex tightening (P3.6 fix)**: previously `re.search(r'\|\s*([A-Fa-f0-9]+)\s*', content)` (lfwrite.py pre-P3.6). This loose form matched ANY pipe-separated hex substring (could false-match unrelated pipe-tokens in the cache). Tightened to iceman-canonical targeting cmdlfem4x05.c:1391 emission `Address %02d | %08X - %s`:
     - Anchored: `re.search(r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-', content)`.
     - Fallback: `re.search(r'\|\s+([A-Fa-f0-9]{8})\s+-', content)` — tolerates executor-cleaned cache bodies where the `Address NN` prefix was stripped.
-  - Test coverage (`test_write_lf_flow.py`): 3 positive + 1 negative shape validated. Negative (`Pipe | FF` bad body) correctly misses the anchored regex.
+  - **lfverify regex tightening (post-P3.6 fix)**: `lfverify.verify_em4x05` previously used a bare `\b([A-Fa-f0-9]{8})\b` fallback which would false-match the iceman INFO precursor line at `cmdlfem4x05.c:1385` `"Reading address %02u using password %08X"` (password is 8 hex chars, matched BEFORE the real `Address NN | HHHHHHHH -` data).  Replaced with the same anchored `Address NN | <8hex> -` pattern + `| <8hex> -` fallback; bare-hex catchall removed.
+  - Test coverage (`test_write_lf_flow.py`): 3 positive + 1 negative shape validated, plus post-fix pwd-echo-skip test.
 - **Adapter still running iceman→legacy**:
-  - `_normalize_em4x05_info` (pm3_compat.py:1586) normalizes `lf em 4x05 info` response (dotted→colon). DOES NOT touch `lf em 4x05 read` response. No interaction with the tightened regex.
+  - `_normalize_em4x05_info` (pm3_compat.py:1594) normalizes `lf em 4x05 info` response (dotted→colon). DOES NOT touch `lf em 4x05 read` response. No interaction with the tightened regex.
   - Matrix L1048-1053 (Phase 4 audit target): `lf em 4x05 read/write/dump` divergence table entries are informational; no adapter wired for `read` response format beyond the shared `_RE_DOTTED_SEPARATOR` generic stripper.
   - The generic `_RE_DOTTED_SEPARATOR` in `_post_normalize()` could in theory alter an `Address %02d` prefix if dots appeared; iceman emission has NO dots in this line — confirmed by source grep on `cmdlfem4x05.c:1391`. No conflict.
 - **Live symptom**: 0 live samples in iceman_output.json for `lf em 4x05 write` / `lf em 4x05 read`. Synthetic test samples cover iceman raw shape, Lock suffix shape, prefix-stripped fallback, and negative (bad) shape — all pass.
@@ -590,8 +591,8 @@ No live symptom but documented for Phase 4 audit cross-check:
 ### Entry: lf sea (short-prefix alias) — identical both firmwares, iceman-canonical
 
 - **Middleware now iceman-native**:
-  - `lfwrite._inline_verify()` (lfwrite.py L551) → `lf sea`.
-  - `lfverify.verify()` scan-fallback branch (lfverify.py L219) → `lf sea`.
+  - `lfwrite._inline_verify()` (lfwrite.py L647) → `lf sea`.
+  - `lfverify.verify()` scan-fallback branch (lfverify.py L247) → `lf sea`.
   - Both forks accept `lf sea` as a short-prefix alias for `lf search` (cmdlf.c:1890 CLIParserInit "lf search"). Divergence matrix Appendix B L1567: "kept as `lf sea` in middleware since both accept it."
 - **Adapter still running iceman→legacy**:
   - No translation rule for `lf sea` in either direction — both firmwares canonicalise via the dispatcher. Pass-through.
@@ -602,12 +603,12 @@ No live symptom but documented for Phase 4 audit cross-check:
 
 No live symptom but documented for Phase 4 audit cross-check:
 
-- `write_nedap()` (lfwrite.py L216) delegates to `write_raw_t55xx()` — same T55xx write path as other B0+raw paths. No separate PM3 command emission.
-- `PAR_CLONE_MAP` (lfwrite.py L225) — dispatch table only, no PM3 commands of its own.
-- `B0_WRITE_MAP` (lfwrite.py L117-129) — T55xx block 0 config word literals. Source of truth: `lfwrite_strings.txt` exact extraction from Cython binary. 12 entries (VISA2000/VIKING/NORALSY/PRESCO/HID_PROX/AWID/PYRAMID/IO_PROX/KERI/JABLOTRON/GPROX_II/NEDAP). DATA, not divergence-sensitive.
-- `LOCK_UNAVAILABLE_LIST` (lfwrite.py L147) — empty list in v1.0.90; placeholder for future expansion. Dormant.
-- `check_detect()` (lfwrite.py L459) — delegates to `lft55xx.wipe_t()` / `detectT55XX()` / `chkT55xx()`. All PM3 command emission is inside `lft55xx` module (P3.5 scope). No direct emission from lfwrite.py.
-- `lfverify.verify_t55xx()` (lfverify.py L94) / `verify_em4x05()` (lfverify.py L130) — delegate to `lft55xx` / `lfem4x05` (P3.5 scope). Only `lf sea` falls back to direct executor emission.
+- `write_nedap()` (lfwrite.py L247) delegates to `write_raw_t55xx()` — same T55xx write path as other B0+raw paths. No separate PM3 command emission.
+- `PAR_CLONE_MAP` (lfwrite.py L256) — dispatch table only, no PM3 commands of its own.
+- `B0_WRITE_MAP` (lfwrite.py L132-145) — T55xx block 0 config word literals. Source of truth: `lfwrite_strings.txt` exact extraction from Cython binary. 12 entries (VISA2000/VIKING/NORALSY/PRESCO/HID_PROX/AWID/PYRAMID/IO_PROX/KERI/JABLOTRON/GPROX_II/NEDAP). DATA, not divergence-sensitive.
+- `LOCK_UNAVAILABLE_LIST` (lfwrite.py L168) — empty list in v1.0.90; placeholder for future expansion. Dormant.
+- `check_detect()` (lfwrite.py L565) — delegates to `lft55xx.wipe_t()` / `detectT55XX()` / `chkT55xx()`. All PM3 command emission is inside `lft55xx` module (P3.5 scope). No direct emission from lfwrite.py.
+- `lfverify.verify_t55xx()` (lfverify.py L101) / `verify_em4x05()` (lfverify.py L137) — delegate to `lft55xx` / `lfem4x05` (P3.5 scope). Only `lf sea` falls back to direct executor emission.
 
 ---
 

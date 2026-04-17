@@ -351,14 +351,16 @@ def write_raw(typ, raw, key=None):
 def write_dump_t55xx(file, key=None):
     """Restore T5577 dump from file, then verify by reading blocks back.
 
-    Iceman-native: `lf t55xx restore -f <path>`. CLI spec: cmdlft55xx.c:2775
-    CmdT55xxRestore / CLIParserInit "lf t55xx restore", argtable
+    Iceman-native: `lf t55xx restore -f <path>`. CLI spec: cmdlft55xx.c:2653
+    CmdT55xxRestore / CLIParserInit "lf t55xx restore" @ :2655, argtable
     arg_str0("f", "file", ...) + arg_str0("p", "pwd", ...). Dispatch at
     cmdlft55xx.c:4790. Iceman restore emits per-block writes via nested
-    CmdT55xxWriteBlock calls (cmdlft55xx.c:2735/2749/2763), then
-    `PrintAndLogEx(INFO, "Done!")` at cmdlft55xx.c:2771. Trace prefix was
+    CmdT55xxWriteBlock calls, then `PrintAndLogEx(INFO, "Done!")` at
+    cmdlft55xx.c:2771.  (Note: iceman HEAD has an orphaned v1 of
+    CmdT55xxRestore inside a `/* ... */` comment block starting at
+    :2774 — cite L2653 for the live function.)  Trace prefix was
     historically `lf t55xx restore f ...` (pre-canonicalisation); iceman
-    accepts BOTH `-f` and the bare-char form. Divergence matrix L1287.
+    accepts BOTH `-f` and the bare-char form.  Divergence matrix L1287.
 
     Ground truth: PM3 command log (original_current_ui write_t55xx_block_fail)
     shows the original lfwrite.so sends:

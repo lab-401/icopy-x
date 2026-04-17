@@ -94,14 +94,15 @@ TIMEOUT = 10000
 #   - `Block0\.+\s+([A-Fa-f0-9]+)` — NO `0x` prefix; iceman prints a raw
 #     hex dword after the dots.  Legacy adapter added `0x` before the
 #     refactor; the new regex is iceman-native and disregards `0x`.
-#   - `[Pp]assword\.{6,}\s+([A-Fa-f0-9]+)` — iceman `Password..........`
-#     with 10 dots; use `{6,}` to tolerate the shorter 6-dot
-#     `Password set.` line (which matches the same regex but captures
-#     `No`/`Yes` non-hex so the regex engine backtracks to skip it if
-#     scanned line-by-line).  Callers only invoke this regex when
-#     `Password` itself is present (the `usepwd` branch), so collisions
-#     are benign.  Additional trailing hex characters terminate at
-#     whitespace per `\s+`.
+#   - `[Pp]assword\.{8,}\s+([A-Fa-f0-9]+)` — iceman `Password..........`
+#     with 10 dots; use `{8,}` to REJECT the shorter 6-dot
+#     `Password set......` line which would otherwise match this regex
+#     and capture `No`/`Yes` non-hex (which then fails the
+#     `[A-Fa-f0-9]+` class).  `{8,}` cleanly excludes the 6-dot form
+#     without regex-engine backtracking.  Callers only invoke this
+#     regex when the `Password` line is present (the `usepwd` branch),
+#     so collisions are benign.  Additional trailing hex characters
+#     terminate at whitespace per `\s+`.
 _RE_CHIP_TYPE = r'Chip [Tt]ype\.+\s+(\S+)'
 _RE_MODULATE = r'Modulation\.+\s+(\S+)'
 _RE_BLOCK0 = r'Block0\.+\s+([A-Fa-f0-9]+)'
