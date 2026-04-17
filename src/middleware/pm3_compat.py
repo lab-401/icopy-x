@@ -1114,8 +1114,11 @@ _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'lf t55xx chk': [_normalize_t55xx_chk_password],
     'lf em 4x05 info': [_normalize_em4x05_info],
     'lf em 4x05_info': [_normalize_em4x05_info],
-    'lf em 4x05 dump': [_normalize_em4x05_info, _normalize_save_messages],
-    'lf em 4x05_dump': [_normalize_em4x05_info, _normalize_save_messages],
+    # em4x05 dump uses tolerant `[Ss]aved` regex (lfem4x05.py:313) so
+    # _normalize_save_messages is redundant here -- kept strict only for
+    # lf t55xx dump (lft55xx.py:557 uses capital `Saved` regex).
+    'lf em 4x05 dump': [_normalize_em4x05_info],
+    'lf em 4x05_dump': [_normalize_em4x05_info],
     'lf em 410x reader': [_normalize_em410x_id],
     'lf em 410x_read': [_normalize_em410x_id],
 }
