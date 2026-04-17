@@ -193,9 +193,76 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 
 ---
 
-## P3.2+ (placeholder)
+## P3.2 Read HF flow
 
-_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1 entries above._
+### Entry: hf mf darkside / hf mf nested key-extraction regression
+
+- **Middleware now iceman-native**:
+  - `hfmfkeys.darkside()` inline regex `r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]'` (hfmfkeys.py:282) — iceman `cmdhfmf.c:1275` emits `"Found valid key [ %012X ]"` (capital Found, bracketed, PRIX64 uppercase).
+  - `hfmfkeys.nestedOneKey()` inline regex `r'found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]'` (hfmfkeys.py:320) — iceman `mifare/mifarehost.c:686` emits `"Target block %4u key type %c -- found valid key [ %012X ]"` (lowercase "found", bracketed).
+  - `re.IGNORECASE` retained so either helper tolerates the counterpart's case. Matrix section `hf mf darkside` (divergence_matrix.md L687-707) + `hf mf nested` (L740-759).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1199-1211` `_normalize_darkside_key()` + `_RE_DARKSIDE_NEW = r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]'` rewrites iceman `"Found valid key [ AABBCCDDEEFF ]"` → legacy `"Found valid key: aabbccddeeff"` (lowercase, colon). Wired for `hf mf darkside` AND `hf mf nested` at `pm3_compat.py:1823-1824` (both normalizer lists include `_normalize_darkside_key`).
+- **Live symptom (iceman FW)**:
+  - `hfmfkeys.darkside()` returns -1 even when iceman emits a successful `Found valid key [ <hex> ]` line. The adapter rewrites the bracketed form to `Found valid key: <hex>` BEFORE the middleware regex runs; the middleware regex requires `[ ... ]` brackets, so the match fails.
+  - `hfmfkeys.nestedOneKey()` same root cause — the adapter targets the same line shape; any successful nested attack that emits via mifarehost.c:686 gets rewritten to the legacy colon shape and the iceman-native regex misses it.
+  - Observable: Read flow of a key-limited MF1K card succeeds on fchk (key-table still matches via 4-column `|` shape) but falls back to "total failure" when fchk is incomplete because darkside/nested can't extract keys. Read screen shows `M1-*_X_0.bin` with many empty sectors.
+  - `iceman_output.json` samples DO NOT surface this failure: 6 darkside samples are all "Card is not vulnerable" shape (no Found-valid-key line), and the 4 nested success samples still carry the bracketed form verbatim (adapter didn't fire when capture ran, or capture pre-dates adapter activation).
+- **Phase 4 action**:
+  - REMOVE `_normalize_darkside_key` from `_RESPONSE_NORMALIZERS['hf mf darkside']` (`pm3_compat.py:1823`).
+  - REMOVE `_normalize_darkside_key` from `_RESPONSE_NORMALIZERS['hf mf nested']` (`pm3_compat.py:1824`).
+  - The function can remain defined for legacy→iceman direction if/when a legacy FW emits the colon form and middleware needs bracketed — unlikely needed. Safer to delete entirely after confirming no other consumer.
+
+### Entry: hf mf rdbl / hf mf rdsc / hf mf cgetblk block-data regression (dormant)
+
+- **Middleware now iceman-native**:
+  - `hfmfread._RE_BLOCK_DATA_LINE = r'data:\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})'` (hfmfread.py:293-294) — iceman `mf_print_block_one` via sprint_hex (cmdhfmf.c:572/601/603) on the device's installed build still emits `"data: XX XX XX XX ..."` sprint_hex form. Verified by iceman_output.json `hf mf rdsc` (all 10 success samples), `hf mf cgetblk` (samples 8-9).
+  - `hfmfread._parse_blocks_from_text()` simplified to single-regex pass; legacy fallbacks (`_RE_BLOCK_DATA` continuous 32-hex, `_RE_BLOCK_SPACED` pipe-grid) removed.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1241-1268` `_normalize_rdbl_response()` + `_RE_RDBL_TABLE_ROW = r'^\s*(\d+)\s*\|\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})\s*\|.*$'` rewrites iceman-HEAD grid form `  0 | AA BB ... | ascii` → legacy-compatible `data: AA BB ...`. Wired for `hf mf rdbl`, `hf mf rdsc`, `hf mf cgetblk` at `pm3_compat.py:1827-1829`.
+  - `pm3_compat.py:1216-1234` `_normalize_wrbl_response()` rewrites `( ok )` / `( fail )` → `isOk:01` / `isOk:00`. Wired for `hf mf rdsc` at `pm3_compat.py:1828` (second entry in the list). This normalizer is WRITE-path; on rdsc it's dead weight — no rdsc response line contains those tokens.
+- **Live symptom**:
+  - DORMANT on the device's current iceman build. The adapter's `_RE_RDBL_TABLE_ROW` regex requires the HEAD grid `N | hex | ...` shape which the device's iceman does NOT emit; the `.sub()` never matches, leaving the existing `data: XX XX ...` lines intact. The iceman-native middleware regex matches correctly.
+  - Future-bump risk: if the device is ever flashed to /tmp/rrg-pm3 HEAD iceman, rdbl/rdsc/cgetblk will emit the grid form. `_normalize_rdbl_response` would then fire and rewrite to `data:` for the middleware. Since middleware-native regex is already `data:`, this is SAFE on firmware bump — no action required.
+- **Phase 4 action**:
+  - No change required immediately; both adapter and middleware point to the same `data:` form.
+  - OPTIONAL cleanup: remove `_normalize_wrbl_response` from `_RESPONSE_NORMALIZERS['hf mf rdsc']` (`pm3_compat.py:1828`) — rdsc never emits `Write ( ok )` / `( fail )`, so the normalizer is dead weight for that command.
+
+### Entry: hf mf fchk key-table regression (dormant)
+
+- **Middleware now iceman-native**:
+  - `hfmfkeys._RE_KEY_TABLE = r'\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|'` (hfmfkeys.py:235) — iceman 4-column `|`-bordered shape as emitted by the device's installed iceman build. Matrix section `hf mf fchk` v2 correction (divergence_matrix.md L711-736) confirmed via iceman_output.json dominant shape. TODO(Phase 4 / firmware bump) comment at hfmfkeys.py:227-233 explicitly flags the regex for re-audit if device iceman is upgraded to HEAD (which emits 5-column `+`-separated format, cmdhfmf.c:4966-5060 printKeyTable).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1160-1192` `_normalize_fchk_table()` + `_RE_FCHK_NEW_ROW` rewrites the HEAD 5-column `+`-separated row → 4-column `|`-bordered row. Wired for `hf mf fchk`, `hf mf chk`, `hf mf nested`, `hf mf staticnested` at `pm3_compat.py:1821-1825`.
+- **Live symptom**:
+  - DORMANT. The device's installed iceman emits the 4-column `|`-bordered shape directly; `_RE_FCHK_NEW_ROW` (which matches only the HEAD 5-column shape) never fires. iceman_output.json `hf mf fchk` samples 0 and 3 confirm device iceman emits rows like `| 000 | 484558414354   | 1 | a22ae129c013   | 1 |` — middleware-native regex matches verbatim, adapter is no-op.
+  - Future-bump risk: if device is upgraded, adapter will fire and rewrite to 4-column `|` form, middleware regex will match correctly. SAFE on firmware bump.
+- **Phase 4 action**:
+  - No change required. The adapter is a forward-compatibility helper — leave wired.
+
+### Entry: hf mfu dump / hf mfu info passthrough
+
+- **Middleware now iceman-native**:
+  - `hfmfuread.read()` keywords `"Can't select card"` (cmdhf14a.c:1817) and `"Partial dump created"` (cmdhfmfu.c:3769). No regex parsing of response body; success path uses os.path.exists on .bin file.
+  - `hfmfuinfo` subtype keywords preserved; iceman-native NTAG 213/215/216 verbatim substrings from cmdhfmfu.c:1034-1044.
+- **Adapter still running iceman→legacy**:
+  - `_RESPONSE_NORMALIZERS['hf mfu dump'] = [_normalize_save_messages]` (pm3_compat.py:1840) — lowercases `"Saved N bytes"` → `"saved N bytes"`. Dormant for hfmfuread which never parses the save line (verifies via filesystem).
+  - `_RESPONSE_NORMALIZERS['hf mfu info'] = []` (pm3_compat.py:1839) — no normalizers wired. scan.py matches iceman-native TYPE substrings verbatim.
+- **Live symptom**: NONE. Both commands pass through iceman-native text to middleware without adapter interference.
+- **Phase 4 action**: No change required.
+
+### Entry: P3.2 dormant keywords (informational)
+
+Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
+
+- `hfmfuread.py:127` `"Can't select card"` — emission IDENTICAL on both firmwares AFTER executor strip (matrix L900). Iceman HEAD's `ul_select()` (cmdhfmfu.c:386-409) logs at DEBUG only, so on HEAD this keyword would be dormant for the `hf mfu dump` path. Device's older iceman build may still route some failures through the 14a reader helper (cmdhf14a.c:1817). Kept as defensive check — no action needed unless device trace confirms zero emission on current build.
+- `hfmfkeys.onNestedCall(lines)` — pass-only stub (hfmfkeys.py:294). Legacy `.so` registered a progress callback for nested attacks; iceman emits `INPLACE` progress lines that the executor's PM3 wrapper discards. No wiring needed.
+
+---
+
+## P3.3+ (placeholder)
+
+_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2 entries above._
 
 ---
 
