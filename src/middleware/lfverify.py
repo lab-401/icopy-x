@@ -29,6 +29,16 @@ Ground truth:
     Spec:       docs/middleware-integration/6-write_spec.md
     Strings:    docs/v1090_strings/lfverify_strings.txt
 
+Compat-flip status (P3.6 Write LF):
+    The ONLY PM3 command this module emits directly is `lf sea` (the
+    fallback path when the `scan` module is unavailable). Iceman
+    accepts `lf sea` as a short-prefix alias for `lf search`
+    (CLIParserInit at cmdlf.c:1890); divergence matrix Appendix B
+    L1567 confirms both forks accept the short form. All other
+    verification steps delegate to tag-specific readers in
+    `lfread`/`lft55xx`/`lfem4x05` (P3.5 scope) or to the `scan`
+    module -- those modules carry their own P3.x refactor scope.
+
 API:
     verify(typ, uid_par, raw_par) -> int
     verify_t55xx(file) -> int
@@ -211,6 +221,9 @@ def verify(typ, uid_par, raw_par):
         if not _scan.isTagFound(result):
             return VERIFY_FAIL
     else:
+        # Fallback path: `scan` module unavailable. Iceman-native:
+        # `lf sea` == `lf search` short-prefix alias (cmdlf.c:1890
+        # CLIParserInit). Divergence matrix Appendix B L1567.
         ret = executor.startPM3Task('lf sea', 10000)
         if ret == -1:
             return VERIFY_FAIL
