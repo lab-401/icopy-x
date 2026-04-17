@@ -504,8 +504,18 @@ def reworkPM3All():
 
     Calls hmi_driver.restartpm3(), closes socket, sleeps 3s, reconnects.
     Strings: "restartpm3", "hmi_driver"
+
+    Clears CONTENT_OUT_IN__TXT_CACHE (2026-04-17): without this, a stale
+    response from the previous PM3 session lingers in the cache and later
+    callers reading via getPrintContent/hasKeyword/getContentFromRegex*
+    see phantom output. Observed during PC-mode teardown — the PM3 Raw
+    plugin returned a previous tag's "Felica select failed" response on
+    a fresh scan of a different tag. Rework implies cache-is-stale by
+    definition, so clear before reconnect.
     """
-    global _socket_instance
+    global _socket_instance, CONTENT_OUT_IN__TXT_CACHE
+
+    CONTENT_OUT_IN__TXT_CACHE = ''
 
     if hmi_driver is not None:
         try:
@@ -522,6 +532,22 @@ def reworkPM3All():
 
     time.sleep(3)
     connect2PM3()
+
+    # Force rftask to respawn its PM3 subprocess right here, rather than
+    # letting the next startPM3Task trigger an auto-recovery cascade
+    # (rework_max=2 × reworkManager retries). Factory audit §5 shows
+    # PM3 RUNNING immediately post-stop; matching that requires driving
+    # the respawn synchronously.
+    #
+    # Evidence (2026-04-17): before this change, stopPCMode left the
+    # rftask subprocess dead (killed by our empty-CTL handler on entry)
+    # and took ~112 s to stabilise through retry amplification. With
+    # this direct ctl=restart, the subprocess respawn is one deterministic
+    # step (~4 s).
+    try:
+        _send_ctrl('restart', timeout=8000)
+    except Exception:
+        pass
 
 # ===========================================================================
 # Callback management

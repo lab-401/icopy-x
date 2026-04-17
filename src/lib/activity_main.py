@@ -1890,36 +1890,79 @@ class PCModeActivity(BaseActivity):
         self.startBGTask(_do_stop)
 
     def startPCMode(self):
-        """Start PC mode: gadget + socat + PM3.
+        """Start PC mode: PM3 off -> gadget -> wait ttyGS0 -> socat.
 
-        From binary startPCMode():
-            1. gadget_linux.upan_and_serial()
-            2. start_socat()
-            3. wait_for_pm3_online()
-            4. hmi_driver.presspm3()
-            5. executor.startPM3Ctrl()
+        Ordering is critical. Evidence chain 2026-04-17:
+
+        - Factory ground truth (docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt §4):
+            dmesg [1484] PM3 USB disconnect  (PM3 gone)
+            dmesg [1488] PM3 USB reconnect   (ttyACM0 recreated)
+            dmesg [1491] g_acm_ms gadget ready
+          i.e. PM3 detaches BEFORE the gadget binds.
+
+        - Our prior reimpl ordered (gadget -> socat -> ... -> kill PM3).
+          At the moment start_socat() ran, the PM3 subprocess still held
+          /dev/ttyACM0 with O_EXCL (lsof 4uW). socat could not open
+          ttyACM0, exited instantly (DEVNULL stderr hid the reason),
+          and the PC client saw "cannot communicate".
+
+        New order (matches factory dmesg):
+          1. executor.startPM3Ctrl()        -> rftask empty-CTL tears
+                                               down PM3 subprocess,
+                                               releasing /dev/ttyACM0.
+          2. hmi_driver.presspm3()          -> GD32 resets PM3 so
+                                               /dev/ttyACM0 re-enumerates.
+          3. gadget_linux.upan_and_serial() -> unmount upan, modprobe
+                                               g_acm_ms (free UDC via
+                                               gadget_linux.upan_and_serial
+                                               unload-first block).
+          4. wait for /dev/ttyGS0 + /dev/ttyACM0 as char devices
+                                            -> kernel gadget enumeration
+                                               is async; this avoids
+                                               socat racing with O_CREAT
+                                               and leaving a regular file.
+          5. start_socat()                  -> both ttys are now char
+                                               devices and free.
         """
+        import stat as _stat, os as _os, time as _time
+
+        # 1. Kill PM3 subprocess so /dev/ttyACM0 is free for socat.
         try:
-            import gadget_linux
-            gadget_linux.upan_and_serial()
+            import executor
+            executor.startPM3Ctrl()
         except Exception:
             pass
 
-        self.start_socat()
-
-        self.wait_for_pm3_online()
-
+        # 2. Reset PM3 hardware (USB re-enumerate ttyACM0 cleanly).
         try:
             import hmi_driver
             hmi_driver.presspm3()
         except Exception:
             pass
 
+        # 3. Install g_acm_ms (unmount upan first).
         try:
-            import executor
-            executor.startPM3Ctrl()
+            import gadget_linux
+            gadget_linux.upan_and_serial()
         except Exception:
             pass
+
+        # 4. Wait for both endpoints to be real character devices.
+        #    Up to ~5s — matches typical USB re-enumeration + gadget bind.
+        def _is_chardev(p):
+            try:
+                return _stat.S_ISCHR(_os.stat(p).st_mode)
+            except Exception:
+                return False
+
+        for _ in range(50):
+            if _is_chardev('/dev/ttyGS0') and _is_chardev('/dev/ttyACM0'):
+                break
+            _time.sleep(0.1)
+
+        # 5. Bridge ttyGS0 <-> ttyACM0.
+        self.wait_for_pm3_online()
+        self.start_socat()
 
     def stopPCMode(self):
         """Stop PC mode: kill socat, gadget, restart PM3.
@@ -1940,11 +1983,13 @@ class PCModeActivity(BaseActivity):
         except Exception:
             pass
 
-        try:
-            import hmi_driver
-            hmi_driver.restartpm3()
-        except Exception:
-            pass
+        # Note: do NOT call hmi_driver.restartpm3() here.
+        # executor.reworkPM3All() below already invokes restartpm3()
+        # internally (executor.py:522). Calling both back-to-back
+        # triggers a USB disconnect/reconnect cascade that multiplies
+        # the rework cycle count (observed 2026-04-17: 7 USB
+        # enumeration cycles post-stop, PM3 subprocess didn't
+        # stabilise for ~112 s vs factory ~4 s).
 
         try:
             import executor
@@ -1961,13 +2006,25 @@ class PCModeActivity(BaseActivity):
         Live device confirmation: socat fd5=ttyGS0, fd6=ttyACM0
         Process tree: python3 → sh -c → sudo → socat (shell=True)
         See: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt §3
+
+        Instrumentation (2026-04-17): stderr routed to a file on the
+        rootfs (/root/pcmode_socat.log) instead of being discarded.
+        Prior reimpl used DEVNULL + bare `except: pass`, so if socat
+        failed instantly (e.g. because /dev/ttyACM0 was O_EXCL-locked by
+        the PM3 subprocess, or /dev/ttyGS0 was a leftover regular file)
+        there was no diagnostic. -d -d makes socat verbose.
         """
+        import subprocess
+        log_path = '/root/pcmode_socat.log'
         try:
-            import subprocess
+            stderr_fh = open(log_path, 'ab', buffering=0)
+        except Exception:
+            stderr_fh = subprocess.DEVNULL
+        try:
             self._process_socat = subprocess.Popen(
-                'sudo socat /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0',
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                'sudo socat -d -d /dev/ttyGS0,raw,echo=0 /dev/ttyACM0,raw,echo=0',
+                stdout=stderr_fh,
+                stderr=stderr_fh,
                 shell=True,
             )
             self._child_pid = self._process_socat.pid
