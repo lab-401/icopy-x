@@ -459,6 +459,7 @@ def parser():
             parts = uid_clean.split('-', 1)
             if len(parts) == 2:
                 seaObj['data'] = 'Country: %s' % parts[0]
+                seaObj['country'] = parts[0]
                 seaObj['nc'] = parts[1]
             else:
                 seaObj['data'] = uid_clean

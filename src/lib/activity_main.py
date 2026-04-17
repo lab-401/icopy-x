@@ -6086,6 +6086,8 @@ class SimulationActivity(BaseActivity):
             'FC:':  ('fc',),
             'CN:':  ('cn',),
             'Format:': ('len',),
+            'Country:': ('country',),
+            'NC:':  ('nc',),
         }
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
