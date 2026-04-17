@@ -609,16 +609,23 @@ def get_version():
 
 
 def needs_translation():
-    """Return True if translation may be needed in either direction.
+    """Return True if translation is required (LEGACY/ORIGINAL FW only).
 
-    During the compat flip transition:
-      - On iceman: forward rules still active for un-migrated modules
-      - On original: reverse rules active for migrated modules
-    After full migration + LEGACY_COMPAT=False, returns False always.
+    After Phase 4 compat flip, translate() and translate_response() are
+    pure no-ops on iceman FW (middleware is iceman-native).  The
+    _BLOCKED_CMDS_ICEMAN hardware-workaround substitution is handled
+    inside translate() itself and does not require needs_translation()
+    to report True.  Telemetry / callers gating on this predicate should
+    therefore see False on iceman FW.
+
+    Returns True only on ORIGINAL (factory) FW, where the reverse rule
+    set (iceman CLI-flag -> legacy positional) is active.
+
+    When LEGACY_COMPAT is False, always False.
     """
     if not LEGACY_COMPAT:
         return False
-    return _current_version in (PM3_VERSION_ICEMAN, PM3_VERSION_ORIGINAL)
+    return _current_version == PM3_VERSION_ORIGINAL
 
 
 def translate(cmd):

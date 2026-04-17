@@ -480,11 +480,17 @@ def run_reverse_only():
 # ---------------------------------------------------------------------------
 
 def run_needs_translation():
-    """Test needs_translation() with LEGACY_COMPAT=True and various versions."""
+    """Test needs_translation() with LEGACY_COMPAT=True and various versions.
+
+    Phase 4 tightened needs_translation() to ORIGINAL-only.  Iceman FW
+    translate()/translate_response() are no-ops so needs_translation()
+    returns False for ICEMAN.  _BLOCKED_CMDS_ICEMAN substitution is
+    handled inside translate() without relying on this predicate.
+    """
     _ensure_legacy_on()
 
     _set_version(pm3_compat.PM3_VERSION_ICEMAN)
-    _test('NEEDS_TRANS iceman', pm3_compat.needs_translation(), True)
+    _test('NEEDS_TRANS iceman', pm3_compat.needs_translation(), False)
 
     _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
     _test('NEEDS_TRANS original', pm3_compat.needs_translation(), True)
