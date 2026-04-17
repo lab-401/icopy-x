@@ -101,9 +101,21 @@ def upan_and_serial():
     STR@0x0001d2d0 " removable=1 stall=0") + live device confirmation
     (/sys/module/g_acm_ms/parameters/: file=/dev/mmcblk0p4, removable=Y, stall=N)
     See: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt §2
+
+    UDC pre-flight: the USB Device Controller can host only ONE gadget
+    driver at a time. If a prior gadget (g_mass_storage boot-default, or
+    g_serial from our post-PC-mode teardown) is still bound, g_acm_ms
+    gets queued pending and never enumerates — the PC sees no ttyGS0
+    and PC-mode silently fails. Confirmed live 2026-04-17 via dmesg:
+    "udc-core: couldn't find an available UDC - added [g_acm_ms] to list
+    of pending drivers" while g_mass_storage remained bound. Unload
+    every possible prior gadget before loading g_acm_ms.
     """
     logger.debug("gadget_linux: upan_and_serial()")
     try:
+        # Free the UDC. modprobe -r on an unloaded module is a no-op.
+        for mod in ('g_serial', 'g_mass_storage', 'g_ether', 'g_acm_ms'):
+            os.system('sudo modprobe -r %s 2>/dev/null' % mod)
         umount_upan_partition()
         partition = get_upan_partition()
         os.system('sudo modprobe g_acm_ms file=%s removable=1 stall=0' % partition)
