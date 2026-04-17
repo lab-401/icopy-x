@@ -141,14 +141,16 @@ _BLOCKED_CMDS_ICEMAN = frozenset({
 
 
 # ---------------------------------------------------------------------------
-# Reverse translation rules (iceman → factory/original)
+# Command translation rules (iceman → factory/original).
 #
-# Used when running on original (factory) firmware with middleware modules
-# that have been migrated to iceman syntax.  Converts iceman CLI-flag
-# commands back to old-style positional syntax the factory PM3 understands.
+# Active only on LEGACY (factory) firmware.  Middleware is iceman-native
+# after Phase 3, so these rules are the single-direction translator that
+# converts iceman CLI-flag commands back to the positional-arg syntax
+# legacy PM3 understands.
 #
-# Populated flow-by-flow as middleware modules are migrated.
-# Rules are tried in order; first match wins.
+# Rules are tried in order; first match wins.  Patterns are anchored to
+# iceman-native command syntax so they never match a command that has
+# already been translated down to legacy form (idempotent).
 # ---------------------------------------------------------------------------
 
 def _reverse_mf_rdbl(m):
@@ -232,7 +234,7 @@ def _reverse_t55xx_read_page1(m):
     return 'lf t55xx read b %s p %s o 1' % (m.group(1), m.group(2))
 
 
-_REVERSE_TRANSLATION_RULES = [
+_COMMAND_TRANSLATION_RULES = [
     # -----------------------------------------------------------------------
     # Flow 1: Scan — reverse rules (iceman → factory)
     # -----------------------------------------------------------------------
@@ -647,7 +649,7 @@ def translate(cmd):
     # Legacy (factory) firmware: convert iceman CLI-flag syntax to legacy
     # positional form.  Middleware emits iceman form; factory PM3 needs
     # old positional commands.
-    for pattern, replacement in _REVERSE_TRANSLATION_RULES:
+    for pattern, replacement in _COMMAND_TRANSLATION_RULES:
         m = pattern.match(stripped)
         if m:
             if callable(replacement):
