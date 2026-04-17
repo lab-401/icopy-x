@@ -395,10 +395,39 @@ class RemoteTaskManager:
         """Handle control commands.
 
         Binary: request_task_ctl closure. String "restart" confirmed in binary.
+
+        Empty CTL payload (sent by PCModeActivity.startPCMode via
+        executor.startPM3Ctrl with default empty arg) instructs rftask to
+        tear down the PM3 subprocess so socat can claim /dev/ttyACM0
+        exclusively for the PC-mode USB-gadget bridge. Without this,
+        proxmark3 -w --flush and socat both hold the tty, their reads
+        interleave, and the PC client sees truncated/corrupted frames
+        (symptoms observed 2026-04-17: "Received packet OLD frame with
+        payload too short? 258/534", "frame preamble too short: 2/10",
+        hf search failures).
+
+        Factory ground truth: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt
+          §1 "PM3 subprocess: NOT RUNNING (killed/gone during PC Mode)"
+          §5 post-stop PM3 back to RUNNING state
+
+        The subprocess is restored later by PCModeActivity.stopPCMode() ->
+        executor.reworkPM3All() -> reworkManager(), which fully re-spawns
+        proxmark3 and the reader thread.
+
+        Only the subprocess + reader thread are torn down here. The TCP
+        server thread stays listening (factory audit §1: "RTM (port 8888):
+        STILL LISTENING").
         """
         if ctl == 'restart':
             self.reworkManager()
             return 'OK'
+
+        if ctl == '':
+            self._has_manager = False
+            self._destroy_read_thread()
+            self._destroy_subprocess()
+            return 'OK'
+
         return ''
 
     def _request_task_plt(self, plt_cmd):
