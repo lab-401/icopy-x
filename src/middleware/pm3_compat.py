@@ -1021,6 +1021,23 @@ def _normalize_iclass_wrbl(text):
     return _RE_LEGACY_ICLASS_WROTE.sub(_lg_replace, text)
 
 
+# -- hf mf rdsc / rdbl: legacy grid `N | XX XX ... XX` -> iceman `data: XX XX ... XX` --
+
+# LEGACY: cmdhfmf.c factory fork emits each block as `%3d | %s` (decimal block
+#         number + 16-byte grid shape).  Example from trace:
+#             `  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22`
+# ICEMAN: cmdhfmf.c:572/603 sprint_hex via mf_print_block_one emits `data: %s`.
+# Middleware `hfmfread._RE_BLOCK_DATA_LINE` matches iceman `data:` shape only.
+_RE_LEGACY_MF_BLOCK_GRID = re.compile(
+    r'^\s*\d{1,3}\s*\|\s+((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})',
+    re.MULTILINE)
+
+
+def _normalize_mf_block_grid(text):
+    """Rewrite legacy `  N | XX XX ... XX` block lines -> iceman `data: XX ...`."""
+    return _RE_LEGACY_MF_BLOCK_GRID.sub(r'data: \1', text)
+
+
 # -- hf iclass rdbl: legacy ' block NN : <hex>' -> iceman ' block N/0xNN : <hex>' --
 
 # LEGACY: cmdhficlass.c:2399 `" block %02X : <hex>"` (capital-hex block number).
@@ -1100,6 +1117,8 @@ def _normalize_felica_reader(text):
 _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'hf mf wrbl': [_normalize_wrbl_response],
     'hf mf restore': [_normalize_wrbl_response],
+    'hf mf rdbl': [_normalize_mf_block_grid],
+    'hf mf rdsc': [_normalize_mf_block_grid],
     'hf 15 restore': [_normalize_hf15_restore],
     'hf 15 csetuid': [_normalize_hf15_csetuid],
     'hf iclass rdbl': [_normalize_iclass_rdbl],
