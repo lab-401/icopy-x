@@ -121,12 +121,24 @@ def upan_or_both(mod=None):
 
 
 def kill_all_module(auto_remount=True):
-    """Remove all USB gadget kernel modules.
+    """Remove all USB gadget kernel modules, then restore the baseline gadget.
 
     Args:
         auto_remount: if True, remount UPAN partition after cleanup (default True)
 
     This is the main teardown function called by PCModeActivity.stopPCMode().
+
+    Factory audit ground truth
+      docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt
+        §4 dmesg: "[1891] g_serial gadget: g_serial ready (loaded during cleanup)"
+        §5 POST-STOP STATE: "Kernel module: g_serial (NOT g_acm_ms)"
+
+    Factory's teardown UNLOADS the composite g_acm_ms and then LOADS g_serial
+    as the baseline gadget. Leaving the USB-C in a no-gadget state (our prior
+    behaviour) breaks the USB controller until the device reboots — user-
+    reported symptom 2026-04-17: "USB-C hub no longer works after PC-mode
+    until I reboot". Restoring g_serial re-initialises the USB gadget layer
+    cleanly.
     """
     logger.debug("gadget_linux: kill_all_module(auto_remount=%s)", auto_remount)
     try:
@@ -143,6 +155,12 @@ def kill_all_module(auto_remount=True):
         pass
     try:
         os.system('sudo modprobe -r g_ether')
+    except Exception:
+        pass
+    # Factory: reload g_serial as baseline gadget so USB controller is not
+    # left orphaned. See audit §4/§5 cited above.
+    try:
+        os.system('sudo modprobe g_serial')
     except Exception:
         pass
     if auto_remount:
