@@ -58,11 +58,9 @@
                 "title": "Erase Tag",
                 "content": {"type": "empty"},
                 "toast": {"text": "Erase successful", "icon": "check", "timeout": 0},
-                "buttons": {"left": "Erase", "right": "Erase"},
+                "buttons": {"left": "", "right": "Erase"},
                 "keys": {
-                    "M1": "run:startErase",
                     "M2": "run:startErase",
-                    "OK": "run:startErase",
                     "PWR": "finish"
                 }
             }
@@ -72,11 +70,9 @@
                 "title": "Erase Tag",
                 "content": {"type": "empty"},
                 "toast": {"text": "Erase failed", "icon": "error", "timeout": 0},
-                "buttons": {"left": "Erase", "right": "Erase"},
+                "buttons": {"left": "", "right": "Erase"},
                 "keys": {
-                    "M1": "run:startErase",
                     "M2": "run:startErase",
-                    "OK": "run:startErase",
                     "PWR": "finish"
                 }
             }
@@ -86,11 +82,9 @@
                 "title": "Erase Tag",
                 "content": {"type": "empty"},
                 "toast": {"text": "No valid keys\uff0cPlease use 'Auto Copy' first, Then erase", "icon": "error", "timeout": 0},
-                "buttons": {"left": "Erase", "right": "Erase"},
+                "buttons": {"left": "", "right": "Erase"},
                 "keys": {
-                    "M1": "run:startErase",
                     "M2": "run:startErase",
-                    "OK": "run:startErase",
                     "PWR": "finish"
                 }
             }
@@ -100,11 +94,9 @@
                 "title": "Erase Tag",
                 "content": {"type": "empty"},
                 "toast": {"text": "Erase Failed: ACL Locked Sectors", "icon": "error", "timeout": 0},
-                "buttons": {"left": "Erase", "right": "Erase"},
+                "buttons": {"left": "", "right": "Erase"},
                 "keys": {
-                    "M1": "run:startErase",
                     "M2": "run:startErase",
-                    "OK": "run:startErase",
                     "PWR": "finish"
                 }
             },

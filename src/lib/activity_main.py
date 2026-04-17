@@ -2866,8 +2866,9 @@ class WipeTagActivity(BaseActivity):
 
         elif self._state in (self.STATE_SUCCESS, self.STATE_FAILED,
                              self.STATE_NO_KEYS):
-            # M1/M2/OK: re-erase with saved type (state table)
-            if key in (KEY_M1, KEY_M2, KEY_OK):
+            # Only M2 ("Erase") triggers re-erase.  M1 is unset in these
+            # result states — the UI shouldn't show two identical buttons.
+            if key == KEY_M2:
                 self._startErase()
             elif key == KEY_PWR:
                 if self._handlePWR():
@@ -3046,57 +3047,41 @@ class WipeTagActivity(BaseActivity):
         if self._progress is not None:
             self._progress.hide()
 
+        # Restore buttons FIRST so Toast's "don't dim the button bar" check
+        # sees the action-bar background on the canvas.  If the toast is
+        # shown before the buttons are drawn, the dim overlay covers the
+        # whole screen and the Erase label appears greyed out.
+        # M2="Erase", M1 unset — avoid two identically-labelled buttons
+        # for a single action.
+        self.setLeftButton('')
+        self.setRightButton(resources.get_str('wipe'))
+
         # Show result toast
         if result == 'success':
             self._state = self.STATE_SUCCESS
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_success'),
-                    mode=Toast.MASK_CENTER,
-                    icon='check',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('wipe_success')
+            toast_icon = 'check'
         elif result == 'no_keys':
             self._state = self.STATE_NO_KEYS
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_no_valid_keys'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('wipe_no_valid_keys')
+            toast_icon = 'error'
         elif result == 'no_tag':
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('no_tag_found'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('no_tag_found')
+            toast_icon = 'error'
         elif result == 'error':
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('err_at_wiping'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('err_at_wiping')
+            toast_icon = 'error'
         else:
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_failed'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
-
-        # Restore buttons: M1="Erase", M2="Erase"
-        # Ground truth: screenshots menu_6, unknown_error
-        self.setLeftButton(resources.get_str('wipe'))
-        self.setRightButton(resources.get_str('wipe'))
+            toast_msg = resources.get_str('wipe_failed')
+            toast_icon = 'error'
+        if self._toast is not None:
+            self._toast.show(
+                toast_msg, mode=Toast.MASK_CENTER,
+                icon=toast_icon, duration_ms=0,
+            )
 
     @property
     def state(self):

@@ -1322,9 +1322,16 @@ class Toast:
 
         # --- Build RGBA mask: dim + toast box + icon ---
         # Ground truth (user-observed on original device): when the action bar
-        # is visible, the dim overlay does NOT cover the buttons.
+        # is visible, the dim overlay does NOT cover the buttons so the
+        # Rescan/Erase/etc label stays fully readable.
+        # The legacy constant TAG_BTN_BG ('tags_btn_bg') was never drawn by
+        # the current renderer (which uses 'button_bar' instead), so the
+        # check below always missed and the mask covered the whole screen.
+        # Match both tag names so this works no matter which renderer path
+        # created the bar.
         from lib._constants import TAG_BTN_BG, BTN_BAR_Y0
-        has_btn_bar = bool(self._canvas.find_withtag(TAG_BTN_BG))
+        has_btn_bar = bool(self._canvas.find_withtag(TAG_BTN_BG)) or \
+                      bool(self._canvas.find_withtag('button_bar'))
         dim_h = BTN_BAR_Y0 if has_btn_bar else H
 
         mask = Image.new('RGBA', (W, H), (0, 0, 0, 0))
