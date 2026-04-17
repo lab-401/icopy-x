@@ -24,6 +24,44 @@
 
 Reimplemented from lfread.so (iCopy-X v1.0.90).
 Ground truth: archive/lib_transliterated/lfread.py
+
+Iceman-native command forms (P3.5 refactor, 2026-04-17):
+  - Every per-tag dispatcher uses iceman `lf <tag> reader` spelling
+    (matrix L1213-1237 consolidated 19-row section).  Iceman source:
+    /tmp/rrg-pm3/client/src/cmdlf<tag>.c dispatch tables — each entry
+    `{"reader", Cmd<Tag>Reader, IfPm3Lf, ...}`.  Matrix verifies:
+      - lf em 410x reader   cmdlfem410x.c:891    (matrix L1075)
+      - lf hid reader       cmdlfhid.c:723       (matrix L1160)
+      - lf indala reader    cmdlfindala.c:1102   (matrix L1225)
+      - lf awid reader      cmdlfawid.c:605      (matrix L998)
+      - lf io reader        cmdlfio.c:373        (matrix L1226)
+      - lf gproxii reader   cmdlfguard.c:417     (matrix L1227)
+      - lf securakey reader cmdlfsecurakey.c:300 (matrix L1228)
+      - lf viking reader    cmdlfviking.c:248    (matrix L1229)
+      - lf pyramid reader   cmdlfpyramid.c:451   (matrix L1230)
+      - lf fdxb reader      cmdlffdxb.c:908      (matrix L1110)
+      - lf gallagher reader cmdlfgallagher.c:386 (matrix L1144)
+      - lf jablotron reader cmdlfjablotron.c:317 (matrix L1223)
+      - lf keri reader      cmdlfkeri.c:375      (matrix L1231)
+      - lf nedap reader     cmdlfnedap.c:569     (matrix L1232)
+      - lf noralsy reader   cmdlfnoralsy.c:291   (matrix L1224)
+      - lf pac reader       cmdlfpac.c:401       (matrix L1233)
+      - lf paradox reader   cmdlfparadox.c:477   (matrix L1234)
+      - lf presco reader    cmdlfpresco.c:363    (matrix L1235)
+      - lf visa2000 reader  cmdlfvisa2000.c:306  (matrix L1236)
+      - lf nexwatch reader  cmdlfnexwatch.c:585  (matrix L1237)
+  - Parsers consume `lfsearch.REGEX_*` (refactored to iceman-native in
+    P3.1; see lfsearch.py header) via the shared `read()` / `readCardIdAndRaw`
+    / `readFCCNAndRaw` helpers.
+  - Per-tag FC/CN shape caveats (iceman-native Raw: always present,
+    FC/CN sometimes omitted — matrix L1213): Gallagher emits
+    `Facility: %u Card No.: %u` not `FC: %u Card: %u` (cmdlfgallagher.c:88),
+    KERI emits `Internal ID: %u, Raw:` not `Card:` (cmdlfkeri.c:176),
+    NEDAP emits `ID: %05u subtype: %1u customer code:` (cmdlfnedap.c:146),
+    Presco emits `Site code:/User code:` (cmdlfpresco.c:114), NexWatch
+    emits only `Raw :` (cmdlfnexwatch.c:247).  Callers accept empty
+    FC/CN; fallback to `Raw:` via `lfsearch.REGEX_RAW` keeps success
+    status truthy when a raw field is present.  See gap log P3.5.
 """
 
 try:
@@ -66,6 +104,29 @@ def createRetObj(uid, raw, ret):
 
 
 def read(cmd, uid_regex, raw_regex, uid_index=0, raw_index=0):
+    """Generic LF per-tag reader driver.
+
+    Sends `cmd` (an iceman-native `lf <tag> reader` string; see module
+    docstring citations), parses cached PM3 response with the shared
+    iceman-native regex patterns in lfsearch.
+
+    Regex patterns imported via `lfsearch.REGEX_*` are iceman-native as of
+    P3.1 refactor (see lfsearch.py module header):
+      REGEX_RAW     r'(?:Raw|raw):\\s*([xX0-9a-fA-F ]+)' matches iceman
+                    `, Raw: <hex>` (cmdlf*.c demod emission) and iceman
+                    HID lowercase `raw: <hex>` (cmdlfhid.c:235).
+      REGEX_CARD_ID r'(?:Card|ID|UID)[\\s:]+([xX0-9a-fA-F ]+)' matches
+                    iceman `Card: %u` (Jablotron/Noralsy/Paradox/PAC),
+                    `Card %X` (Viking, space-no-colon), `ID: %u` (Paradox
+                    Internal ID), `UID... %s` (Indala).
+      REGEX_EM410X  r'EM 410x(?:\\s+XL)?\\s+ID\\s+([0-9A-Fa-f]+)' matches
+                    iceman `EM 410x ID %010llX` (cmdlfem410x.c:115) and
+                    XL variant at :118.
+      REGEX_HID     r'raw:\\s+([0-9A-Fa-f]+)' matches iceman
+                    `raw: %08x%08x%08x` (cmdlfhid.c:235).
+      REGEX_ANIMAL  r'Animal ID\\.+\\s+([0-9\\-]+)' matches iceman
+                    `Animal ID........... %03u-%012llu` (cmdlffdxb.c:572/578).
+    """
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return createRetObj(None, None, -1)
@@ -86,11 +147,37 @@ def read(cmd, uid_regex, raw_regex, uid_index=0, raw_index=0):
 
 
 def readCardIdAndRaw(cmd, uid_index=0, raw_index=0):
+    """Iceman-native per-tag: parse `Card|ID|UID` + `Raw:` from cache.
+
+    Used by: Viking, ProxIO, Jablotron, Nedap, Noralsy, PAC, Presco,
+    Visa2000, NexWatch.  Shape spec: lfsearch.REGEX_CARD_ID /
+    REGEX_RAW (iceman-native, see lfsearch.py module header).
+    """
     return read(cmd, lfsearch.REGEX_CARD_ID, lfsearch.REGEX_RAW,
                 uid_index=uid_index, raw_index=raw_index)
 
 
 def readFCCNAndRaw(cmd, uid_index=0, raw_index=0):
+    """Iceman-native per-tag: parse `FC: %d Card: %u` + `Raw:` from cache.
+
+    Used by: AWID (cmdlfawid.c:248), GProx-II (cmdlfguard.c:186),
+    Securakey (cmdlfsecurakey.c:113), Pyramid (cmdlfpyramid.c:161),
+    Keri (cmdlfkeri.c:176 — `Internal ID:` only, no FC/CN),
+    Gallagher (cmdlfgallagher.c:88 — `Facility:`/`Card No.:` not
+    `FC:`/`Card:`), Paradox (cmdlfparadox.c:224).
+
+    Iceman-native FC/CN regex lives in lfsearch.py:
+      _RE_FC = r'FC:\\s+([xX0-9a-fA-F]+)'
+      _RE_CN = r'(CN|Card(?:\\s+No\\.)?)[\\s:]+(\\d+)'
+
+    Per matrix L1213 + iceman source audit: Keri/Gallagher/Nedap/Presco/
+    NexWatch emit alternative field labels; lfsearch._RE_FC won't match
+    `Facility:` (Gallagher) and `_RE_CN` won't match `Internal ID:`
+    (Keri) or `ID:` alone (Nedap, plus subtype/customer).
+    `getFCCN()` falls back to `'FC,CN: X,X'` sentinel when regex misses,
+    keeping `uid` truthy so caller's `if uid or raw:` still returns
+    success when Raw: is present. See gap log P3.5.
+    """
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return createRetObj(None, None, -1)
