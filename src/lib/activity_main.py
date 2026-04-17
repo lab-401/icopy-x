@@ -5943,6 +5943,7 @@ class SimulationActivity(BaseActivity):
         self._sim_stopping = False
         self._auto_start = False
         self._defdata = None
+        self._defbundle = None
         self._trace_data = None
         self._last_pm3_cmd = None
         super().__init__(bundle)
@@ -5971,6 +5972,11 @@ class SimulationActivity(BaseActivity):
                     # Extract UID/data using the appropriate parser
                     data_key = self._sim_entry[4]  # 'uid', 'data', 'fccn', etc.
                     self._defdata = bundle.get('uid', bundle.get('data', ''))
+                    # Keep the full scan bundle so _showSimUi can populate
+                    # multi-field forms (FC/CN/Subtype/etc.) from individual
+                    # keys (bundle['fc'], bundle['cn'], ...) rather than
+                    # stuffing the formatted 'data' string into field 0.
+                    self._defbundle = bundle
                     self._auto_start = True
                     self._showSimUi()
                     self._startSimForData()
@@ -6065,14 +6071,36 @@ class SimulationActivity(BaseActivity):
         fields = SIM_FIELDS.get(draw_key, [])
         from lib.widget import SimFields
         self._sim_fields = SimFields(canvas, y_start=78)
+        # Label → scan-cache bundle key.  When the activity was entered
+        # from a scan (self._defbundle is set), the field's default is
+        # replaced by the matching cache key.  Without this lookup every
+        # scanned multi-field tag (Pyramid, AWID, KERI, IOProx, GProxII,
+        # Paradox, etc.) stuffed the formatted display string
+        # (e.g. "FC,CN: 153,39312") into field 0 and the PM3 sim command
+        # then rejected the bad input.  Labels that aren't mapped fall
+        # through to the widget default — avoids corrupting Nedap/FDX
+        # specific fields when we don't know the cache-key naming.
+        _LABEL_TO_CACHE_KEY = {
+            'UID:': ('uid', 'data'),
+            'ID:':  ('data', 'raw'),
+            'FC:':  ('fc',),
+            'CN:':  ('cn',),
+            'Format:': ('len',),
+        }
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
-            # Ground truth (original trace line 52): when entering from
-            # Scan/Dump, the UID from the scan cache replaces the first
-            # field's default.  Original: PM3> hf 14a sim t 1 u DAEFB416
-            # OSS bug: was using default '12345678' instead.
             val = default
-            if i == 0 and self._defdata:
+            # Prefer per-label lookup from scan bundle when available.
+            if isinstance(self._defbundle, dict):
+                for k in _LABEL_TO_CACHE_KEY.get(label, ()):
+                    v = self._defbundle.get(k)
+                    if v not in (None, '', 'X'):  # 'X' = lfsearch "unknown FC"
+                        val = v
+                        break
+            # Fallback: legacy single-defdata path (first field only)
+            # preserves behaviour for non-scan entrypoints (Dump Files)
+            # where the bundle has {'sim_index': N, 'defdata': '...'}.
+            elif i == 0 and self._defdata:
                 val = self._defdata
             self._sim_fields.addField(label, val, fmt, max_val)
         self._sim_fields.show()
