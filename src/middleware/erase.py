@@ -179,8 +179,18 @@ def _erase_std_m1(info_cache, on_progress=None):
     if on_progress:
         on_progress('chkdic', 0, 0)
     size_flag = {0: '--mini', 1: '--1k', 2: '--2k', 4: '--4k'}.get(mf_type, '--1k')
+    # Ensure the MF Classic key dictionary file exists on disk —
+    # iceman PM3 fails with "can't find .dic" otherwise.  hfmfkeys.fchks()
+    # normally generates it during reads, but erase may run cold (no
+    # prior read in this boot) and /tmp is volatile across reboots.
+    key_file = '/tmp/.keys/mf_tmp_keys.dic'
+    try:
+        import hfmfkeys as _hfmfkeys
+        key_file = _hfmfkeys.genKeyFile('', list(_hfmfkeys.DEFAULT_KEYS))
+    except Exception:
+        pass
     ret = executor.startPM3Task(
-        'hf mf fchk %s -f /tmp/.keys/mf_tmp_keys' % size_flag, 600000)
+        'hf mf fchk %s -f %s' % (size_flag, key_file), 600000)
     cache = getattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '') or ''
 
     # Check if any keys were found
@@ -370,8 +380,17 @@ def erase_t5577():
 
     # Step 5: Password brute force (last resort)
     # Trace: lf t55xx chk f /tmp/.keys/t5577_tmp_keys (timeout=180000)
-    executor.startPM3Task(
-        'lf t55xx chk -f /tmp/.keys/t5577_tmp_keys', 180000)
+    # lft55xx.genKeyFile writes the 107 default T5577 keys (same set the
+    # original factory firmware used — confirmed via real-device trace).
+    # It returns the full path (ending in .dic so iceman's
+    # loadFileDICTIONARY_safe finds it without auto-appending the suffix).
+    key_file = '/tmp/.keys/t5577_tmp_keys.dic'
+    try:
+        import lft55xx as _lft55xx
+        key_file = _lft55xx.genKeyFile(_lft55xx.DEFAULT_KEYS.split('\n'))
+    except Exception:
+        pass
+    executor.startPM3Task('lf t55xx chk -f %s' % key_file, 180000)
 
     # All strategies failed
     return 'failed'

@@ -219,13 +219,17 @@ def call_listener(listener, max_value, progress, state='read'):
 def genKeyFile(keys):
     """Generate a temporary key file from a list of keys.
 
-    QEMU-verified: creates file in /tmp/.keys/ directory,
-    writes one key per line (skipping comments/empty).
-    Returns the file path.
+    Writes to /tmp/.keys/t5577_tmp_keys.dic — the .dic suffix is
+    required because iceman PM3's loadFileDICTIONARY_safe() always
+    appends .dic when searching (filenamemcopy in fileutils.c).
+    Factory PM3 accepted the bare filename, so this file name change
+    is iceman-specific.  Returns the full path (caller passes it to
+    `lf t55xx chk -f <path>`; iceman skips the .dic append because
+    the name already ends with it).
     """
     keys_dir = '/tmp/.keys'
     os.makedirs(keys_dir, exist_ok=True)
-    tmp_keys_file = os.path.join(keys_dir, 't5577_tmp_keys')
+    tmp_keys_file = os.path.join(keys_dir, 't5577_tmp_keys.dic')
     with open(tmp_keys_file, 'w') as f:
         for line in keys:
             line = line.strip()
