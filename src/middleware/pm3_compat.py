@@ -1165,39 +1165,38 @@ def _post_normalize(text):
 
 
 # ===========================================================================
-# Layer 2: Command-specific response normalizations
+# Layer 2: Command-specific LEGACY->ICEMAN normalizers.
+#
+# Fire only when _current_version == PM3_VERSION_ORIGINAL (legacy factory
+# firmware).  Middleware is iceman-native after Phase 3; these rewriters
+# bring legacy FW output UP to iceman shape so middleware regex matches.
+#
+# Each entry cites:
+#   LEGACY: /tmp/factory_pm3/client/src/<file>:<line>  (what factory emits)
+#   ICEMAN: /tmp/rrg-pm3/client/src/<file>:<line>     (what middleware expects)
 # ===========================================================================
 
-# -- Track B: fchk table normalization --
+# -- hf mf fchk table (device firmware-bump forward compat) --
 
-# New fchk table row: " 000 | 003 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1"
-# Old fchk table row: "| 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |"
+# HEAD iceman row: " 000 | 003 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1"
+# Device iceman emits 4-col `| 000 | ... |` verbatim (no rewrite needed).
+# Keep normalizer defined for the 5-col->4-col conversion when iceman HEAD
+# flashes (unwired by default; wired for `hf mf fchk/chk/nested/staticnested`
+# as forward-compat bump guard).  Gap log P3.2 dormant entry.
 _RE_FCHK_NEW_ROW = re.compile(
     r'^\s*(\d{3})\s*\|\s*\d{3}\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d)',
     re.MULTILINE)
-
-# New fchk separator: "-----+-----+--------------+---+--------------+----"
-_RE_FCHK_NEW_SEP = re.compile(
-    r'^-{3,}\+.*$', re.MULTILINE)
-
-# New fchk header: " Sec | Blk | key A        |res| key B        |res"
-_RE_FCHK_NEW_HDR = re.compile(
-    r'^\s*Sec\s*\|\s*Blk\s*\|.*$', re.MULTILINE)
+_RE_FCHK_NEW_SEP = re.compile(r'^-{3,}\+.*$', re.MULTILINE)
+_RE_FCHK_NEW_HDR = re.compile(r'^\s*Sec\s*\|\s*Blk\s*\|.*$', re.MULTILINE)
 
 
 def _normalize_fchk_table(text):
-    """Normalize RRG fchk key table to old pipe-bordered format.
+    """Rewrite iceman HEAD 5-col fchk table to 4-col for middleware.
 
-    New: ' 000 | 003 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1'
-    Old: '| 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |'
-
-    Key changes:
-    - Remove Blk column
-    - Add pipe borders
-    - Lowercase hex keys (old used PRIx64, new uses PRIX64)
-    - Adjust spacing
+    HEAD iceman (cmdhfmf.c:4966-5060 printKeyTable): 5-col +-separated.
+    Device iceman (older build): 4-col |-bordered.  Middleware targets
+    4-col (`hfmfkeys._RE_KEY_TABLE`).  Firmware-bump forward compat.
     """
-    # Replace data rows
     def _fchk_row_replace(m):
         sec = m.group(1)
         key_a = m.group(2).lower()
@@ -1208,307 +1207,257 @@ def _normalize_fchk_table(text):
             sec, key_a, res_a, key_b, res_b)
 
     text = _RE_FCHK_NEW_ROW.sub(_fchk_row_replace, text)
-
-    # Replace separators
     text = _RE_FCHK_NEW_SEP.sub(
         '|-----|----------------|---|----------------|---|', text)
-
-    # Replace header
     text = _RE_FCHK_NEW_HDR.sub(
         '| Sec | key A          |res| key B          |res|', text)
-
     return text
 
 
-# -- Track C: wrbl/rdsc/restore isOk normalization --
+# -- hf mf wrbl / restore: legacy isOk -> iceman Write ( ok/fail ) --
 
+# LEGACY: cmdhfmf.c:716,825,1307 `PrintAndLogEx(SUCCESS, "isOk:%02x", isOK)`.
+# ICEMAN: cmdhfmf.c:1389,9677,9760 `PrintAndLogEx(SUCCESS, "Write ( ok )")`.
+# Middleware `hfmfwrite._KW_WRBL_SUCCESS = r'Write \( ok \)'`.
 def _normalize_wrbl_response(text):
-    """Normalize wrbl/rdsc/restore response format.
+    """Rewrite legacy `isOk:01`/`isOk:00` -> iceman `Write ( ok )`/`Write ( fail )`.
 
-    New: 'Write ( ok )' / 'Write ( fail )'
-    Old: 'isOk:01' / 'isOk:00'
-
-    Also handles restore table rows:
-    New: ' N | data... | ( ok )' / '( fail )'
+    Also rewrites `hf mf restore` table rows where legacy emits `| isOk:XX`.
     """
-    # wrbl success
-    text = text.replace('Write ( ok )', 'isOk:01')
-    text = text.replace('Write ( fail )', 'isOk:00')
-
-    # restore rows: "( ok )" -> "isOk:01", "( fail )" -> "isOk:00"
-    # Be careful not to replace other "(ok)" patterns
-    text = re.sub(r'\(\s*ok\s*\)', 'isOk:01', text)
-    text = re.sub(r'\(\s*fail\s*\)', 'isOk:00', text)
-
+    text = text.replace('isOk:01', 'Write ( ok )')
+    text = text.replace('isOk:00', 'Write ( fail )')
     return text
 
 
-# -- Track D: EM410x ID format --
+# -- lf em 410x: legacy EM TAG ID -> iceman EM 410x ID --
 
-# New: "EM 410x ID 0100000058"
-# Old: "EM TAG ID      : 0100000058"
-# Requires minimum 5 hex chars to avoid matching "found!" in "Valid EM 410x ID found!"
-_RE_EM410X_NEW = re.compile(r'EM 410x (?:XL )?ID\s+([0-9A-Fa-f]{5,})')
-
-# Also normalize the "Valid" keyword line: "Valid EM 410x ID" -> "Valid EM410x ID"
-_RE_VALID_EM410X = re.compile(r'Valid EM 410x ID')
+# LEGACY: cmdlfem4x.c:266/269 `"\nEM TAG ID      : %s"`.
+# ICEMAN: cmdlfem410x.c:115 `"EM 410x ID <hex>"`.
+# Middleware `lfsearch.REGEX_EM410X = r'EM 410x(?:\s+XL)?\s+ID\s+([0-9A-Fa-f]+)'`.
+_RE_LEGACY_EM_TAG_ID = re.compile(r'EM TAG ID\s*:\s*([0-9A-Fa-f]+)')
+# Keyword also differs: legacy `Valid EM410x ID` (no space) vs iceman
+# `Valid EM 410x ID` (space).  Middleware keyword is iceman form.
+_RE_LEGACY_VALID_EM410X = re.compile(r'Valid EM410x ID')
 
 
 def _normalize_em410x_id(text):
-    """Normalize EM410x ID format.
-
-    New: 'EM 410x ID 0100000058' -> 'EM TAG ID      : 0100000058'
-    New: 'Valid EM 410x ID' -> 'Valid EM410x ID'
-    """
-    # Normalize the data ID line
-    def _em_replace(m):
-        return 'EM TAG ID      : %s' % m.group(1)
-    text = _RE_EM410X_NEW.sub(_em_replace, text)
-    # Normalize the Valid keyword line
-    text = _RE_VALID_EM410X.sub('Valid EM410x ID', text)
+    """Rewrite legacy `EM TAG ID      : <hex>` -> iceman `EM 410x ID <hex>`."""
+    text = _RE_LEGACY_EM_TAG_ID.sub(r'EM 410x ID \1', text)
+    text = _RE_LEGACY_VALID_EM410X.sub('Valid EM 410x ID', text)
     return text
 
 
-# -- Track D: Chipset detection format --
+# -- lf sea: legacy Chipset detection: -> iceman Chipset... --
 
-_RE_CHIPSET_NEW = re.compile(r'^\s*Chipset\.{3,}\s+(.*?)$', re.MULTILINE)
+# LEGACY: cmdlf.c:1349/1357/1365 `"Chipset detection: <name>"`.
+# ICEMAN: cmdlf.c:1601-1655 `"Chipset... <name>"` (3 dots).
+# Middleware `lfsearch._RE_CHIPSET = r'Chipset\.+\s+(.*)'`.
+_RE_LEGACY_CHIPSET = re.compile(
+    r'^(\s*)Chipset detection:\s*', re.MULTILINE)
 
 
 def _normalize_chipset_detection(text):
-    """Normalize chipset detection format.
-
-    New: 'Chipset... EM4x05 / EM4x69'
-    Old: 'Chipset detection: EM4x05 / EM4x69'
-    """
-    return _RE_CHIPSET_NEW.sub(r'Chipset detection: \1', text)
+    """Rewrite legacy `Chipset detection: <name>` -> iceman `Chipset... <name>`."""
+    return _RE_LEGACY_CHIPSET.sub(r'\1Chipset... ', text)
 
 
-# -- Track D: FDX-B Animal ID format --
+# -- lf fdx/fdxb: legacy Animal ID: -> iceman Animal ID dotted --
 
-# Bug 3: iceman outputs "Animal ID: 060-030207938416" (colon after ID).
-# Legacy output: "Animal Tag ID      0060-030207938416" (spaces, no colon).
-# lfsearch REGEX_ANIMAL = r'.*ID\s+([xX0-9A-Fa-f\-]{2,})' requires
-# whitespace after ID, not a colon.  Fix: remove colons after ID keywords.
-_RE_ANIMAL_ID_COLON = re.compile(r'(Animal(?:\s+Tag)?\s+ID)[\s.]*:', re.IGNORECASE)
+# LEGACY: cmdlffdx.c:200 `"Animal ID:     %04u-%012u"` (colon + spaces);
+#         cmdlffdx.c:282/286 `"Animal ID          <green>%04u-%012u"` (spaces).
+# ICEMAN: cmdlffdxb.c:572/578 `"Animal ID........... <country>-<national>"`
+#         (9-11 dots).
+# Middleware `lfsearch.REGEX_ANIMAL = r'Animal ID\.+\s+([0-9\-]+)'`.
+_RE_LEGACY_ANIMAL_ID_COLON = re.compile(
+    r'^(\s*)Animal(?:\s+Tag)?\s+ID\s*:\s*', re.MULTILINE | re.IGNORECASE)
+_RE_LEGACY_ANIMAL_ID_SPACES = re.compile(
+    r'^(\s*)Animal(?:\s+Tag)?\s+ID\s{2,}', re.MULTILINE | re.IGNORECASE)
 
 
 def _normalize_fdxb_animal_id(text):
-    """Normalize FDX-B Animal ID format for REGEX_ANIMAL matching.
-
-    New: 'Animal ID: 060-030207938416'
-    Old: 'Animal Tag ID      0060-030207938416'
-
-    Remove colon after 'Animal ID' so REGEX_ANIMAL's \\s+ matches.
-    """
-    if 'FDX-B' not in text and 'Animal' not in text:
+    """Rewrite legacy `Animal ID:` or `Animal ID   ` -> iceman `Animal ID........`."""
+    if 'Animal' not in text:
         return text
-    return _RE_ANIMAL_ID_COLON.sub(r'\1 ', text)
+    # Colon form first (cmdlffdx.c:200)
+    text = _RE_LEGACY_ANIMAL_ID_COLON.sub(r'\1Animal ID........... ', text)
+    # Then space-padded form (cmdlffdx.c:282/286)
+    text = _RE_LEGACY_ANIMAL_ID_SPACES.sub(r'\1Animal ID........... ', text)
+    return text
 
 
-# -- Track E: T55xx config normalization --
+# -- lf t55xx detect: legacy colon/pipe -> iceman dotted --
 
-# New T55xx config lines use dots and no colon, lowercase "type"
-# These patterns run on prefix-stripped text (no [+] markers)
-_RE_T55XX_CHIP_NEW = re.compile(
-    r'^\s*Chip type\.{3,}\s+(.*?)$', re.MULTILINE | re.IGNORECASE)
-_RE_T55XX_MOD_NEW = re.compile(
-    r'^\s*Modulation\.{3,}\s+(.*?)$', re.MULTILINE)
-_RE_T55XX_BLOCK0_NEW = re.compile(
-    r'^\s*Block0\.{3,}\s+([A-Fa-f0-9]{8})(?:\s+\S.*)?$', re.MULTILINE)
-_RE_T55XX_PWD_SET_NEW = re.compile(
-    r'^\s*Password set\.{3,}\s+(.*?)$', re.MULTILINE | re.IGNORECASE)
-_RE_T55XX_PWD_NEW = re.compile(
-    r'^\s*Password\.{3,}\s+([A-Fa-f0-9]{8})', re.MULTILINE | re.IGNORECASE)
+# LEGACY: cmdlft55xx.c:1606 `"     Chip Type      : <name>"` (CAPITAL T, colon).
+#         cmdlft55xx.c:1612 `"     Block0         : 0x%08X"` (0x prefix, colon).
+# ICEMAN: cmdlft55xx.c:1837 `" Chip type......... <name>"` (lowercase t, 9 dots).
+#         cmdlft55xx.c:1843 `" Block0............ %08X %s"` (12 dots, no 0x).
+# Middleware lft55xx._RE_CHIP_TYPE = r'Chip [Tt]ype\.+\s+(\S+)', _RE_BLOCK0,
+# _RE_MODULATE, _RE_PWD all target iceman dotted shape.
+_RE_LEGACY_CHIP_TYPE = re.compile(
+    r'^(\s*)Chip Type\s+:\s*', re.MULTILINE)
+_RE_LEGACY_MODULATION = re.compile(
+    r'^(\s*)Modulation\s+:\s*', re.MULTILINE)
+_RE_LEGACY_BLOCK0 = re.compile(
+    r'^(\s*)Block0\s+:\s*0x([A-Fa-f0-9]+)', re.MULTILINE)
+_RE_LEGACY_PWD_SET = re.compile(
+    r'^(\s*)Password Set\s+:\s*', re.MULTILINE)
+_RE_LEGACY_PWD = re.compile(
+    r'^(\s*)Password\s+:\s*([A-Fa-f0-9]+)', re.MULTILINE)
 
 
 def _normalize_t55xx_config(text):
-    """Normalize T55xx configuration output to old format.
-
-    New: 'Chip type......... T55x7'
-    Old: '     Chip Type      : T55x7'
-
-    Restores colon separators and proper casing for regex matching.
-    """
-    text = _RE_T55XX_CHIP_NEW.sub(
-        r'     Chip Type      : \1', text)
-    text = _RE_T55XX_MOD_NEW.sub(
-        r'     Modulation     : \1', text)
-    text = _RE_T55XX_BLOCK0_NEW.sub(
-        r'     Block0         : 0x\1', text)
-    text = _RE_T55XX_PWD_SET_NEW.sub(
-        r'     Password Set   : \1', text)
-    text = _RE_T55XX_PWD_NEW.sub(
-        r'     Password       : \1', text)
+    """Rewrite legacy T55xx colon/pipe config -> iceman dotted config."""
+    text = _RE_LEGACY_CHIP_TYPE.sub(r'\1Chip type......... ', text)
+    text = _RE_LEGACY_MODULATION.sub(r'\1Modulation........ ', text)
+    text = _RE_LEGACY_BLOCK0.sub(r'\1Block0............ \2', text)
+    text = _RE_LEGACY_PWD_SET.sub(r'\1Password set...... ', text)
+    text = _RE_LEGACY_PWD.sub(r'\1Password.......... \2', text)
     return text
 
 
-# -- Track E: EM4x05 info normalization --
+# -- lf em 4x05 info: legacy colon/pipe -> iceman dotted --
 
-_RE_EM4X05_CHIP_NEW = re.compile(
-    r'^\s*Chip type\.{3,}\s+(.*?)$', re.MULTILINE | re.IGNORECASE)
-_RE_EM4X05_SERIAL_NEW = re.compile(
-    r'^\s*Serialno\.{3,}\s+([A-Fa-f0-9]+)', re.MULTILINE)
-_RE_EM4X05_CONFIG_NEW = re.compile(
-    r'^\s*Config word\.{3,}\s+([A-Fa-f0-9]+)', re.MULTILINE | re.IGNORECASE)
+# LEGACY: cmdlfem4x.c:1266 `"\n Chip Type:   %u | <name>"` (decimal id + pipe).
+#         cmdlfem4x.c:1242 `"ConfigWord: %08X (Word 4)\n"` (parenthetical).
+#         Legacy emits `"  Serial #: %08X"` (no grep hit but matrix L1032).
+# ICEMAN: cmdlfem4x05.c:869 `"Chip type..... <name>"` (5 dots, lowercase).
+#         cmdlfem4x05.c:871 `"Serialno...... %08X"` (6 dots).
+#         cmdlfem4x05.c:873 `"Block0........ %08x"` (8 dots, no `ConfigWord`).
+# Middleware lfem4x05._RE_CHIP/SERIAL/CONFIG all target iceman dotted.
+_RE_LEGACY_EM4X_CHIP = re.compile(
+    r'^(\s*)Chip Type\s*:\s*\d+\s*\|\s*(\S+)', re.MULTILINE)
+_RE_LEGACY_EM4X_SERIAL = re.compile(
+    r'^(\s*)Serial\s*#\s*:\s*([A-Fa-f0-9]+)', re.MULTILINE)
+# ConfigWord is structural-flip: iceman emits Block0 (raw), legacy emitted
+# ConfigWord (decoded).  Inject `Block0........ <hex>` line from the
+# `ConfigWord: <hex>` emission so middleware `_RE_CONFIG` (Block0 dotted)
+# can capture the raw dword.  Gap log P3.5 accepts field-loss of the
+# decoded `(Word 4)` annotation.
+_RE_LEGACY_EM4X_CONFIG = re.compile(
+    r'^(\s*)ConfigWord\s*:\s*([A-Fa-f0-9]+)(?:\s*\([^)]*\))?', re.MULTILINE)
 
 
 def _normalize_em4x05_info(text):
-    """Normalize EM4x05 info output to old format.
-
-    Restores colon-separated labels with pipe separators and parentheticals
-    for middleware regex matching:
-      _RE_CHIP  = r'.*Chip Type.*\\|(.*)'
-      _RE_CONFIG = r'.*ConfigWord:(.*)\\(.*'
-    """
-    # Chip Type needs pipe: " Chip Type:   9 | EM4305"
-    def _em_chip_replace(m):
-        val = m.group(1).strip()
-        return ' Chip Type:   %s | %s' % ('0', val)
-    text = _RE_EM4X05_CHIP_NEW.sub(_em_chip_replace, text)
-    text = _RE_EM4X05_SERIAL_NEW.sub(
-        r'  Serial #: \1', text)
-    # ConfigWord needs parenthetical: "ConfigWord: 00080040 (xx)"
-    def _em_config_replace(m):
-        val = m.group(1).strip()
-        return ' ConfigWord: %s (%s)' % (val, val)
-    text = _RE_EM4X05_CONFIG_NEW.sub(_em_config_replace, text)
+    """Rewrite legacy EM4x05 colon/pipe info -> iceman dotted info."""
+    text = _RE_LEGACY_EM4X_CHIP.sub(r'\1Chip type..... \2', text)
+    text = _RE_LEGACY_EM4X_SERIAL.sub(r'\1Serialno...... \2', text)
+    text = _RE_LEGACY_EM4X_CONFIG.sub(r'\1Block0........ \2', text)
     return text
 
 
-# -- Track E: save message normalization --
+# -- Save message normalization (legacy-lowercase -> iceman-capital) --
 
-_RE_SAVED_UPPER = re.compile(r'^Saved\s+', re.MULTILINE)
+# LEGACY fileutils.c factory fork: `"saved %zu bytes to binary file %s"`.
+# ICEMAN: fileutils.c:293 `"Saved %zu bytes to binary file \`%s\`"` (capital,
+# backtick-quoted filename).
+# Middleware dumpers use tolerant `[Ss]aved \d+ bytes to binary file` regex,
+# so this is an idempotent upcase for exact-shape parity tests.
+_RE_LEGACY_SAVED_LOWER = re.compile(r'^saved\s+', re.MULTILINE)
 
 
 def _normalize_save_messages(text):
-    """Normalize file save messages from uppercase to lowercase.
-
-    New: 'Saved 64 bytes to binary file `lf-t55xx-...`'
-    Old: 'saved 64 bytes to binary file lf-t55xx-...'
-
-    Also strips backtick quoting around filenames.
-    """
-    text = _RE_SAVED_UPPER.sub('saved ', text)
-    # Strip backtick quoting: `filename` -> filename
-    text = re.sub(r'`([^`]+)`', r'\1', text)
-    return text
+    """Rewrite legacy `saved N bytes` -> iceman `Saved N bytes`."""
+    return _RE_LEGACY_SAVED_LOWER.sub('Saved ', text)
 
 
-# -- Track F: hf 15 restore normalization --
+# -- hf 15 restore: legacy 'Write OK'+'done' -> iceman 'Done!' --
 
+# LEGACY: cmdhf15.c:1737/1744 `"restore failed. Too many retries."` + `"done"`.
+# ICEMAN: cmdhf15.c:2818 `PrintAndLogEx(INFO, "Done!")`.
+# Middleware `hf15write._KW_RESTORE_SUCCESS = r"Done!"`.
 def _normalize_hf15_restore(text):
-    """Normalize hf 15 restore response for legacy keyword matching.
-
-    New (iceman): 'Restoring data blocks\\n\\nDone!'
-    Old (legacy): 'Write OK\\n...\\ndone'
-
-    hf15write.py checks hasKeyword('Write OK') and hasKeyword('done').
-    Iceman uses 'Done!' instead.  Inject legacy keywords on success.
-    """
-    if 'Done' in text:
-        text = text + '\nWrite OK\ndone'
+    """Rewrite legacy `done` success sentinel -> iceman `Done!`."""
+    # Only inject if legacy success sentinel present and iceman sentinel absent.
+    if 'Done!' in text:
+        return text
+    # Legacy `done` (lowercase, no exclamation) emitted only on success path.
+    # Avoid false-matching `done` inside other words by anchoring to start-of-line.
+    if re.search(r'(?m)^done\b', text):
+        text = text + '\nDone!'
     return text
 
 
-# -- Track F: iCLASS write normalization --
+# -- hf iclass wrbl: legacy 'Wrote block NN successful' -> iceman '( ok )' --
 
-_RE_ICLASS_OK = re.compile(
-    r'Wrote block \d+\s*/\s*0x[0-9A-Fa-f]+\s*\(\s*ok\s*\)')
+# LEGACY: cmdhficlass.c:2149 `"Wrote block %02X successful"`.
+# ICEMAN: cmdhficlass.c:3134 `"Wrote block %d / 0x%02X ( ok )"`.
+# Middleware `iclasswrite._KW_WRBL_SUCCESS = r'\( ok \)'`.
+_RE_LEGACY_ICLASS_WROTE = re.compile(
+    r'Wrote block ([0-9A-Fa-f]+)\s+successful')
 
 
 def _normalize_iclass_wrbl(text):
-    """Normalize iCLASS write block response.
-
-    New: 'Wrote block 7 / 0x07 ( ok )'
-    Old: 'Wrote block 07 successful'
-    """
-    def _ic_replace(m):
-        return m.group(0).replace('( ok )', 'successful')
-    return _RE_ICLASS_OK.sub(_ic_replace, text)
+    """Rewrite legacy `Wrote block NN successful` -> iceman ` ( ok )` form."""
+    def _lg_replace(m):
+        return 'Wrote block %s / 0x%s ( ok )' % (
+            m.group(1), m.group(1).zfill(2).upper())
+    return _RE_LEGACY_ICLASS_WROTE.sub(_lg_replace, text)
 
 
-# -- Track F: iCLASS rdbl response normalization --
+# -- hf iclass rdbl: legacy ' block NN : <hex>' -> iceman ' block N/0xNN : <hex>' --
 
-# New iclass rdbl format: " block   6/0x06 : AA BB CC DD EE FF 00 11"
-# Old iclass rdbl format: "Block 6 : AA BB CC DD EE FF 00 11"
-# Middleware regex: r'[Bb]lock \d+ : ([a-fA-F0-9 ]+)'
-# The /0xHH part and extra padding break the \d+ match.
-_RE_ICLASS_RDBL_NEW = re.compile(
-    r'^\s*block\s+(\d+)/0x[0-9A-Fa-f]+\s*:\s*(.+)$',
-    re.MULTILINE | re.IGNORECASE)
+# LEGACY: cmdhficlass.c:2399 `" block %02X : <hex>"` (capital-hex block number).
+# ICEMAN: cmdhficlass.c:3501 `" block %3d/0x%02X : <hex>"` (decimal + /0xNN).
+# Middleware `hficlass._RE_BLOCK_READ = r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+...'`.
+_RE_LEGACY_ICLASS_BLOCK = re.compile(
+    r'^(\s*)block\s+([0-9A-Fa-f]{1,2})\s*:\s+', re.MULTILINE | re.IGNORECASE)
 
 
 def _normalize_iclass_rdbl(text):
-    """Normalize iCLASS read block response to old format.
-
-    New: ' block   6/0x06 : AA BB CC DD EE FF 00 11'
-    Old: 'Block 6 : AA BB CC DD EE FF 00 11'
-
-    Strips the /0xHH hex representation and normalizes spacing
-    so middleware regex r'[Bb]lock \\d+ : ([a-fA-F0-9 ]+)' matches.
-    """
-    def _ic_rdbl_replace(m):
-        return 'Block %s : %s' % (m.group(1), m.group(2).strip())
-    return _RE_ICLASS_RDBL_NEW.sub(_ic_rdbl_replace, text)
+    """Rewrite legacy ` block NN : <hex>` -> iceman ` block N/0x<NN> : <hex>`."""
+    def _lg_replace(m):
+        indent = m.group(1)
+        blk_hex = m.group(2).upper().zfill(2)
+        blk_dec = int(blk_hex, 16)
+        return '%sblock %3d/0x%s : ' % (indent, blk_dec, blk_hex)
+    return _RE_LEGACY_ICLASS_BLOCK.sub(_lg_replace, text)
 
 
-# -- Track E: T55xx chk password normalization --
+# -- lf t55xx chk: legacy `Found valid password: <hex>` -> iceman bracketed --
 
-# New T55xx chk outputs 4 bracket variants:
-#   "found valid password [ XXXXXXXX ]"       (no colon, lowercase)
-#   "found valid password : [ XXXXXXXX ]"     (colon+space, lowercase)
-#   "found valid password: [ XXXXXXXX ]"      (colon, lowercase)
-#   "Found valid password: [ XXXXXXXX ]"      (colon, uppercase F)
-# Old format: "Found valid password: XXXXXXXX" (colon, no brackets)
-# Middleware regex: r'Found valid.*?:\s*([A-Fa-f0-9]+)'
-_RE_T55XX_PWD_FOUND = re.compile(
-    r'[Ff]ound valid\s+password\s*:?\s*\[\s*([0-9A-Fa-f]{8})\s*\]')
+# LEGACY: cmdlft55xx.c factory fork `"Found valid password: %08X"` (bare hex).
+# ICEMAN: cmdlft55xx.c:3658/3660/3816 `"Found valid password: [ %08X ]"`
+#         (bracketed).
+# Middleware `lft55xx._RE_FOUND_VALID = r'Found valid password:\s*\[?\s*([A-Fa-f0-9]+)\s*\]?'`
+# tolerates both via optional brackets; pre-flip adapter stripped brackets
+# for the pre-refactor middleware.  Now we inject brackets on legacy.
+_RE_LEGACY_PWD_BARE = re.compile(
+    r'[Ff]ound valid\s+password:\s*([A-Fa-f0-9]{8})(?!\s*\])')
 
 
 def _normalize_t55xx_chk_password(text):
-    """Normalize T55xx chk password output to old colon format.
-
-    All four new-format bracket variants → 'Found valid password: XXXXXXXX'
-    so middleware regex r'Found valid.*?:\\s*([A-Fa-f0-9]+)' matches.
-    """
-    def _pwd_replace(m):
-        return 'Found valid password: %s' % m.group(1)
-    return _RE_T55XX_PWD_FOUND.sub(_pwd_replace, text)
+    """Rewrite legacy `Found valid password: <hex>` -> iceman bracketed form."""
+    return _RE_LEGACY_PWD_BARE.sub(r'Found valid password: [ \1 ]', text)
 
 
-# -- Track F: hf 15 csetuid normalization --
+# -- hf 15 csetuid: legacy lowercase (ok) -> iceman `Setting new UID ( ok )` --
 
+# LEGACY: cmdhf15.c:1811 `"setting new UID (" _GREEN_("ok") ")"` (lowercase s,
+#         no space inside parens); :1808 `"(" _RED_("failed") ")"`.
+# ICEMAN: cmdhf15.c:2900 `"Setting new UID ( " _GREEN_("ok") " )"` (capital S,
+#         spaces inside parens).
+# Middleware `hf15write._RE_CSETUID_OK = r"Setting new UID\s*\(\s*ok\s*\)"`.
 def _normalize_hf15_csetuid(text):
-    """Normalize hf 15 csetuid response.
-
-    New: 'Setting new UID ( ok )', 'no tag found'
-    Old: 'setting new UID (ok)', "can't read card UID"
-    """
-    text = text.replace('Setting new UID ( ok )', 'setting new UID (ok)')
-    text = text.replace('Setting new UID ( fail )', 'setting new UID (failed)')
-    text = text.replace('no tag found', "can't read card UID")
+    """Rewrite legacy lowercase `setting new UID (ok)` -> iceman shape."""
+    text = text.replace('setting new UID (ok)', 'Setting new UID ( ok )')
+    text = text.replace('setting new UID (failed)', 'Setting new UID ( fail )')
+    # Legacy also has `can't read card UID` which iceman emits as `no tag found`.
+    text = text.replace("can't read card UID", 'no tag found')
     return text
 
 
-# -- Track F: FeliCa reader normalization --
+# -- hf felica reader: legacy `IDm  <hex>` -> iceman `IDm: <hex>` --
+
+# LEGACY: cmdhffelica.c:1835 `"FeliCa tag info"` header + :1837 `"IDm  %s"`
+#         (two spaces, no colon).
+# ICEMAN: cmdhffelica.c:1183 `"IDm: " _GREEN_("%s")` (single colon-space).
+# Middleware `hffelica._KW_FOUND = r'IDm:\s'` strict colon form.
+_RE_LEGACY_IDM_NOCOLON = re.compile(r'\bIDm\s{2}(\S)')
+
 
 def _normalize_felica_reader(text):
-    """Normalize FeliCa reader response.
-
-    New: 'FeliCa card select failed', IDm without header
-    Old: 'card timeout', 'FeliCa tag info' header, 'IDm  XXXX' with spaces
-    """
-    text = text.replace('FeliCa card select failed', 'card timeout')
-    # Restore "FeliCa tag info" header if IDm is present
-    if 'IDm' in text and 'FeliCa tag info' not in text:
-        text = 'FeliCa tag info\n' + text
-    # Normalize IDm format: "IDm: XXXX" -> "IDm  XX XX XX..."
-    idm_match = re.search(r'IDm:\s*([0-9A-Fa-f]+)', text)
-    if idm_match:
-        raw = idm_match.group(1)
-        spaced = ' '.join(raw[i:i+2] for i in range(0, len(raw), 2))
-        text = text.replace(idm_match.group(0), 'IDm  %s' % spaced)
-    return text
+    """Rewrite legacy `IDm  <hex>` -> iceman `IDm: <hex>`."""
+    return _RE_LEGACY_IDM_NOCOLON.sub(r'IDm: \1', text)
 
 
 # ===========================================================================
