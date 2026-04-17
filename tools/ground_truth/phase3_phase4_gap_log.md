@@ -114,6 +114,85 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 
 ---
 
+## P3.7 iCLASS flow
+
+### Entry: hf iclass rdbl block-read regex regression
+
+- **Middleware now iceman-native**:
+  - `hficlass._RE_BLOCK_READ = r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+([A-Fa-f0-9 ]+)'` — iceman `cmdhficlass.c:3501` emits ` block %3d/0x%02X : <hex>`, e.g. ` block   6/0x06 : 12 FF ...`. The regex targets the iceman-native shape (decimal block + slash + hex annotation + colon + hex run).
+  - Same pattern applied inline at `iclasswrite.py:verify()` — replaces the prior `[Bb]lock\s*[0-9a-fA-F]+\s*:\s*hex` which matched NEITHER firmware (matrix divergence_matrix.md line 508 notes both legacy and iceman raw forms failed the old regex).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1675-1691` `_normalize_iclass_rdbl` rewrites iceman ` block   6/0x06 : 12 FF ...` → legacy `Block 6 : 12 FF ...` (strips `/0x..`, capitalises `B`, collapses spaces).
+  - Wired for `hf iclass rdbl` at `pm3_compat.py:1846` (`_RESPONSE_NORMALIZERS['hf iclass rdbl'] = [_normalize_iclass_rdbl]`).
+- **Live symptom (iceman FW, with current adapter)**:
+  - `hficlass.checkKey()` returns False for EVERY valid key because `_RE_BLOCK_READ` targets the iceman raw shape with `/0x..`, but adapter rewrote it to `Block 6 : ...` before middleware sees it.
+  - Cascading failures: `chkKeys_1`/`chkKeys_2` return None → `parser()` returns `type=ICLASS_ELITE` (default) but missing `key` field → `iclassread.readLegacy`/`readElite` return `-2` → Scan flow shows "Read Failed!" on EVERY iCLASS card.
+  - Observable in test: `tests/phase3_trace_parity/test_iclass_flow.py` — 10/10 live iceman_output.json samples for `hf iclass rdbl` carry the adapter-normalized `Block 1 : ...` shape; iceman-native regex produces no-match as expected (parity test asserts non-match for normalized samples, match for synthetic iceman raw samples).
+- **Phase 4 action**:
+  - REMOVE `_normalize_iclass_rdbl` from `_RESPONSE_NORMALIZERS['hf iclass rdbl']` (`pm3_compat.py:1846`) OR gate it on `_current_version == PM3_VERSION_ORIGINAL`.
+  - `_normalize_iclass_rdbl` function body itself (`pm3_compat.py:1680-1691`) can be retained as a dormant forward-direction rewriter if Phase 4 needs legacy-FW support; the systemic divergence #4 flag in the matrix says legacy raw shape has hex block numbers that `\d+` can't match, so the legacy→iceman direction would still need SOME normaliser.
+  - Re-capture iceman_output.json after adapter disable; the 10 currently-normalized samples should flip to raw ` block   N/0x.. : ...` form, at which point the parity-test negative assertions become positive assertions.
+
+### Entry: hf iclass wrbl success-keyword regression
+
+- **Middleware now iceman-native**:
+  - `iclasswrite._KW_WRBL_SUCCESS = r'\( ok \)'` — iceman `cmdhficlass.c:3134` emits `Wrote block %d / 0x%02X ( " _GREEN_("ok") " )`, e.g. `Wrote block 6 / 0x06 ( ok )`. Keyword targets the literal ` ( ok )` substring.
+  - Previously `r'successful|\( ok \)'` — format-agnostic alternation carrying forward legacy `Wrote block 07 successful`. Dropped per Option B (iceman-native only).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1654-1666` `_normalize_iclass_wrbl` rewrites iceman ` ( ok )` → legacy ` successful` (string replace on line `Wrote block N / 0xNN ( ok )`). Wired at `pm3_compat.py:1847`.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `iclasswrite.writeDataBlock()` returns -10 (error) for EVERY successful write because adapter has rewritten ` ( ok )` to ` successful` before middleware sees it; iceman-native keyword match fails.
+  - Observable in test: live iceman_output.json samples for `hf iclass wrbl` all show the adapter-normalized `Wrote block 6 / 0x06 successful` shape — iceman-native keyword correctly misses these; parity test asserts non-match.
+  - User-visible: Write flow reports FAIL on every iCLASS block write even when PM3 actually wrote successfully; `writeDataBlocks()` aborts on first block and returns -1; UI shows "Write Failed!" and rolls back the operation.
+- **Phase 4 action**:
+  - REMOVE `_normalize_iclass_wrbl` from `_RESPONSE_NORMALIZERS['hf iclass wrbl']` (`pm3_compat.py:1847`).
+  - Legacy direction: if a legacy PM3 is ever exercised, its raw `Wrote block 07 successful` emission won't match `\( ok \)` — would need an inverse normalizer rewriting legacy `successful` → iceman `( ok )`. Dead path for iceman target (iceman is the reference), document as systemic-#8 entry.
+
+### Entry: hf iclass calcnewkey 4-dot Xor div key regression
+
+- **Middleware now iceman-native**:
+  - `iclasswrite._RE_XOR_DIV_KEY = r'Xor div key\.+\s+([0-9A-Fa-f ]+)'` — iceman `cmdhficlass.c:5419` emits `Xor div key.... %s` with a **4-dot** separator (literal four dots, not five, not colon). Verified by reading `/tmp/rrg-pm3/client/src/cmdhficlass.c:5419`: `PrintAndLogEx(SUCCESS, "Xor div key.... " _YELLOW_("%s") "\n", ...)`.
+  - Previously `r'Xor div key\s*:\s*([0-9A-Fa-f ]+)'` — colon form carried forward from legacy + prior matrix note. The prior matrix annotation (line 1361) claimed colon separator; this refactor reads iceman source directly and corrects the annotation: iceman emits dotted form, legacy emits colon form.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1070-1071` `_RE_DOTTED_SEPARATOR = re.compile(r'^(\s*\S.*?\S)\.{3,}\s+', re.MULTILINE)` in `_post_normalize()` (`pm3_compat.py:1122`) rewrites ALL dotted-separator lines including `Xor div key....` → `Xor div key: `. Generic stripper, same one flagged in P3.1 scan entry.
+  - No command-specific normalizer; the generic post-normalize dot-stripper is the culprit.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `iclasswrite.calcNewKey()` returns -10 (error) because adapter rewrote `Xor div key.... <hex>` → `Xor div key: <hex>` before middleware match; iceman-native 4-dot regex fails.
+  - Cascading failure: `writePassword()` returns -10 → password rotation aborts → UI shows "Write Failed!" on the dedicated password change flow.
+  - 0 live iceman_output.json samples exist (matrix line 1356 notes empty trace set); parity-test validation relies on synthetic iceman-native 4-dot samples.
+- **Phase 4 action**:
+  - REMOVE `_RE_DOTTED_SEPARATOR.sub` from `_post_normalize()` (`pm3_compat.py:1122`). Same action item logged in the P3.1 scan entries (hf 14a info) — this is the SAME generic stripper.
+  - Once removed, iceman 4-dot separator reaches middleware verbatim and `_RE_XOR_DIV_KEY` matches.
+  - Update matrix annotation at line 1361 to reflect the dotted form (done by this refactor's docs-commit).
+
+### Entry: hf iclass info CSN extraction (matrix v2 correction-confirm)
+
+- **Middleware now iceman-native** (status: ALREADY CORRECT, re-cited):
+  - `hficlass._RE_CSN = r'CSN:*\s([A-Fa-f0-9 ]+)'` — iceman `cmdhficlass.c:8032` emits `    CSN: %s uid` (4-space indent, colon-space, hex run, ` uid` suffix). Regex captures hex run until non-hex char (stops naturally at ` uid`).
+  - Matrix v2 correction at divergence_matrix.md line 422 confirmed iceman DOES emit the full tag-info block including CSN (v1 falsely claimed ping-only). No middleware change required.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1070-1071` `_RE_DOTTED_SEPARATOR` in `_post_normalize()` also fires on the iceman Fingerprint section `    CSN.......... HID range` (L8088/8098) and rewrites the dotted CSN line to `CSN: HID range`. But the middleware regex hex class `[A-Fa-f0-9 ]+` rejects `H` (for `HID`), so the regex naturally misses the annotation line and matches only the real CSN data line — no live symptom.
+- **Live symptom (iceman FW, with current adapter)**: none — `_RE_CSN` works correctly on both the canonical `CSN: <hex> uid` line AND the Fingerprint-section dotted annotation (annotation line's non-hex content is rejected by the hex class).
+- **Phase 4 action**: NO-OP for this field. Parity test asserts `_RE_CSN` successfully captures the hex CSN on the canonical line AND correctly misses the Fingerprint annotation line.
+
+### Entry: hf iclass dump success-keyword (identical both firmwares)
+
+- **Middleware now iceman-native** (status: ALREADY CORRECT, re-cited):
+  - `iclassread._KW_DUMP_SUCCESS = 'saving dump file'` — iceman `cmdhficlass.c:2978` emits `saving dump file - %u blocks read`; legacy `cmdhficlass.c:1031`/`:1990` emit the identical substring. Matrix v2 correction at divergence_matrix.md line 484-487 confirmed the prior v1 claim of LEGACY-ONLY was false.
+- **Adapter still running iceman→legacy**: none affecting this keyword.
+- **Live symptom (iceman FW)**: none.
+- **Phase 4 action**: NO-OP.
+
+### Entry: P3.7 dormant / API-preservation (informational)
+
+Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
+
+- `hficlass._RE_BLK7 = r'Blk7#:([0-9a-fA-F]+)'` (`hficlass.py:54`) — DORMANT on both firmwares; legacy-iCopy-X-specific synthesised line. No iceman source emits this shape. Retained for API compatibility with consumers that still read the `blk7` dict key. Phase 4 can drop if the consumer audit clears.
+- `hficlass._CMD_CHK = 'hf iclass chk -f '` (`hficlass.py:50`) — DEAD; never formatted into a command (the fallback uses `--vb6kdf` literal instead). Retained for API symmetry with legacy `.so`; Phase 4 audit can drop.
+- `hficlass.readTagBlock` — internal fallback chain (returns empty on failure; consumer `iclasswrite.verify` handles empty ret). Iceman-native path validated via synthetic samples.
+
+---
+
 ## P3.2+ (placeholder)
 
 _Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1 entries above._
