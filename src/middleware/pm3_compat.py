@@ -1504,16 +1504,15 @@ def translate_response(text, cmd=None):
     Called by executor._send_and_cache() after _clean_pm3_output() (which
     handles ANSI stripping and [+]/[=] prefix removal unconditionally).
 
-    This function handles only the COMPATIBILITY normalization:
-      Phase B: command-specific normalizers (T55xx, fchk table, etc.)
-      Phase C: remaining dotted-to-colon, UID annotations, ISO numbers
+    After Phase 4 compat flip, middleware is iceman-native. This function
+    now runs only on LEGACY (factory) firmware, rewriting legacy FW output
+    UP to iceman shape so the iceman-native middleware regex matches.
 
-    On iceman firmware: converts iceman-specific output to factory format
-    so old middleware patterns still match.  After the compat flip with
-    format-agnostic patterns, this becomes redundant on iceman but harmless.
+    On iceman firmware: pass-through no-op (middleware regex matches
+    iceman-native text directly; module is effectively inert).
 
-    On factory firmware: no normalization needed (factory output already
-    matches factory-era patterns).
+    On factory firmware: phase B command-specific rewriters + phase C
+    targeted field inverters convert legacy shapes to iceman shapes.
 
     Args:
         text: Response text (already cleaned by executor._clean_pm3_output)
@@ -1528,7 +1527,7 @@ def translate_response(text, cmd=None):
     if not LEGACY_COMPAT:
         return text
 
-    if _current_version != PM3_VERSION_ICEMAN:
+    if _current_version != PM3_VERSION_ORIGINAL:
         return text
 
     result = text
