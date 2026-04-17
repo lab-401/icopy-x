@@ -322,6 +322,13 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 - `hf 14a info` UID regex `r'UID:\s*([\dA-Fa-f ]+)'` (hfmfwrite.py:521,523) — iceman `hf 14a info` emits `" UID: 7A F2 EC B2"` (space-colon-space-hex). Regex matches iceman directly. IDENTICAL TO P3.1 SCAN refactor's _RE_UID alternation (hf14ainfo.py).
 - `hfmfuwrite.verify()` path — uses `scan.scan_14a()` + `scan.isTagFound()`. Both iceman-native via the P3.1 scan refactor. No direct PM3-command emission in this code path.
 
+### Entry: erase.py cross-module wrbl split-brain
+
+- **Finding**: `src/middleware/erase.py` lines 79, 288, 296, 318, 326 still use the legacy alternation pattern `'isOk:01' in wr_cache or 'Write ( ok )' in wr_cache` (and the Gen1a block-0 regex at :79 still includes `isOk:01` in the alternation group). `hfmfwrite.py` is now iceman-strict (`_KW_WRBL_SUCCESS = r'Write \( ok \)'`) after P3.3 refactor. The two modules parse the SAME `hf mf wrbl` PM3 response with DIFFERENT expectations — a split-brain state: erase still tolerates adapter-synth `isOk:01`, write does not.
+- **Raised during**: P3.3 Challenger + Auditor review (cross-module consistency check).
+- **Scope boundary**: erase.py is P3.4's scope (scheduled next flow refactor). No edit made during P3.3 fixer — logged here for traceability only.
+- **Phase 4 action**: NONE beyond P3.4 completing. When P3.4 refactors erase.py to iceman-native, all five alternation sites (79/288/296/318/326) collapse to the iceman literal `Write ( ok )` and this entry resolves by construction.
+
 ---
 
 ## P3.8 ISO15693/FeliCa/Legic/Sniff flow
@@ -360,23 +367,25 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
   - REMOVE `_normalize_hf15_csetuid` from `_RESPONSE_NORMALIZERS['hf 15 csetuid']` (`pm3_compat.py:1844`). Matrix L362 already flags it as "arguably redundant" once the middleware regex is refactored to iceman-native form.
   - Re-capture iceman_output.json after adapter disable; the post-adapter normalized sample should flip to iceman `Setting new UID ( ok )` shape.
 
-### Entry: hf felica reader sentinel flip (IDm: vs FeliCa tag info)
+### Entry: hf felica reader sentinel flip (IDm: vs FeliCa tag info) — SEVERITY: HIGH
 
 - **Middleware now iceman-native**:
   - `hffelica._KW_FOUND = r'IDm:\s'` (hffelica.py) — iceman `cmdhffelica.c:1183` emits `PrintAndLogEx(SUCCESS, "IDm: " _GREEN_("%s"), sprint_hex_inrow(card.IDm, sizeof(card.IDm)))`. The iceman `read_felica_uid()` helper (L1144) is the ONLY success emission site; legacy `readFelicaUid()` helper at L1803 — which emitted `"FeliCa tag info"` (L1835) — was replaced by the uid-only variant.
   - `hffelica._KW_TIMEOUT = 'card timeout'` (hffelica.py) — iceman `cmdhffelica.c:1431` emits `PrintAndLogEx(WARNING, "card timeout")`. Matches both firmwares (COSMETIC divergence on trailing `(-4)` status code, iceman-only).
   - `hffelica._RE_IDM = r'.*IDm(.*)'` unchanged — iceman emission `"IDm: XX XX ..."` is a superset of legacy `"IDm %s"`; capture after `IDm` yields the hex bytes (plus colon for iceman) which is then stripped of whitespace.
   - Previously `_KW_FOUND = 'FeliCa tag info'` — MATCHES LEGACY ONLY. Iceman has ZERO emissions of `"FeliCa tag info"` (grep-verified on `/tmp/rrg-pm3/client/src/cmdhffelica.c`). Divergence matrix L382 previously flagged the STRUCTURAL gap.
-- **Adapter still running iceman→legacy**:
-  - `pm3_compat.py::_normalize_felica_reader` (matrix L386 cites) injects the legacy `"FeliCa tag info"` banner on iceman success output so the PRE-refactor middleware `_KW_FOUND` keyword matched.
-  - Grep: `grep -n "_normalize_felica_reader\|felica_reader\|FeliCa tag info" src/middleware/pm3_compat.py` — verify the function name and wiring line for Phase 4 removal.
-- **Live symptom (iceman FW, current adapter)**:
+- **Adapter STILL ACTIVELY BREAKS iceman iff wired**:
+  - `_normalize_felica_reader` (pm3_compat.py:1734-1749) rewrites iceman `"IDm: XX XX ..."` → legacy `"IDm  XX XX ..."` (two-space separator, NO colon). Exact sequence: `re.search(r'IDm:\s*([0-9A-Fa-f]+)', text)` captures the hex, emits `'IDm  %s' % spaced` with NO colon in the replacement (pm3_compat.py:1749).
+  - Wired at pm3_compat.py:1849 (`_RESPONSE_NORMALIZERS['hf felica reader'] = [_normalize_felica_reader]`).
+  - **Post-adapter text NO LONGER MATCHES the new middleware keyword**: `hffelica._KW_FOUND = r'IDm:\s'` requires the colon; adapter strips it. Every successful iceman FeliCa detection silently fails the `executor.hasKeyword(_KW_FOUND)` check in `hffelica.parser()`.
+- **Live symptom (iceman FW, current adapter) — PRODUCTION IMPACT**:
   - iceman_output.json has 10 `hf felica reader` samples — all 10 are `"card timeout"` bodies (no successful FeliCa detections captured). Live samples therefore exercise the NEGATIVE path only; `parser()` returns `{'found': False}` for every sample.
-  - The positive (success) path is validated via synthetic iceman-native samples in the trace-parity test — those PASS with the new `IDm:` keyword. Without this refactor, the synthetic `"IDm: 01 FE ..."` body would have failed the old `_KW_FOUND='FeliCa tag info'` check → `parser()` would return `found=False` despite a valid FeliCa detection → scan_felica() would report `createExecTimeout(5)` instead of populating `type=21` FELICA result dict.
-  - Scan flow consequence (pre-refactor): FeliCa cards on iceman FW were silently misclassified as "no tag" because the legacy banner keyword never matched.
+  - Positive-path synthetic trace-parity samples BYPASS the adapter (they inject iceman-native `IDm: XX` directly into the executor cache) so the test suite is GREEN — but this masks the live breakage.
+  - Against a real iceman PM3 talking through the current adapter: a valid FeliCa card emits `"IDm: 01 FE XX XX XX XX XX XX"`; adapter rewrites to `"IDm  01 FE XX XX XX XX XX XX"` (no colon); middleware `_KW_FOUND = r'IDm:\s'` fails to match; `parser()` returns `{'found': False}`; `scan_felica()` reports `createExecTimeout(5)`.
+  - **FeliCa cards show as "no tag" on live iceman firmware until Phase 4 disables the adapter.** This is a hard live regression (Option B transition-period breakage, as accepted in the refactor charter — but logging HIGH severity so Phase 4 prioritises FeliCa normalizer removal).
 - **Phase 4 action**:
-  - REMOVE `_normalize_felica_reader` from `_RESPONSE_NORMALIZERS['hf felica reader']` (pm3_compat.py; find wiring line).
-  - Re-capture iceman_output.json with at least one FeliCa tag present to populate a positive sample.
+  - REMOVE `_normalize_felica_reader` from `_RESPONSE_NORMALIZERS['hf felica reader']` (pm3_compat.py:1849).
+  - Re-capture iceman_output.json with at least one FeliCa tag present to populate a positive sample and lock the iceman-native shape into the live fixture set.
 
 ### Entry: hf 15 dump / hf felica litedump / hf legic dump passthrough (identical both forks)
 
@@ -413,13 +422,14 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
   - `sniff.sniff125KStart()` → `"lf sniff"` (cmdlf.c:955 CLIParser).
   - `sniff.sniffT5577Start()` → `"lf config -a 0 -t 20 -s 10000"` + `"lf t55xx sniff"` (cmdlf.c:626 / cmdlft55xx.c:4336, both CLIParser forms).
   - The `lf config` flag spelling `-a 0 -t 20 -s 10000` is iceman CLIParser form. Legacy used bare `a 0 t 20 s 10000` (param_getchar loop, cmdlf.c legacy fork). Matrix v2 L1418-1436 flags this as STRUCTURAL divergence requiring command-translate on the LEGACY direction.
-- **Adapter still running iceman→legacy**:
-  - `_REVERSE_RULES` in pm3_compat.py — per matrix L1436, a `_reverse_lf_config` rule is REQUIRED to rewrite iceman `lf config -a N -t M -s K` → legacy bare-char form BEFORE transmit to a legacy PM3. Matrix notes this rule is NOT currently wired.
+- **Adapter running iceman→legacy**:
+  - `_REVERSE_RULES` in pm3_compat.py — the `lf config` reverse rule IS WIRED at `pm3_compat.py:805-806`. Pattern: `re.compile(r'^lf config\s+-a\s+(\S+)\s+-t\s+(\S+)\s+-s\s+(\S+)$')` → replacement `r'lf config a \1 t \2 s \3'` rewrites iceman CLIParser flag form to legacy bare-char form for legacy-direction transmit. Verified directly during P3.8 fixer review (2026-04-17). Matrix v2 L1436's "NOT wired" claim is STALE — the rule was added at some prior refactor pass.
   - All other sniff commands have IDENTICAL spelling on both forks; no command-translate required.
-- **Live symptom (iceman FW, current adapter)**: NONE for the iceman target direction — sniff.py emits iceman-native syntax already. The legacy direction is missing the reverse rule but that is Phase 4's responsibility.
+- **Live symptom (iceman FW, current adapter)**: NONE. sniff.py emits iceman-native syntax; on iceman firmware the forward path is a no-op (no translation needed). On legacy firmware the reverse rule at :805-806 rewrites correctly. No breakage either direction.
 - **Phase 4 action**:
-  - Add `_reverse_lf_config` to `_REVERSE_RULES` in pm3_compat.py per matrix L1436 directive. Pattern: match `^lf config\s+(-[a-z]\s+\d+)(\s+-[a-z]\s+\d+)*$`, emit bare-char form.
+  - Reverse rule wired and correct; no Phase 4 action required for `lf config`.
   - Sniff command forms do not need Phase 4 changes; middleware is already iceman-canonical.
+  - Matrix v2 L1436 text should be updated during Phase 4 matrix reconciliation (already tracked under "Documentation debt" at the end of this gap log).
 
 ### Entry: P3.8 dormant / identical-both-firmwares (informational)
 
