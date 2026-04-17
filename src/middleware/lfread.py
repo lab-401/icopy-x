@@ -180,9 +180,16 @@ def readFCCNAndRaw(cmd, uid_index=0, raw_index=0):
     NexWatch emit alternative field labels; lfsearch._RE_FC won't match
     `Facility:` (Gallagher) and `_RE_CN` won't match `Internal ID:`
     (Keri) or `ID:` alone (Nedap, plus subtype/customer).
-    `getFCCN()` falls back to `'FC,CN: X,X'` sentinel when regex misses,
-    keeping `uid` truthy so caller's `if uid or raw:` still returns
-    success when Raw: is present. See gap log P3.5.
+
+    Success gate: EITHER `parseFC()`/`parseCN()` extracted something
+    (FC/CN regex hit), OR `REGEX_RAW` extracted a hex string.  We
+    CANNOT rely on `getFCCN()`'s string truthiness because it returns
+    the literal sentinel `'FC,CN: X,X'` when both FC and CN are empty
+    (lfsearch.py:267) — a non-empty placeholder that would always
+    evaluate truthy and produce spurious success on any non-empty
+    response.  Callers still receive the formatted `'FC,CN: ...'`
+    string in `data` (callers expect that shape), but only after we've
+    verified real FC/CN or Raw data was actually captured.
     """
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -190,11 +197,19 @@ def readFCCNAndRaw(cmd, uid_index=0, raw_index=0):
     content = executor.getPrintContent()
     if not content or executor.isEmptyContent():
         return createRetObj(None, None, -1)
-    uid = lfsearch.getFCCN()
+    # Check FC/CN extraction directly — do NOT rely on getFCCN() truthiness
+    # (it returns the 'FC,CN: X,X' sentinel even when both fields missed).
+    fc = lfsearch.parseFC()
+    cn = lfsearch.parseCN()
     raw = executor.getContentFromRegexG(lfsearch.REGEX_RAW, 1)
     if raw:
         raw = lfsearch.cleanHexStr(raw.strip())
-    if uid or raw:
+    if fc or cn or raw:
+        # At least one of FC/CN/Raw actually parsed — success.
+        # Data carries the formatted FC/CN (sentinel X,X if both missed
+        # but Raw present), preserving caller-expected 'FC,CN: xxx,yyy'
+        # shape.
+        uid = lfsearch.getFCCN()
         return createRetObj(uid, raw, 1)
     return createRetObj(None, None, -1)
 

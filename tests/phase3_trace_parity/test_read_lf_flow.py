@@ -541,6 +541,20 @@ _ICEMAN_NATIVE_SAMPLES = [
      ' Raw : 560E9C20FB8B4CE0A1B2C3D4\n\n',
      lambda body: _re.search(lfsearch.REGEX_RAW, body).group(1).strip()
                  == '560E9C20FB8B4CE0A1B2C3D4'),
+
+    # -------- lfread.readFCCNAndRaw false-positive sentinel guard -----
+    ('readFCCNAndRaw sentinel guard', 'non-empty body, no FC/CN, no Raw',
+     # Body contains text but NOTHING that matches _RE_FC/_RE_CN or
+     # REGEX_RAW.  Pre-fix readFCCNAndRaw returned {return:1, data:'FC,CN:
+     # X,X'} because getFCCN() sentinel was always truthy.  Post-fix
+     # asserts `parseFC()` / `parseCN()` / REGEX_RAW all empty so the
+     # success gate rejects.
+     'Some unrelated output with no FC, no CN, no Raw fields here.\n',
+     lambda body: (
+         not lfsearch.parseFC()
+         and not lfsearch.parseCN()
+         and _re.search(lfsearch.REGEX_RAW, body) is None
+     )),
 ]
 
 
