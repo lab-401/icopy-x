@@ -511,6 +511,27 @@ _SYNTHETIC_SAMPLES = [
      # Post-fix requires `NN | 0x<8hex> |` framing.
      'Password set...... Yes\nPassword.......... DEADBEEF\n',
      lambda body: _ICEMAN_T55XX_DUMP_ROW.findall(body) == []),
+
+    # -------- lfverify.verify_em4x05 anchored regex (FIX E) -----------
+    # Iceman cmdlfem4x05.c:1385 emits the INFO precursor
+    # `"Reading address NN using password HHHHHHHH"` BEFORE the SUCCESS
+    # `"Address NN | HHHHHHHH - %s"`.  Pre-fix bare `\\b[A-Fa-f0-9]{8}\\b`
+    # fallback captured the password (first 8-hex token), causing
+    # verify-false-FAIL on every password-protected EM4x05 block read.
+    # Post-fix anchored regex requires `Address NN | <8hex> -`.
+    ('lf em 4x05 read', 'anchored regex skips pwd echo line',
+     'Reading address 01 using password 11223344\n'
+     'Address 01 | DEADC0DE - \n',
+     lambda body: re.search(
+         r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-', body
+     ).group(1).upper() == 'DEADC0DE'),
+    ('lf em 4x05 read', 'pwd-only body does NOT false-match',
+     # Only the pwd echo, no real data row.  Anchored regex must miss.
+     'Reading address 01 using password 11223344\n',
+     lambda body: (
+         re.search(r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-', body)
+         is None
+     )),
 ]
 
 

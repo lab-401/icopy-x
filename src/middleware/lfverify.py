@@ -173,11 +173,31 @@ def verify_em4x05(file):
         if not expected_blocks:
             return VERIFY_FAIL
 
-        # Compare: extract hex data from each block's PM3 output
+        # Compare: extract hex data from each block's PM3 output.
+        #
+        # Iceman-native `lf em 4x05 read` success emission
+        # (cmdlfem4x05.c:1391):
+        #     PrintAndLogEx(SUCCESS, "Address %02d | %08X - %s", ...)
+        # Shape: `Address NN | HHHHHHHH - <Lock|empty>`.  The anchored
+        # pattern below requires the `| <8hex> -` framing to avoid
+        # false-matching the iceman precursor INFO line at
+        # cmdlfem4x05.c:1385:
+        #     `Reading address NN using password HHHHHHHH`
+        # — the password is also 8 hex chars and, under the old bare
+        # `\b([A-Fa-f0-9]{8})\b` fallback, matched BEFORE the real
+        # block data, causing verify-false-FAIL on every password-
+        # protected block read.  Fallback bare-hex removed entirely
+        # for the same reason.
         for i in range(min(len(expected_blocks), len(blocks))):
             block_content = blocks[i] if blocks[i] else ''
-            # Extract hex data from PM3 lf em 4x05_read output
-            m = _re.search(r'\b([A-Fa-f0-9]{8})\b', block_content)
+            m = _re.search(r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-',
+                           block_content)
+            if m is None:
+                # Prefix-stripped cache bodies: fallback to bare
+                # `| <8hex> -` motif.  Still anchored on the pipe +
+                # trailing dash, so the pwd line (which has no pipe)
+                # cannot match.
+                m = _re.search(r'\|\s+([A-Fa-f0-9]{8})\s+-', block_content)
             if m:
                 data_hex = m.group(1).upper()
                 if data_hex != expected_blocks[i]:
