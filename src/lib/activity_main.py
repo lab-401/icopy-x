@@ -1983,11 +1983,13 @@ class PCModeActivity(BaseActivity):
         except Exception:
             pass
 
-        try:
-            import hmi_driver
-            hmi_driver.restartpm3()
-        except Exception:
-            pass
+        # Note: do NOT call hmi_driver.restartpm3() here.
+        # executor.reworkPM3All() below already invokes restartpm3()
+        # internally (executor.py:522). Calling both back-to-back
+        # triggers a USB disconnect/reconnect cascade that multiplies
+        # the rework cycle count (observed 2026-04-17: 7 USB
+        # enumeration cycles post-stop, PM3 subprocess didn't
+        # stabilise for ~112 s vs factory ~4 s).
 
         try:
             import executor
