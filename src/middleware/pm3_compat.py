@@ -1062,20 +1062,46 @@ _RE_BARE_INFO = re.compile(r'^\[=\]\s*$\n?', re.MULTILINE)
 # Note: strip_ansi already removes color codes; these are the text markers.
 _RE_LINE_PREFIX = re.compile(r'^\[(?:\+|=|#|!!?|\-|/|\\|\|)\]\s?', re.MULTILINE)
 
-# Normalize dotted field separators to colon format (runs AFTER prefix strip
-# and AFTER command-specific normalizers, so only catches remaining patterns).
-# Matches lines like "Prng detection..... weak" and normalizes
-# the dots to ": " to match old format "Prng detection: weak".
-# Uses non-greedy .*? to avoid consuming dots in the match group.
-_RE_DOTTED_SEPARATOR = re.compile(
-    r'^(\s*\S.*?\S)\.{3,}\s+', re.MULTILINE)
+# ---------------------------------------------------------------------------
+# Legacy-direction global normalizations.
+#
+# Applied by _post_normalize() on LEGACY (factory) FW only.  Middleware was
+# flipped to iceman-native in Phase 3; these rewriters bring known legacy
+# field shapes UP to iceman shape so the iceman middleware regex matches.
+#
+# Targeted inversion: only known-field labels (Prng detection, Static nonce,
+# Magic capabilities, Xor div key).  The prior blanket dotted-to-colon
+# rewriter was removed — it inverted the correct direction.
+# ---------------------------------------------------------------------------
 
-# Strip UID type annotations like "( ONUID, re-used )" from UID lines
-_RE_UID_ANNOTATION = re.compile(
-    r'(UID:\s*(?:[0-9A-Fa-f]{2}\s*)+?)\s+\([^)]*\)')
+# Legacy emits `Prng detection: weak|hard|fail` (cmdhf14a.c:1999-2003).
+# Iceman emits `Prng detection..... weak` (5 dots) / `...... fail` (6 dots).
+# Middleware `hf14ainfo._RE_PRNG = r'Prng detection\.+\s+(\w+)'` targets dots.
+_RE_LEGACY_PRNG_COLON = re.compile(
+    r'^(\s*)Prng detection:\s*', re.MULTILINE)
 
-# Normalize ISO number spacing: "ISO 14443-A" -> "ISO14443-A" etc.
-_RE_ISO_SPACE = re.compile(r'\bISO\s+(1\d{4})')
+# Legacy emits `Static nonce: yes` (cmdhf14a.c:1989).
+# Iceman emits `Static nonce....... yes` (7 dots).
+# Middleware `hf14ainfo._KW_STATIC_NONCE = 'Static nonce....... yes'`.
+_RE_LEGACY_STATIC_NONCE_COLON = re.compile(
+    r'^(\s*)Static nonce:\s*', re.MULTILINE)
+
+# Legacy emits `Magic capabilities : Gen 1a` (mifarehost.c:1171 w/ space).
+# Iceman emits `Magic capabilities... Gen 1a` (3 dots).
+# Middleware `hf14ainfo._KW_GEN1A = 'Magic capabilities... Gen 1a'`.
+_RE_LEGACY_MAGIC_COLON = re.compile(
+    r'^(\s*)Magic capabilities\s*:\s*', re.MULTILINE)
+
+# Legacy emits `Xor div key : %s` (cmdhficlass.c:2784 w/ space).
+# Iceman emits `Xor div key.... %s` (4 dots).
+# Middleware `iclasswrite._RE_XOR_DIV_KEY = r'Xor div key\.+\s+...'`.
+_RE_LEGACY_XOR_DIV_KEY_COLON = re.compile(
+    r'^(\s*)Xor div key\s*:\s*', re.MULTILINE)
+
+# Legacy emits `ISO15693` / `ISO14443-B` / `ISO18092` with NO space.
+# Iceman emits `ISO 15693` / `ISO 14443-B` / `ISO 18092` WITH space.
+# Middleware `hfsearch._KW_ISO15693 = 'Valid ISO 15693'` (with space).
+_RE_LEGACY_ISO_NOSPACE = re.compile(r'\bISO(1\d{4})')
 
 
 def _pre_normalize(text):
@@ -1107,31 +1133,33 @@ def _pre_normalize(text):
 
 
 def _post_normalize(text):
-    """Phase C: Generic normalizations that run AFTER command-specific ones.
+    """Phase C: Generic legacy→iceman normalizations after command-specific.
 
-    Catches remaining dotted separators not handled by specific normalizers,
-    strips UID annotations, and normalizes ISO number spacing.
+    Targeted inversion of known-field labels that legacy FW emits with a
+    colon separator but iceman emits with dots (middleware targets the
+    iceman dotted shape).
     """
     if not text:
         return text
 
-    # Normalize remaining dotted separators to colon
-    # Command-specific normalizers already handled their own dotted patterns
-    # (T55xx, EM4x05, Magic, Chipset), so this only catches leftovers
-    # like "Prng detection..... weak", "Static nonce....... yes"
-    text = _RE_DOTTED_SEPARATOR.sub(r'\1: ', text)
+    # Legacy `Prng detection: weak` → iceman `Prng detection..... weak`
+    # Use 5 dots (iceman's canonical form at cmdhf14a.c:3326).
+    text = _RE_LEGACY_PRNG_COLON.sub(r'\1Prng detection..... ', text)
 
-    # FDX-B: After dot-to-colon conversion, "Animal ID...........: X"
-    # is now "Animal ID: X".  Remove the colon so REGEX_ANIMAL's \s+ matches.
-    # Must run here (Phase C) because Phase B sees the dotted form.
-    text = _RE_ANIMAL_ID_COLON.sub(r'\1 ', text)
+    # Legacy `Static nonce: yes` → iceman `Static nonce....... yes`
+    # Use 7 dots (cmdhf14a.c:3319).
+    text = _RE_LEGACY_STATIC_NONCE_COLON.sub(r'\1Static nonce....... ', text)
 
-    # Strip UID annotations: "UID: 5E 5B CE 4C   ( ONUID, re-used )"
-    # -> "UID: 5E 5B CE 4C"
-    text = _RE_UID_ANNOTATION.sub(r'\1', text)
+    # Legacy `Magic capabilities : Gen 1a` → iceman `Magic capabilities... Gen 1a`
+    # Use 3 dots (mifarehost.c:1710).
+    text = _RE_LEGACY_MAGIC_COLON.sub(r'\1Magic capabilities... ', text)
 
-    # Normalize ISO numbers: "ISO 15693" -> "ISO15693"
-    text = _RE_ISO_SPACE.sub(r'ISO\1', text)
+    # Legacy `Xor div key : <hex>` → iceman `Xor div key.... <hex>`
+    # Use 4 dots (cmdhficlass.c:5419).
+    text = _RE_LEGACY_XOR_DIV_KEY_COLON.sub(r'\1Xor div key.... ', text)
+
+    # Legacy `ISO15693` → iceman `ISO 15693` (inject space).
+    text = _RE_LEGACY_ISO_NOSPACE.sub(r'ISO \1', text)
 
     return text
 
@@ -1192,25 +1220,6 @@ def _normalize_fchk_table(text):
     return text
 
 
-# -- Track B: darkside key format --
-
-# New: "Found valid key [ AABBCCDDEEFF ]"
-# Old: "Found valid key: aabbccddeeff"  (middleware regex: r'Found valid key\s*:\s*(...)')
-_RE_DARKSIDE_NEW = re.compile(
-    r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]')
-
-
-def _normalize_darkside_key(text):
-    """Normalize darkside key output to old format.
-
-    Preserves 'Found' capitalization to match middleware regex in
-    hfmfkeys.py: r'Found valid key\\s*:\\s*([A-Fa-f0-9]{12})'
-    """
-    def _dk_replace(m):
-        return 'Found valid key: %s' % m.group(1).lower()
-    return _RE_DARKSIDE_NEW.sub(_dk_replace, text)
-
-
 # -- Track C: wrbl/rdsc/restore isOk normalization --
 
 def _normalize_wrbl_response(text):
@@ -1232,54 +1241,6 @@ def _normalize_wrbl_response(text):
     text = re.sub(r'\(\s*fail\s*\)', 'isOk:00', text)
 
     return text
-
-
-# -- Track C: rdbl/cgetblk data format --
-
-# New rdbl table row: "  0 | AA BB CC DD EE FF 00 11 22 33 44 55 66 77 88 99 | .ascii."
-# Old rdbl format:    "data: AA BB CC DD EE FF 00 11 22 33 44 55 66 77 88 99"
-_RE_RDBL_TABLE_ROW = re.compile(
-    r'^\s*(\d+)\s*\|\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})\s*\|.*$',
-    re.MULTILINE)
-
-# Table headers from rdbl/rdsc/cgetblk
-_RE_RDBL_TABLE_HDR = re.compile(
-    r'^\s*#\s*\|\s*sector\s+\d+.*$', re.MULTILINE)
-_RE_RDBL_TABLE_SEP = re.compile(
-    r'^-{3,}\+-{3,}.*$', re.MULTILINE)
-
-
-def _normalize_rdbl_response(text):
-    """Normalize rdbl/cgetblk block data to old 'data:' format.
-
-    New: '  0 | AA BB CC ... | ascii'
-    Old: 'data: AA BB CC ...'
-
-    Preserves block number for sector reads (multiple blocks).
-    """
-    def _rdbl_replace(m):
-        block_data = m.group(2).strip()
-        return 'data: %s' % block_data
-
-    text = _RE_RDBL_TABLE_ROW.sub(_rdbl_replace, text)
-    # Remove table headers and separators
-    text = _RE_RDBL_TABLE_HDR.sub('', text)
-    text = _RE_RDBL_TABLE_SEP.sub('', text)
-    return text
-
-
-# -- Track C: Magic capabilities --
-
-_RE_MAGIC_DOTTED = re.compile(r'Magic capabilities\.{3,}\s+', re.MULTILINE)
-
-
-def _normalize_magic_capabilities(text):
-    """Normalize magic capabilities format.
-
-    New: 'Magic capabilities... Gen 1a'
-    Old: 'Magic capabilities : Gen 1a'
-    """
-    return _RE_MAGIC_DOTTED.sub('Magic capabilities : ', text)
 
 
 # -- Track D: EM410x ID format --
@@ -1322,67 +1283,6 @@ def _normalize_chipset_detection(text):
     return _RE_CHIPSET_NEW.sub(r'Chipset detection: \1', text)
 
 
-# -- Track D: 'No data found!' restoration --
-
-def _normalize_lf_no_data(text):
-    """Restore 'No data found!' message for lf search.
-
-    In the new firmware, this message was removed. If lf search produces
-    no tag detection AND no 'No known 125/134 kHz tags found!', the
-    middleware expects 'No data found!' to be present.
-    This is handled at the scan level - if lf search returns empty/no
-    valid tags, we inject the expected marker.
-    """
-    # If the text is empty or has no tag detection at all, inject the marker
-    if not text or not text.strip():
-        return 'No data found!\n'
-    return text
-
-
-# -- Track D: HID Prox format --
-
-# New HID output uses hid_print_card() with wiegand decode
-# We need to extract raw value and emit old-style "HID Prox - XXXX"
-_RE_HID_RAW = re.compile(r'raw:\s*([0-9A-Fa-f]+)', re.IGNORECASE)
-
-# Strip leading zeros from HID Prox hex (iceman pads to 24 chars, legacy was 8-16)
-_RE_HID_PROX_LINE = re.compile(r'HID Prox - (0*)([0-9A-Fa-f]+)')
-
-
-def _normalize_hid_prox(text):
-    """Normalize HID Prox output to old format.
-
-    Bug 2: iceman outputs 'HID Prox - 000000000000002006222332' (24 chars,
-    zero-padded) while legacy used shorter hex (8-16 chars).  Strip leading
-    zeros so lfsearch REGEX_HID extracts the meaningful portion.
-
-    Also prepend old-style line if missing (pure wiegand decode output).
-    """
-    if 'Valid HID Prox ID' not in text:
-        return text
-
-    if 'HID Prox -' not in text:
-        # Pure wiegand decode output — prepend old-style line from raw
-        m = _RE_HID_RAW.search(text)
-        if m:
-            raw = m.group(1)
-            text = 'HID Prox - %s\n%s' % (raw, text)
-
-    # Strip leading zeros from HID Prox line (keep at least 8 chars)
-    def _strip_hid_zeros(m):
-        leading = m.group(1)
-        value = m.group(2)
-        # Keep at least 8 hex chars to match legacy %08x format
-        full = leading + value
-        stripped = full.lstrip('0') or '0'
-        if len(stripped) < 8:
-            stripped = full[-(max(8, len(stripped))):]
-        return 'HID Prox - %s' % stripped
-
-    text = _RE_HID_PROX_LINE.sub(_strip_hid_zeros, text)
-    return text
-
-
 # -- Track D: FDX-B Animal ID format --
 
 # Bug 3: iceman outputs "Animal ID: 060-030207938416" (colon after ID).
@@ -1403,145 +1303,6 @@ def _normalize_fdxb_animal_id(text):
     if 'FDX-B' not in text and 'Animal' not in text:
         return text
     return _RE_ANIMAL_ID_COLON.sub(r'\1 ', text)
-
-
-# -- Track D: Gallagher field format --
-
-# Bug 5: iceman outputs "GALLAGHER - Region: 0 Facility: 4369 Card No.: 0"
-# lfsearch _RE_FC expects "FC:" and _RE_CN expects "Card:" or "CN:".
-# "Facility:" doesn't match _RE_FC; "Card No.:" confuses _RE_CN.
-_RE_GALLAGHER_FACILITY = re.compile(r'\bFacility:\s+(\d+)')
-_RE_GALLAGHER_CARD_NO = re.compile(r'\bCard No\.:\s+(\d+)')
-
-
-def _normalize_gallagher_fields(text):
-    """Normalize Gallagher field names for FC/CN regex matching.
-
-    New: 'Facility: 4369 Card No.: 0'
-    Old: 'FC: 4369 Card: 0'
-
-    Convert Gallagher-specific field names to the standard FC:/Card: format
-    that lfsearch _RE_FC and _RE_CN expect.
-    """
-    if 'GALLAGHER' not in text:
-        return text
-    text = _RE_GALLAGHER_FACILITY.sub(r'FC: \1', text)
-    text = _RE_GALLAGHER_CARD_NO.sub(r'Card: \1', text)
-    return text
-
-
-# -- Track D: SecuraKey hex FC --
-
-# Bug 6: iceman outputs "FC: 0x2AAA" (hex) but lfsearch's getFCCN()
-# calls int(cleanHexStr(fc)) which fails on hex letters ('2AAA').
-# Legacy PM3 output FC as decimal.  Convert hex FC to decimal.
-_RE_FC_HEX = re.compile(r'\bFC:\s+(0x[0-9A-Fa-f]+)')
-
-
-def _normalize_securakey_fc_hex(text):
-    """Convert hex FC values to decimal for lfsearch compatibility.
-
-    New: 'FC: 0x2AAA'  -> 'FC: 10922'
-    """
-    if 'Securakey' not in text and 'SECURAKEY' not in text:
-        return text
-
-    def _hex_to_dec(m):
-        try:
-            return 'FC: %d' % int(m.group(1), 16)
-        except ValueError:
-            return m.group(0)
-
-    return _RE_FC_HEX.sub(_hex_to_dec, text)
-
-
-# -- Track D: AWID unknown format card number --
-
-# Bug 1: iceman outputs "AWID - len: 222 -unknown- (57051) - Wiegand: ..."
-# For known formats, FC:/Card: are present.  For unknown formats, the card
-# number is in parentheses but no Card: line exists.  lfsearch setUID2FCCN
-# needs Card: to extract CN.
-_RE_AWID_UNKNOWN_CARD = re.compile(
-    r'AWID\s*-\s*len:\s*\d+\s+-unknown-\s+\((\d+)\)')
-
-
-def _normalize_awid_card_number(text):
-    """Add Card: line for AWID unknown format cards.
-
-    New: 'AWID - len: 222 -unknown- (57051) - Wiegand: ...'
-    Fix: Append 'Card: 57051' so _RE_CN can extract it.
-    """
-    if 'AWID' not in text:
-        return text
-    m = _RE_AWID_UNKNOWN_CARD.search(text)
-    if m and 'Card:' not in text:
-        card_num = m.group(1)
-        # Insert Card: line after the AWID detection line
-        text = text + '\nCard: %s' % card_num
-    return text
-
-
-# -- Track D: Keri / keyword case normalization --
-
-# Bug 7: iceman may output "Valid Keri ID" (mixed case) but lfsearch
-# checks "Valid KERI ID" (all caps).  hasKeyword uses case-sensitive
-# re.search.  Normalize known case differences.
-_LF_KEYWORD_CASE_MAP = {
-    'Valid Keri ID': 'Valid KERI ID',
-    'Valid keri ID': 'Valid KERI ID',
-}
-
-
-def _normalize_lf_keyword_case(text):
-    """Normalize case of LF Valid keyword lines.
-
-    Iceman may use different casing than the legacy PM3 for certain tag
-    detection keywords.  lfsearch.py checks exact case via re.search.
-    """
-    for old, new in _LF_KEYWORD_CASE_MAP.items():
-        if old in text:
-            text = text.replace(old, new)
-    return text
-
-
-# -- Track D: Indala long raw to short UID --
-
-# Bug 8: iceman outputs "Indala (len 130)  Raw: 800000000000005..."
-# The full raw is 28+ bytes (56+ hex chars) which is too long for display.
-# The lfsearch handler sets data = raw (full hex), which truncates on
-# the small screen showing only trailing zeros.
-# For long Indala, extract the meaningful middle portion as a Card: line.
-_RE_INDALA_LONG = re.compile(
-    r'Indala\s+\(len\s+(\d+)\)\s+Raw:\s+([0-9A-Fa-f]+)')
-
-
-def _normalize_indala_uid(text):
-    """Add short Card ID for long Indala raw data.
-
-    For Indala cards with raw > 16 hex chars, extract a meaningful
-    portion and add as Card: line so REGEX_CARD_ID can extract a
-    display-friendly UID.
-    """
-    if 'Indala' not in text:
-        return text
-    m = _RE_INDALA_LONG.search(text)
-    if not m:
-        return text
-    raw_hex = m.group(2)
-    if len(raw_hex) <= 16:
-        return text  # Short Indala, raw is already usable
-    # Extract meaningful portion: strip leading 80/00 padding and trailing 00s
-    stripped = raw_hex.lstrip('0')
-    if stripped.startswith('8'):
-        # Leading 0x80 is a start marker, skip it
-        stripped = stripped[1:].lstrip('0')
-    # Trim trailing zeros
-    stripped_trail = stripped.rstrip('0') or stripped[:8]
-    # Use up to 16 chars of the meaningful portion
-    short_id = stripped_trail[:16] if len(stripped_trail) > 16 else stripped_trail
-    if short_id and 'Card:' not in text:
-        text = text + '\nCard: %s' % short_id
-    return text
 
 
 # -- Track E: T55xx config normalization --
@@ -1750,67 +1511,6 @@ def _normalize_felica_reader(text):
     return text
 
 
-# -- MANUFACTURER label restoration --
-
-def _normalize_manufacturer(text):
-    """Restore MANUFACTURER: label removed in new firmware.
-
-    The new firmware removed the 'MANUFACTURER:' label entirely,
-    printing just the manufacturer name indented.  The old regex
-    pattern '.*MANUFACTURER:(.*)' needs this label.
-
-    We detect the manufacturer section by checking for known
-    manufacturer names (NXP, Infineon, etc.) on indented lines
-    following the SAK line.
-    """
-    # Only add if MANUFACTURER: is not already present
-    if 'MANUFACTURER:' in text:
-        return text
-
-    # Known manufacturer strings from PM3 source
-    _MANUFACTURERS = [
-        'NXP', 'Infineon', 'STMicroelectronics', 'Motorola',
-        'Philips', 'ATMEL', 'EM Micro', 'Shanghai',
-        'Gemplus', 'Inside Contactless',
-    ]
-    lines = text.split('\n')
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        for mfr in _MANUFACTURERS:
-            if stripped.startswith(mfr):
-                lines[i] = 'MANUFACTURER: %s' % stripped
-                return '\n'.join(lines)
-    return text
-
-
-# -- Track G: ISO15693 manufacturer normalization for hf search --
-
-# Bug 10: iceman's hf search uses 'STMicroelectronics' or 'ST Microelectronics'
-# but hfsearch.py checks for 'ST Microelectronics SA France'.
-# Map iceman manufacturer names to legacy equivalents.
-_ISO15693_MANUFACTURER_MAP = {
-    'STMicroelectronics': 'ST Microelectronics SA France',
-    'ST Microelectronics SA': 'ST Microelectronics SA France',
-    'ST Microelectronics': 'ST Microelectronics SA France',
-}
-
-
-def _normalize_iso15693_manufacturer(text):
-    """Normalize ISO15693 manufacturer names for hfsearch keyword matching.
-
-    Iceman uses short manufacturer names (e.g., 'STMicroelectronics') but
-    hfsearch.py expects the full legacy string ('ST Microelectronics SA France')
-    for proper ISO15693 subtype detection (ST SA vs ICODE).
-    """
-    if 'ISO15693' not in text and 'iso15693' not in text.lower():
-        return text
-    for short, full in _ISO15693_MANUFACTURER_MAP.items():
-        if short in text and full not in text:
-            text = text.replace(short, full)
-            break
-    return text
-
-
 # ===========================================================================
 # Command-specific dispatch table
 # ===========================================================================
@@ -1820,60 +1520,28 @@ def _normalize_iso15693_manufacturer(text):
 _RESPONSE_NORMALIZERS = {
     'hf mf fchk': [_normalize_fchk_table],
     'hf mf chk': [_normalize_fchk_table],
-    'hf mf darkside': [_normalize_darkside_key],
-    'hf mf nested': [_normalize_fchk_table, _normalize_darkside_key],
+    'hf mf nested': [_normalize_fchk_table],
     'hf mf staticnested': [_normalize_fchk_table],
     'hf mf wrbl': [_normalize_wrbl_response],
-    'hf mf rdbl': [_normalize_rdbl_response],
-    'hf mf rdsc': [_normalize_rdbl_response, _normalize_wrbl_response],
-    'hf mf cgetblk': [_normalize_rdbl_response],
-    'hf mf csetblk': [],
-    'hf mf csetuid': [],
-    'hf mf cload': [],
-    'hf mf cwipe': [],
-    'hf mf dump': [_normalize_rdbl_response],
     'hf mf restore': [_normalize_wrbl_response],
-    'hf 14a info': [_normalize_magic_capabilities, _normalize_manufacturer],
-    'hf sea': [_normalize_iso15693_manufacturer],
-    'hf search': [_normalize_iso15693_manufacturer],
-    'hf mfu info': [],
-    'hf mfu dump': [_normalize_save_messages],
-    'hf mfu restore': [],
-    'hf 15 dump': [_normalize_save_messages],
     'hf 15 restore': [_normalize_hf15_restore],
     'hf 15 csetuid': [_normalize_hf15_csetuid],
-    'hf iclass dump': [_normalize_save_messages],
     'hf iclass rdbl': [_normalize_iclass_rdbl],
     'hf iclass wrbl': [_normalize_iclass_wrbl],
-    'hf iclass chk': [],
     'hf felica reader': [_normalize_felica_reader],
-    'hf felica litedump': [],
-    'lf sea': [_normalize_lf_no_data, _normalize_em410x_id,
-               _normalize_hid_prox, _normalize_chipset_detection,
-               _normalize_fdxb_animal_id, _normalize_gallagher_fields,
-               _normalize_securakey_fc_hex, _normalize_awid_card_number,
-               _normalize_lf_keyword_case, _normalize_indala_uid],
-    'lf search': [_normalize_lf_no_data, _normalize_em410x_id,
-                  _normalize_hid_prox, _normalize_chipset_detection,
-                  _normalize_fdxb_animal_id, _normalize_gallagher_fields,
-                  _normalize_securakey_fc_hex, _normalize_awid_card_number,
-                  _normalize_lf_keyword_case, _normalize_indala_uid],
+    'lf sea': [_normalize_em410x_id, _normalize_chipset_detection,
+               _normalize_fdxb_animal_id],
+    'lf search': [_normalize_em410x_id, _normalize_chipset_detection,
+                  _normalize_fdxb_animal_id],
     'lf t55xx detect': [_normalize_t55xx_config],
     'lf t55xx dump': [_normalize_t55xx_config, _normalize_save_messages],
-    'lf t55xx read': [],
-    'lf t55xx write': [],
-    'lf t55xx wipe': [],
     'lf t55xx chk': [_normalize_t55xx_chk_password],
-    'lf t55xx restore': [],
     'lf em 4x05 info': [_normalize_em4x05_info],
     'lf em 4x05_info': [_normalize_em4x05_info],
     'lf em 4x05 dump': [_normalize_em4x05_info, _normalize_save_messages],
     'lf em 4x05_dump': [_normalize_em4x05_info, _normalize_save_messages],
-    'lf em 4x05 read': [],
-    'lf em 4x05_read': [],
     'lf em 410x reader': [_normalize_em410x_id],
     'lf em 410x_read': [_normalize_em410x_id],
-    'data save': [_normalize_save_messages],
 }
 
 
