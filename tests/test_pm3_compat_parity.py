@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
-"""Comprehensive parity test suite for pm3_compat bidirectional translation.
+"""Parity test suite for pm3_compat after Phase 4 inversion.
 
 Agent 6 (Test Builder) — PM3 compatibility flip verification pipeline.
 
+Phase 4 state:
+  - Middleware is iceman-native (Phase 3 complete).
+  - pm3_compat.translate() runs only on LEGACY (factory) FW, converting
+    iceman CLI-flag commands down to legacy positional syntax.
+  - pm3_compat.translate_response() runs only on LEGACY FW, converting
+    legacy output UP to iceman shape for iceman-native middleware regex.
+  - On iceman FW both are pass-through (except _BLOCKED_CMDS_ICEMAN
+    hardware workaround).
+  - Forward (legacy->iceman) translation rules were deleted since all
+    middleware now emits iceman form directly.
+
 Categories:
-  1. Bidirectional command translation (5 properties per forward rule)
-  2. LEGACY_COMPAT gate
-  3. _clean_pm3_output independence
+  1. Iceman FW pass-through (forward direction is a no-op)
+  2. Legacy FW translation (iceman cmd -> factory cmd)
+  3. LEGACY_COMPAT gate
+  4. _clean_pm3_output independence
 """
 
 import sys
@@ -45,24 +57,27 @@ def _ensure_legacy_on():
 
 
 # ---------------------------------------------------------------------------
-# Category 1: Bidirectional Command Translation
+# Category 1: Iceman-FW pass-through + Legacy-FW reverse translation.
 #
-# For each forward rule we construct a sample factory command, its expected
-# iceman translation, and test 5 properties:
-#   1. Forward: factory_cmd -> translate(iceman) -> expected iceman
-#   2. Reverse: iceman_cmd -> translate(original) -> expected factory_cmd
-#   3. Round-trip: factory -> fwd -> rev -> equals original
-#   4. Iceman idempotency: iceman_cmd -> translate(iceman) -> unchanged
-#   5. Factory idempotency: factory_cmd -> translate(original) -> unchanged
+# Phase 4 changed the semantics:
+#   - ICEMAN FW: translate() returns the input unchanged (forward rules
+#     deleted; middleware is iceman-native).  Exception: _BLOCKED_CMDS_ICEMAN
+#     commands are substituted with 'hw ping'.
+#   - ORIGINAL (factory) FW: translate() converts iceman CLI-flag syntax
+#     down to legacy positional syntax.
 #
-# Rules whose reverse is not covered by _REVERSE_TRANSLATION_RULES
-# (one-way only) are tested for properties 1, 4, 5 only.
+# For each (factory_cmd, iceman_cmd) pair we test:
+#   1. FWD_ICE: translate(iceman_cmd) on ICEMAN == iceman_cmd (pass-through)
+#   2. FWD_FAC: translate(factory_cmd) on ICEMAN == factory_cmd (pass-through)
+#   3. REV:     translate(iceman_cmd) on ORIGINAL == factory_cmd (reverse)
+#   4. IDEM_ICE: translate(iceman_cmd) on ICEMAN == iceman_cmd (alias of 1)
+#   5. IDEM_FAC: translate(factory_cmd) on ORIGINAL == factory_cmd (idempotent)
 # ---------------------------------------------------------------------------
 
 # Each entry: (factory_cmd, expected_iceman_cmd, has_reverse_rule)
-# has_reverse_rule=True means the reverse rule table should convert
-# iceman_cmd back to factory_cmd (properties 2+3 tested).
-# has_reverse_rule=False means no reverse rule exists (one-way translation).
+# has_reverse_rule=True means _COMMAND_TRANSLATION_RULES will convert
+# iceman_cmd back to factory_cmd on LEGACY FW (property 3 tested).
+# has_reverse_rule=False means the reverse is one-way (property 3 skipped).
 
 BIDIRECTIONAL_PAIRS = [
     # -- Name changes --
@@ -237,13 +252,13 @@ BIDIRECTIONAL_PAIRS = [
 
 
 def run_category1():
-    """Run all bidirectional command translation tests."""
+    """Run iceman-FW pass-through + legacy-FW reverse translation tests."""
     _ensure_legacy_on()
 
     for entry in BIDIRECTIONAL_PAIRS:
         if len(entry) == 3:
             factory_cmd, iceman_cmd, has_reverse = entry
-            reverse_factory = factory_cmd  # default: reverse should produce original
+            reverse_factory = factory_cmd
         elif len(entry) == 4:
             factory_cmd, iceman_cmd, has_reverse, reverse_factory = entry
         else:
@@ -251,33 +266,29 @@ def run_category1():
 
         label = factory_cmd[:60]
 
-        # Property 1: Forward translation (factory -> iceman)
-        _set_version(pm3_compat.PM3_VERSION_ICEMAN)
-        fwd = pm3_compat.translate(factory_cmd)
-        _test('FWD [%s]' % label, fwd, iceman_cmd)
-
-        # Property 4: Iceman idempotency (iceman_cmd unchanged on iceman)
+        # Property 1: iceman-FW pass-through for iceman command.
+        # Post-flip translate() is a no-op on iceman (forward rules deleted).
         _set_version(pm3_compat.PM3_VERSION_ICEMAN)
         idem_ice = pm3_compat.translate(iceman_cmd)
-        _test('IDEM_ICE [%s]' % label, idem_ice, iceman_cmd)
+        _test('ICE_PASSTHRU_ICE [%s]' % label, idem_ice, iceman_cmd)
 
-        # Property 5: Factory idempotency (factory_cmd unchanged on original)
+        # Property 2: iceman-FW pass-through for factory command.
+        # Legacy input on iceman now passes through (no forward translation).
+        _set_version(pm3_compat.PM3_VERSION_ICEMAN)
+        fwd = pm3_compat.translate(factory_cmd)
+        _test('ICE_PASSTHRU_FAC [%s]' % label, fwd, factory_cmd)
+
+        # Property 5: Factory idempotency (factory_cmd unchanged on original).
+        # Factory syntax on legacy FW is native — no rule should rewrite.
         _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
         idem_fac = pm3_compat.translate(factory_cmd)
         _test('IDEM_FAC [%s]' % label, idem_fac, factory_cmd)
 
         if has_reverse:
-            # Property 2: Reverse translation (iceman -> factory)
+            # Property 3: Reverse translation (iceman cmd -> factory) on legacy.
             _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
             rev = pm3_compat.translate(iceman_cmd)
             _test('REV [%s]' % label, rev, reverse_factory)
-
-            # Property 3: Round-trip (factory -> fwd -> rev -> original)
-            _set_version(pm3_compat.PM3_VERSION_ICEMAN)
-            fwd2 = pm3_compat.translate(factory_cmd)
-            _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
-            rt = pm3_compat.translate(fwd2)
-            _test('RT [%s]' % label, rt, reverse_factory)
 
 
 # ---------------------------------------------------------------------------
@@ -487,22 +498,34 @@ def run_needs_translation():
 # ---------------------------------------------------------------------------
 
 def run_translate_response():
-    """Test translate_response behavior with LEGACY_COMPAT=True."""
+    """Test translate_response behavior with LEGACY_COMPAT=True.
+
+    Phase 4 flipped the gate: translate_response runs only on LEGACY FW now.
+    On iceman FW it is a pass-through.  On original FW it rewrites legacy
+    output UP to iceman shape so iceman-native middleware regex matches.
+    """
     _ensure_legacy_on()
 
-    # On original firmware, translate_response is a no-op
-    _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
-    resp = 'Write ( ok )\nSome data'
-    _test('RESP original_noop',
-          pm3_compat.translate_response(resp, 'hf mf wrbl'), resp)
-
-    # On iceman firmware, response normalization applies
+    # On iceman firmware, translate_response is a pass-through no-op.
     _set_version(pm3_compat.PM3_VERSION_ICEMAN)
-    _test('RESP iceman_wrbl_ok',
-          'isOk:01' in pm3_compat.translate_response('Write ( ok )', 'hf mf wrbl'),
+    resp = 'Write ( ok )\nSome data'
+    _test('RESP iceman_noop',
+          pm3_compat.translate_response(resp, 'hf mf wrbl'), resp)
+    _test('RESP iceman_noop_prng',
+          pm3_compat.translate_response('Prng detection..... weak\n', 'hf 14a info'),
+          'Prng detection..... weak\n')
+
+    # On original (legacy) firmware, legacy->iceman normalization applies.
+    _set_version(pm3_compat.PM3_VERSION_ORIGINAL)
+    _test('RESP original_wrbl_isOk01_to_iceman',
+          'Write ( ok )' in pm3_compat.translate_response('isOk:01\n', 'hf mf wrbl'),
           True)
-    _test('RESP iceman_wrbl_fail',
-          'isOk:00' in pm3_compat.translate_response('Write ( fail )', 'hf mf wrbl'),
+    _test('RESP original_wrbl_isOk00_to_iceman',
+          'Write ( fail )' in pm3_compat.translate_response('isOk:00\n', 'hf mf wrbl'),
+          True)
+    _test('RESP original_prng_colon_to_dotted',
+          'Prng detection..... weak' in pm3_compat.translate_response(
+              'Prng detection: weak\n', 'hf 14a info'),
           True)
 
     # Empty text
