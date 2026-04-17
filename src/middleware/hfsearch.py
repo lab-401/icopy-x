@@ -95,10 +95,15 @@ _KW_TOPAZ = 'Valid Topaz'
 # ---------------------------------------------------------------------------
 # Regex patterns — iceman-native shapes
 # ---------------------------------------------------------------------------
-# Iceman ISO15693 UID: `" UID: " _GREEN_("%s")` (cmdhf15.c emits UID with
-# single leading space + colon + space). Simplify from legacy-tolerant
-# `.*UID:\s(.*)` to iceman-specific bounded capture.
-_RE_UID = r'UID:\s+([0-9A-Fa-f ]+)'
+# Iceman ISO15693 UID: `"UID.... " _GREEN_("%s")` — cmdhf15.c:447 inside
+# `getUID()` called by `readHF15Uid()` (cmdhf15.c:465), which is the path
+# exercised by `hf sea` (cmdhf.c:197). The field separator is FOUR dots,
+# NOT a colon — iceman dropped the legacy `UID: ` form for ISO15693 entirely.
+# Grep of /tmp/rrg-pm3/client/src/cmdhf15.c for `UID:` within SUCCESS-level
+# emissions yields zero matches; only `UID....` is emitted.
+# Keep regex tolerant to 4+ dots in case downstream iceman versions vary.
+# Matrix L971 (hf search ISO15693 sub-row — to be re-verified in v4).
+_RE_UID = r'UID\.{3,}\s+([0-9A-Fa-f ]+)'
 
 # Iceman ISO14443-B UID: `" UID    : %s"` (cmdhf14b.c:1269, padded spaces
 # before colon). Tolerant to both padded and non-padded colon.
