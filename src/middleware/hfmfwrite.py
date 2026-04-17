@@ -244,7 +244,11 @@ def write_with_gen1a_only_uid(infos):
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
-    if executor.hasKeyword("Can't set magic"):
+    # csetuid failure emission (iceman): cmdhfmf.c:5831 emits
+    # `PrintAndLogEx(ERR, "Can't set UID. error %d", res)`. This is DISTINCT
+    # from cload's `Can't set magic card block: %d` (cmdhfmf.c:6061/6108/9028).
+    # Substring `"Can't set UID"` matches the csetuid-specific failure literal.
+    if executor.hasKeyword("Can't set UID"):
         return -1
     gen1afreeze()
     return 1
