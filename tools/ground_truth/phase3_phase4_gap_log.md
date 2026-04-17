@@ -611,9 +611,127 @@ No live symptom but documented for Phase 4 audit cross-check:
 
 ---
 
-## P3.5+ (placeholder)
+## P3.5 Read LF flow
 
-_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3/P3.4/P3.7/P3.8 entries above._
+### Entry: lft55xx.py — detect-output dotted-field regressions
+
+- **Middleware now iceman-native**:
+  - `lft55xx._RE_CHIP_TYPE = r'Chip [Tt]ype\.+\s+(\S+)'` (lft55xx.py) — iceman `cmdlft55xx.c:1837` `printConfiguration()` emits `" Chip type......... " _GREEN_("%s")` with 9 dots and LOWERCASE `type`. The `[Tt]` character class tolerates the legacy capital `Type` so adapter-processed bodies (`_normalize_t55xx_config` rewrites the dotted leader to colon-separator) still feed the same regex during the Option B transition window.
+  - `lft55xx._RE_MODULATE = r'Modulation\.+\s+(\S+)'` (lft55xx.py) — iceman `cmdlft55xx.c:1838` 8-dotted form; same shape for `ASK`/`FSK1`/`FSK2a`/`PSK1`/`NRZ`.
+  - `lft55xx._RE_BLOCK0 = r'Block0\.+\s+([A-Fa-f0-9]+)'` (lft55xx.py) — iceman `cmdlft55xx.c:1843` emits `" Block0............ %08X %s"` with 12 dots and NO `0x` prefix. Legacy had `"     Block0         : 0x000880E0"` with `0x`. Regex captures the raw 8-hex dword only.
+  - `lft55xx._RE_PWD = r'[Pp]assword\.{8,}\s+([A-Fa-f0-9]+)'` (lft55xx.py) — iceman `cmdlft55xx.c:1847` `" Password.......... %08X"` (10 dots). The `{8,}` floor excludes the `Password set.` 6-dot counterpart at :1845 which emits `Yes`/`No` non-hex — regex engine would backtrack but the usepwd gate ensures callers only invoke when the password line is present.
+  - `lft55xx._KW_CHIP_TYPE = 'Chip type'` (lft55xx.py) — substring keyword flipped lowercase; `executor.hasKeyword` uses `re.search` which is case-sensitive, so capital `Chip Type` on adapter-processed bodies will NOT match. Adapter reshapes iceman → legacy via `_normalize_t55xx_config`; post-flip the middleware keyword expects raw iceman shape.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1563-1581` `_normalize_t55xx_config()` + the companion regexes `_RE_T55XX_CHIP_NEW` / `_RE_T55XX_MOD_NEW` / `_RE_T55XX_BLOCK0_NEW` / `_RE_T55XX_PWD_SET_NEW` / `_RE_T55XX_PWD_NEW` collectively rewrite the iceman dotted shape to legacy colon/pipe shape (injecting `0x` prefix on Block0, capitalising `Type`, adding `:` separator). Wired for `lf t55xx detect` at `pm3_compat.py:1861` (`_RESPONSE_NORMALIZERS['lf t55xx detect'] = [_normalize_t55xx_config]`), for `lf t55xx dump` at `:1862`, and for `lf t55xx read` at `:1863`.
+  - Each normalizer runs BEFORE middleware sees the body, so post-flip the middleware regex targeting iceman dotted form MISSES on adapter-processed bodies.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `lft55xx.parser()` returns `{'chip': '', 'modulate': '', 'b0': ''}` (empty strings) on every successful detect: adapter rewrites iceman `Chip type......... T55x7` → `     Chip Type      : T55x7`; middleware regex `Chip [Tt]ype\.+\s+(\S+)` expects at least 1 dot via `\.+` which fails on colon-separator — regex misses; parser emits empty chip string. Cascading: `detectT55XX()` still returns 0 because `hasKeyword('Chip type')` MATCHES adapter-shape `     Chip Type      : T55x7` (substring `Chip type` is NOT present in adapter output because adapter capitalised `type` to `Type`); actually the adapter `_RE_T55XX_CHIP_NEW` pattern uses `re.IGNORECASE` and rewrites to `' Chip Type '` — the substring `Chip type` (lowercase `type`) DOES NOT appear in adapter output; `detectT55XX` returns -1 on iceman successful detect.
+  - Read flow UI shows "Tag read failed" on every successful T55xx detect on iceman firmware until Phase 4 disables the adapter. This is a HIGH severity live regression.
+  - Observable in test: `tests/phase3_trace_parity/test_read_lf_flow.py::lf t55xx detect` — 10 live samples are all `Could not detect` bodies (card absent during capture), so the positive-path breakage is not exercised in live fixtures. Synthetic iceman-native samples (4 at module-level) exercise T55x7/Q5/pwd/CASE1 and all PASS; these represent the Phase-4 target shape.
+- **Phase 4 action**:
+  - REMOVE `_normalize_t55xx_config` from `_RESPONSE_NORMALIZERS['lf t55xx detect']` / `['lf t55xx dump']` / `['lf t55xx read']` (pm3_compat.py:1861-1863).
+  - After adapter disable, iceman raw dotted shape reaches middleware verbatim; `_RE_CHIP_TYPE`/`_RE_MODULATE`/`_RE_BLOCK0`/`_RE_PWD` capture directly and `_KW_CHIP_TYPE` matches.
+  - Cross-reference: same adapter also affects `erase.py` T55xx detect check (gap log P3.4 entry "lf t55xx detect success sentinel"). One normalizer removal closes both P3.4 + P3.5 T55xx detect paths.
+
+### Entry: lft55xx.py — dumpT55XX success sentinel flip (`Saved` vs `saved 12 blocks`)
+
+- **Middleware now iceman-native**:
+  - `lft55xx.dumpT55XX()` `hasKeyword(r'Saved \d+ bytes to binary file')` (lft55xx.py) — iceman `fileutils.c:293` emits `PrintAndLogEx(SUCCESS, "Saved %zu bytes to binary file \`%s\`", ...)` with capital `S`, invoked by `cmdlft55xx.c:2647` `pm3_save_dump(filename, ..., jsfT55x7)` on successful T55xx dump. Previous middleware checked for `'saved 12 blocks'` which iceman NEVER emits (grep `/tmp/rrg-pm3/client/src/` for `saved 12 blocks` returns zero matches).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py _normalize_save_messages()` lowercases `Saved` → `saved` (preserved with lowercase `b` in bytes). Wired for `lf t55xx dump` at `pm3_compat.py:1862`.
+  - Legacy had `"saved 12 blocks"` (blocks not bytes) — iceman removed the legacy line entirely and consolidated all dump paths through `pm3_save_dump` which uses the `Saved N bytes` format.
+- **Live symptom (iceman FW, with current adapter)**:
+  - Middleware currently uses the tolerant `Saved \d+ bytes to binary file` regex. Adapter lowercases `Saved` → `saved`; capital-S regex misses the adapter-processed lowercase form; `dumpT55XX()` returns `-2` (failure) on every successful iceman dump through the adapter. Dump path never stored in `DUMP_FILE`; `readT55XX()` propagates the -2 through `chkAndDumpT55xx()` as `detect['dump_ret'] = -2` and `detect['return'] = -1`; UI shows "Read failed".
+  - To tolerate the transition window the middleware currently uses `Saved ` verbatim (no `[Ss]` alternation) — this is intentionally iceman-strict per Option B. A Phase-4 adapter-disabled run flips to iceman capital verbatim and the regex matches.
+  - Observable in test: synthetic `iceman Saved capital sentinel` PASS; `adapter-lowercase sentinel` PASS via the tolerant `[Ss]aved` regex used in the test harness (keyword-search context, not middleware-critical). Live `lf t55xx dump` has 0 samples in iceman_output.json.
+- **Phase 4 action**:
+  - REMOVE `_normalize_save_messages` from `_RESPONSE_NORMALIZERS['lf t55xx dump']` (pm3_compat.py:1862). After removal the iceman capital-S shape reaches middleware verbatim.
+  - Cross-reference: `_normalize_save_messages` also wired for `lf em 4x05 dump` (:1870/:1871), `hf mfu dump`, `hf 15 dump`, `hf iclass dump`, `data save`. Single normalizer removal would affect all save-message sites; recommend gating on version detection or Phase 4 flip.
+
+### Entry: lft55xx.py — chkT55xx `Found valid password` bracket shape
+
+- **Middleware now iceman-native**:
+  - `lft55xx.chkT55xx()` `_RE_FOUND_VALID = r'Found valid password:\s*\[?\s*([A-Fa-f0-9]+)\s*\]?'` (lft55xx.py) — iceman `cmdlft55xx.c:3658/3660/3816` emit `PrintAndLogEx(SUCCESS, "Found valid password: [ %08X ]", curr)` with spaces inside brackets. Legacy emitted `"Found valid password: %08X"` without brackets. Bracket tolerance via `\[?` + `\]?` lets the same pattern capture both shapes during the transition window.
+  - Previous regex `Found valid.*?:\s*([A-Fa-f0-9]+)` FAILED on iceman output because `[` is not in the `[A-Fa-f0-9]` character class (verified: `python3 -c "import re; print(re.search(r'Found valid.*?:\s*([A-Fa-f0-9]+)', 'Found valid password: [ 51243648 ]'))"` returns `None`).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1869` `_RESPONSE_NORMALIZERS['lf t55xx chk'] = [_normalize_t55xx_chk_password]` — the `_normalize_t55xx_chk_password` function rewrites iceman bracket form `Found valid password: [ XXXXXXXX ]` → legacy bare-hex `Found valid password: XXXXXXXX` so pre-refactor middleware could match. Post-refactor middleware tolerates both via the `\[?`/`\]?` alternation.
+- **Live symptom (iceman FW, with current adapter)**: NONE during transition — both forms match. On iceman raw (adapter disabled) the bracket form matches directly.
+- **Phase 4 action**:
+  - REMOVE `_normalize_t55xx_chk_password` from `_RESPONSE_NORMALIZERS['lf t55xx chk']` (pm3_compat.py:1869). Optional: tighten middleware regex to bracket-only `r'Found valid password:\s*\[\s*([A-Fa-f0-9]+)\s*\]'` post-Phase-4.
+
+### Entry: lfem4x05.py — info-output dotted fields + `Chip type` lowercase
+
+- **Middleware now iceman-native**:
+  - `lfem4x05._RE_CHIP = r'Chip [Tt]ype\.+\s+(\S+)'` (lfem4x05.py) — iceman `cmdlfem4x05.c:869` emits `PrintAndLogEx(SUCCESS, "Chip type..... " _YELLOW_("%s"), em_get_card_str(block0))` with 5 dots and lowercase `type`. Legacy had `" Chip Type:   9 | EM4305"` (pipe with decimal id-then-name). The dotted regex captures iceman shape; `[Tt]` tolerates legacy capital during transition.
+  - `lfem4x05._RE_SERIAL = r'Serialno\.+\s+([A-Fa-f0-9]+)'` (lfem4x05.py) — iceman `cmdlfem4x05.c:871` `"Serialno...... %08X"` (6 dots, all-hex serial). Legacy emitted `"  Serial #: 1A2B3C4D"` with `#:` separator.
+  - `lfem4x05._RE_CONFIG = r'Block0\.+\s+([A-Fa-f0-9]+)'` (lfem4x05.py) — SEMANTIC FLIP: iceman `printEM4x05Info` at `cmdlfem4x05.c:869-893` has NO `ConfigWord:` field emission (grep `cmdlfem4x05.c` for `ConfigWord` returns zero). Iceman folded config into `Block0........ %08x` at :873. Legacy emitted `ConfigWord: %08X (decoded)` as a separate structural line. `_RE_CONFIG` now targets the iceman `Block0........` dword — semantically "block 0 raw" not "config word decoded"; the downstream `result['cw']` key carries the raw dword which is a subset of what legacy provided.
+  - `lfem4x05.parser()` detection keyword flipped from `hasKeyword('Chip Type')` (capital T) to `hasKeyword('Chip type')` (lowercase t) — same rationale as lft55xx: `re.search` is case-sensitive; adapter-processed bodies now carry the legacy capital so the lowercase keyword misses during transition.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1594-1615` `_normalize_em4x05_info()` rewrites iceman `Chip type..... EM4305` → legacy ` Chip Type:   0 | EM4305`, `Serialno...... 1A2B3C4D` → `  Serial #: 1A2B3C4D`, and injects a synthetic `ConfigWord: <hex> (<hex>)` line. Wired for `lf em 4x05 info` at `pm3_compat.py:1868` (and `lf em 4x05_info` / `lf em 4x05 dump` / `lf em 4x05_dump` at :1869-:1871).
+- **Live symptom (iceman FW, with current adapter)**:
+  - `lfem4x05.parser()` returns `{'found': False}` on every iceman-native EM4x05 detection: adapter rewrites `Chip type.....` → ` Chip Type:` (capital); middleware `hasKeyword('Chip type')` (lowercase) MISSES on the adapter-processed body; parser short-circuits with `found=False` at the keyword gate. Cascading: `info4X05()` returns `{'found': False}`; `infoAndDumpEM4x05ByKey()` marks `return: -1`; `readEM4X05()` returns dict-with-return=-1 to the activity layer; UI shows "Read failed" on every EM4x05 read on iceman firmware.
+  - This is a HIGH severity live regression until Phase 4 disables the adapter.
+  - Observable in test: `tests/phase3_trace_parity/test_read_lf_flow.py::lf em 4x05 info` — 10 live samples all-empty or `Could not detect`; 3 synthetic iceman-native samples (`iceman EM4305 full info`, `iceman EM4x69 chip variant`, `iceman no-tag empty`) all PASS — these represent the Phase-4 target shape.
+- **Phase 4 action**:
+  - REMOVE `_normalize_em4x05_info` from `_RESPONSE_NORMALIZERS['lf em 4x05 info']` / `['lf em 4x05_info']` / `['lf em 4x05 dump']` / `['lf em 4x05_dump']` (pm3_compat.py:1868-1871).
+  - After adapter disable, iceman dotted shape reaches middleware verbatim; `_RE_CHIP` / `_RE_SERIAL` / `_RE_CONFIG` capture directly; `hasKeyword('Chip type')` matches the raw iceman emission.
+  - **ACCEPT structural field loss**: iceman removed the `ConfigWord:` parenthetical descriptor. `result['cw']` now carries block-0 raw hex (a superset of config bits) rather than the legacy decoded `(ConfigWord <hex>)` text. Downstream consumers must adapt; catalogued under APPENDIX. If a decoded config descriptor is required, the middleware would need to run its own block-0 decoder — out of compat-flip scope.
+
+### Entry: lfem4x05.py — dump save sentinel flip (same as T55xx)
+
+- **Middleware now iceman-native**:
+  - `lfem4x05.dump4X05()` `hasKeyword(r'[Ss]aved \d+ bytes to binary file')` + `getContentFromRegexG(r'[Ss]aved \d+ bytes to binary file\s*(.*)', 1)` (lfem4x05.py) — same iceman `fileutils.c:293` origin as T55xx dump; `lf em 4x05 dump` at `cmdlfem4x05.c:1343/1345` calls `pm3_save_dump(filename, ..., jsfEM4x69 | jsfEM4x05)` which emits the capital-S line.
+  - Previous `'saved 64 bytes to binary file'` (lowercase, hardcoded byte count) depended on both adapter normalization AND exact byte-count match — iceman emits variable byte counts per block combination; regex-based `\d+` handles both shapes.
+- **Adapter still running iceman→legacy**:
+  - Same `_normalize_save_messages` as T55xx dump (pm3_compat.py:1870/1871 for `lf em 4x05 dump` / `lf em 4x05_dump`). Lowercases `Saved` → `saved`; tolerant regex matches both.
+- **Live symptom**: NONE (tolerant regex `[Ss]aved`).
+- **Phase 4 action**: same as T55xx dump — remove normalizer from the EM4x05 dump entries.
+
+### Entry: lfread.py — per-tag reader FC/CN shape mismatches (lfsearch regex coverage gap)
+
+- **Middleware now iceman-native**:
+  - `lfread.readFCCNAndRaw(cmd)` uses `lfsearch.getFCCN()` (which parses via `lfsearch._RE_FC = r'FC:\s+([xX0-9a-fA-F]+)'` and `lfsearch._RE_CN = r'(CN|Card(?:\s+No\.)?)[\s:]+(\d+)'`) + `lfsearch.REGEX_RAW`. These regexes target the DOMINANT iceman per-tag reader emissions (AWID, Pyramid, GProx-II, Securakey, Paradox — all emit `FC: %d Card: %u`).
+  - **Coverage gaps (per iceman source audit during P3.5)**:
+    - **Gallagher** (`cmdlfgallagher.c:88`): emits `"GALLAGHER - Region: %u Facility: %u Card No.: %u Issue Level: %u"`. Uses `Facility:` not `FC:`. `_RE_FC` MISSES. `_RE_CN` MATCHES the `Card No.` alternate. Consequence: `parseFC()` returns empty; `getFCCN()` falls back to `'FC,CN: X,0'` partial-sentinel (zero-padded CN, X placeholder FC). `readGALLAGHER()` reports truthy uid → success with garbage FC field.
+    - **KERI** (`cmdlfkeri.c:176`): emits `"KERI - Internal ID: %u, Raw: %08X%08X"`. Uses `Internal ID:` not `FC:`/`Card:`. Neither `_RE_FC` nor `_RE_CN` matches. `getFCCN()` returns `'FC,CN: X,X'` sentinel. Raw-only success path — middleware reports `{'return': 1, 'data': 'FC,CN: X,X', 'raw': '<hex>'}`; UI shows placeholder FC/CN for KERI tags.
+    - **NEDAP** (`cmdlfnedap.c:146`): emits `"NEDAP (%s) - ID: %05u subtype: %1u customer code: %u / 0x%03X Raw: %s"`. Uses `ID:` which is NOT in `_RE_CN` (matches `CN|Card|Card No.` only). Uses `subtype:` + `customer code:` not `FC:`. Neither regex matches; raw-only success.
+    - **Presco** (`cmdlfpresco.c:114`): emits `"Presco Site code: %u User code: %u Full code: %08X Raw: %s"`. Uses `Site code:`/`User code:` not `FC:`/`Card:`. `_RE_CN` does not match `Site code` or `User code`. Raw-only success.
+    - **NexWatch** (`cmdlfnexwatch.c:247`): INFO-level emission `" Raw : %08X%08X%08X"` only — no FC/CN/ID emission at non-DEBUG level. `readNexWatch()` via `readCardIdAndRaw` — `REGEX_CARD_ID` misses; `REGEX_RAW` matches. Raw-only success with empty `data`.
+  - `lfread.readNexWatch()` uses `readCardIdAndRaw` — consistent with iceman's `Raw:`-only reader emission (the Card-id-bearing line is at DEBUG level only, not visible to executor cache).
+- **Adapter still running iceman→legacy**: No dedicated `_normalize_*` adapter wired per-tag in pm3_compat.py for Gallagher/KERI/NEDAP/Presco/NexWatch readers (middleware runs per-tag `lf <tag> reader` commands; the generic `_RE_DOTTED_SEPARATOR` has no load-bearing effect on these shapes). However `_normalize_gallagher_fields` (`pm3_compat.py _RESPONSE_NORMALIZERS['lf sea']`) rewrites the Gallagher fields when the emission is captured via `lf search` — not triggered on direct per-tag reader path.
+- **Live symptom**:
+  - Tags of these types yield a truthy return (Raw: is always captured) but `data` field contains placeholder `'FC,CN: X,X'` or `'FC,CN: X,0'` instead of decoded facility/card-number. Downstream UI that expects decoded FC/CN (Scan→Simulate prepopulation, result-screen labels) will display the placeholder.
+  - Not a complete failure — middleware returns success — but degraded UX on these five specific tag types. Matrix L1213 flagged the consolidated 15-row section.
+- **Phase 4 action**:
+  - OPTION A: Broaden `lfsearch._RE_FC` to tolerant alternation — `r'(?:FC|Facility|Site code|Internal ID|ID):\s+(\S+)'`. Risk: picks up unrelated fields on other tags (e.g., legacy `UID:` on hf cards shares `ID:` substring). Needs careful per-regex scoping to `lf sea`-only paths.
+  - OPTION B: Introduce per-tag dedicated regex in `lfread.py` (e.g., `_RE_GALLAGHER_FACILITY = r'Facility:\s+(\d+)'`, etc.) and override `readFCCNAndRaw` for the five affected protocols. Preserves lfsearch scoping but breaks the "shared regex pool" elegance.
+  - OPTION C: Accept placeholder FC/CN for these five tags and document in UI spec. Raw: is captured; `read` success is preserved; only the decoded fields degrade.
+  - Decision deferred. Phase 4 audit should prioritise based on which tag types are actually encountered in the user-facing flows (iCopy-X v1.0.90 had no Gallagher/KERI/NEDAP/Presco/NexWatch user-facing per-tag read paths — these were reachable only via `lf search` classification path; direct per-tag read is a P3.5 addition via the `READ` dispatch table).
+  - Cross-reference: matrix L1213-1237 consolidated section documents the 15-row per-tag reader dispatch. Matrix row `lf gallagher reader / clone` (L1142) flags field-level divergence — same gap.
+
+### Entry: lfread.py — identical-both-firmwares (informational)
+
+No live symptom but documented for Phase 4 audit cross-check:
+
+- `lfread.read()` / `readCardIdAndRaw()` / `readFCCNAndRaw()` helpers — helper-level iceman-agnostic; all dispatch to the shared lfsearch regex pool.
+- Every `lf <tag> reader` dispatch form is **iceman-canonical post command-translate wiring** (pm3_compat.py:275-277 `lf <tag> read` → `lf <tag> reader` forward; pm3_compat.py:717-720 reverse). Matrix L1223-1237 consolidated section.
+- `lfread.READ` dispatch table (lfread.py L234-257, 22 tag_type IDs) is unchanged by P3.5 refactor — preserves public API for `scan.py::onScanFinish` + `lfverify.py` + `lfwrite.py::_inline_verify`.
+- `readT55XX()` / `readEM4X05()` delegate to lft55xx / lfem4x05 which went through the P3.5 regex flip.
+
+### Entry: Matrix corrections surfaced during P3.5 audit
+
+- **Matrix L1267** — "Chip Type" (capital T) in iceman column should be "Chip type" (lowercase). Source `cmdlft55xx.c:1837` emits `" Chip type........."`. Gap log + middleware regex corrected; matrix text TODO.
+- **Matrix L1032** — "Chip type....." in iceman column already noted as lowercase. Same for Serialno. Matrix v4 was correct; lfem4x05 regex now matches.
+- **Matrix L1034** — `ConfigWord` is listed as FORMAT divergence. Audit reveals iceman `cmdlfem4x05.c:869-893` emits NO `ConfigWord:` at all (structural removal). Matrix should be updated STRUCTURAL from FORMAT. Middleware `_RE_CONFIG` now targets `Block0........` as semantic substitute (matches the iceman-native emission shape).
+- **Matrix L1213-1237 consolidated 15-row section** — Gallagher/KERI/NEDAP/Presco/NexWatch field-label divergence from `FC:`/`Card:` baseline is not called out in the table. Phase 4 matrix reconciliation should add per-protocol rows or annotate the consolidated-section action row with the alternate field labels (`Facility:`/`Internal ID:`/`ID: subtype:`/`Site code:`/DEBUG-only-raw).
+
+All matrix-stale rows are already correctly refactored in middleware code and gap-logged. Source of truth for Phase 4: (a) post-refactor middleware code, (b) `/tmp/rrg-pm3/client/src/cmdlf*.c`, (c) this gap log. Matrix file will be reconciled during Phase 4 close-out.
+
+---
+
+## P3.9+ (placeholder)
+
+_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3/P3.4/P3.5/P3.6/P3.7/P3.8 entries above._
 
 ---
 
