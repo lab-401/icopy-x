@@ -598,6 +598,17 @@ def reworkPM3All():
     time.sleep(3)
     connect2PM3()
 
+    # Force rftask to respawn its PM3 subprocess right here, rather than
+    # letting the next startPM3Task trigger an auto-recovery cascade
+    # (rework_max=2 × reworkManager retries). Factory audit §5 shows
+    # PM3 RUNNING immediately post-stop; matching that requires driving
+    # the respawn synchronously.
+    try:
+        _send_ctrl('restart', timeout=8000)
+    except Exception:
+        pass
+
+
 def resetReworkCount():
     """Reset the consecutive-rework counter and request pipeline cleanup.
 
