@@ -418,12 +418,24 @@ def write_dump_t55xx(file, key=None):
         # Can't read dump file — accept restore success
         return 1
 
-    # Compare: extract block hex from dump_text
+    # Compare: extract block hex from dump_text.
+    #
+    # Iceman-native row emission: cmdlft55xx.c:1831
+    #     PrintAndLogEx(NORMAL, "%02d | 0x%08X | %s", j, blockData, ...)
+    # Shape: `NN | 0xHHHHHHHH | <binary-ascii>`.  Iceman NEVER emits
+    # `blk <N>` or `block <N>` on data rows — `blk` only appears in the
+    # column header at cmdlft55xx.c:677 where the "hex data" column is
+    # literal text, not extractable hex.  Pre-fix pattern
+    # `(?:blk|block)\s*\d+\s*\|\s*([A-Fa-f0-9]{8})` was dead code
+    # against iceman output.  The bare `\b[A-Fa-f0-9]{8}\b` fallback
+    # was removed because it greedily captured the first 8-hex token
+    # anywhere in the cache (including unrelated config descriptors,
+    # DLMode tables, password strings).  The anchored iceman pattern
+    # below rejects false-matches by requiring the `NN | 0x<8hex>`
+    # framing.
     import re as _re
-    read_blocks = _re.findall(r'(?:blk|block)\s*\d+\s*\|\s*([A-Fa-f0-9]{8})', dump_text, _re.IGNORECASE)
-    if not read_blocks:
-        # Fallback: try simpler hex extraction from read output
-        read_blocks = _re.findall(r'\b([A-Fa-f0-9]{8})\b', dump_text)
+    read_blocks = _re.findall(r'^\s*\d+\s*\|\s*0x([A-Fa-f0-9]{8})\s*\|',
+                              dump_text, _re.MULTILINE)
 
     if not read_blocks:
         return -1

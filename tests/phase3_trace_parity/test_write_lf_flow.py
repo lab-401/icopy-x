@@ -441,6 +441,12 @@ def _test_lf_sea_live_sample(body, sample_idx):
 # for commands with 0 live samples in iceman_output.json.
 # ---------------------------------------------------------------------------
 
+# Iceman t55xx dump row regex as re-implemented in lfwrite.py L423 post-fix.
+# Matches cmdlft55xx.c:1831 `"%02d | 0x%08X | %s"`.
+_ICEMAN_T55XX_DUMP_ROW = re.compile(
+    r'^\s*\d+\s*\|\s*0x([A-Fa-f0-9]{8})\s*\|', re.MULTILINE)
+
+
 _SYNTHETIC_SAMPLES = [
     ('lf em 4x05 read', 'iceman Address NN | HHHHHHHH - <empty>',
      'Address 01 | DEADC0DE - \n',
@@ -481,6 +487,30 @@ _SYNTHETIC_SAMPLES = [
     ('lf indala clone', 'iceman Preparing to clone Indala 64 bit ... Done!',
      'Preparing to clone Indala 64 bit to T55x7 raw a0000000a0002021\nDone!\n',
      lambda body: 'Done!' in body),
+
+    # -------- lf t55xx dump row shape (post-fix verify regex) --------
+    # Iceman cmdlft55xx.c:1831 `"%02d | 0x%08X | %s"`.  Pre-fix regex
+    # used `(?:blk|block)\\s*\\d+\\s*\\|` which iceman NEVER emits on
+    # data rows (`blk` is header-only at cmdlft55xx.c:677).
+    ('lf t55xx dump', 'iceman NN | 0xHHHHHHHH | binary row',
+     '------------------------- T55xx tag memory -----------------------------\n'
+     '00 | 0x000880E0 | 00000000000010001000000011100000\n'
+     '01 | 0x01DEB4DD | 00000001110111101011010011011101\n'
+     '02 | 0xEDE7E8B7 | 11101101111001111110100010110111\n',
+     lambda body: _ICEMAN_T55XX_DUMP_ROW.findall(body) == [
+         '000880E0', '01DEB4DD', 'EDE7E8B7'
+     ]),
+    ('lf t55xx dump', 'negative — header row does NOT match',
+     # cmdlft55xx.c:677 header shape — `blk | hex data | ...` with
+     # literal text in the "hex data" column, not hex.  Must NOT match.
+     'blk | hex data | binary                              | ascii\n',
+     lambda body: _ICEMAN_T55XX_DUMP_ROW.findall(body) == []),
+    ('lf t55xx dump', 'negative — no false-match on standalone 8-hex',
+     # Pre-fix bare `\\b([A-Fa-f0-9]{8})\\b` fallback captured any
+     # 8-hex token (e.g. password strings, config descriptors).
+     # Post-fix requires `NN | 0x<8hex> |` framing.
+     'Password set...... Yes\nPassword.......... DEADBEEF\n',
+     lambda body: _ICEMAN_T55XX_DUMP_ROW.findall(body) == []),
 ]
 
 
