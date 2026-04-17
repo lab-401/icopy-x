@@ -76,7 +76,7 @@ COUNT = 0
 # Public regex patterns -- from binary string extraction (spec section 3.3)
 # ---------------------------------------------------------------------------
 REGEX_ANIMAL = r'.*ID\s+([xX0-9A-Fa-f\-]{2,})'
-REGEX_CARD_ID = r'(?:Card|ID|id|CARD|ID|UID|uid|Uid)\s*:*\s*([xX0-9a-fA-F ]+)'
+REGEX_CARD_ID = r'(?i)(?:Card|UID|ID)\s*[.:]*\s*([xX0-9a-fA-F ]+)'
 REGEX_EM410X = r'EM TAG ID\s+:[\s]+([xX0-9a-fA-F]+)'
 REGEX_HID = r'HID Prox - ([xX0-9a-fA-F]+)'
 REGEX_PROX_ID_XSF = r'(XSF\(.*?\).*?:[xX0-9a-fA-F]+)'

@@ -73,11 +73,11 @@ def parser():
         result['uid'] = uid
         result['found'] = True
 
-    if 'NTAG213' in text:
+    if 'NTAG 213' in text:
         result['type'] = getattr(tagtypes, 'NTAG213_144B', 5)
-    elif 'NTAG215' in text:
+    elif 'NTAG 215' in text:
         result['type'] = getattr(tagtypes, 'NTAG215_504B', 6)
-    elif 'NTAG216' in text:
+    elif 'NTAG 216' in text:
         result['type'] = getattr(tagtypes, 'NTAG216_888B', 7)
     elif 'Ultralight C' in text or 'UL-C' in text:
         result['type'] = getattr(tagtypes, 'ULTRALIGHT_C', 3)
