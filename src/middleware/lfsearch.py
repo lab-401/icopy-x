@@ -106,12 +106,20 @@ REGEX_HID = r'raw:\s+([0-9A-Fa-f]+)'
 # decimal card number after colon. Matches iceman natively.
 REGEX_PROX_ID_XSF = r'(XSF\(.*?\).*?:[xX0-9a-fA-F]+)'
 
-# Iceman per-tag demod consistently emits ", Raw: <hex>" (capital Raw+colon)
-# (cmdlfjablotron.c:98, cmdlfviking.c:57, cmdlfawid.c:248, cmdlfnoralsy.c:106,
-# cmdlfparadox.c:224, cmdlfsecurakey.c:113, cmdlfpresco.c:114, ...); HID demod
-# uses lowercase "raw:" (cmdlfhid.c:235). Drop legacy `Hex|HEX|hex` alternates
-# never emitted by iceman. Matrix L988.
-REGEX_RAW = r'(?:Raw|raw):\s*([xX0-9a-fA-F ]+)'
+# Iceman per-tag demod emits two colon spellings for the Raw field:
+#   - ", Raw: <hex>" (tight colon) — majority shape:
+#     cmdlfjablotron.c:98, cmdlfviking.c:57, cmdlfawid.c:248,
+#     cmdlfnoralsy.c:106, cmdlfparadox.c:224, cmdlfsecurakey.c:113,
+#     cmdlfpresco.c:114, cmdlfpac.c:171, cmdlfio.c:156, cmdlfkeri.c:176,
+#     cmdlfmotorola.c:123, cmdlfguard.c:186, cmdlfnedap.c:146.
+#   - " Raw : <hex>" (space-before-colon) — NexWatch:
+#     cmdlfnexwatch.c:247 `" Raw : %08X%08X%08X"` (space padding kept
+#     by iceman for NexWatch's single-field emission; no `, Card:`
+#     prefix on the same line).
+# HID demod uses lowercase "raw:" (cmdlfhid.c:235).  The `\s*` before
+# the colon tolerates both forms iceman-natively.  Drop legacy
+# `Hex|HEX|hex` alternates never emitted by iceman.  Matrix L988.
+REGEX_RAW = r'(?:Raw|raw)\s*:\s*([xX0-9a-fA-F ]+)'
 
 # ---------------------------------------------------------------------------
 # Internal regex patterns -- iceman-native shapes

@@ -59,9 +59,13 @@ Iceman-native command forms (P3.5 refactor, 2026-04-17):
     KERI emits `Internal ID: %u, Raw:` not `Card:` (cmdlfkeri.c:176),
     NEDAP emits `ID: %05u subtype: %1u customer code:` (cmdlfnedap.c:146),
     Presco emits `Site code:/User code:` (cmdlfpresco.c:114), NexWatch
-    emits only `Raw :` (cmdlfnexwatch.c:247).  Callers accept empty
-    FC/CN; fallback to `Raw:` via `lfsearch.REGEX_RAW` keeps success
-    status truthy when a raw field is present.  See gap log P3.5.
+    emits only `" Raw : <hex>"` with a space before the colon
+    (cmdlfnexwatch.c:247).  `lfsearch.REGEX_RAW` now uses `\\s*:` to
+    tolerate both the tight `Raw:` and the NexWatch space-before-colon
+    form, so raw capture works for every per-tag demod.  Callers accept
+    empty FC/CN; fallback to `Raw:` via `lfsearch.REGEX_RAW` keeps
+    success status truthy when a raw field is present.  See gap log
+    P3.5.
 """
 
 try:
@@ -112,9 +116,11 @@ def read(cmd, uid_regex, raw_regex, uid_index=0, raw_index=0):
 
     Regex patterns imported via `lfsearch.REGEX_*` are iceman-native as of
     P3.1 refactor (see lfsearch.py module header):
-      REGEX_RAW     r'(?:Raw|raw):\\s*([xX0-9a-fA-F ]+)' matches iceman
-                    `, Raw: <hex>` (cmdlf*.c demod emission) and iceman
-                    HID lowercase `raw: <hex>` (cmdlfhid.c:235).
+      REGEX_RAW     r'(?:Raw|raw)\\s*:\\s*([xX0-9a-fA-F ]+)' matches iceman
+                    `, Raw: <hex>` (cmdlf*.c demod emission), NexWatch's
+                    `" Raw : <hex>"` space-before-colon form
+                    (cmdlfnexwatch.c:247), and iceman HID lowercase
+                    `raw: <hex>` (cmdlfhid.c:235).
       REGEX_CARD_ID r'(?:Card|ID|UID)[\\s:]+([xX0-9a-fA-F ]+)' matches
                     iceman `Card: %u` (Jablotron/Noralsy/Paradox/PAC),
                     `Card %X` (Viking, space-no-colon), `ID: %u` (Paradox

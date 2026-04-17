@@ -534,6 +534,13 @@ _ICEMAN_NATIVE_SAMPLES = [
          == 'FF82C080AABBCCDD'
          and _re.search(lfsearch._RE_FC, body) is None
      )),
+
+    # -------- lf nexwatch reader (space-before-colon Raw shape) --------
+    ('lf nexwatch reader', 'iceman NexWatch Raw space-before-colon',
+     # cmdlfnexwatch.c:247 emits `" Raw : %08X%08X%08X"` — verbatim.
+     ' Raw : 560E9C20FB8B4CE0A1B2C3D4\n\n',
+     lambda body: _re.search(lfsearch.REGEX_RAW, body).group(1).strip()
+                 == '560E9C20FB8B4CE0A1B2C3D4'),
 ]
 
 
