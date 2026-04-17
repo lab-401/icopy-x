@@ -324,9 +324,119 @@ Listed for Phase 4 audit; no live symptom but documented to prevent confusion:
 
 ---
 
+## P3.8 ISO15693/FeliCa/Legic/Sniff flow
+
+### Entry: hf 15 restore success-sentinel flip (Done! vs Write OK+done)
+
+- **Middleware now iceman-native**:
+  - `hf15write._KW_RESTORE_SUCCESS = r"Done!"` (hf15write.py:69) — iceman `cmdhf15.c:2818` emits `PrintAndLogEx(INFO, "Done!")` as the sole success sentinel after the block-restore loop.
+  - `hf15write._KW_RESTORE_TOO_MANY = r"Too many retries"` (hf15write.py:70) — iceman `cmdhf15.c:2803` emits `PrintAndLogEx(FAILED, "Too many retries ( fail )")`. Note: iceman does NOT emit a `"restore failed"` string anywhere in `cmdhf15.c` (grep-verified on `/tmp/rrg-pm3/client/src/cmdhf15.c`). Legacy `cmdhf15.c:1737` emitted a compound `"restore failed. Too many retries."`; iceman split the two messages apart.
+  - Previous check chain (`hasKeyword("Write OK") AND hasKeyword("done")`) DROPPED: iceman never emits either literal anywhere in the restore path. Divergence matrix L333-334 confirms.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1638-1649` `_normalize_hf15_restore()` detects `"Done"` in iceman body and appends a literal `"\nWrite OK\ndone"` suffix, synthesising the legacy shape so the PRE-refactor middleware could keyword-match.
+  - Wired for `hf 15 restore` at `pm3_compat.py:1843` (`_RESPONSE_NORMALIZERS['hf 15 restore'] = [_normalize_hf15_restore]`).
+- **Live symptom (iceman FW, with current adapter)**:
+  - Benign during transition: the post-refactor middleware `hf15write._KW_RESTORE_SUCCESS = "Done!"` correctly fires on the iceman-raw `"Done!"` line, regardless of whether the adapter has appended the legacy suffix (the adapter only APPENDS; it does not modify the raw text). `hf15write.write()` therefore still returns 1 on iceman writes.
+  - No live-sample regression observed. Live `tests/phase3_trace_parity/test_iso_felica_legic_sniff_flow.py::hf 15 restore` → 1 sample, 1 pass.
+- **Phase 4 action**:
+  - REMOVE `_normalize_hf15_restore` from `_RESPONSE_NORMALIZERS['hf 15 restore']` (`pm3_compat.py:1843`).
+  - The injected `Write OK\ndone` suffix becomes dead text once the middleware no longer consumes those keywords. No side effects elsewhere (grep confirms no other middleware consumer reads `Write OK` for `hf 15 restore`).
+
+### Entry: hf 15 csetuid success-regex iceman-raw (Setting new UID ( ok ))
+
+- **Middleware now iceman-native**:
+  - `hf15write._RE_CSETUID_OK = r"Setting new UID\s*\(\s*ok\s*\)"` (hf15write.py:72) — iceman `cmdhf15.c:2900` emits `PrintAndLogEx(SUCCESS, "Setting new UID ( " _GREEN_("ok") " )")`. Capital `S` with spaces inside the parens.
+  - `hf15write._KW_CSETUID_NO_TAG = r"no tag found"` (hf15write.py:71) — iceman `cmdhf15.c:2868/2891` emits `PrintAndLogEx(FAILED, "no tag found")` on UID-read failure (pre- and post-write sanity checks).
+  - Previously `r"[Ss]etting new UID \(?\s*ok\s*\)?"` — dual-shape alternation retained lowercase `s` for legacy, optional `(` for adapter-stripped paren. Dropped per Option B: middleware targets iceman RAW only.
+  - Previously `r"can't read card UID|no tag found"` — legacy `"can't read card UID"` branch REMOVED (iceman emits `"no tag found"` only; legacy `"can't read card UID"` source is in an entirely different hf15 path, cmdhf15.c legacy fork only).
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py:1720-1728` `_normalize_hf15_csetuid()` rewrites iceman `"Setting new UID ( ok )"` → legacy `"setting new UID (ok)"` (lowercase, no spaces in parens). Also rewrites `"Setting new UID ( fail )"` → `"setting new UID (failed)"`.
+  - Wired for `hf 15 csetuid` at `pm3_compat.py:1844`.
+- **Live symptom (iceman FW, with current adapter)**:
+  - `hf15write.write()` returns -1 for every successful csetuid: adapter rewrites iceman `Setting new UID ( ok )` → `setting new UID (ok)` before middleware sees it; iceman-native regex `Setting new UID\s*\(\s*ok\s*\)` (capital S) no longer finds a match.
+  - Cascading failure: write flow UI shows "Write Failed!" on every ISO15693 UID-set even when PM3 actually set the UID successfully.
+  - Observable in test: `tests/phase3_trace_parity/test_iso_felica_legic_sniff_flow.py` — live sample `hf 15 csetuid[1]` carries adapter-normalized `setting new UID (ok)`; iceman-native regex correctly MISSES (test asserts this as expected during transition).
+- **Phase 4 action**:
+  - REMOVE `_normalize_hf15_csetuid` from `_RESPONSE_NORMALIZERS['hf 15 csetuid']` (`pm3_compat.py:1844`). Matrix L362 already flags it as "arguably redundant" once the middleware regex is refactored to iceman-native form.
+  - Re-capture iceman_output.json after adapter disable; the post-adapter normalized sample should flip to iceman `Setting new UID ( ok )` shape.
+
+### Entry: hf felica reader sentinel flip (IDm: vs FeliCa tag info)
+
+- **Middleware now iceman-native**:
+  - `hffelica._KW_FOUND = r'IDm:\s'` (hffelica.py) — iceman `cmdhffelica.c:1183` emits `PrintAndLogEx(SUCCESS, "IDm: " _GREEN_("%s"), sprint_hex_inrow(card.IDm, sizeof(card.IDm)))`. The iceman `read_felica_uid()` helper (L1144) is the ONLY success emission site; legacy `readFelicaUid()` helper at L1803 — which emitted `"FeliCa tag info"` (L1835) — was replaced by the uid-only variant.
+  - `hffelica._KW_TIMEOUT = 'card timeout'` (hffelica.py) — iceman `cmdhffelica.c:1431` emits `PrintAndLogEx(WARNING, "card timeout")`. Matches both firmwares (COSMETIC divergence on trailing `(-4)` status code, iceman-only).
+  - `hffelica._RE_IDM = r'.*IDm(.*)'` unchanged — iceman emission `"IDm: XX XX ..."` is a superset of legacy `"IDm %s"`; capture after `IDm` yields the hex bytes (plus colon for iceman) which is then stripped of whitespace.
+  - Previously `_KW_FOUND = 'FeliCa tag info'` — MATCHES LEGACY ONLY. Iceman has ZERO emissions of `"FeliCa tag info"` (grep-verified on `/tmp/rrg-pm3/client/src/cmdhffelica.c`). Divergence matrix L382 previously flagged the STRUCTURAL gap.
+- **Adapter still running iceman→legacy**:
+  - `pm3_compat.py::_normalize_felica_reader` (matrix L386 cites) injects the legacy `"FeliCa tag info"` banner on iceman success output so the PRE-refactor middleware `_KW_FOUND` keyword matched.
+  - Grep: `grep -n "_normalize_felica_reader\|felica_reader\|FeliCa tag info" src/middleware/pm3_compat.py` — verify the function name and wiring line for Phase 4 removal.
+- **Live symptom (iceman FW, current adapter)**:
+  - iceman_output.json has 10 `hf felica reader` samples — all 10 are `"card timeout"` bodies (no successful FeliCa detections captured). Live samples therefore exercise the NEGATIVE path only; `parser()` returns `{'found': False}` for every sample.
+  - The positive (success) path is validated via synthetic iceman-native samples in the trace-parity test — those PASS with the new `IDm:` keyword. Without this refactor, the synthetic `"IDm: 01 FE ..."` body would have failed the old `_KW_FOUND='FeliCa tag info'` check → `parser()` would return `found=False` despite a valid FeliCa detection → scan_felica() would report `createExecTimeout(5)` instead of populating `type=21` FELICA result dict.
+  - Scan flow consequence (pre-refactor): FeliCa cards on iceman FW were silently misclassified as "no tag" because the legacy banner keyword never matched.
+- **Phase 4 action**:
+  - REMOVE `_normalize_felica_reader` from `_RESPONSE_NORMALIZERS['hf felica reader']` (pm3_compat.py; find wiring line).
+  - Re-capture iceman_output.json with at least one FeliCa tag present to populate a positive sample.
+
+### Entry: hf 15 dump / hf felica litedump / hf legic dump passthrough (identical both forks)
+
+- **Middleware now iceman-native**:
+  - `hf15read.py`: command form `"hf 15 dump -f {path}"` — iceman CLI `-f/--file` (cmdhf15.c:1803). Middleware only checks `executor.startPM3Task` return + file existence on disk; no keyword parsing.
+  - `felicaread.py`: command form `"hf felica litedump"` — iceman `cmdhffelica.c:5056 CmdHFFelicaDumpLite`, dispatch table entry at `:5329` (`{"litedump", ...}`). Matrix v2 correction (L402) confirms iceman and legacy share the SAME command name — no command-translate needed.
+  - `legicread.py`: command form `"hf legic dump"` — iceman `cmdhflegic.c:871 CmdLegicDump`, dispatch table entry at `:1471`. Emits `pm3_save_dump` "Saved N bytes ..." line on success; no `"Done!"` sentinel. Middleware only checks `startPM3Task` return + file existence.
+- **Adapter still running iceman→legacy**:
+  - `_normalize_save_messages` (pm3_compat.py; cited by matrix L1492-1496) lowercases iceman `"Saved N bytes..."` → legacy `"saved N bytes..."`. NOT on the middleware's critical path for any of these three commands (middleware does not parse the save line), but runs generically via `_RESPONSE_NORMALIZERS` wiring for any command that emits a save message.
+  - `hf felica litedump` iceman behavior diverges from legacy (matrix L390-406): iceman `CmdHFFelicaDumpLite` at `:5113-5200` emits a TRACE block via `print_hex_break` but does NOT write a `.bin` dump file — the legacy fork wrote to disk. 0 iceman trace samples in iceman_output.json (matrix L396). Impact: middleware `felicaread.read()` reports `{'return': 0, 'file': path}` even though the file never exists on iceman. Phase 4 to reconcile once a real iceman FeliCa litedump capture is available.
+- **Live symptom (iceman FW, current adapter)**: NONE observed for hf 15 dump and hf legic dump (file-existence path unaffected). For hf felica litedump: silent success-report with no file on disk — downstream consumers that open the reported path will hit a FileNotFoundError. No live breakage because the flow is rarely exercised; surfaced as a Phase 4 todo.
+- **Phase 4 action**:
+  - No adapter changes required for hf 15 dump / hf legic dump (middleware is already iceman-native command form + content-agnostic).
+  - For hf felica litedump: when iceman trace capture is available, verify whether iceman actually writes a dump file via an alternate helper or if the middleware should issue a different command (e.g., `hf felica dump`). The matrix v2 correction reopens this question.
+
+### Entry: sniff HF/LF trace-len patterns (iceman Recorded activity / Reading bytes)
+
+- **Middleware now iceman-native**:
+  - `sniff.PATTERN_HF_TRACE_LEN = r'(?:trace len = |Recorded activity \( )(\d+)'` (sniff.py) — iceman `cmdtrace.c:1181/1425` emits `PrintAndLogEx(SUCCESS, "Recorded activity ( %u bytes )", gs_traceLen)`. Legacy emitted `"trace len = N"`. Alternation keeps the legacy form tolerated during the Phase 4 transition; once adapter is disabled, the `trace len = ` branch becomes dormant.
+  - `sniff.PATTERN_LF_TRACE_LEN = r'Reading (\d+) bytes from device memory'` (sniff.py) — iceman `cmddata.c:1873` emits `PrintAndLogEx(INFO, "Reading %u bytes from device memory", n)`. IDENTICAL on both firmwares.
+- **Adapter still running iceman→legacy**:
+  - No dedicated trace-len normalizer in pm3_compat.py (grep confirms no `_normalize_trace_len`). The `_RE_DOTTED_SEPARATOR` generic rewriter (pm3_compat.py:1070/1122) has no effect on these sentinels (they do not use dotted leaders).
+- **Live symptom**: NONE — patterns match both firmware forms via alternation.
+- **Phase 4 action**:
+  - After adapter disable, the `"trace len = "` alternation branch becomes dead text. Optional: drop the alternation once iceman_output.json is re-captured and confirms no trace of the legacy string under iceman.
+
+### Entry: sniff command forms (hf 14a/14b/iclass/topaz sniff, lf sniff, lf config, lf t55xx sniff)
+
+- **Middleware now iceman-native**:
+  - `sniff.sniff14AStart()` → `"hf 14a sniff"` (cmdhf14a.c:1079 CLIParser).
+  - `sniff.sniff14BStart()` → `"hf 14b sniff"` (cmdhf14b.c:1038 CLIParser).
+  - `sniff.sniffIClassAStart()` → `"hf iclass sniff"` (cmdhficlass.c:931 CLIParser).
+  - `sniff.sniffTopazStart()` → `"hf topaz sniff"` (cmdhftopaz.c:829 CLIParser).
+  - `sniff.sniff125KStart()` → `"lf sniff"` (cmdlf.c:955 CLIParser).
+  - `sniff.sniffT5577Start()` → `"lf config -a 0 -t 20 -s 10000"` + `"lf t55xx sniff"` (cmdlf.c:626 / cmdlft55xx.c:4336, both CLIParser forms).
+  - The `lf config` flag spelling `-a 0 -t 20 -s 10000` is iceman CLIParser form. Legacy used bare `a 0 t 20 s 10000` (param_getchar loop, cmdlf.c legacy fork). Matrix v2 L1418-1436 flags this as STRUCTURAL divergence requiring command-translate on the LEGACY direction.
+- **Adapter still running iceman→legacy**:
+  - `_REVERSE_RULES` in pm3_compat.py — per matrix L1436, a `_reverse_lf_config` rule is REQUIRED to rewrite iceman `lf config -a N -t M -s K` → legacy bare-char form BEFORE transmit to a legacy PM3. Matrix notes this rule is NOT currently wired.
+  - All other sniff commands have IDENTICAL spelling on both forks; no command-translate required.
+- **Live symptom (iceman FW, current adapter)**: NONE for the iceman target direction — sniff.py emits iceman-native syntax already. The legacy direction is missing the reverse rule but that is Phase 4's responsibility.
+- **Phase 4 action**:
+  - Add `_reverse_lf_config` to `_REVERSE_RULES` in pm3_compat.py per matrix L1436 directive. Pattern: match `^lf config\s+(-[a-z]\s+\d+)(\s+-[a-z]\s+\d+)*$`, emit bare-char form.
+  - Sniff command forms do not need Phase 4 changes; middleware is already iceman-canonical.
+
+### Entry: P3.8 dormant / identical-both-firmwares (informational)
+
+No live symptom but documented for Phase 4 audit cross-check:
+
+- `hffelica.CMD = 'hf felica reader'` + `TIMEOUT = 10000` — iceman/legacy share the top-level command spelling. Only the SUCCESS sentinel differs (refactored above).
+- `hf15read.CMD = 'hf 15 dump'` — dispatch table entry identical between iceman and legacy (cmdhf15.c:3629 / factory fork). CLI `-f` flag identical.
+- `legicread.CMD = 'hf legic dump'` + `TIMEOUT = 5000` — iceman/legacy share the command spelling (cmdhflegic.c:1471 / factory fork). No output keyword parsed by middleware.
+- `felicaread.CMD = 'hf felica litedump'` + `TIMEOUT = 5000` — identical command both firmwares; output parse semantics differ but middleware doesn't parse output content. See hf felica litedump entry above for the trace-vs-file gap deferred to Phase 4.
+- All `sniff.PATTERN_T5577_*` regexes (sniff.py) — `'Default pwd write'`, `'Default write'`, `'Leading ... pwd write'` lines. Both iceman (cmdlft55xx.c:4336 handler) and legacy emit identical table format. Trace-parity test confirms extraction works on iceman-shape bodies.
+- `sniff.PATTERN_M1_KEY = r'key\s+([A-Fa-f0-9]+)'` (sniff.py) — iceman `hf list mf` annotation lines emit `"key <hex>"` substring verbatim. Identical both firmwares.
+
+---
+
 ## P3.4+ (placeholder)
 
-_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3 entries above._
+_Add entries per subsequent flow refactor. Structure: same 4-section format as P3.1/P3.2/P3.3/P3.7/P3.8 entries above._
 
 ---
 
