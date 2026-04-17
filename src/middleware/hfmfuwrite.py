@@ -82,22 +82,35 @@ def write_call(line):
     # listener mechanism.
     pass
 
+# Iceman-native keywords for `hf mfu restore`.
+# Matrix: divergence_matrix.md L905-928 `hf mfu restore` +
+# divergence_matrix_v2_changes.md C4 correction.
+#
+# Source-cite:
+#   Iceman /tmp/rrg-pm3/client/src/cmdhfmfu.c:4218 — CmdHF14AMfURestore
+#     emits `PrintAndLogEx(INFO, "Done!")` on success (exclamation mark
+#     is part of the literal).
+#   Iceman cmdhf14a.c reader helper -> "Can't select card" on
+#     selection failure (identical across both firmwares per matrix).
+#   "failed to write block" — iceman cmdhfmfu.c write-loop on per-
+#     block failure.
+# Legacy cmdhfmfu.c:2343 emits `"Finish restore"` with NO "Done" token —
+# this middleware no longer matches legacy completion. Phase 4 adapter
+# responsibility (see gap log P3.3 entry).
+_KW_RESTORE_SUCCESS = r'Done!'
+_KW_SELECT_FAIL = "Can't select card"
+_KW_WRITE_FAIL = "failed to write block"
+
 def write(infos, file):
     """Write MIFARE Ultralight/NTAG data to a tag.
 
-    Ground truth (hfmfuwrite_strings.txt):
-        __pyx_kp_u_hf_mfu_restore_s_e_f   = "hf mfu restore s e f {}"
-        __pyx_kp_u_Can_t_select_card       = "Can't select card"
-        __pyx_kp_u_failed_to_write_block   = "failed to write block"
-        __pyx_n_s_startPM3Task
-        __pyx_n_s_hasKeyword
-        __pyx_n_s_stopPM3Task
-
-    Flow (6-write_spec.md §5.4):
-        1. Build command: "hf mfu restore s e f {filepath}"
+    Flow (6-write_spec.md §5.4, iceman-native post P3.3 compat-flip):
+        1. Build iceman command: `hf mfu restore -s -e -f <file>`
         2. Execute via startPM3Task with write_call callback
-        3. Check for failure keywords
-        4. Return 1 (success) or -1/-10 (failure)
+        3. Check iceman failure keywords (`Can't select card`,
+           `failed to write block`)
+        4. Check iceman completion sentinel `Done!` (cmdhfmfu.c:4218)
+        5. Return 1 (success) or -1/-10 (failure)
 
     Args:
         infos: dict with 'type' key (int tag type ID)
@@ -108,12 +121,12 @@ def write(infos, file):
         -1  on failure
         -10 on critical failure (card not selectable)
     """
-    # Build PM3 command
-    # Strings: __pyx_kp_u_hf_mfu_restore_s_e_f = "hf mfu restore s e f {}"
+    # Iceman CLI form: `hf mfu restore -s -e -f <file>`
+    # Matrix L908: iceman/legacy accept same flag syntax; legacy trace
+    # prefix `hf mfu restore s e f` is the older flag spelling (no dash
+    # on legacy — handled transparently by iceman parser aliases).
     cmd = "hf mfu restore -s -e -f {}".format(file)
 
-    # Execute with callback
-    # Strings: __pyx_n_s_startPM3Task
     # Ground truth timeouts (from real device traces):
     #   UL plain: 10888  (trace_dump_files_20260403)
     #   UL-EV1:   16888  (trace_original_full_20260410)
@@ -134,19 +147,16 @@ def write(infos, file):
     timeout = _MFU_TIMEOUTS.get(typ, 30000)
     executor.startPM3Task(cmd, timeout, write_call)
 
-    # Check for failure keywords
-    # Strings: __pyx_kp_u_Can_t_select_card
-    if executor.hasKeyword("Can't select card"):
+    # Iceman failure keywords (iceman-native literals).
+    if executor.hasKeyword(_KW_SELECT_FAIL):
         return -10
-
-    # Strings: __pyx_kp_u_failed_to_write_block
-    if executor.hasKeyword("failed to write block"):
+    if executor.hasKeyword(_KW_WRITE_FAIL):
         return -1
 
-    # Iceman success indicator: "Done" appears after all blocks written.
+    # Iceman success sentinel: `Done!` (cmdhfmfu.c:4218 literal).
     # If the card lost contact mid-restore, the response only has
-    # "Loaded N bytes" without "Done" — that's a silent failure.
-    if not executor.hasKeyword("Done"):
+    # "Loaded N bytes" / "Restoring ..." without `Done!` — silent fail.
+    if not executor.hasKeyword(_KW_RESTORE_SUCCESS):
         return -1
 
     return 1
