@@ -132,6 +132,16 @@ _KW_STATIC_NONCE = 'Static nonce....... yes'
 # string; legacy v1090 firmware kept the string. Substring match survives
 # as neutral keyword (not emitted by iceman today). Retained per matrix
 # scope — middleware parser() checks as Case 1 precedence test.
+# DORMANT on both firmwares: grep of /tmp/rrg-pm3/client/src/ and
+# /tmp/factory_pm3/client/src/ both yield zero matches for this literal
+# string. No emission path exists post-iceman-flip on either side.
+# TODO(Phase 4): reconcile whether to (a) drop the keyword + Case 1
+# precedence test entirely (both firmwares' multi-tag UX routes through
+# Anticollision failure Case 2), or (b) replace with the iceman-native
+# multi-tag indicator (needs iceman source cite — none found as of
+# 2026-04-17). Leaving as no-op keyword for now keeps parser() graph
+# topologically equivalent to v1.0.90 binary; guarantees no wrong-path
+# activation under iceman since emission is absent.
 _KW_MULTIPLE_TAGS = 'Multiple tags detected'
 
 # Iceman cmdhf14a.c:2746 emits this identical string. IDENTICAL.

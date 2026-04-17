@@ -127,7 +127,14 @@ _RE_FC = r'FC:\s+([xX0-9a-fA-F]+)'
 # `Card %X` (Viking cmdlfviking.c:57 — space, no colon), `CN: %u` (COTAG
 # cmdlfcotag.c:76). Tolerant colon-or-space required for iceman natively since
 # Viking is the outlier. Matrix L988.
-_RE_CN = r'(CN|Card(?:\s+No\.)?|Card ID)[\s:]+(\d+)'
+# `Card ID` alternate dropped: the only iceman `lf sea`-reachable emission
+# of "Card ID" is cmdlfidteck.c:129 ("IDTECK Tag Found: Card ID %u ..."),
+# but IDTECK is NOT handled by lfsearch.parser() (no tagtypes constant, no
+# Check N block) and flows through a chipset-detection fallback. saflok
+# `Card ID: %u` (cmdhfsaflok.c:1035) is a HF flow, unreachable by lf sea.
+# Removing the alternate keeps _RE_CN scoped to the lfsearch flows that
+# actually use it. Grep verified 2026-04-17.
+_RE_CN = r'(CN|Card(?:\s+No\.)?)[\s:]+(\d+)'
 
 # Iceman AWID/Pyramid/Securakey emit `- len: %d` (cmdlfawid.c:248,
 # cmdlfpyramid.c:161, cmdlfsecurakey.c:113) — lowercase only. Drop `Len|LEN|
