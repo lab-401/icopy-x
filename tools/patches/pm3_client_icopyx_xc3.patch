@@ -1,0 +1,31 @@
+From: quantum-x <2514540+quantum-x@users.noreply.github.com>
+Subject: client: add -DXC3 for PM3ICOPYX so FPGA_TYPE resolves correctly
+
+iceman's `client/Makefile` adds only `-DICOPYX` when building for
+PM3ICOPYX, but `common_fpga/fpga.h` selects `FPGA_TYPE "3s100evq100"`
+only when `XC3` is defined. Without `-DXC3` the client defaults to
+`FPGA_TYPE "2s30vq100"` (Spartan-II), which then causes
+`cmd_hw_version`'s `strstr(payload->versionstr, FPGA_TYPE)` check to
+fail against the firmware's bitstream header `3s100evq100`, emitting
+a spurious `FPGA firmware... chip mismatch` warning on every `hw
+version` invocation.
+
+The firmware side gets `-DXC3` via `PLATFORM_DEFS` in `Makefile.hal`
+(L156), but the client Makefile was never updated. iCopy-X is
+XC3S100E per `Makefile.hal` L157 (`PLTNAME = iCopy-X with XC3S100E`),
+so adding `-DXC3` to the client build is correct, not a divergence.
+
+Ref: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt
+     (ground-truth confirms iCopy-X FPGA chip is XC3S100E)
+
+--- a/client/Makefile
++++ b/client/Makefile
+@@ -26,7 +26,7 @@
+ include ../Makefile.defs
+
+ ifeq ($(PLATFORM),PM3ICOPYX)
+-  INCLUDES += -DICOPYX
++  INCLUDES += -DICOPYX -DXC3
+ endif
+
+ INSTALLBIN = proxmark3
