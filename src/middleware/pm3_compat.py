@@ -841,44 +841,6 @@ def _post_normalize(text):
 #   ICEMAN: /tmp/rrg-pm3/client/src/<file>:<line>     (what middleware expects)
 # ===========================================================================
 
-# -- hf mf fchk table (device firmware-bump forward compat) --
-
-# HEAD iceman row: " 000 | 003 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1"
-# Device iceman emits 4-col `| 000 | ... |` verbatim (no rewrite needed).
-# Keep normalizer defined for the 5-col->4-col conversion when iceman HEAD
-# flashes (unwired by default; wired for `hf mf fchk/chk/nested/staticnested`
-# as forward-compat bump guard).  Gap log P3.2 dormant entry.
-_RE_FCHK_NEW_ROW = re.compile(
-    r'^\s*(\d{3})\s*\|\s*\d{3}\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d)',
-    re.MULTILINE)
-_RE_FCHK_NEW_SEP = re.compile(r'^-{3,}\+.*$', re.MULTILINE)
-_RE_FCHK_NEW_HDR = re.compile(r'^\s*Sec\s*\|\s*Blk\s*\|.*$', re.MULTILINE)
-
-
-def _normalize_fchk_table(text):
-    """Rewrite iceman HEAD 5-col fchk table to 4-col for middleware.
-
-    HEAD iceman (cmdhfmf.c:4966-5060 printKeyTable): 5-col +-separated.
-    Device iceman (older build): 4-col |-bordered.  Middleware targets
-    4-col (`hfmfkeys._RE_KEY_TABLE`).  Firmware-bump forward compat.
-    """
-    def _fchk_row_replace(m):
-        sec = m.group(1)
-        key_a = m.group(2).lower()
-        res_a = m.group(3)
-        key_b = m.group(4).lower()
-        res_b = m.group(5)
-        return '| %s | %s   | %s | %s   | %s |' % (
-            sec, key_a, res_a, key_b, res_b)
-
-    text = _RE_FCHK_NEW_ROW.sub(_fchk_row_replace, text)
-    text = _RE_FCHK_NEW_SEP.sub(
-        '|-----|----------------|---|----------------|---|', text)
-    text = _RE_FCHK_NEW_HDR.sub(
-        '| Sec | key A          |res| key B          |res|', text)
-    return text
-
-
 # -- hf mf wrbl / restore: legacy isOk -> iceman Write ( ok/fail ) --
 
 # LEGACY: cmdhfmf.c:716,825,1307 `PrintAndLogEx(SUCCESS, "isOk:%02x", isOK)`.
@@ -1136,10 +1098,6 @@ def _normalize_felica_reader(text):
 # has no prefix to match, and the module is fully inert without any
 # normalizer registry to traverse.
 _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
-    'hf mf fchk': [_normalize_fchk_table],
-    'hf mf chk': [_normalize_fchk_table],
-    'hf mf nested': [_normalize_fchk_table],
-    'hf mf staticnested': [_normalize_fchk_table],
     'hf mf wrbl': [_normalize_wrbl_response],
     'hf mf restore': [_normalize_wrbl_response],
     'hf 15 restore': [_normalize_hf15_restore],
