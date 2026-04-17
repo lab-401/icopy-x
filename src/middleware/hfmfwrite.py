@@ -400,6 +400,7 @@ def write_common(listener, infos, bundle):
     import re as _re
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
+    probe_conclusive = False
     if ret == 1:
         text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
         has_error = (executor.hasKeyword('wupC1 error') or
@@ -411,9 +412,18 @@ def write_common(listener, infos, bundle):
         has_block_data = bool(_re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text))
         if has_block_data and not has_error:
             is_gen1a = True
+            probe_conclusive = True
+        elif has_error:
+            # wupC1 error = definitive "not Gen1a" answer from THIS card.
+            # Don't let a stale scan-cache flag (e.g. from an AutoCopy source
+            # card) override the target probe below.
+            probe_conclusive = True
 
-    # Use infos gen1a flag if set by scan phase
-    if infos.get('gen1a', False):
+    # Use infos gen1a flag only when the direct probe was inconclusive.
+    # Without this guard an AutoCopy source's gen1a=True leaks into a
+    # Gen2/CUID target and the flow tries cload — which requires the
+    # wupC1 backdoor and fails with "Can't set magic card block: 0".
+    if not probe_conclusive and infos.get('gen1a', False):
         is_gen1a = True
 
     # Step 3: Key verification on TARGET card (only for standard path)

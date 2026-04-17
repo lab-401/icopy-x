@@ -922,10 +922,10 @@ class LfReaderTestActivity(BaseActivity):
             self._finish_with_result(False)
 
     def run_watch(self):
-        """Run 'lf em 410x_watch' for live EM tag detection."""
+        """Run 'lf em 410x watch' for live EM tag detection (iceman syntax)."""
         try:
             import executor
-            ret = executor.startPM3Task('lf em 410x_watch', timeout=8888)
+            ret = executor.startPM3Task('lf em 410x watch', timeout=8888)
             if ret == 1:
                 content = ''
                 try:

@@ -3162,11 +3162,11 @@ class SniffActivity(BaseActivity):
     # Sniff type definitions: (resource_key, pm3_start_cmd, pm3_list_cmd, type_id)
     # Ground truth: trace_sniff_flow_20260403.txt — real device PM3 commands
     SNIFF_TYPES = [
-        ('sniff_item1', 'hf 14a sniff', 'hf list mf', '14a'),       # trace: hf list mf NOT hf 14a list
-        ('sniff_item2', 'hf 14b sniff', 'hf list 14b', '14b'),
-        ('sniff_item3', 'hf iclass sniff', 'hf list iclass', 'iclass'),
-        ('sniff_item4', 'hf topaz sniff', 'hf list topaz', 'topaz'),
-        ('sniff_item5', 'lf t55xx sniff', None, '125k'),             # trace: lf t55xx sniff NOT lf sniff
+        ('sniff_item1', 'hf 14a sniff', 'hf mf list', '14a'),        # iceman: hf mf list (factory was: hf list mf)
+        ('sniff_item2', 'hf 14b sniff', 'hf 14b list', '14b'),       # iceman: hf 14b list
+        ('sniff_item3', 'hf iclass sniff', 'hf iclass list', 'iclass'),
+        ('sniff_item4', 'hf topaz sniff', 'hf topaz list', 'topaz'),
+        ('sniff_item5', 'lf t55xx sniff', None, '125k'),
     ]
 
     # Instruction pages for HF types (Steps 1-4)
@@ -5866,22 +5866,22 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
 # =====================================================================
 
 SIM_MAP = [
-    ('M1 S50 1k',     1,  'HF', 'hf_4b',     'uid',     'hf 14a sim t 1 u {}'),
-    ('M1 S70 4k',     0,  'HF', 'hf_4b',     'uid',     'hf 14a sim t 2 u {}'),
-    ('Ultralight',    2,  'HF', 'single_7b', 'uid',     'hf 14a sim t 7 u {}'),
-    ('Ntag215',       6,  'HF', 'single_7b', 'uid',     'hf 14a sim t 8 u {}'),
-    ('FM11RF005SH',   40, 'HF', 'single_4b', 'uid',     'hf 14a sim t 9 u {}'),
-    ('Em410x ID',     8,  'LF', 'lf_4b',     'uid',     'lf em 410x_sim {}'),
-    ('HID Prox ID',   9,  'LF', 'lf_5b',     'data',    'lf hid sim {}'),
-    ('AWID ID',       11, 'LF', 'lf_awid',   'fccn',    'lf awid sim {} {} {}'),
-    ('IO Prox ID',    12, 'LF', 'lf_io',     'ioporx',  'lf io sim {} {} {}'),
-    ('G-Prox II ID',  13, 'LF', 'lf_gporx',  'fccn',    'lf gproxii sim {} {} {}'),
-    ('Viking ID',     15, 'LF', 'single_4b', 'uid',     'lf Viking sim {}'),
-    ('Pyramid ID',    16, 'LF', 'lf_pyramid','pyramid', 'lf Pyramid sim {} {}'),
-    ('Jablotron ID',  30, 'LF', 'lf_jab',    'jabdat',  'lf Jablotron sim {}'),
-    ('Nedap ID',      32, 'LF', 'lf_nedap',  'nedap',   'lf nedap sim s {} c {} i {}'),
-    ('FDX-B Animal',  28, 'LF', 'lf_fdx_a',  'fdx',     'lf FDX sim c {} n {} s'),
-    ('FDX-B Data',    28, 'LF', 'lf_fdx_d',  'fdx',     'lf FDX sim c {} n {} e {}'),
+    ('M1 S50 1k',     1,  'HF', 'hf_4b',     'uid',     'hf 14a sim -t 1 --uid {}'),
+    ('M1 S70 4k',     0,  'HF', 'hf_4b',     'uid',     'hf 14a sim -t 2 --uid {}'),
+    ('Ultralight',    2,  'HF', 'single_7b', 'uid',     'hf 14a sim -t 7 --uid {}'),
+    ('Ntag215',       6,  'HF', 'single_7b', 'uid',     'hf 14a sim -t 8 --uid {}'),
+    ('FM11RF005SH',   40, 'HF', 'single_4b', 'uid',     'hf 14a sim -t 9 --uid {}'),
+    ('Em410x ID',     8,  'LF', 'lf_4b',     'uid',     'lf em 410x sim --id {}'),
+    ('HID Prox ID',   9,  'LF', 'lf_5b',     'data',    'lf hid sim -r {}'),
+    ('AWID ID',       11, 'LF', 'lf_awid',   'fccn',    'lf awid sim --fmt {} --fc {} --cn {}'),
+    ('IO Prox ID',    12, 'LF', 'lf_io',     'ioporx',  'lf io sim --vn {} --fc {} --cn {}'),
+    ('G-Prox II ID',  13, 'LF', 'lf_gporx',  'fccn',    'lf gproxii sim --xor 0 --fmt {} --fc {} --cn {}'),
+    ('Viking ID',     15, 'LF', 'single_4b', 'uid',     'lf viking sim --cn {}'),
+    ('Pyramid ID',    16, 'LF', 'lf_pyramid','pyramid', 'lf pyramid sim --fc {} --cn {}'),
+    ('Jablotron ID',  30, 'LF', 'lf_jab',    'jabdat',  'lf jablotron sim --cn {}'),
+    ('Nedap ID',      32, 'LF', 'lf_nedap',  'nedap',   'lf nedap sim --st {} --cc {} --id {}'),
+    ('FDX-B Animal',  28, 'LF', 'lf_fdx_a',  'fdx',     'lf fdxb sim --country {} --national {} --animal'),
+    ('FDX-B Data',    28, 'LF', 'lf_fdx_d',  'fdx',     'lf fdxb sim --country {} --national {} --extended {}'),
 ]
 
 # QEMU-verified defaults from real .so binary (sim_common.sh lines 203-210).

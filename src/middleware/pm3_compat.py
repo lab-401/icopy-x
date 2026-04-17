@@ -279,6 +279,9 @@ _TRANSLATION_RULES = [
     # lf em 410x_sim {id} -> lf em 410x sim --id {id}
     (re.compile(r'^lf em 410x_sim\s+(\S+)$'), r'lf em 410x sim --id \1'),
 
+    # lf em 410x_watch -> lf em 410x watch
+    (re.compile(r'^lf em 410x_watch$'), 'lf em 410x watch'),
+
     # lf em 4x05_write {blk} {data} {key} -> lf em 4x05 write -b {blk} -d {data} -p {key}
     (re.compile(r'^lf em 4x05_write\s+(\S+)\s+(\S+)\s+(\S+)$'), _translate_em4x05_write),
 
@@ -801,6 +804,73 @@ _REVERSE_TRANSLATION_RULES = [
     # lf config -a {a} -t {t} -s {s} -> lf config a {a} t {t} s {s}
     (re.compile(r'^lf config\s+-a\s+(\S+)\s+-t\s+(\S+)\s+-s\s+(\S+)$'),
      r'lf config a \1 t \2 s \3'),
+
+    # hf 14a/14b/iclass/topaz list / hf mf list (iceman aliases) -> hf list {proto}
+    # Iceman has per-protocol list aliases; factory used `hf list <protocol>`.
+    (re.compile(r'^hf mf list$'), 'hf list mf'),
+    (re.compile(r'^hf 14a list$'), 'hf list 14a'),
+    (re.compile(r'^hf 14b list$'), 'hf list 14b'),
+    (re.compile(r'^hf iclass list$'), 'hf list iclass'),
+    (re.compile(r'^hf topaz list$'), 'hf list topaz'),
+
+    # -----------------------------------------------------------------------
+    # Flow 13: Simulation — reverse rules (iceman → factory)
+    # -----------------------------------------------------------------------
+
+    # hf 14a sim -t {type} --uid {uid}  (or -u alias) -> hf 14a sim t {type} u {uid}
+    (re.compile(r'^hf 14a sim\s+-t\s+(\S+)\s+(?:--uid|-u)\s+(\S+)$'),
+     r'hf 14a sim t \1 u \2'),
+
+    # hf mf csave --1k -f {file} -> hf mf csave 1 o {file}
+    # hf mf csave --4k -f {file} -> hf mf csave 4 o {file}
+    (re.compile(r'^hf mf csave\s+--1k\s+-f\s+(\S+)$'), r'hf mf csave 1 o \1'),
+    (re.compile(r'^hf mf csave\s+--4k\s+-f\s+(\S+)$'), r'hf mf csave 4 o \1'),
+    (re.compile(r'^hf mf csave\s+--mini\s+-f\s+(\S+)$'), r'hf mf csave 0 o \1'),
+    (re.compile(r'^hf mf csave\s+--2k\s+-f\s+(\S+)$'), r'hf mf csave 2 o \1'),
+
+    # lf em 410x sim --id {id} -> lf em 410x_sim {id}
+    (re.compile(r'^lf em 410x sim\s+--id\s+(\S+)$'), r'lf em 410x_sim \1'),
+
+    # lf em 410x watch -> lf em 410x_watch
+    (re.compile(r'^lf em 410x watch$'), 'lf em 410x_watch'),
+
+    # lf hid sim -r {raw} -> lf hid sim {raw}
+    (re.compile(r'^lf hid sim\s+-r\s+(\S+)$'), r'lf hid sim \1'),
+
+    # lf awid sim --fmt X --fc Y --cn Z -> lf awid sim X Y Z
+    (re.compile(r'^lf awid sim\s+--fmt\s+(\S+)\s+--fc\s+(\S+)\s+--cn\s+(\S+)$'),
+     r'lf awid sim \1 \2 \3'),
+
+    # lf io sim --vn X --fc Y --cn Z -> lf io sim X Y Z
+    (re.compile(r'^lf io sim\s+--vn\s+(\S+)\s+--fc\s+(\S+)\s+--cn\s+(\S+)$'),
+     r'lf io sim \1 \2 \3'),
+
+    # lf gproxii sim --xor 0 --fmt X --fc Y --cn Z -> lf gproxii sim X Y Z
+    # Factory gproxii sim takes 3 positional args (fmt, fc, cn) — xor is iceman-only.
+    (re.compile(r'^lf gproxii sim\s+--xor\s+\S+\s+--fmt\s+(\S+)\s+--fc\s+(\S+)\s+--cn\s+(\S+)$'),
+     r'lf gproxii sim \1 \2 \3'),
+
+    # lf viking sim --cn X -> lf viking sim X
+    (re.compile(r'^lf viking sim\s+--cn\s+(\S+)$'), r'lf viking sim \1'),
+
+    # lf pyramid sim --fc X --cn Y -> lf pyramid sim X Y
+    (re.compile(r'^lf pyramid sim\s+--fc\s+(\S+)\s+--cn\s+(\S+)$'),
+     r'lf pyramid sim \1 \2'),
+
+    # lf jablotron sim --cn X -> lf jablotron sim X
+    (re.compile(r'^lf jablotron sim\s+--cn\s+(\S+)$'), r'lf jablotron sim \1'),
+
+    # lf nedap sim --st X --cc Y --id Z -> lf nedap sim s X c Y i Z
+    (re.compile(r'^lf nedap sim\s+--st\s+(\S+)\s+--cc\s+(\S+)\s+--id\s+(\S+)$'),
+     r'lf nedap sim s \1 c \2 i \3'),
+
+    # lf fdxb sim --country X --national Y --animal -> lf fdx sim c X n Y s
+    (re.compile(r'^lf fdxb sim\s+--country\s+(\S+)\s+--national\s+(\S+)\s+--animal$'),
+     r'lf fdx sim c \1 n \2 s'),
+
+    # lf fdxb sim --country X --national Y --extended Z -> lf fdx sim c X n Y e Z
+    (re.compile(r'^lf fdxb sim\s+--country\s+(\S+)\s+--national\s+(\S+)\s+--extended\s+(\S+)$'),
+     r'lf fdx sim c \1 n \2 e \3'),
 ]
 
 
