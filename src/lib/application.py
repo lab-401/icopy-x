@@ -184,6 +184,18 @@ def startApp():
     except Exception:
         pass
 
+    # ── 5b. Audio init + startup chime ────────────────────────────
+    # pygame.mixer.init() must run after the Tk root is created (some
+    # SDL backends share an event loop assumption with the windowing
+    # toolkit; safer to defer).  audio.init() is graceful — silent
+    # no-op when no sound HW (QEMU, dev host with no audio device).
+    try:
+        from lib import audio
+        audio.init()
+        audio.playSystemStart()
+    except Exception:
+        pass
+
     # ── 6. Start screen mirror service if configured ────────────────
     try:
         import settings

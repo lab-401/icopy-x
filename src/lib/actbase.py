@@ -72,6 +72,9 @@ from lib._constants import (
     BATTERY_Y,
     KEY_M1,
     KEY_M2,
+    KEY_OK,
+    KEY_UP,
+    KEY_DOWN,
 )
 
 
@@ -587,11 +590,30 @@ class BaseActivity(Activity):
         M1 suppressed when left button is hidden or inactive.
         M2 suppressed when right button is hidden or inactive.
         All other keys (OK, UP, DOWN, PWR) always dispatch.
+
+        Audio feedback (post-asset-swap):
+          UP/DOWN          -> navigate_tap.mp3
+          OK               -> navigate_click.mp3
+          M1/M2 (active)   -> navigate_click.mp3 (after the gate)
+        Suppressed M1/M2 presses make no sound — matches the visual
+        cue (greyed-out button = inert).
         """
         if key == KEY_M1 and (not self._m1_visible or not self._m1_active):
             return
         if key == KEY_M2 and (not self._m2_visible or not self._m2_active):
             return
+        # Sound dispatch happens AFTER the M1/M2 active-gate so an
+        # inactive button press is silent.  Wrapped in try/except so
+        # an audio failure (no mixer / missing asset) never blocks
+        # the actual key handler.
+        try:
+            from lib import audio
+            if key == KEY_UP or key == KEY_DOWN:
+                audio.playNavTap()
+            elif key == KEY_OK or key == KEY_M1 or key == KEY_M2:
+                audio.playNavClick()
+        except Exception:
+            pass
         self.onKeyEvent(key)
 
     # ==================================================================

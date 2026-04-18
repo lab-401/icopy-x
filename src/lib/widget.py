@@ -1213,6 +1213,15 @@ class Toast:
             duration_ms = self._duration_ms
         self._showing = True
 
+        # Audio: short chime when a toast appears.  Local import to
+        # avoid pulling pygame in for the hundreds of widgets that
+        # never call show().
+        try:
+            from lib import audio
+            audio.playSystemToast()
+        except Exception:
+            pass
+
         self._draw(message, icon, wrap=wrap)
 
         # Re-raise toast elements to top of z-order — ensures toast
