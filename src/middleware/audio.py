@@ -22,22 +22,36 @@
 
 """Audio playback and volume control.
 
-OSS reimplementation of audio.so.
-Binary source: audio.so (Cython, pygame + subprocess)
-Ground truth: V1090_MODULE_AUDIT.txt lines 913-961
+OSS reimplementation of audio.so, post-asset-swap revision.
 
-The original module uses pygame.mixer for audio playback and
-subprocess calls to amixer for system volume control.
-On real hardware, amixer controls ALSA Speaker volume.
-In QEMU/test mode, audio functions gracefully no-op (no sound hardware).
+Two layers:
 
-DRM note: The original audio.so contains DRM license checks.
+  1) System sounds — five short mp3s in res/audio/ wired into the
+     standard UI events (list navigation, button click, startup,
+     shutdown, toast).  Each event has a thin helper here; call
+     sites in keymap.py / hmi_driver.py / application.py / widget.py
+     invoke the helpers.
+
+  2) Generic playback — play(name) / playOfVolume(name, v) for any
+     other asset (pygame.mixer handles both .wav and .mp3).  The
+     legacy named-event stubs (playTagfound, playSniffStep1, etc.)
+     are retained as no-ops for source compatibility with code that
+     still calls them; they no longer attempt to look up the old
+     numbered .wav corpus that was removed.
+
+Playback path: pygame.mixer (preferred — handles both wav + mp3) →
+no-op log when pygame unavailable (QEMU / no sound HW).  We do NOT
+fall back to `aplay` for mp3 because aplay only handles wav; trying
+mp3 through aplay produces noise instead of audio.
+
+DRM note: The original audio.so contained DRM license checks.
 Per project rules, DRM gate functions are replaced with pass-throughs.
 """
 
 import logging
 import os
 import subprocess
+import threading
 
 logger = logging.getLogger(__name__)
 
@@ -50,23 +64,30 @@ _mixer_available = False  # True if pygame.mixer initialized successfully
 # Volume percentage map: UI level -> ALSA percentage string
 # Ground truth: settings.fromLevelGetVolume() returns 0/30/65/100
 _VOLUME_PCT = {0: '0%', 1: '30%', 2: '65%', 3: '100%'}
+_LEVEL_TO_PCT = {0: 0, 1: 30, 2: 65, 3: 100}
 
-# Audio file base path (real device)
+# Audio file base path (real device).  Falls back to a relative path
+# resolved against the lib's parent directory if the device path is
+# absent (development / QEMU runs from the source tree).
 _AUDIO_BASE = '/home/pi/ipk_app_main/res/audio'
+if not os.path.isdir(_AUDIO_BASE):
+    _AUDIO_BASE = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), '..', '..', 'res', 'audio'))
 
-# Volume preview file — audio.so uses res/audio/11.4.wav
-# (string literal found in audio_strings.txt line 1670)
-_VOLUME_EXAM_FILE = '11.4.wav'
+# Named system sounds (post-asset-swap).  Volume preview reuses the
+# toast tone because the new asset set has no dedicated calibration
+# tone — toast is short, distinct, and at a comfortable level.
+_SOUND_NAV_TAP        = 'navigate_tap.mp3'
+_SOUND_NAV_CLICK      = 'navigate_click.mp3'
+_SOUND_SYSTEM_START   = 'system_start.mp3'
+_SOUND_SYSTEM_SHUTDOWN = 'system_shutdown.mp3'
+_SOUND_SYSTEM_TOAST   = 'system_toast.mp3'
+_VOLUME_EXAM_FILE     = _SOUND_SYSTEM_TOAST
 
 
-def _has_command(cmd):
-    """Check if a system command exists on PATH."""
-    try:
-        subprocess.run(['which', cmd], capture_output=True, timeout=2)
-        return True
-    except Exception:
-        return False
-
+# =====================================================================
+# Init / volume control
+# =====================================================================
 
 def init():
     """Initialize audio subsystem.
@@ -89,13 +110,9 @@ def init():
 def setVolume(v):
     """Set system volume via ALSA amixer.
 
-    Ground truth (trace_original_backlight_volume_20260410.txt):
-    audio.setVolume receives the ALSA percentage directly (0/20/50/100),
-    NOT the UI level index. The caller (VolumeActivity) converts via
-    settings.fromLevelGetVolume() before calling.
-
     Args:
-        v: int ALSA volume percentage (0, 20, 50, 100)
+        v: int ALSA volume percentage (0, 20, 50, 100) — caller already
+           converted from UI level via settings.fromLevelGetVolume().
     """
     global _volume_level
     _volume_level = v
@@ -112,115 +129,121 @@ def setVolume(v):
         logger.debug("audio.setVolume(%s) — amixer error: %s", v, e)
 
 
-def playVolumeExam(v=100, chk=False):
-    """Play volume preview/calibration tone.
-
-    Original: plays res/audio/11.4.wav at current volume via pygame.mixer.
-    Falls back to aplay if pygame unavailable, no-ops if neither works.
-
-    Args:
-        v: volume percentage (default 100)
-        chk: check DRM license (pass-through, always succeeds)
-    """
-    logger.debug("audio.playVolumeExam(v=%s, chk=%s)", v, chk)
-    wav = os.path.join(_AUDIO_BASE, _VOLUME_EXAM_FILE)
-    if not os.path.exists(wav):
-        logger.debug("playVolumeExam — wav not found: %s", wav)
-        return
-    # Try pygame.mixer first (matches original .so)
-    if _mixer_available:
-        try:
-            import pygame
-            pygame.mixer.music.load(wav)
-            pygame.mixer.music.set_volume(v / 100.0)
-            pygame.mixer.music.play()
-            return
-        except Exception as e:
-            logger.debug("playVolumeExam — pygame error: %s", e)
-    # Fallback: aplay (non-blocking)
-    try:
-        subprocess.Popen(
-            ['aplay', '-q', wav],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        )
-    except FileNotFoundError:
-        logger.debug("playVolumeExam — aplay not found (QEMU)")
-    except Exception as e:
-        logger.debug("playVolumeExam — aplay error: %s", e)
-
-
 def setKeyAudioEnable(enable):
     """Enable or disable key press click sounds.
 
     Ground truth: VolumeActivity sets False when level=0 (Off),
     True for all other levels.
-
-    Args:
-        enable: bool — True to enable key click sounds
     """
     global _key_audio_enabled
     _key_audio_enabled = bool(enable)
     logger.debug("audio.setKeyAudioEnable(%s)", enable)
 
 
-def playOfVolume(name, volume):
-    """Play named audio file at specified volume.
+def get_framerate(name):
+    """Get framerate of named audio file.  Default 44100 (CD quality)."""
+    return 44100
 
-    Args:
-        name: audio file name (e.g. '11.4.wav')
-        volume: playback volume (0-100)
-    """
-    logger.debug("audio.playOfVolume(%s, %s)", name, volume)
+
+# =====================================================================
+# Generic playback (used by the named system-sound helpers below)
+# =====================================================================
+
+def play(name):
+    """Play named audio file at current volume."""
+    vol = _LEVEL_TO_PCT.get(_volume_level, 65)
+    playOfVolumeImpl(name, vol)
+
+
+def playOfVolume(name, volume):
+    """Play named audio file at specified volume (0-100)."""
     playOfVolumeImpl(name, volume)
 
 
 def playOfVolumeImpl(n, v):
-    """Internal implementation of volume playback.
+    """Internal implementation of named-asset playback.
 
-    Tries pygame.mixer first, falls back to aplay.
+    pygame.mixer is the only path; it handles both .wav and .mp3.
+    No fallback for mp3 because aplay can't decode it.  When
+    pygame is unavailable (QEMU) the call gracefully no-ops.
     """
-    logger.debug("audio.playOfVolumeImpl(%s, %s)", n, v)
     wav = os.path.join(_AUDIO_BASE, n) if not os.path.isabs(n) else n
     if not os.path.exists(wav):
+        logger.debug("audio.playOfVolumeImpl(%s) — file not found: %s", n, wav)
         return
-    if _mixer_available:
-        try:
-            import pygame
-            snd = pygame.mixer.Sound(wav)
-            snd.set_volume(v / 100.0)
-            snd.play()
-            return
-        except Exception as e:
-            logger.debug("playOfVolumeImpl — pygame error: %s", e)
+    if not _mixer_available:
+        logger.debug("audio.playOfVolumeImpl(%s) — no mixer", n)
+        return
     try:
-        subprocess.Popen(
-            ['aplay', '-q', wav],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        )
-    except Exception:
-        pass
+        import pygame
+        snd = pygame.mixer.Sound(wav)
+        snd.set_volume(max(0.0, min(1.0, v / 100.0)))
+        snd.play()
+    except Exception as e:
+        logger.debug("audio.playOfVolumeImpl(%s) — pygame error: %s", n, e)
 
 
-def play(name):
-    """Play named audio file at current volume."""
-    logger.debug("audio.play(%s)", name)
-    # Map volume level to percentage for playback
-    pct_map = {0: 0, 1: 30, 2: 65, 3: 100}
-    vol = pct_map.get(_volume_level, 65)
-    playOfVolumeImpl(name, vol)
+def playVolumeExam(v=100, chk=False):
+    """Play volume preview/calibration tone.
 
-
-def get_framerate(name):
-    """Get framerate of named audio file.
-
-    Returns:
-        int: framerate (default 44100)
+    Used by VolumeActivity on UP/DOWN to preview the new volume.
+    Plays the system-toast tone at the explicit volume `v` (overrides
+    the global level so the user hears what the proposed level sounds
+    like before committing).
     """
-    return 44100
+    logger.debug("audio.playVolumeExam(v=%s, chk=%s)", v, chk)
+    playOfVolumeImpl(_VOLUME_EXAM_FILE, v)
 
 
-# === Sound effect functions (all no-ops in QEMU) ===
-# Ground truth: V1090_MODULE_AUDIT.txt lines 920-953
+# =====================================================================
+# Named system sounds — wired to UI events
+# =====================================================================
+
+def playNavTap():
+    """List navigation tap (UP/DOWN keys).  Wired in keymap.py."""
+    if not _key_audio_enabled:
+        return
+    play(_SOUND_NAV_TAP)
+
+
+def playNavClick():
+    """Mapped-button click (OK/M1/M2 after the actbase active gate).
+    Wired in keymap.py."""
+    if not _key_audio_enabled:
+        return
+    play(_SOUND_NAV_CLICK)
+
+
+def playSystemStart():
+    """UI startup sound.  Wired in application.startApp() after the
+    Tk root is created and audio.init() has run."""
+    play(_SOUND_SYSTEM_START)
+
+
+def playSystemShutdown():
+    """Shutdown sound.  Wired in hmi_driver when GD32 sends the
+    'shutdown' command (PWR long-press), played BEFORE the
+    'shutdowning' ack so the user hears it while the screen still
+    holds.  Synchronous-blocking play would race the shutdown; we
+    fire-and-forget like every other sound."""
+    play(_SOUND_SYSTEM_SHUTDOWN)
+
+
+def playSystemToast():
+    """Toast overlay fires.  Wired in widget.Toast.show()."""
+    play(_SOUND_SYSTEM_TOAST)
+
+
+# =====================================================================
+# Legacy named-stub compatibility
+# =====================================================================
+# The original audio.so exposed ~31 named event functions whose .wav
+# mappings lived in the closed-source binary.  Call sites still
+# reference these names (actbase.playKeyEnable/Disable, batteryui.
+# playChargingAudio, activity_tools.playStartExma, activity_main.
+# playTagfound/playTagNotfound, etc.).  We retain the names as
+# no-ops so those call sites keep working without churn.  When a
+# given event acquires a real asset assignment, route it here.
 
 def playCancel(chk=False): logger.debug("audio.playCancel()")
 def playChargingAudio(chk=False): logger.debug("audio.playChargingAudio()")
@@ -253,3 +276,101 @@ def playTraceFileSaved(chk=False): logger.debug("audio.playTraceFileSaved()")
 def playVerifiFail(chk=False): logger.debug("audio.playVerifiFail()")
 def playVerifiSuccess(chk=False): logger.debug("audio.playVerifiSuccess()")
 def playVerifying(chk=False): logger.debug("audio.playVerifying()")
+
+
+# =====================================================================
+# Scroller music (xmp .xm playback) — used by AboutActivity
+# =====================================================================
+
+class _ScrollerMusic:
+    """Background xmp subprocess playing the scroller .xm module.
+
+    The xmp binary is bundled at res/about/xmp (ARM 32-bit ELF).  We
+    spawn it as a subprocess for the lifetime of the scroller; stop()
+    sends SIGTERM and waits briefly for clean exit.  Threading is
+    handled by the OS — xmp runs in its own process, no Python-side
+    thread needed.
+
+    Lifecycle is deliberately simple: one start(), one stop(), no
+    pause/resume.  AboutActivity._stop_scroller() always runs from
+    the same UI thread that called _start_scroller(), so concurrent
+    start()/stop() races aren't possible from the call sites.
+    """
+
+    def __init__(self):
+        self._proc = None
+        self._lock = threading.Lock()
+
+    def start(self, xm_path, xmp_binary):
+        """Start xmp subprocess playing xm_path.  No-op if either
+        path is missing or another instance is already running."""
+        with self._lock:
+            if self._proc is not None and self._proc.poll() is None:
+                return  # already playing
+            if not (os.path.isfile(xm_path) and os.path.isfile(xmp_binary)):
+                logger.debug("scroller_music.start() — missing assets: "
+                             "xm=%s xmp=%s", xm_path, xmp_binary)
+                return
+            try:
+                # --loop: replay forever while scroller is on screen.
+                # Send stdout/stderr to /dev/null so a slow log doesn't
+                # block the UI thread when xmp prints frame stats.
+                #
+                # LD_LIBRARY_PATH is augmented with the directory
+                # containing the xmp binary so it can find the bundled
+                # libxmp.so.4 (the device's xenial install does not
+                # ship libxmp out of the box).  We prepend rather than
+                # replace so any system libpulse / libasound stays
+                # discoverable.
+                env = os.environ.copy()
+                xmp_dir = os.path.dirname(os.path.abspath(xmp_binary))
+                existing_ld = env.get('LD_LIBRARY_PATH', '')
+                env['LD_LIBRARY_PATH'] = (
+                    xmp_dir + ':' + existing_ld
+                    if existing_ld else xmp_dir)
+                self._proc = subprocess.Popen(
+                    [xmp_binary, '--loop', xm_path],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    env=env,
+                    preexec_fn=os.setsid,  # own process group → killpg
+                )
+                logger.debug("scroller_music.start() — pid=%s",
+                             self._proc.pid)
+            except Exception as e:
+                logger.debug("scroller_music.start() — error: %s", e)
+                self._proc = None
+
+    def stop(self):
+        """Terminate the xmp subprocess.  Safe to call multiple times."""
+        with self._lock:
+            if self._proc is None:
+                return
+            try:
+                import signal
+                os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
+            except (ProcessLookupError, PermissionError, OSError):
+                pass
+            try:
+                self._proc.wait(timeout=2)
+            except Exception:
+                try:
+                    self._proc.kill()
+                except Exception:
+                    pass
+            logger.debug("scroller_music.stop() — pid=%s stopped",
+                         self._proc.pid if self._proc else '?')
+            self._proc = None
+
+
+_scroller_music = _ScrollerMusic()
+
+
+def startScrollerMusic(xm_path, xmp_binary):
+    """Public API for AboutActivity.  See _ScrollerMusic.start."""
+    _scroller_music.start(xm_path, xmp_binary)
+
+
+def stopScrollerMusic():
+    """Public API for AboutActivity.  See _ScrollerMusic.stop."""
+    _scroller_music.stop()
