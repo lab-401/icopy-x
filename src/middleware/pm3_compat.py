@@ -873,6 +873,19 @@ def _post_normalize(text):
     # Legacy `ISO15693` → iceman `ISO 15693` (inject space).
     text = _RE_LEGACY_ISO_NOSPACE.sub(r'ISO \1', text)
 
+    # Legacy `Raw   <hex>` (space-padded, no colon) → iceman `Raw: <hex>`.
+    # iCopy-X Community fork LF readers emit Raw without colon; middleware
+    # `lfsearch.REGEX_RAW = r'(?:Raw|raw)\s*:\s*([xX0-9a-fA-F ]+)' requires
+    # the colon form.  Applies universally across all LF reader outputs.
+    text = _RE_LEGACY_RAW_NOCOLON.sub(r'\1Raw: ', text)
+
+    # Legacy `Animal ID   <id>` (space-padded) → iceman `Animal ID........... <id>`.
+    # Middleware `lfsearch.REGEX_ANIMAL = r'Animal ID\.+\s+([0-9\-]+)' needs
+    # the dotted form.  The colon form is handled too (cmdlffdx.c:200).
+    if 'Animal' in text:
+        text = _RE_LEGACY_ANIMAL_ID_COLON.sub(r'\1Animal ID........... ', text)
+        text = _RE_LEGACY_ANIMAL_ID_SPACES.sub(r'\1Animal ID........... ', text)
+
     return text
 
 
@@ -954,6 +967,38 @@ def _normalize_fdxb_animal_id(text):
     # Then space-padded form (cmdlffdx.c:282/286)
     text = _RE_LEGACY_ANIMAL_ID_SPACES.sub(r'\1Animal ID........... ', text)
     return text
+
+
+# Legacy `lf fdxb reader` (standalone) emits Raw without colon:
+#   `Raw                25 02 69 60 60 38 95 3F`
+# Middleware lfsearch.REGEX_RAW requires `Raw:` form.  Rewrite to match.
+_RE_LEGACY_RAW_NOCOLON = re.compile(
+    r'^(\s*)Raw\s{2,}(?=[0-9A-Fa-fxX])', re.MULTILINE)
+
+
+def _normalize_raw_line(text):
+    """Rewrite legacy `Raw   <hex>` (space-padded) -> iceman `Raw: <hex>`."""
+    return _RE_LEGACY_RAW_NOCOLON.sub(r'\1Raw: ', text)
+
+
+# HID Prox output format (both legacy and iceman, cmdlfhid.c):
+#   `HID Prox - <hex> (<dec>) - len: N bit - OEM: %03u FC: %u Card: %u`
+# The leading `<hex>` after `HID Prox - ` is the raw Wiegand payload
+# that `lf hid clone -r <hex>` expects.  Middleware REGEX_HID matches
+# only iceman's `raw: <hex>` which isn't emitted in the HID Prox line
+# itself.  Synthesize a `raw: <hex>` line so the reader can extract it.
+_RE_HID_PROX_LINE = re.compile(
+    r'HID Prox\s*-\s*([0-9A-Fa-f]+)\s+\(\d+\)')
+
+
+def _normalize_hid_prox(text):
+    """Synthesize iceman `raw: <hex>` from legacy `HID Prox - <hex> (<dec>)`."""
+    m = _RE_HID_PROX_LINE.search(text)
+    if not m:
+        return text
+    if 'raw:' in text.lower():
+        return text
+    return text + '\nraw: ' + m.group(1) + '\n'
 
 
 # -- lf t55xx detect: legacy colon/pipe -> iceman dotted --
@@ -1117,6 +1162,29 @@ def _normalize_mf_found_key(text):
     return _RE_LEGACY_FOUND_KEY_SPACED.sub(_strip_spaces, text)
 
 
+# -- hf sea ISO15693 UID: legacy ` UID: XX XX ...` -> iceman `UID.... XX XX ...` --
+#
+# LEGACY (iCopy-X fork, per real-device trace):
+#   [-] Searching for ISO 15693 tag...
+#    UID: E0 04 01 3C F9 43 B3 02
+#   TYPE: NXP(Philips); IC SL2 ICS20/ICS21(SLI) ICS2002/ICS2102(SLIX) ICS2602(SLIX2)
+#
+#   Valid ISO 15693 tag found
+# ICEMAN (cmdhf15.c:447 inside getUID() -> readHF15Uid() called by hf sea):
+#   UID.... E0 04 01 3C F9 43 B3 02
+# Middleware `hfsearch._RE_UID = r'UID\.{3,}\s+([0-9A-Fa-f ]+)'` matches
+# only the iceman 4-dot form.  Fix by rewriting the 15693 `UID:` line
+# (guarded by the adjacent `TYPE:` + `Valid ISO 15693 tag found` context
+# to avoid clobbering unrelated `UID:` emissions in the same response).
+_RE_LEGACY_HFSEA_15693_UID = re.compile(
+    r'(?m)^\s*UID:\s+([0-9A-Fa-f ]+?)\s*\n(\s*TYPE:\s*[^\n]*\n\s*\n\s*Valid ISO\s*15693)')
+
+
+def _normalize_hf_sea(text):
+    """Rewrite legacy `UID:` to iceman `UID....` in hf sea ISO15693 block."""
+    return _RE_LEGACY_HFSEA_15693_UID.sub(r'UID.... \1\n\2', text)
+
+
 # -- hf mfu restore: legacy `Finish restore` -> iceman `Done!` --
 
 # LEGACY: cmdhfmfu.c CmdHF14AMfURestore L2220 `PrintAndLogEx(INFO, "Finish restore")`.
@@ -1214,6 +1282,8 @@ _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'hf mf darkside': [_normalize_mf_found_key],
     'hf mf nested': [_normalize_mf_found_key],
     'hf mfu restore': [_normalize_mfu_restore],
+    'hf sea': [_normalize_hf_sea],
+    'hf search': [_normalize_hf_sea],
     'hf 15 restore': [_normalize_hf15_restore],
     'hf 15 csetuid': [_normalize_hf15_csetuid],
     'hf iclass rdbl': [_normalize_iclass_rdbl],
@@ -1223,6 +1293,11 @@ _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
                _normalize_fdxb_animal_id],
     'lf search': [_normalize_em410x_id, _normalize_chipset_detection,
                   _normalize_fdxb_animal_id],
+    # HID Prox line carries the raw Wiegand payload as the first
+    # field after `HID Prox - `; synthesize a `raw: <hex>` line so the
+    # reader can extract it (middleware REGEX_HID = r'raw:\s+([0-9A-Fa-f]+)').
+    'lf hid reader': [_normalize_hid_prox],
+    'lf hid read': [_normalize_hid_prox],
     'lf t55xx detect': [_normalize_t55xx_config],
     'lf t55xx dump': [_normalize_t55xx_config, _normalize_save_messages],
     'lf t55xx chk': [_normalize_t55xx_chk_password],
