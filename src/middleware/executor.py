@@ -603,6 +603,12 @@ def reworkPM3All():
     # (rework_max=2 × reworkManager retries). Factory audit §5 shows
     # PM3 RUNNING immediately post-stop; matching that requires driving
     # the respawn synchronously.
+    #
+    # Evidence (2026-04-17): before this change, stopPCMode left the
+    # rftask subprocess dead (killed by our empty-CTL handler on entry)
+    # and took ~112 s to stabilise through retry amplification. With
+    # this direct ctl=restart, the subprocess respawn is one deterministic
+    # step (~4 s).
     try:
         _send_ctrl('restart', timeout=8000)
     except Exception:
@@ -625,6 +631,7 @@ def resetReworkCount():
     global _consecutive_reworks, _pipeline_needs_cleanup
     _consecutive_reworks = 0
     _pipeline_needs_cleanup = True
+
 
 # ===========================================================================
 # Callback management

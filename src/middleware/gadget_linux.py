@@ -101,9 +101,21 @@ def upan_and_serial():
     STR@0x0001d2d0 " removable=1 stall=0") + live device confirmation
     (/sys/module/g_acm_ms/parameters/: file=/dev/mmcblk0p4, removable=Y, stall=N)
     See: docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt §2
+
+    UDC pre-flight: the USB Device Controller can host only ONE gadget
+    driver at a time. If a prior gadget (g_mass_storage boot-default, or
+    g_serial from our post-PC-mode teardown) is still bound, g_acm_ms
+    gets queued pending and never enumerates — the PC sees no ttyGS0
+    and PC-mode silently fails. Confirmed live 2026-04-17 via dmesg:
+    "udc-core: couldn't find an available UDC - added [g_acm_ms] to list
+    of pending drivers" while g_mass_storage remained bound. Unload
+    every possible prior gadget before loading g_acm_ms.
     """
     logger.debug("gadget_linux: upan_and_serial()")
     try:
+        # Free the UDC. modprobe -r on an unloaded module is a no-op.
+        for mod in ('g_serial', 'g_mass_storage', 'g_ether', 'g_acm_ms'):
+            os.system('sudo modprobe -r %s 2>/dev/null' % mod)
         umount_upan_partition()
         partition = get_upan_partition()
         os.system('sudo modprobe g_acm_ms file=%s removable=1 stall=0' % partition)
@@ -121,12 +133,24 @@ def upan_or_both(mod=None):
 
 
 def kill_all_module(auto_remount=True):
-    """Remove all USB gadget kernel modules.
+    """Remove all USB gadget kernel modules, then restore the baseline gadget.
 
     Args:
         auto_remount: if True, remount UPAN partition after cleanup (default True)
 
     This is the main teardown function called by PCModeActivity.stopPCMode().
+
+    Factory audit ground truth
+      docs/Real_Hardware_Intel/pcmode_live_audit_20260411.txt
+        §4 dmesg: "[1891] g_serial gadget: g_serial ready (loaded during cleanup)"
+        §5 POST-STOP STATE: "Kernel module: g_serial (NOT g_acm_ms)"
+
+    Factory's teardown UNLOADS the composite g_acm_ms and then LOADS g_serial
+    as the baseline gadget. Leaving the USB-C in a no-gadget state (our prior
+    behaviour) breaks the USB controller until the device reboots — user-
+    reported symptom 2026-04-17: "USB-C hub no longer works after PC-mode
+    until I reboot". Restoring g_serial re-initialises the USB gadget layer
+    cleanly.
     """
     logger.debug("gadget_linux: kill_all_module(auto_remount=%s)", auto_remount)
     try:
@@ -143,6 +167,12 @@ def kill_all_module(auto_remount=True):
         pass
     try:
         os.system('sudo modprobe -r g_ether')
+    except Exception:
+        pass
+    # Factory: reload g_serial as baseline gadget so USB controller is not
+    # left orphaned. See audit §4/§5 cited above.
+    try:
+        os.system('sudo modprobe g_serial')
     except Exception:
         pass
     if auto_remount:

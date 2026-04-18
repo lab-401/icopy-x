@@ -29,13 +29,14 @@ jobs:
     steps:
       - name: Resolve latest PM3 release
         id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ github.event.inputs.pm3_tag }}"
           if [ -z "$TAG" ]; then
-            TAG=$(git ls-remote --tags ${{ env.PM3_REPO }} "v4.*" \
-              | grep -v '\^{}' | sed 's|.*refs/tags/||' \
-              | sort -t. -k1,1 -k2,2n | tail -1)
-            echo "Resolved latest: $TAG"
+            TAG=$(gh release view --repo RfidResearchGroup/proxmark3 \
+              --json tagName --jq '.tagName')
+            echo "Resolved latest release: $TAG"
           else
             echo "Using provided: $TAG"
           fi
