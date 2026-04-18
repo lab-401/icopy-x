@@ -856,8 +856,24 @@ class AboutActivity(BaseActivity):
         else:
             self._start_scroller()
 
+    # Scroller easter-egg asset paths.  Resolved relative to this lib
+    # so they work both on the device (/home/pi/ipk_app_main/lib/...)
+    # and against the source tree (development).
+    _SCROLLER_RES_DIR = os.path.normpath(
+        os.path.join(os.path.dirname(__file__), '..', 'res', 'about'))
+    _SCROLLER_XM = os.path.join(_SCROLLER_RES_DIR, 'scroller.xm')
+    _SCROLLER_XMP = os.path.join(_SCROLLER_RES_DIR, 'xmp')
+
     def _start_scroller(self):
-        """Create and embed the about scroller easter egg."""
+        """Create and embed the about scroller easter egg.
+
+        Audio: launch the bundled xmp player on res/about/scroller.xm
+        as a background subprocess.  Music starts when the scroller
+        becomes visible and is killed by _stop_scroller() when the
+        page changes or the activity is finished.  Asset / xmp
+        binary lookup is graceful — missing files just leave the
+        scroller silent (visual still works).
+        """
         canvas = self.getCanvas()
         if canvas is None:
             return
@@ -872,9 +888,25 @@ class AboutActivity(BaseActivity):
         except Exception:
             logger.exception("Failed to start about scroller")
             self._scroller = None
+        # Music is independent of the visual — start it even if the
+        # scroller widget itself failed (no point silencing the song
+        # because of a draw glitch).
+        try:
+            from lib import audio
+            audio.startScrollerMusic(self._SCROLLER_XM, self._SCROLLER_XMP)
+        except Exception:
+            logger.exception("Failed to start scroller music")
 
     def _stop_scroller(self):
-        """Stop and destroy the embedded scroller if running."""
+        """Stop and destroy the embedded scroller + its music."""
+        # Music first — stop the subprocess before tearing down the
+        # canvas so the audio cuts cleanly on page change rather than
+        # tailing into the next page's render.
+        try:
+            from lib import audio
+            audio.stopScrollerMusic()
+        except Exception:
+            pass
         if self._scroller is not None:
             self._scroller.stop()
             try:
