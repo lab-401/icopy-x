@@ -5914,7 +5914,7 @@ SIM_MAP = [
     ('Ntag215',       6,  'HF', 'single_7b', 'uid',     'hf 14a sim -t 8 --uid {}'),
     ('FM11RF005SH',   40, 'HF', 'single_4b', 'uid',     'hf 14a sim -t 9 --uid {}'),
     ('Em410x ID',     8,  'LF', 'lf_4b',     'uid',     'lf em 410x sim --id {}'),
-    ('HID Prox ID',   9,  'LF', 'lf_5b',     'data',    'lf hid sim -r {}'),
+    ('HID Prox ID',   9,  'LF', 'lf_5b',     'raw',     'lf hid sim -r {}'),
     ('AWID ID',       11, 'LF', 'lf_awid',   'fccn',    'lf awid sim --fmt {} --fc {} --cn {}'),
     ('IO Prox ID',    12, 'LF', 'lf_io',     'ioporx',  'lf io sim --vn {} --fc {} --cn {}'),
     ('G-Prox II ID',  13, 'LF', 'lf_gporx',  'fccn',    'lf gproxii sim --xor 0 --fmt {} --fc {} --cn {}'),
@@ -5936,7 +5936,12 @@ SIM_FIELDS = {
     'single_7b': [('UID:', '123456789ABCDE',   'hex', 14)],
     'single_4b': [('UID:', '12345678',         'hex', 8)],
     'lf_4b':     [('UID:', '1234567890',       'hex', 10)],
-    'lf_5b':     [('ID:',  '112233445566',     'hex', 12)],
+    'lf_5b':     [('ID:',  '000000000000112233445566', 'hex', 24)],
+    # HID Prox raw payload: iceman cmdlfhid.c:235 emits `raw: %08x%08x%08x`
+    # (3 dwords = 24 hex chars).  Form sized to fit the iceman-native
+    # raw form so scan→sim prepop doesn't truncate to all-zero leading
+    # bytes.  PM3 'lf hid sim -r <hex>' accepts variable-length hex
+    # (26/35/40/48-bit formats), but the upper bound is 24 chars.
     'lf_awid':   [('Format:', '50',   'dec', 99),       # 2 digits max 99
                   ('FC:',  '2001',    'dec', 9999),      # 4 digits max 9999
                   ('CN:',  '13371337','dec', 99999999)],  # 8 digits, .so passes raw (user confirmed)
@@ -6011,9 +6016,20 @@ class SimulationActivity(BaseActivity):
                         break
                 if sim_idx is not None:
                     self._sim_entry = SIM_MAP[sim_idx]
-                    # Extract UID/data using the appropriate parser
-                    data_key = self._sim_entry[4]  # 'uid', 'data', 'fccn', etc.
-                    self._defdata = bundle.get('uid', bundle.get('data', ''))
+                    # Extract UID/data using the appropriate parser.  data_key
+                    # names the cache field this tag's prepop should pull from
+                    # (e.g. HID Prox uses 'raw' because cache.data is the
+                    # descriptive 'FC,CN: ...' string while cache.raw holds
+                    # the parseable hex payload that 'lf hid sim -r' expects).
+                    # Multi-field tags (AWID 'fccn', Pyramid 'pyramid', etc.)
+                    # have synthetic keys that don't exist in the cache —
+                    # they fall through the chain to the legacy uid/data
+                    # behaviour, which is harmless because _defbundle drives
+                    # their multi-field forms in _showSimUi anyway.
+                    data_key = self._sim_entry[4]  # 'uid', 'raw', 'data', 'fccn', etc.
+                    self._defdata = bundle.get(
+                        data_key,
+                        bundle.get('uid', bundle.get('data', '')))
                     # Keep the full scan bundle so _showSimUi can populate
                     # multi-field forms (FC/CN/Subtype/etc.) from individual
                     # keys (bundle['fc'], bundle['cn'], ...) rather than
@@ -6132,20 +6148,40 @@ class SimulationActivity(BaseActivity):
             'NC:':  ('nc',),
             'Version:': ('vn',),   # IO Prox XSF version field
         }
+        # Per-tag override key (field 0 only): SIM_MAP entry[4] names the
+        # cache field this tag's prepop should pull from.  Necessary for
+        # tags where the label-based lookup picks the wrong field — e.g.
+        # HID Prox uses label 'ID:' which _LABEL_TO_CACHE_KEY maps to
+        # ('data', 'raw'); but HID's cache.data is the descriptive
+        # 'FC,CN: x,y' string while cache.raw holds the parseable hex
+        # payload that 'lf hid sim -r' expects.  Multi-field tags
+        # (AWID 'fccn', Pyramid 'pyramid', etc.) use synthetic keys that
+        # don't exist in the cache so the override gracefully misses
+        # and falls through to the label-based lookup.
+        sim_override_key = self._sim_entry[4] if self._sim_entry else None
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
             val = default
-            # Prefer per-label lookup from scan bundle when available.
-            if isinstance(self._defbundle, dict):
+            populated = False
+            # Per-tag override (field 0 only).
+            if (i == 0 and sim_override_key
+                    and isinstance(self._defbundle, dict)):
+                v = self._defbundle.get(sim_override_key)
+                if v not in (None, '', 'X'):
+                    val = v
+                    populated = True
+            # Per-label lookup from scan bundle.
+            if not populated and isinstance(self._defbundle, dict):
                 for k in _LABEL_TO_CACHE_KEY.get(label, ()):
                     v = self._defbundle.get(k)
                     if v not in (None, '', 'X'):  # 'X' = lfsearch "unknown FC"
                         val = v
+                        populated = True
                         break
             # Fallback: legacy single-defdata path (first field only)
             # preserves behaviour for non-scan entrypoints (Dump Files)
             # where the bundle has {'sim_index': N, 'defdata': '...'}.
-            elif i == 0 and self._defdata:
+            if not populated and i == 0 and self._defdata:
                 val = self._defdata
             self._sim_fields.addField(label, val, fmt, max_val)
         self._sim_fields.show()
