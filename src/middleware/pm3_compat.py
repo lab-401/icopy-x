@@ -242,8 +242,18 @@ def _reverse_indala_clone(m):
 
 
 def _reverse_t55xx_read_page1(m):
-    """lf t55xx read -b {blk} -p {key} --page1 -> lf t55xx read b {blk} p {key} o 1"""
-    return 'lf t55xx read b %s p %s o 1' % (m.group(1), m.group(2))
+    """lf t55xx read -b {blk} -p {key} --page1 -> lf t55xx read b {blk} p {key} 1
+
+    Legacy factory `lf t55xx read` (cmdlft55xx.c:107-108) treats `o` and
+    `1` as unrelated optional tokens:
+      o  = override safety check (may damage tags per `cmdlft55xx.c:110-113`
+           WARNING block)
+      1  = read Page 1 instead of Page 0
+    Iceman `--page1` only means page 1; it does NOT imply override.
+    Ground truth: trace_t55_to_t55_write_trace_20260328.txt:51-57 shows the
+    legacy middleware emitting `lf t55xx read b 0 1` (trailing `1`, no `o`).
+    """
+    return 'lf t55xx read b %s p %s 1' % (m.group(1), m.group(2))
 
 
 _COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
