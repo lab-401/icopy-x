@@ -51,7 +51,6 @@ Per project rules, DRM gate functions are replaced with pass-throughs.
 import logging
 import os
 import subprocess
-import threading
 
 logger = logging.getLogger(__name__)
 
@@ -279,98 +278,40 @@ def playVerifying(chk=False): logger.debug("audio.playVerifying()")
 
 
 # =====================================================================
-# Scroller music (xmp .xm playback) — used by AboutActivity
+# Scroller music (looped .ogg playback) — used by AboutActivity
 # =====================================================================
-
-class _ScrollerMusic:
-    """Background xmp subprocess playing the scroller .xm module.
-
-    The xmp binary is bundled at res/about/xmp (ARM 32-bit ELF).  We
-    spawn it as a subprocess for the lifetime of the scroller; stop()
-    sends SIGTERM and waits briefly for clean exit.  Threading is
-    handled by the OS — xmp runs in its own process, no Python-side
-    thread needed.
-
-    Lifecycle is deliberately simple: one start(), one stop(), no
-    pause/resume.  AboutActivity._stop_scroller() always runs from
-    the same UI thread that called _start_scroller(), so concurrent
-    start()/stop() races aren't possible from the call sites.
-    """
-
-    def __init__(self):
-        self._proc = None
-        self._lock = threading.Lock()
-
-    def start(self, xm_path, xmp_binary):
-        """Start xmp subprocess playing xm_path.  No-op if either
-        path is missing or another instance is already running."""
-        with self._lock:
-            if self._proc is not None and self._proc.poll() is None:
-                return  # already playing
-            if not (os.path.isfile(xm_path) and os.path.isfile(xmp_binary)):
-                logger.debug("scroller_music.start() — missing assets: "
-                             "xm=%s xmp=%s", xm_path, xmp_binary)
-                return
-            try:
-                # --loop: replay forever while scroller is on screen.
-                # Send stdout/stderr to /dev/null so a slow log doesn't
-                # block the UI thread when xmp prints frame stats.
-                #
-                # LD_LIBRARY_PATH is augmented with the directory
-                # containing the xmp binary so it can find the bundled
-                # libxmp.so.4 (the device's xenial install does not
-                # ship libxmp out of the box).  We prepend rather than
-                # replace so any system libpulse / libasound stays
-                # discoverable.
-                env = os.environ.copy()
-                xmp_dir = os.path.dirname(os.path.abspath(xmp_binary))
-                existing_ld = env.get('LD_LIBRARY_PATH', '')
-                env['LD_LIBRARY_PATH'] = (
-                    xmp_dir + ':' + existing_ld
-                    if existing_ld else xmp_dir)
-                self._proc = subprocess.Popen(
-                    [xmp_binary, '--loop', xm_path],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    env=env,
-                    preexec_fn=os.setsid,  # own process group → killpg
-                )
-                logger.debug("scroller_music.start() — pid=%s",
-                             self._proc.pid)
-            except Exception as e:
-                logger.debug("scroller_music.start() — error: %s", e)
-                self._proc = None
-
-    def stop(self):
-        """Terminate the xmp subprocess.  Safe to call multiple times."""
-        with self._lock:
-            if self._proc is None:
-                return
-            try:
-                import signal
-                os.killpg(os.getpgid(self._proc.pid), signal.SIGTERM)
-            except (ProcessLookupError, PermissionError, OSError):
-                pass
-            try:
-                self._proc.wait(timeout=2)
-            except Exception:
-                try:
-                    self._proc.kill()
-                except Exception:
-                    pass
-            logger.debug("scroller_music.stop() — pid=%s stopped",
-                         self._proc.pid if self._proc else '?')
-            self._proc = None
+# pygame.mixer.music is the single-stream music API and shares the
+# audio device with pygame.mixer.Sound (both go through SDL_mixer's
+# already-open ALSA handle), so we avoid the "device busy" contention
+# that an external player like xmp hits on this device.  A pre-rendered
+# scroller.ogg lives in res/audio/ — playback is a one-liner.
 
 
-_scroller_music = _ScrollerMusic()
-
-
-def startScrollerMusic(xm_path, xmp_binary):
-    """Public API for AboutActivity.  See _ScrollerMusic.start."""
-    _scroller_music.start(xm_path, xmp_binary)
+def startScrollerMusic(ogg_path):
+    """Start looping background music for the About scroller easter
+    egg.  No-op if pygame mixer is unavailable or the file is missing."""
+    if not _mixer_available:
+        logger.debug("startScrollerMusic — no mixer")
+        return
+    if not os.path.isfile(ogg_path):
+        logger.debug("startScrollerMusic — missing: %s", ogg_path)
+        return
+    try:
+        import pygame
+        vol = _LEVEL_TO_PCT.get(_volume_level, 65)
+        pygame.mixer.music.load(ogg_path)
+        pygame.mixer.music.set_volume(max(0.0, min(1.0, vol / 100.0)))
+        pygame.mixer.music.play(loops=-1)
+    except Exception as e:
+        logger.debug("startScrollerMusic — pygame error: %s", e)
 
 
 def stopScrollerMusic():
-    """Public API for AboutActivity.  See _ScrollerMusic.stop."""
-    _scroller_music.stop()
+    """Stop the scroller music.  Safe to call when nothing is playing."""
+    if not _mixer_available:
+        return
+    try:
+        import pygame
+        pygame.mixer.music.stop()
+    except Exception as e:
+        logger.debug("stopScrollerMusic — pygame error: %s", e)

@@ -859,20 +859,17 @@ class AboutActivity(BaseActivity):
     # Scroller easter-egg asset paths.  Resolved relative to this lib
     # so they work both on the device (/home/pi/ipk_app_main/lib/...)
     # and against the source tree (development).
-    _SCROLLER_RES_DIR = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), '..', 'res', 'about'))
-    _SCROLLER_XM = os.path.join(_SCROLLER_RES_DIR, 'scroller.xm')
-    _SCROLLER_XMP = os.path.join(_SCROLLER_RES_DIR, 'xmp')
+    _SCROLLER_OGG = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), '..', 'res', 'audio', 'scroller.ogg'))
 
     def _start_scroller(self):
         """Create and embed the about scroller easter egg.
 
-        Audio: launch the bundled xmp player on res/about/scroller.xm
-        as a background subprocess.  Music starts when the scroller
-        becomes visible and is killed by _stop_scroller() when the
-        page changes or the activity is finished.  Asset / xmp
-        binary lookup is graceful — missing files just leave the
-        scroller silent (visual still works).
+        Audio: loop res/audio/scroller.ogg via pygame.mixer.music for
+        the lifetime of the scroller page; killed by _stop_scroller()
+        on page change or activity finish.  Missing-file handling is
+        graceful — the scroller stays silent but the visual still
+        works.
         """
         canvas = self.getCanvas()
         if canvas is None:
@@ -893,7 +890,7 @@ class AboutActivity(BaseActivity):
         # because of a draw glitch).
         try:
             from lib import audio
-            audio.startScrollerMusic(self._SCROLLER_XM, self._SCROLLER_XMP)
+            audio.startScrollerMusic(self._SCROLLER_OGG)
         except Exception:
             logger.exception("Failed to start scroller music")
 
