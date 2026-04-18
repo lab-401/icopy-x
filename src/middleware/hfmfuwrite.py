@@ -131,12 +131,12 @@ def write(infos, file):
         -10 on critical failure (card not selectable)
     """
     # Tag-type-conditional flags:
-    #   -s  special write of block 0 (UID/BCC) via Gen2 magic protocol.
-    #       Only works on Gen2-magic cards.  We have no Gen2 probe today
-    #       (scan only flags Gen1a), and using -s on non-Gen2 corrupts
-    #       block 2 BCC which then aborts every subsequent block write.
-    #       Observed on both plain MFU and Gen3/APDU EV1 in Phase 6 —
-    #       dropped unconditionally until Gen2 detection exists.
+    #   -s  special write of "configuration blocks" {3, 0, 1, 2, pages-5..}
+    #       (cmdhfmfu.c:4191-4214).  Block 0 is UID/manufacturer, block 1
+    #       UID continuation, block 2 lock+BCC, block 3 OTP.  Only magic
+    #       UL cards accept these writes (iceman comment cmdhfmfu.c:4175:
+    #       "Skip block 0,1,2,3 (only magic tags can write to them)").
+    #       Conditionally added below based on magic-card detection.
     #   -e  write EV1/NTAG special blocks 0xF1-0xFB (PACK/SIG/VERSION).
     #       Only meaningful on EV1 and NTAG — plain MFU (MF0ICU1) and
     #       UL-C lack these blocks and emit `failed to write block`.
@@ -146,13 +146,44 @@ def write(infos, file):
     except (ValueError, TypeError):
         typ = 2
 
+    # Magic-card detection: iceman cmdhfmfu.c:1080-1100 wraps magic-type
+    # substrings in parens in the `hf mfu info` TYPE line, e.g.
+    # `( USCUID-UL )`, `( NTAG21x )`, `( NTAG CUID )`, `( Gen 2 / CUID )`.
+    # Presence indicates the card supports magic block-0 (UID/BCC) write
+    # and needs `-s` per cmdhfmfu.c:4191-4214 to write source UID.
+    # Without `-s`, data blocks write but UID stays as the magic card's
+    # stuck default — observed live on iceman v4.21611 for USCUID-UL.
+    #
+    # We re-issue `hf mfu info` here because the version run during the
+    # initial scan is gone — executor.CONTENT_OUT_IN__TXT_CACHE has been
+    # overwritten by intervening commands (`hf mfu dump`, etc.).
+    _MFU_MAGIC_MARKERS = (
+        '( USCUID-UL )', '( NTAG21x )', '( NTAG CUID )',
+        '( Gen 2 / CUID )', '( Gen 1a )', '( Gen 1b )',
+    )
+    needs_special_uid = False
+    if executor is not None:
+        try:
+            executor.startPM3Task('hf mfu info', 8888)
+            _info_text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
+            for _marker in _MFU_MAGIC_MARKERS:
+                if _marker in _info_text:
+                    needs_special_uid = True
+                    break
+        except Exception:
+            # Probe failure: default safe (no -s). Matches pre-fix
+            # behavior for non-magic cards; magic cards just won't get
+            # block-0 written this run.
+            pass
+
     # type codes (from activity_read.py tag IDs):
     #   2 ULTRALIGHT, 3 ULTRALIGHT_C, 4 EV1,
     #   5 NTAG213, 6 NTAG215, 7 NTAG216
+    flags = ''
     if typ in (4, 5, 6, 7):
-        flags = '-e '           # EV1/NTAG: special blocks only (no -s)
-    else:
-        flags = ''              # plain MFU / UL-C: data blocks only
+        flags += '-e '          # EV1/NTAG: PACK/SIG/VERSION blocks
+    if needs_special_uid:
+        flags += '-s '          # Magic UL: block 0 (UID/BCC) write
     cmd = "hf mfu restore {}-f {}".format(flags, file)
 
     # Ground truth timeouts (from real device traces):
