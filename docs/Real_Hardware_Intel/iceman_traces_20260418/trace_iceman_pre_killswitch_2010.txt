@@ -1,0 +1,745 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] === ALL INSTALLED ===
+[   0.011] POLL stack=['MainActivity'] 
+[   0.067] KEY> KEYDOWN_PRES!
+[   0.464] KEY> KEYDOWN_PRES!
+[   1.348] KEY> KEYOK_PRES!
+[   1.518] START(ScanActivity, None) bundle=None
+[   1.574] PM3> hf 14a info (timeout=5000)
+[   1.577] CONNECT> connect2PM3()
+[   1.580] CONNECT< socket=True
+[   2.018] POLL stack=['MainActivity', 'ScanActivity'] 
+[   3.325] PM3< ret=1 content_len=620 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection..... hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[   3.362] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[   3.475] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[   3.486] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[   3.525] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[   3.676] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[   5.707] KEY> KEY_PWR_CAN_PRES!
+[   5.713] FINISH(top=ScanActivity d=2)
+[   5.888] SERIAL_TX> b'pctbat\r\n'
+[   5.900] SERIAL_TX> b'charge\r\n'
+[   6.030] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[   6.045] KEY> KEY_PWR_CAN_PRES!
+[   6.857] KEY> KEYUP_PRES!
+[   7.065] KEY> KEYUP_PRES!
+[   7.474] KEY> KEYOK_PRES!
+[   7.477] START(AutoCopyActivity, None) bundle=None
+[   7.505] PM3> hf 14a info (timeout=5000)
+[   7.507] CONNECT> connect2PM3()
+[   7.513] CONNECT< socket=True
+[   7.535] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[   7.607] PM3< ret=1 content_len=1 \n
+[   7.610] PM3> lf sea (timeout=10000)
+[   8.975] PM3< ret=1 content_len=168 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[   9.014] PM3> hf sea (timeout=10000)
+[  14.559] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[  14.583] PM3> lf t55xx detect (timeout=10000)
+[  15.917] SERIAL_TX> b'pctbat\r\n'
+[  15.930] SERIAL_TX> b'charge\r\n'
+[  17.703] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  17.716] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  18.002] PM3< ret=1 content_len=1 \n
+[  18.005] PM3> hf felica reader (timeout=10000)
+[  19.141] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[  23.132] KEY> KEYM2_PRES!
+[  23.172] PM3> hf 14a info (timeout=5000)
+[  23.173] CONNECT> connect2PM3()
+[  23.177] CONNECT< socket=True
+[  23.271] PM3< ret=1 content_len=1 \n
+[  23.274] PM3> lf sea (timeout=10000)
+[  24.738] PM3< ret=1 content_len=168 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  24.742] PM3> hf sea (timeout=10000)
+[  25.947] SERIAL_TX> b'pctbat\r\n'
+[  25.960] SERIAL_TX> b'charge\r\n'
+[  30.283] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[  30.286] PM3> lf t55xx detect (timeout=10000)
+[  33.337] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  33.339] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  33.540] PM3< ret=1 content_len=1 \n
+[  33.543] PM3> hf felica reader (timeout=10000)
+[  34.676] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[  35.977] SERIAL_TX> b'pctbat\r\n'
+[  35.991] SERIAL_TX> b'charge\r\n'
+[  40.861] KEY> KEYM2_PRES!
+[  40.873] PM3> hf 14a info (timeout=5000)
+[  40.876] CONNECT> connect2PM3()
+[  40.878] CONNECT< socket=True
+[  40.974] PM3< ret=1 content_len=1 \n
+[  40.977] PM3> lf sea (timeout=10000)
+[  42.361] PM3< ret=1 content_len=302 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  42.375] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[  42.614] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  42.660] PM3> lf paradox reader (timeout=10000)
+[  42.663] CONNECT> connect2PM3()
+[  42.667] CONNECT< socket=True
+[  42.933] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  46.027] SERIAL_TX> b'pctbat\r\n'
+[  46.041] SERIAL_TX> b'charge\r\n'
+[  47.766] KEY> KEYM2_PRES!
+[  47.777] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 236,49152', 'raw': '0f56999a9a5a555555555555'}) bundle={"return": 1, "data": "FC,CN: 236,49152", "raw": "0f56999a9a5a555555555555"}
+[  48.125] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=35 uid=
+[  48.374] KEY> KEYM2_PRES!
+[  48.376] FINISH(top=WarningWriteActivity d=3)
+[  48.397] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 236,49152', 'raw': '0f56999a9a5a555555555555'}) bundle={"return": 1, "data": "FC,CN: 236,49152", "raw": "0f56999a9a5a555555555555"}
+[  48.627] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=35 uid=
+[  48.749] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  48.751] CONNECT> connect2PM3()
+[  48.754] CONNECT< socket=True
+[  49.622] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  49.623] PM3> lf t55xx detect (timeout=10000)
+[  49.917] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[  49.935] PM3> lf paradox clone -r 0f56999a9a5a555555555555 (timeout=10000)
+[  51.511] PM3< ret=1 content_len=145 Preparing to clone Paradox to T55x7 with raw hex\nBlk | Data\n----+------------\n 00 | 00107060\n 01 | 0F56999A\n 02 | 9A5A5555\n 03 | 55555555\nDone!\n\n
+[  51.512] PM3> lf sea (timeout=10000)
+[  52.745] PM3< ret=1 content_len=291 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  52.746] PM3> lf paradox reader (timeout=10000)
+[  53.013] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  54.258] KEY> KEYM1_PRES!
+[  54.586] PM3> lf sea (timeout=10000)
+[  55.783] PM3< ret=1 content_len=291 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  55.786] PM3> lf paradox reader (timeout=10000)
+[  56.053] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  56.063] SERIAL_TX> b'pctbat\r\n'
+[  56.075] SERIAL_TX> b'charge\r\n'
+[  60.509] KEY> KEY_PWR_CAN_PRES!
+[  61.091] KEY> KEY_PWR_CAN_PRES!
+[  61.093] PRESSPM3> called
+[  61.094] SERIAL_TX> b'presspm3\r\n'
+[  61.110] PRESSPM3< done
+[  61.110] PM3_STOP> stopPM3Task()
+[  61.111] PM3_STOP< ret=None
+[  61.111] FINISH(top=WriteActivity d=3)
+[  61.150] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  61.711] KEY> KEY_PWR_CAN_PRES!
+[  61.714] PRESSPM3> called
+[  61.714] SERIAL_TX> b'presspm3\r\n'
+[  61.730] PRESSPM3< done
+[  61.730] PM3_STOP> stopPM3Task()
+[  61.731] PM3_STOP< ret=None
+[  61.731] FINISH(top=AutoCopyActivity d=2)
+[  62.152] POLL stack=['MainActivity'] type=35 uid=
+[  62.486] KEY> KEYOK_PRES!
+[  62.490] START(AutoCopyActivity, None) bundle=None
+[  62.547] PM3> hf 14a info (timeout=5000)
+[  62.551] CONNECT> connect2PM3()
+[  62.556] CONNECT< socket=True
+[  62.658] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  62.662] PM3< ret=1 content_len=1 \n
+[  62.665] PM3> lf sea (timeout=10000)
+[  64.137] PM3< ret=1 content_len=258 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  64.140] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e804346'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[  64.164] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[  64.411] PM3> lf pyramid reader (timeout=10000)
+[  64.413] CONNECT> connect2PM3()
+[  64.417] CONNECT< socket=True
+[  64.755] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  66.145] SERIAL_TX> b'pctbat\r\n'
+[  66.161] SERIAL_TX> b'charge\r\n'
+[  67.295] KEY> KEYM1_PRES!
+[  67.320] PM3> lf pyramid reader (timeout=10000)
+[  67.322] CONNECT> connect2PM3()
+[  67.327] CONNECT< socket=True
+[  67.651] PM3< ret=1 content_len=1 \n
+[  69.440] KEY> KEY_PWR_CAN_PRES!
+[  69.456] PRESSPM3> called
+[  69.457] SERIAL_TX> b'presspm3\r\n'
+[  69.475] PRESSPM3< done
+[  69.480] PM3_STOP> stopPM3Task()
+[  69.484] PM3_STOP< ret=None
+[  69.488] FINISH(top=AutoCopyActivity d=2)
+[  69.681] POLL stack=['MainActivity'] type=16 uid=
+[  71.409] KEY> KEYOK_PRES!
+[  71.412] START(AutoCopyActivity, None) bundle=None
+[  71.470] PM3> hf 14a info (timeout=5000)
+[  71.473] CONNECT> connect2PM3()
+[  71.478] CONNECT< socket=True
+[  71.574] PM3< ret=1 content_len=1 \n
+[  71.577] PM3> lf sea (timeout=10000)
+[  71.685] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[  73.139] PM3< ret=1 content_len=258 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  73.141] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e804346'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[  73.412] PM3> lf pyramid reader (timeout=10000)
+[  73.414] CONNECT> connect2PM3()
+[  73.418] CONNECT< socket=True
+[  73.754] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  76.022] KEY> KEYM2_PRES!
+[  76.028] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 240,61456', 'raw': '00010101010101010101015e0e804346'}) bundle={"return": 1, "data": "FC,CN: 240,61456", "raw": "00010101010101010101015e0e804346"}
+[  76.179] SERIAL_TX> b'pctbat\r\n'
+[  76.195] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=16 uid=
+[  76.196] SERIAL_TX> b'charge\r\n'
+[  76.649] KEY> KEYM2_PRES!
+[  76.652] FINISH(top=WarningWriteActivity d=3)
+[  76.673] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 240,61456', 'raw': '00010101010101010101015e0e804346'}) bundle={"return": 1, "data": "FC,CN: 240,61456", "raw": "00010101010101010101015e0e804346"}
+[  76.699] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=16 uid=
+[  77.011] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  77.013] CONNECT> connect2PM3()
+[  77.016] CONNECT< socket=True
+[  77.874] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  77.875] PM3> lf t55xx detect (timeout=10000)
+[  78.168] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[  78.170] PM3> lf t55xx write -b 1 -d 00010101 (timeout=10000)
+[  78.267] PM3< ret=1 content_len=45 Writing page 0  block: 01  data: 0x00010101\n\n
+[  78.268] PM3> lf t55xx write -b 2 -d 01010101 (timeout=10000)
+[  78.374] PM3< ret=1 content_len=45 Writing page 0  block: 02  data: 0x01010101\n\n
+[  78.375] PM3> lf t55xx write -b 3 -d 0101015e (timeout=10000)
+[  78.483] PM3< ret=1 content_len=45 Writing page 0  block: 03  data: 0x0101015E\n\n
+[  78.484] PM3> lf t55xx write -b 4 -d 0e804346 (timeout=10000)
+[  78.592] PM3< ret=1 content_len=45 Writing page 0  block: 04  data: 0x0E804346\n\n
+[  78.593] PM3> lf t55xx write -b 0 -d 00107080 (timeout=10000)
+[  78.700] PM3< ret=1 content_len=45 Writing page 0  block: 00  data: 0x00107080\n\n
+[  78.700] PM3> lf sea (timeout=10000)
+[  79.896] PM3< ret=1 content_len=247 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  79.896] PM3> lf pyramid reader (timeout=10000)
+[  80.229] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  83.210] KEY> KEYM1_PRES!
+[  83.521] PM3> lf sea (timeout=10000)
+[  84.686] PM3< ret=1 content_len=247 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  84.688] PM3> lf pyramid reader (timeout=10000)
+[  85.020] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  86.212] SERIAL_TX> b'pctbat\r\n'
+[  86.226] SERIAL_TX> b'charge\r\n'
+[  87.308] KEY> KEYM2_PRES!
+[  87.621] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  87.622] CONNECT> connect2PM3()
+[  87.626] CONNECT< socket=True
+[  88.481] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  88.482] PM3> lf t55xx detect (timeout=10000)
+[  91.521] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  91.523] PM3> lf t55xx wipe (timeout=10000)
+[  92.369] PM3< ret=1 content_len=424 Target T55x7 tag\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  92.370] PM3> lf t55xx detect (timeout=10000)
+[  95.374] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  95.375] PM3> lf t55xx detect -p 20206666 (timeout=10000)
+[  96.242] SERIAL_TX> b'pctbat\r\n'
+[  96.255] SERIAL_TX> b'charge\r\n'
+[ 101.324] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 101.332] PM3> lf t55xx chk -f /tmp/.keys/t5577_tmp_keys.dic (timeout=30000)
+[ 106.271] SERIAL_TX> b'pctbat\r\n'
+[ 106.285] SERIAL_TX> b'charge\r\n'
+[ 116.302] SERIAL_TX> b'pctbat\r\n'
+[ 116.315] SERIAL_TX> b'charge\r\n'
+[ 116.767] KEY> KEY_PWR_CAN_PRES!
+[ 116.769] PRESSPM3> called
+[ 116.770] SERIAL_TX> b'presspm3\r\n'
+[ 116.785] PRESSPM3< done
+[ 116.786] PM3_STOP> stopPM3Task()
+[ 126.332] SERIAL_TX> b'pctbat\r\n'
+[ 126.345] SERIAL_TX> b'charge\r\n'
+[ 131.335] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 131.370] PM3_STOP< ret=None
+[ 131.371] FINISH(top=WriteActivity d=3)
+[ 131.807] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[ 132.342] KEY> KEY_PWR_CAN_PRES!
+[ 132.344] PRESSPM3> called
+[ 132.345] SERIAL_TX> b'presspm3\r\n'
+[ 132.360] PRESSPM3< done
+[ 132.360] PM3_STOP> stopPM3Task()
+[ 132.361] PM3_STOP< ret=None
+[ 132.362] FINISH(top=AutoCopyActivity d=2)
+[ 132.809] POLL stack=['MainActivity'] type=16 uid=
+[ 136.008] KEY> KEYOK_PRES!
+[ 136.011] START(AutoCopyActivity, None) bundle=None
+[ 136.056] PM3> hf 14a info (timeout=5000)
+[ 136.058] CONNECT> connect2PM3()
+[ 136.061] CONNECT< socket=True
+[ 136.174] PM3< ret=1 content_len=1 \n
+[ 136.177] PM3> lf sea (timeout=10000)
+[ 136.315] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[ 137.711] PM3< ret=1 content_len=457 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 137.715] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 137.818] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 138.003] PM3> lf securakey reader (timeout=10000)
+[ 138.005] CONNECT> connect2PM3()
+[ 138.010] CONNECT< socket=True
+[ 138.261] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 140.546] KEY> KEYM2_PRES!
+[ 140.561] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,52428', 'raw': '7FCC0002A955329860000000'}) bundle={"return": 1, "data": "FC,CN: X,52428", "raw": "7FCC0002A955329860000000"}
+[ 140.824] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=14 uid=
+[ 141.425] SERIAL_TX> b'pctbat\r\n'
+[ 141.440] SERIAL_TX> b'charge\r\n'
+[ 141.680] KEY> KEYM2_PRES!
+[ 141.682] FINISH(top=WarningWriteActivity d=3)
+[ 141.703] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,52428', 'raw': '7FCC0002A955329860000000'}) bundle={"return": 1, "data": "FC,CN: X,52428", "raw": "7FCC0002A955329860000000"}
+[ 141.827] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=14 uid=
+[ 142.041] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 142.042] CONNECT> connect2PM3()
+[ 142.045] CONNECT< socket=True
+[ 142.920] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 142.920] PM3> lf t55xx detect (timeout=10000)
+[ 143.208] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 143.209] PM3> lf securakey clone -r 7FCC0002A955329860000000 (timeout=10000)
+[ 144.725] PM3< ret=1 content_len=174 Preparing to clone Securakey to T55x7  with raw hex\nBlk | Data\n----+------------\n 00 | 000C8060\n 01 | 7FCC0002\n 02 | A9553298\n 03 | 60000000\nData written and verified\nDone!\n\n
+[ 144.726] PM3> lf sea (timeout=10000)
+[ 145.970] PM3< ret=1 content_len=446 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 145.971] PM3> lf securakey reader (timeout=10000)
+[ 146.217] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 147.152] KEY> KEYM1_PRES!
+[ 147.465] PM3> lf sea (timeout=10000)
+[ 148.635] PM3< ret=1 content_len=446 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 148.637] PM3> lf securakey reader (timeout=10000)
+[ 148.884] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 151.457] SERIAL_TX> b'pctbat\r\n'
+[ 151.471] SERIAL_TX> b'charge\r\n'
+[ 152.687] KEY> KEY_PWR_CAN_PRES!
+[ 152.924] KEY> KEY_PWR_CAN_PRES!
+[ 152.926] PRESSPM3> called
+[ 152.927] SERIAL_TX> b'presspm3\r\n'
+[ 152.940] PRESSPM3< done
+[ 152.940] PM3_STOP> stopPM3Task()
+[ 152.941] PM3_STOP< ret=None
+[ 152.941] FINISH(top=WriteActivity d=3)
+[ 153.350] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 153.370] KEY> KEY_PWR_CAN_PRES!
+[ 153.372] PRESSPM3> called
+[ 153.372] SERIAL_TX> b'presspm3\r\n'
+[ 153.385] PRESSPM3< done
+[ 153.385] PM3_STOP> stopPM3Task()
+[ 153.386] PM3_STOP< ret=None
+[ 153.386] FINISH(top=AutoCopyActivity d=2)
+[ 153.852] POLL stack=['MainActivity'] type=14 uid=
+[ 154.756] KEY> KEYOK_PRES!
+[ 154.759] START(AutoCopyActivity, None) bundle=None
+[ 154.802] PM3> hf 14a info (timeout=5000)
+[ 154.815] CONNECT> connect2PM3()
+[ 154.820] CONNECT< socket=True
+[ 154.856] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 154.919] PM3< ret=1 content_len=1 \n
+[ 154.922] PM3> lf sea (timeout=10000)
+[ 156.423] PM3< ret=1 content_len=206 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 156.430] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[ 156.702] PM3> lf viking reader (timeout=10000)
+[ 156.704] CONNECT> connect2PM3()
+[ 156.708] CONNECT< socket=True
+[ 156.861] POLL stack=['MainActivity', 'AutoCopyActivity'] type=15 uid=
+[ 156.975] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 159.368] KEY> KEYM2_PRES!
+[ 159.372] START(WarningWriteActivity, {'return': 1, 'data': '99BBB000', 'raw': 'F2000099BBB000C8'}) bundle={"return": 1, "data": "99BBB000", "raw": "F2000099BBB000C8"}
+[ 159.867] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=15 uid=
+[ 160.117] KEY> KEYM2_PRES!
+[ 160.119] FINISH(top=WarningWriteActivity d=3)
+[ 160.145] START(WriteActivity, {'return': 1, 'data': '99BBB000', 'raw': 'F2000099BBB000C8'}) bundle={"return": 1, "data": "99BBB000", "raw": "F2000099BBB000C8"}
+[ 160.369] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=15 uid=
+[ 160.462] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 160.463] CONNECT> connect2PM3()
+[ 160.467] CONNECT< socket=True
+[ 161.314] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 161.315] PM3> lf t55xx detect (timeout=10000)
+[ 161.487] SERIAL_TX> b'pctbat\r\n'
+[ 161.500] SERIAL_TX> b'charge\r\n'
+[ 161.603] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 161.605] PM3> lf t55xx write -b 1 -d F2000099 (timeout=10000)
+[ 161.707] PM3< ret=1 content_len=45 Writing page 0  block: 01  data: 0xF2000099\n\n
+[ 161.708] PM3> lf t55xx write -b 2 -d BBB000C8 (timeout=10000)
+[ 161.816] PM3< ret=1 content_len=45 Writing page 0  block: 02  data: 0xBBB000C8\n\n
+[ 161.817] PM3> lf t55xx write -b 0 -d 00088040 (timeout=10000)
+[ 161.924] PM3< ret=1 content_len=45 Writing page 0  block: 00  data: 0x00088040\n\n
+[ 161.924] PM3> lf sea (timeout=10000)
+[ 163.127] PM3< ret=1 content_len=195 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 163.128] PM3> lf viking reader (timeout=10000)
+[ 163.397] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 165.083] KEY> KEYM1_PRES!
+[ 165.427] PM3> lf sea (timeout=10000)
+[ 166.570] PM3< ret=1 content_len=195 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 166.572] PM3> lf viking reader (timeout=10000)
+[ 166.823] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 170.480] KEY> KEY_PWR_CAN_PRES!
+[ 170.742] KEY> KEY_PWR_CAN_PRES!
+[ 170.743] PRESSPM3> called
+[ 170.744] SERIAL_TX> b'presspm3\r\n'
+[ 170.754] PRESSPM3< done
+[ 170.755] PM3_STOP> stopPM3Task()
+[ 170.755] PM3_STOP< ret=None
+[ 170.755] FINISH(top=WriteActivity d=3)
+[ 170.892] POLL stack=['MainActivity', 'AutoCopyActivity'] type=15 uid=
+[ 171.263] KEY> KEY_PWR_CAN_PRES!
+[ 171.266] PRESSPM3> called
+[ 171.266] SERIAL_TX> b'presspm3\r\n'
+[ 171.280] PRESSPM3< done
+[ 171.280] PM3_STOP> stopPM3Task()
+[ 171.280] PM3_STOP< ret=None
+[ 171.281] FINISH(top=AutoCopyActivity d=2)
+[ 171.393] POLL stack=['MainActivity'] type=15 uid=
+[ 171.517] SERIAL_TX> b'pctbat\r\n'
+[ 171.530] SERIAL_TX> b'charge\r\n'
+[ 181.551] SERIAL_TX> b'pctbat\r\n'
+[ 181.565] SERIAL_TX> b'charge\r\n'
+[ 191.582] SERIAL_TX> b'pctbat\r\n'
+[ 191.595] SERIAL_TX> b'charge\r\n'
+[ 201.612] SERIAL_TX> b'pctbat\r\n'
+[ 201.625] SERIAL_TX> b'charge\r\n'
+[ 211.642] SERIAL_TX> b'pctbat\r\n'
+[ 211.655] SERIAL_TX> b'charge\r\n'
+[ 221.677] SERIAL_TX> b'pctbat\r\n'
+[ 221.690] SERIAL_TX> b'charge\r\n'
+[ 231.707] SERIAL_TX> b'pctbat\r\n'
+[ 231.720] SERIAL_TX> b'charge\r\n'
+[ 241.737] SERIAL_TX> b'pctbat\r\n'
+[ 241.751] SERIAL_TX> b'charge\r\n'
+[ 251.767] SERIAL_TX> b'pctbat\r\n'
+[ 251.780] SERIAL_TX> b'charge\r\n'
+[ 261.797] SERIAL_TX> b'pctbat\r\n'
+[ 261.810] SERIAL_TX> b'charge\r\n'
+[ 271.832] SERIAL_TX> b'pctbat\r\n'
+[ 271.845] SERIAL_TX> b'charge\r\n'
+[ 281.862] SERIAL_TX> b'pctbat\r\n'
+[ 281.875] SERIAL_TX> b'charge\r\n'
+[ 291.892] SERIAL_TX> b'pctbat\r\n'
+[ 291.905] SERIAL_TX> b'charge\r\n'
+[ 301.922] SERIAL_TX> b'pctbat\r\n'
+[ 301.935] SERIAL_TX> b'charge\r\n'
+[ 311.952] SERIAL_TX> b'pctbat\r\n'
+[ 311.965] SERIAL_TX> b'charge\r\n'
+[ 321.982] SERIAL_TX> b'pctbat\r\n'
+[ 321.995] SERIAL_TX> b'charge\r\n'
+[ 332.017] SERIAL_TX> b'pctbat\r\n'
+[ 332.030] SERIAL_TX> b'charge\r\n'
+[ 342.047] SERIAL_TX> b'pctbat\r\n'
+[ 342.060] SERIAL_TX> b'charge\r\n'
+[ 352.082] SERIAL_TX> b'pctbat\r\n'
+[ 352.095] SERIAL_TX> b'charge\r\n'
+[ 362.117] SERIAL_TX> b'pctbat\r\n'
+[ 362.130] SERIAL_TX> b'charge\r\n'
+[ 372.147] SERIAL_TX> b'pctbat\r\n'
+[ 372.160] SERIAL_TX> b'charge\r\n'
+[ 382.177] SERIAL_TX> b'pctbat\r\n'
+[ 382.191] SERIAL_TX> b'charge\r\n'
+[ 392.207] SERIAL_TX> b'pctbat\r\n'
+[ 392.220] SERIAL_TX> b'charge\r\n'
+[ 402.237] SERIAL_TX> b'pctbat\r\n'
+[ 402.250] SERIAL_TX> b'charge\r\n'
+[ 412.267] SERIAL_TX> b'pctbat\r\n'
+[ 412.281] SERIAL_TX> b'charge\r\n'
+[ 422.298] SERIAL_TX> b'pctbat\r\n'
+[ 422.310] SERIAL_TX> b'charge\r\n'
+[ 432.327] SERIAL_TX> b'pctbat\r\n'
+[ 432.340] SERIAL_TX> b'charge\r\n'
+[ 442.362] SERIAL_TX> b'pctbat\r\n'
+[ 442.375] SERIAL_TX> b'charge\r\n'
+[ 452.392] SERIAL_TX> b'pctbat\r\n'
+[ 452.405] SERIAL_TX> b'charge\r\n'
+[ 462.422] SERIAL_TX> b'pctbat\r\n'
+[ 462.435] SERIAL_TX> b'charge\r\n'
+[ 472.452] SERIAL_TX> b'pctbat\r\n'
+[ 472.465] SERIAL_TX> b'charge\r\n'
+[ 482.482] SERIAL_TX> b'pctbat\r\n'
+[ 482.495] SERIAL_TX> b'charge\r\n'
+[ 492.512] SERIAL_TX> b'pctbat\r\n'
+[ 492.526] SERIAL_TX> b'charge\r\n'
+[ 502.542] SERIAL_TX> b'pctbat\r\n'
+[ 502.555] SERIAL_TX> b'charge\r\n'
+[ 512.577] SERIAL_TX> b'pctbat\r\n'
+[ 512.591] SERIAL_TX> b'charge\r\n'
+[ 522.612] SERIAL_TX> b'pctbat\r\n'
+[ 522.626] SERIAL_TX> b'charge\r\n'
+[ 532.642] SERIAL_TX> b'pctbat\r\n'
+[ 532.655] SERIAL_TX> b'charge\r\n'
+[ 542.672] SERIAL_TX> b'pctbat\r\n'
+[ 542.686] SERIAL_TX> b'charge\r\n'
+[ 552.702] SERIAL_TX> b'pctbat\r\n'
+[ 552.715] SERIAL_TX> b'charge\r\n'
+[ 562.732] SERIAL_TX> b'pctbat\r\n'
+[ 562.745] SERIAL_TX> b'charge\r\n'
+[ 572.762] SERIAL_TX> b'pctbat\r\n'
+[ 572.775] SERIAL_TX> b'charge\r\n'
+[ 582.792] SERIAL_TX> b'pctbat\r\n'
+[ 582.806] SERIAL_TX> b'charge\r\n'
+[ 592.822] SERIAL_TX> b'pctbat\r\n'
+[ 592.835] SERIAL_TX> b'charge\r\n'
+[ 602.852] SERIAL_TX> b'pctbat\r\n'
+[ 602.865] SERIAL_TX> b'charge\r\n'
+[ 612.882] SERIAL_TX> b'pctbat\r\n'
+[ 612.895] SERIAL_TX> b'charge\r\n'
+[ 622.912] SERIAL_TX> b'pctbat\r\n'
+[ 622.925] SERIAL_TX> b'charge\r\n'
+[ 632.942] SERIAL_TX> b'pctbat\r\n'
+[ 632.955] SERIAL_TX> b'charge\r\n'
+[ 642.972] SERIAL_TX> b'pctbat\r\n'
+[ 642.985] SERIAL_TX> b'charge\r\n'
+[ 653.002] SERIAL_TX> b'pctbat\r\n'
+[ 653.015] SERIAL_TX> b'charge\r\n'
+[ 663.037] SERIAL_TX> b'pctbat\r\n'
+[ 663.050] SERIAL_TX> b'charge\r\n'
+[ 673.067] SERIAL_TX> b'pctbat\r\n'
+[ 673.080] SERIAL_TX> b'charge\r\n'
+[ 683.097] SERIAL_TX> b'pctbat\r\n'
+[ 683.111] SERIAL_TX> b'charge\r\n'
+[ 693.127] SERIAL_TX> b'pctbat\r\n'
+[ 693.141] SERIAL_TX> b'charge\r\n'
+[ 703.162] SERIAL_TX> b'pctbat\r\n'
+[ 703.176] SERIAL_TX> b'charge\r\n'
+[ 713.197] SERIAL_TX> b'pctbat\r\n'
+[ 713.210] SERIAL_TX> b'charge\r\n'
+[ 723.227] SERIAL_TX> b'pctbat\r\n'
+[ 723.240] SERIAL_TX> b'charge\r\n'
+[ 733.257] SERIAL_TX> b'pctbat\r\n'
+[ 733.270] SERIAL_TX> b'charge\r\n'
+[ 743.287] SERIAL_TX> b'pctbat\r\n'
+[ 743.300] SERIAL_TX> b'charge\r\n'
+[ 753.322] SERIAL_TX> b'pctbat\r\n'
+[ 753.336] SERIAL_TX> b'charge\r\n'
+[ 763.352] SERIAL_TX> b'pctbat\r\n'
+[ 763.366] SERIAL_TX> b'charge\r\n'
+[ 773.382] SERIAL_TX> b'pctbat\r\n'
+[ 773.396] SERIAL_TX> b'charge\r\n'
+[ 774.147] KEY> KEYDOWN_PRES!
+[ 774.483] KEY> KEYDOWN_PRES!
+[ 774.797] KEY> KEYDOWN_PRES!
+[ 775.089] KEY> KEYDOWN_PRES!
+[ 775.590] KEY> KEYOK_PRES!
+[ 775.593] START(SniffActivity, None) bundle=None
+[ 775.752] POLL stack=['MainActivity', 'SniffActivity'] type=15 uid=
+[ 781.070] KEY> KEYOK_PRES!
+[ 782.258] KEY> KEYM1_PRES!
+[ 782.410] PM3> hf 14a sniff (timeout=8000)
+[ 782.416] PM3< ret=1 content_len=36 Press pm3 button to abort sniffing\n\n
+[ 783.413] SERIAL_TX> b'pctbat\r\n'
+[ 783.426] SERIAL_TX> b'charge\r\n'
+[ 793.450] SERIAL_TX> b'pctbat\r\n'
+[ 793.465] SERIAL_TX> b'charge\r\n'
+[ 803.482] SERIAL_TX> b'pctbat\r\n'
+[ 803.495] SERIAL_TX> b'charge\r\n'
+[ 813.513] SERIAL_TX> b'pctbat\r\n'
+[ 813.525] SERIAL_TX> b'charge\r\n'
+[ 823.542] SERIAL_TX> b'pctbat\r\n'
+[ 823.557] SERIAL_TX> b'charge\r\n'
+[ 824.798] KEY> KEYM2_PRES!
+[ 824.800] PRESSPM3> called
+[ 824.801] SERIAL_TX> b'presspm3\r\n'
+[ 824.815] PRESSPM3< done
+[ 824.816] PM3_STOP> stopPM3Task()
+[ 824.816] PM3_STOP< ret=None
+[ 824.824] PM3> hf mf list (timeout=-1)
+[ 827.346] PM3< ret=1 content_len=321827 Recorded activity ( 35589 bytes )\nstart = start of start frame. end = end of frame. src = source of transfer.\nISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       9392 |      11856 | Rdr |93  20                                                                   |     | ANTICOLL\n      23760 |      34288 | Rdr |93  70  3A  F7  35  01  F9 [6A  AD]                                      |  ok | SELECT_UID\n   83198992 |   83199984 | Rdr |52(7)                                                                    |     | WUPA\n   83242384 |   83247152 | Rdr |30  00 [02  A8]                                                          |  ok | READBLOCK(0)\n   83549008 |   83551472 | Rdr |93  20                                                                   |     | ANTICOLL\n   83583104 |   83587808 | Rdr |60  00 [F5  7B]                                                          |  ok | AUTH-A(0)\n   83901392 |   83903856 | Rdr |93  20                                                                   |     | ANTICOLL\n   83935488 |   83940256 | Rdr |E0  80 [31  73]                                                          |  ok | RATS - FSDI=8 (FSD=256), CID=0\n   84276304 |   84276528 | Rdr |01(1)                                                                    |     |\n   84638688 |   84643456 | Rdr |E0  80 [31  73]                                                          |  ok | RATS - FSDI=8 (FSD=256), CID=0\n   85346368 |   85346592 | Rdr |01(1)                                                                    |     |\n   88002512 |   88003120 | Rdr |0B(4)                              
+[ 830.865] KEY> KEYDOWN_PRES!
+[ 832.771] KEY> KEYM2_PRES!
+[ 833.577] SERIAL_TX> b'pctbat\r\n'
+[ 833.596] SERIAL_TX> b'charge\r\n'
+[ 835.313] KEY> KEY_PWR_CAN_PRES!
+[ 837.283] KEY> KEY_PWR_CAN_PRES!
+[ 837.285] FINISH(top=SniffActivity d=2)
+[ 837.361] POLL stack=['MainActivity'] type=15 uid=
+[ 838.183] KEY> KEYDOWN_PRES!
+[ 839.213] KEY> KEYDOWN_PRES!
+[ 839.900] KEY> KEYUP_PRES!
+[ 843.620] SERIAL_TX> b'pctbat\r\n'
+[ 843.636] SERIAL_TX> b'charge\r\n'
+[ 853.652] SERIAL_TX> b'pctbat\r\n'
+[ 853.665] SERIAL_TX> b'charge\r\n'
+[ 859.367] KEY> KEYOK_PRES!
+[ 859.370] START(SimulationActivity, None) bundle=None
+[ 859.394] POLL stack=['MainActivity', 'SimulationActivity'] type=15 uid=
+[ 863.682] SERIAL_TX> b'pctbat\r\n'
+[ 863.696] SERIAL_TX> b'charge\r\n'
+[ 864.114] KEY> KEY_PWR_CAN_PRES!
+[ 864.116] FINISH(top=SimulationActivity d=2)
+[ 864.403] POLL stack=['MainActivity'] type=15 uid=
+[ 865.731] KEY> KEYUP_PRES!
+[ 865.991] KEY> KEYUP_PRES!
+[ 866.244] KEY> KEYUP_PRES!
+[ 866.554] KEY> KEYUP_PRES!
+[ 867.113] KEY> KEYDOWN_PRES!
+[ 867.427] KEY> KEYOK_PRES!
+[ 867.430] START(ScanActivity, None) bundle=None
+[ 867.465] PM3> hf 14a info (timeout=5000)
+[ 867.468] CONNECT> connect2PM3()
+[ 867.471] CONNECT< socket=True
+[ 867.909] POLL stack=['MainActivity', 'ScanActivity'] type=15 uid=
+[ 869.224] PM3< ret=1 content_len=620 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection..... hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[ 869.226] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[ 869.352] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 869.354] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 869.412] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[ 869.560] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 871.742] KEY> KEYM2_PRES!
+[ 871.745] START(SimulationActivity, {'found': True, 'uid': '7AF2ECB2', 'len': 4, 'sak': '08', 'atqa': '0004', 'bbcErr': False, 'static': False, 'gen1a': False, 'type': 1, 'progress': 0, 'return': 1}) bundle={"found": true, "uid": "7AF2ECB2", "len": 4, "sak": "08", "atqa": "0004", "bbcErr": false, "static": false, "gen1a": false, "type": 1, "progress": 0, "return": 1}
+[ 871.852] PM3> hf 14a sim -t 1 --uid 7AF2ECB2 (timeout=-1)
+[ 871.918] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=1 uid=7AF2ECB2
+[ 873.708] SERIAL_TX> b'pctbat\r\n'
+[ 873.721] SERIAL_TX> b'charge\r\n'
+[ 883.753] SERIAL_TX> b'pctbat\r\n'
+[ 883.766] SERIAL_TX> b'charge\r\n'
+[ 890.774] KEY> KEYM1_PRES!
+[ 890.843] PRESSPM3> called
+[ 890.844] SERIAL_TX> b'presspm3\r\n'
+[ 890.860] PRESSPM3< done
+[ 890.862] PM3< ret=1 content_len=158 Emulating ISO/IEC 14443 type A tag with 4 byte UID (7A F2 EC B2 )\nPress pm3 button or <Enter> to abort simulation\nEmulator stopped. Trace length: 1564\nDone!\n\n
+[ 890.862] PM3_STOP> stopPM3Task()
+[ 890.863] PM3_STOP< ret=None
+[ 890.864] START(SimulationTraceActivity, {'trace_data': None, 'trace_len': 0, 'loading': True}) bundle={"trace_data": null, "trace_len": 0, "loading": true}
+[ 890.920] PM3> hf 14a list (timeout=18888)
+[ 890.958] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity', 'SimulationTraceActivity'] type=1 uid=7AF2ECB2
+[ 891.213] PM3< ret=1 content_len=14583 Recorded activity ( 1564 bytes )\nstart = start of start frame. end = end of frame. src = source of transfer.\nISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |        992 | Rdr |52(7)                                                                    |     | WUPA\n       2228 |       4596 | Tag |04  00                                                                   |     |\n       9272 |      11736 | Rdr |93  20                                                                   |     | ANTICOLL\n      12908 |      18796 | Tag |7A  F2  EC  B2  D6                                                       |     |\n      23532 |      33996 | Rdr |93  70  7A  F2  EC  B2  D6 [FD  D8]                                      |  ok | SELECT_UID\n      35232 |      38752 | Tag |08 [B6  DD]                                                              |  ok |\n    1927534 |    1928526 | Rdr |52(7)                                                                    |     | WUPA\n    1929762 |    1932130 | Tag |04  00                                                                   |     |\n    1936824 |    1939288 | Rdr |93  20                                                                   |     | ANTICOLL\n    1940460 |    1946348 | Tag |7A  F2  EC  B2  D6                                                       |     |\n    1951138 |    1961602 | Rdr |93  70  7A  F2  EC  B2  D6 [FD  D8]                                      |  ok | SELECT_UID\n    1962838 |    1966358 | Tag |08 [B6  DD]                                                              |  ok |\n    2258466 |    2259458 | Rdr |52(7)                                                                    |     | WUPA\n    2260694 |    2263062 | Tag |
+[ 892.749] KEY> KEYM2_PRES!
+[ 893.795] SERIAL_TX> b'pctbat\r\n'
+[ 893.811] SERIAL_TX> b'charge\r\n'
+[ 894.446] KEY> KEY_PWR_CAN_PRES!
+[ 895.006] KEY> KEY_PWR_CAN_PRES!
+[ 895.008] FINISH(top=SimulationTraceActivity d=4)
+[ 895.467] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=1 uid=7AF2ECB2
+[ 896.525] KEY> KEY_PWR_CAN_PRES!
+[ 896.527] FINISH(top=SimulationActivity d=3)
+[ 896.970] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[ 897.630] KEY> KEY_PWR_CAN_PRES!
+[ 897.632] FINISH(top=ScanActivity d=2)
+[ 897.973] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 899.807] KEY> KEYDOWN_PRES!
+[ 900.078] KEY> KEYDOWN_PRES!
+[ 900.382] KEY> KEYDOWN_PRES!
+[ 901.111] KEY> KEYOK_PRES!
+[ 901.114] START(SimulationActivity, None) bundle=None
+[ 901.479] POLL stack=['MainActivity', 'SimulationActivity'] type=1 uid=7AF2ECB2
+[ 901.745] KEY> KEYDOWN_PRES!
+[ 902.443] KEY> KEYOK_PRES!
+[ 903.557] KEY> KEYM2_PRES!
+[ 903.636] PM3> hf 14a sim -t 2 --uid 12345678 (timeout=-1)
+[ 903.827] SERIAL_TX> b'pctbat\r\n'
+[ 903.841] SERIAL_TX> b'charge\r\n'
+[ 912.490] KEY> KEY_PWR_CAN_PRES!
+[ 913.188] KEY> KEY_PWR_CAN_PRES!
+[ 913.862] KEY> KEYM1_PRES!
+[ 913.872] SERIAL_TX> b'pctbat\r\n'
+[ 913.886] SERIAL_TX> b'charge\r\n'
+[ 913.940] PRESSPM3> called
+[ 913.940] SERIAL_TX> b'presspm3\r\n'
+[ 913.956] PRESSPM3< done
+[ 913.957] PM3_STOP> stopPM3Task()
+[ 913.958] PM3< ret=1 content_len=157 Emulating ISO/IEC 14443 type A tag with 4 byte UID (12 34 56 78 )\nPress pm3 button or <Enter> to abort simulation\nEmulator stopped. Trace length: 338\nDone!\n\n
+[ 913.959] PM3_STOP< ret=None
+[ 913.960] START(SimulationTraceActivity, {'trace_data': None, 'trace_len': 0, 'loading': True}) bundle={"trace_data": null, "trace_len": 0, "loading": true}
+[ 914.007] POLL stack=['MainActivity', 'SimulationActivity', 'SimulationTraceActivity'] type=1 uid=7AF2ECB2
+[ 914.030] PM3> hf 14a list (timeout=18888)
+[ 914.267] PM3< ret=1 content_len=3245 Recorded activity ( 338 bytes )\nstart = start of start frame. end = end of frame. src = source of transfer.\nISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |       1056 | Rdr |26(7)                                                                    |     | REQA\n       2228 |       4596 | Tag |04  00                                                                   |     |\n      11686 |      16454 | Rdr |50  00 [57  CD]                                                          |  ok | HALT\n      40356 |      41348 | Rdr |52(7)                                                                    |     | WUPA\n      42584 |      44952 | Tag |04  00                                                                   |     |\n      52060 |      54524 | Rdr |93  20                                                                   |     | ANTICOLL\n      55696 |      61584 | Tag |12  34  56  78  08                                                       |     |\n      68594 |      79122 | Rdr |93  70  12  34  56  78  08 [3C  A2]                                      |  ok | SELECT_UID\n      80294 |      83878 | Tag |00 [FE  51]                                                              |  ok |\n     229942 |     234710 | Rdr |50  00 [57  CD]                                                          |  ok | HALT\n     541258 |     542250 | Rdr |52(7)                                                                    |     | WUPA\n     543486 |     545854 | Tag |04  00                                                                   |     |\n     552960 |     563488 | Rdr |93  70  12  34  56  78  08 [3C  A2]                                      |  ok | SELECT_UID\n     564660 |     568244 | Tag |
+[ 915.734] KEY> KEYM1_PRES!
+[ 915.736] FINISH(top=SimulationTraceActivity d=3)
+[ 916.011] POLL stack=['MainActivity', 'SimulationActivity'] type=1 uid=7AF2ECB2
+[ 916.426] KEY> KEY_PWR_CAN_PRES!
+[ 917.574] KEY> KEYDOWN_PRES!
+[ 917.919] KEY> KEYDOWN_PRES!
+[ 918.635] KEY> KEYDOWN_PRES!
+[ 919.225] KEY> KEYOK_PRES!
+[ 921.027] KEY> KEYM2_PRES!
+[ 921.107] PM3> hf 14a sim -t 8 --uid 123456789ABCDE (timeout=-1)
+[ 924.031] SERIAL_TX> b'pctbat\r\n'
+[ 924.050] SERIAL_TX> b'charge\r\n'
+[ 929.237] KEY> KEYM1_PRES!
+[ 929.304] PRESSPM3> called
+[ 929.305] SERIAL_TX> b'presspm3\r\n'
+[ 929.320] PRESSPM3< done
+[ 929.321] PM3_STOP> stopPM3Task()
+[ 929.323] PM3< ret=1 content_len=166 Emulating ISO/IEC 14443 type A tag with 7 byte UID (12 34 56 78 9A BC DE )\nPress pm3 button or <Enter> to abort simulation\nEmulator stopped. Trace length: 213\nDone!\n\n
+[ 929.323] PM3_STOP< ret=None
+[ 929.324] START(SimulationTraceActivity, {'trace_data': None, 'trace_len': 0, 'loading': True}) bundle={"trace_data": null, "trace_len": 0, "loading": true}
+[ 929.380] PM3> hf 14a list (timeout=18888)
+[ 929.535] POLL stack=['MainActivity', 'SimulationActivity', 'SimulationTraceActivity'] type=1 uid=7AF2ECB2
+[ 929.613] PM3< ret=1 content_len=2419 Recorded activity ( 213 bytes )\nstart = start of start frame. end = end of frame. src = source of transfer.\nISO14443A - all times are in carrier periods (1/13.56MHz)\n\n      Start |        End | Src | Data (! denotes parity error)                                           | CRC | Annotation\n------------+------------+-----+-------------------------------------------------------------------------+-----+--------------------\n          0 |       1056 | Rdr |26(7)                                                                    |     | REQA\n       2228 |       4596 | Tag |42  00                                                                   |     |\n   42854138 |   42855130 | Rdr |52(7)                                                                    |     | WUPA\n   42856366 |   42858734 | Tag |42  00                                                                   |     |\n   42863524 |   42865988 | Rdr |93  20                                                                   |     | ANTICOLL\n   42867160 |   42873048 | Tag |88  12  34  56  F8                                                       |     |\n   44237620 |   44242388 | Rdr |50  00 [57  CD]                                                          |  ok | HALT\n   44259764 |   44260756 | Rdr |52(7)                                                                    |     | WUPA\n   44261992 |   44264360 | Tag |42  00                                                                   |     |\n   44269200 |   44271664 | Rdr |93  20                                                                   |     | ANTICOLL\n   44272836 |   44278724 | Tag |88  12  34  56  F8                                                       |     |\n   44283592 |   44294120 | Rdr |93  70  88  12  34  56  F8 [11  EA]                                      |  ok | SELECT_UID\n   44295292 |   44298812 | Tag |04 [DA  17]                                                              |  ok |\n   44303722 |   44306186 | Rdr |95  20 
+[ 930.739] KEY> KEY_PWR_CAN_PRES!
+[ 930.741] FINISH(top=SimulationTraceActivity d=3)
+[ 931.038] POLL stack=['MainActivity', 'SimulationActivity'] type=1 uid=7AF2ECB2
+[ 931.406] KEY> KEY_PWR_CAN_PRES!
+[ 932.212] KEY> KEYUP_PRES!
+[ 932.620] KEY> KEYUP_PRES!
+[ 934.068] SERIAL_TX> b'pctbat\r\n'
+[ 934.081] SERIAL_TX> b'charge\r\n'
+[ 934.861] KEY> KEYOK_PRES!
+[ 936.188] KEY> KEYOK_PRES!
+[ 936.815] KEY> KEYDOWN_PRES!
+[ 937.083] KEY> KEYDOWN_PRES!
+[ 938.381] KEY> KEYDOWN_PRES!
+[ 938.923] KEY> KEYDOWN_PRES!
+[ 939.215] KEY> KEYDOWN_PRES!
+[ 939.795] KEY> KEYDOWN_PRES!
+[ 940.106] KEY> KEYDOWN_PRES!
+[ 940.632] KEY> KEYDOWN_PRES!
+[ 941.464] KEY> KEYRIGHT_PRES!
+[ 942.179] KEY> KEYDOWN_PRES!
+[ 942.418] KEY> KEYDOWN_PRES!
+[ 942.763] KEY> KEYDOWN_PRES!
+[ 943.118] KEY> KEYDOWN_PRES!
+[ 943.329] KEY> KEYDOWN_PRES!
+[ 943.548] KEY> KEYDOWN_PRES!
+[ 944.049] KEY> KEYDOWN_PRES!
+[ 944.097] SERIAL_TX> b'pctbat\r\n'
+[ 944.110] SERIAL_TX> b'charge\r\n'
+[ 946.044] KEY> KEYM2_PRES!
+[ 947.199] KEY> KEYOK_PRES!
+[ 947.644] KEY> KEYM2_PRES!
+[ 947.725] PM3> lf fdxb sim --country 129 --national 112233445566 --animal (timeout=-1)
+[ 954.128] SERIAL_TX> b'pctbat\r\n'
+[ 954.141] SERIAL_TX> b'charge\r\n'
+[ 964.157] SERIAL_TX> b'pctbat\r\n'
+[ 964.187] SERIAL_TX> b'charge\r\n'
+[ 964.729] KEY> KEY_PWR_CAN_PRES!
+[ 965.469] KEY> KEYM1_PRES!
+[ 965.507] PRESSPM3> called
+[ 965.508] SERIAL_TX> b'presspm3\r\n'
+[ 965.520] PRESSPM3< done
+[ 965.522] PM3< ret=1 content_len=341 Country code........ 129\nNational code....... 112233445566\nSet animal bit...... Y\nSet data block bit.. N\nExtended data....... 0x0\nRFU................. 0\nSimulating FDX-B animal ID: 0129-112233445566\nASK simulating with rf/32, invert 1, encoding ASK/BI (2), separator 0, n 4096\nYou can cancel this operation by pressing the pm3 button\nDone!\n\n
+[ 965.522] PM3_STOP> stopPM3Task()
+[ 965.523] PM3_STOP< ret=None
+[ 966.072] KEY> KEY_PWR_CAN_PRES!
+[ 966.309] KEY> KEY_PWR_CAN_PRES!
+[ 966.311] FINISH(top=SimulationActivity d=2)
+[ 966.579] KEY> KEY_PWR_CAN_PRES!
+[ 966.603] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 974.207] SERIAL_TX> b'pctbat\r\n'
+[ 974.220] SERIAL_TX> b'charge\r\n'
+[ 984.237] SERIAL_TX> b'pctbat\r\n'
+[ 984.250] SERIAL_TX> b'charge\r\n'
+[ 994.267] SERIAL_TX> b'pctbat\r\n'
+[ 994.280] SERIAL_TX> b'charge\r\n'
+[1004.297] SERIAL_TX> b'pctbat\r\n'
+[1004.310] SERIAL_TX> b'charge\r\n'
+[1014.327] SERIAL_TX> b'pctbat\r\n'
+[1014.341] SERIAL_TX> b'charge\r\n'
+[1024.357] SERIAL_TX> b'pctbat\r\n'
+[1024.371] SERIAL_TX> b'charge\r\n'
+[1034.392] SERIAL_TX> b'pctbat\r\n'
+[1034.406] SERIAL_TX> b'charge\r\n'
+[1044.422] SERIAL_TX> b'pctbat\r\n'
+[1044.435] SERIAL_TX> b'charge\r\n'
+[1054.452] SERIAL_TX> b'pctbat\r\n'
+[1054.465] SERIAL_TX> b'charge\r\n'
+[1064.482] SERIAL_TX> b'pctbat\r\n'
+[1064.495] SERIAL_TX> b'charge\r\n'
+[1074.512] SERIAL_TX> b'pctbat\r\n'
+[1074.525] SERIAL_TX> b'charge\r\n'
+[1084.542] SERIAL_TX> b'pctbat\r\n'
+[1084.555] SERIAL_TX> b'charge\r\n'
+[1094.572] SERIAL_TX> b'pctbat\r\n'
+[1094.585] SERIAL_TX> b'charge\r\n'
+[1104.602] SERIAL_TX> b'pctbat\r\n'
+[1104.620] SERIAL_TX> b'charge\r\n'
+[1114.637] SERIAL_TX> b'pctbat\r\n'
+[1114.651] SERIAL_TX> b'charge\r\n'
+[1124.667] SERIAL_TX> b'pctbat\r\n'
+[1124.680] SERIAL_TX> b'charge\r\n'
+[1134.697] SERIAL_TX> b'pctbat\r\n'
+[1134.710] SERIAL_TX> b'charge\r\n'
+[1144.727] SERIAL_TX> b'pctbat\r\n'
+[1144.740] SERIAL_TX> b'charge\r\n'
+[1154.762] SERIAL_TX> b'pctbat\r\n'
+[1154.775] SERIAL_TX> b'charge\r\n'
+[1164.792] SERIAL_TX> b'pctbat\r\n'
+[1164.806] SERIAL_TX> b'charge\r\n'
+[1174.822] SERIAL_TX> b'pctbat\r\n'
+[1174.835] SERIAL_TX> b'charge\r\n'
+[1184.852] SERIAL_TX> b'pctbat\r\n'
+[1184.866] SERIAL_TX> b'charge\r\n'
+[1194.882] SERIAL_TX> b'pctbat\r\n'
+[1194.895] SERIAL_TX> b'charge\r\n'
+[1204.912] SERIAL_TX> b'pctbat\r\n'
+[1204.926] SERIAL_TX> b'charge\r\n'
+[1214.942] SERIAL_TX> b'pctbat\r\n'
+[1214.956] SERIAL_TX> b'charge\r\n'
+[1224.972] SERIAL_TX> b'pctbat\r\n'
+[1224.985] SERIAL_TX> b'charge\r\n'
+[1235.002] SERIAL_TX> b'pctbat\r\n'
+[1235.015] SERIAL_TX> b'charge\r\n'
+[1245.037] SERIAL_TX> b'pctbat\r\n'
+[1245.050] SERIAL_TX> b'charge\r\n'
+[1255.067] SERIAL_TX> b'pctbat\r\n'
+[1255.080] SERIAL_TX> b'charge\r\n'
+[1265.102] SERIAL_TX> b'pctbat\r\n'
+[1265.116] SERIAL_TX> b'charge\r\n'
