@@ -277,21 +277,31 @@ def parseAllKeyFromDataFile(infos, file):
 # ---------------------------------------------------------------------------
 # Block / sector reading via PM3
 # ---------------------------------------------------------------------------
-# Iceman-native block data emission. The device's installed iceman build
-# routes `hf mf rdbl`, `hf mf rdsc`, `hf mf cgetblk` through
-# `mf_print_block_one` / helpers in /tmp/rrg-pm3/client/src/cmdhfmf.c:565-606
-# (referenced from rdbl@L1461, rdsc@L1547, cgetblk@L6177). Per iceman_output.
-# json (hf mf rdsc / hf mf cgetblk samples) this device emits the `data: %s`
-# sprint_hex form on each block line, NOT the newer `%3d | %s` grid shape
-# from /tmp/rrg-pm3 HEAD. Matrix section `hf mf cgetblk` (divergence_matrix.
-# md L595-605), `hf mf rdsc` (L785-805), Systemic #4 (L1471-1479).
+# Block data emission shape — matches BOTH known iceman variants and
+# the legacy-via-adapter shape:
 #
-# Primary iceman regex:
-#   _RE_BLOCK_DATA_LINE — `data: XX XX ... XX\n` (16 spaced hex pairs).
-#                         Matches the device's iceman "data:" emission
-#                         consumed by read/erase callers verbatim.
+#   1) `data: XX XX ... XX` (16 spaced hex pairs).
+#      - Older iceman that uses sprint_hex without the table wrapper.
+#      - Legacy FW after `pm3_compat._normalize_mf_block_grid` rewrites
+#        ` N | XX XX ...` → `data: XX XX ...` (pm3_compat.py:1281 entry
+#        for `hf mf rdsc`/`hf mf rdbl`).
+#
+#   2) ` N | XX XX ... XX | ascii` (block-num + pipe + 16 hex pairs +
+#      pipe + ascii). Iceman v4.21611 native shape from
+#      mf_print_block_one (/tmp/rrg-pm3/client/src/cmdhfmf.c:565-606)
+#      via sprint_hex_ascii.  Legacy FW also natively emits the no-
+#      ascii ` N | XX ...` variant, so this branch also catches the
+#      raw legacy shape if the adapter is bypassed (LEGACY_COMPAT=False
+#      kill-switch test).
+#
+# Both branches capture group 1 = 16-byte spaced hex.  re.MULTILINE so
+# `^` anchors to per-line block-num rows (skip the table header which
+# starts with `#`, not a digit).
 _RE_BLOCK_DATA_LINE = re.compile(
-    r'data:\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})')
+    r'(?:data:|^\s*\d+\s*\|)\s*'
+    r'((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})',
+    re.MULTILINE
+)
 
 
 def _parse_blocks_from_text(text):
