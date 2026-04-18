@@ -39,6 +39,8 @@ Return codes:
     -10 = critical failure (card not selectable)
 """
 
+import re
+
 try:
     import executor
 except ImportError:
@@ -99,7 +101,14 @@ def write_call(line):
 # responsibility (see gap log P3.3 entry).
 _KW_RESTORE_SUCCESS = r'Done!'
 _KW_SELECT_FAIL = "Can't select card"
-_KW_WRITE_FAIL = "failed to write block"
+
+# Failure pattern: `failed to write block <N>`.  EV1/NTAG special-block
+# writes (PACK 0xF1=241, SIGnature 0xF2-0xF9=242-249, VERSION 0xFA-0xFB=
+# 250-251) frequently fail on clone magic variants (Gen3/APDU) whose
+# firmware blocks those write commands — even though data blocks 0-19
+# write cleanly.  Only treat failures of blocks < 241 (data blocks) as
+# real write failures.
+_RE_WRITE_FAIL = re.compile(r'failed to write block\s+(\d+)')
 
 def write(infos, file):
     """Write MIFARE Ultralight/NTAG data to a tag.
@@ -121,21 +130,35 @@ def write(infos, file):
         -1  on failure
         -10 on critical failure (card not selectable)
     """
-    # Iceman CLI form: `hf mfu restore -s -e -f <file>`
-    # Matrix L908: iceman/legacy accept same flag syntax; legacy trace
-    # prefix `hf mfu restore s e f` is the older flag spelling (no dash
-    # on legacy — handled transparently by iceman parser aliases).
-    cmd = "hf mfu restore -s -e -f {}".format(file)
-
-    # Ground truth timeouts (from real device traces):
-    #   UL plain: 10888  (trace_dump_files_20260403)
-    #   UL-EV1:   16888  (trace_original_full_20260410)
-    # Larger tags (NTAG213/215/216) scale with page count.
+    # Tag-type-conditional flags:
+    #   -s  special write of block 0 (UID/BCC) via Gen2 magic protocol.
+    #       Only works on Gen2-magic cards.  We have no Gen2 probe today
+    #       (scan only flags Gen1a), and using -s on non-Gen2 corrupts
+    #       block 2 BCC which then aborts every subsequent block write.
+    #       Observed on both plain MFU and Gen3/APDU EV1 in Phase 6 —
+    #       dropped unconditionally until Gen2 detection exists.
+    #   -e  write EV1/NTAG special blocks 0xF1-0xFB (PACK/SIG/VERSION).
+    #       Only meaningful on EV1 and NTAG — plain MFU (MF0ICU1) and
+    #       UL-C lack these blocks and emit `failed to write block`.
     typ = infos.get('type', 2) if isinstance(infos, dict) else 2
     try:
         typ = int(typ)
     except (ValueError, TypeError):
         typ = 2
+
+    # type codes (from activity_read.py tag IDs):
+    #   2 ULTRALIGHT, 3 ULTRALIGHT_C, 4 EV1,
+    #   5 NTAG213, 6 NTAG215, 7 NTAG216
+    if typ in (4, 5, 6, 7):
+        flags = '-e '           # EV1/NTAG: special blocks only (no -s)
+    else:
+        flags = ''              # plain MFU / UL-C: data blocks only
+    cmd = "hf mfu restore {}-f {}".format(flags, file)
+
+    # Ground truth timeouts (from real device traces):
+    #   UL plain: 10888  (trace_dump_files_20260403)
+    #   UL-EV1:   16888  (trace_original_full_20260410)
+    # Larger tags (NTAG213/215/216) scale with page count.
     _MFU_TIMEOUTS = {
         2: 10888,   # ULTRALIGHT
         3: 10888,   # ULTRALIGHT_C
@@ -150,8 +173,19 @@ def write(infos, file):
     # Iceman failure keywords (iceman-native literals).
     if executor.hasKeyword(_KW_SELECT_FAIL):
         return -10
-    if executor.hasKeyword(_KW_WRITE_FAIL):
-        return -1
+
+    # Distinguish data-block failures from EV1/NTAG special-block failures.
+    # Block 0-19 are data; 241+ are PACK/SIG/VERSION only present on real
+    # non-clone EV1/NTAG firmware.  On Gen3/APDU magic clones the special
+    # blocks always fail — don't treat that as an overall write failure.
+    text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
+    for m in _RE_WRITE_FAIL.finditer(text):
+        try:
+            blk = int(m.group(1))
+        except (TypeError, ValueError):
+            return -1
+        if blk < 241:
+            return -1
 
     # Iceman success sentinel: `Done!` (cmdhfmfu.c:4218 literal).
     # If the card lost contact mid-restore, the response only has
