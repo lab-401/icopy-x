@@ -219,12 +219,21 @@ def _reverse_14a_raw(m):
 
 def _reverse_mf_csetuid(m):
     """hf mf csetuid -u {uid} -s {sak} -a {atqa} [-w]
-    -> hf mf csetuid {uid} {sak} {atqa} [w]"""
+    -> hf mf csetuid {uid} {atqa} {sak} [w]
+
+    Legacy positional order is UID -> ATQA (4 hex) -> SAK (2 hex).
+    Device binary usage string:
+      `hf mf csetuid [h] <UID 8 hex symbols> [ATQA 4 hex symbols] [SAK 2 hex symbols] [w]`
+    Device example:
+      `hf mf csetuid 01020304 0004 08 w`  (ATQA=0004, SAK=08).
+    If SAK is sent in the ATQA position, param_gethex fails "ATQA must
+    include 4 HEX symbols" and the Gen1a UID set aborts silently.
+    """
     uid = m.group(1)
     sak = m.group(2)
     atqa = m.group(3)
     has_w = m.group(4) is not None
-    result = 'hf mf csetuid %s %s %s' % (uid, sak, atqa)
+    result = 'hf mf csetuid %s %s %s' % (uid, atqa, sak)
     if has_w:
         result += ' w'
     return result
@@ -233,12 +242,6 @@ def _reverse_mf_csetuid(m):
 def _reverse_em410x_clone(m):
     """lf em 410x clone --id {id} -> lf em 410x_write {id} 1"""
     return 'lf em 410x_write %s 1' % m.group(1)
-
-
-def _reverse_indala_clone(m):
-    """lf indala clone -r {raw} -> lf indala clone {raw} -r {raw}"""
-    raw = m.group(1)
-    return 'lf indala clone %s -r %s' % (raw, raw)
 
 
 def _reverse_t55xx_read_page1(m):
@@ -483,8 +486,12 @@ _COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
     # lf hid clone -r {raw} -> lf hid clone {raw}
     (re.compile(r'^lf hid clone\s+-r\s+(\S+)$'), r'lf hid clone \1'),
 
-    # lf indala clone -r {raw} -> lf indala clone {raw} -r {raw}
-    (re.compile(r'^lf indala clone\s+-r\s+(\S+)$'), _reverse_indala_clone),
+    # NOTE: `lf indala clone` is NOT translated.
+    # Device binary shows CLIParser-based command accepting `-r <hex>`
+    # natively:
+    #   `lf indala clone -r a0000000a0002021`
+    #   `lf indala clone --fc 123 --cn 1337`
+    # Pass-through: iceman syntax works verbatim.
 
     # lf fdxb clone --country {C} --national {N} -> lf fdx clone c {C} n {N}
     (re.compile(r'^lf fdxb clone\s+--country\s+(\S+)\s+--national\s+(\S+)$'),
