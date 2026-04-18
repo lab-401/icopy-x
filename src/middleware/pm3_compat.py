@@ -183,15 +183,22 @@ def _reverse_mf_fchk(m):
 
 def _reverse_mf_nested(m):
     """hf mf nested --size --blk {blk} -a/-b -k {key} --tblk {tblk} --ta/--tb
-    -> hf mf nested {size} {blk} A/B {key} {tblk} A/B"""
-    size_map = {'--mini': '0', '--1k': '1', '--2k': '2', '--4k': '4'}
-    sp = size_map.get(m.group(1), '1')
+    -> hf mf nested o {blk} A/B {key} {tblk} A/B
+
+    Legacy factory syntax has two forms (cmdhfmf.c usage @L120-121):
+      all sectors: hf mf nested <memory> <block> <key A/B> <key> [t,d]
+      one sector : hf mf nested o <block> <key A/B> <key> <tblock> <tkey A/B>
+    Iceman --tblk/--ta/--tb is always the one-sector variant, so the `o`
+    prefix (and dropping the memory-size arg) is mandatory. Without it,
+    legacy parses the command as all-sectors nested with trailing garbage
+    and silently hangs.
+    """
     blk = m.group(2)
     typ = 'A' if m.group(3) == '-a' else 'B'
     key = m.group(4)
     tblk = m.group(5)
     ttyp = 'A' if m.group(6) == '--ta' else 'B'
-    return 'hf mf nested %s %s %s %s %s %s' % (sp, blk, typ, key, tblk, ttyp)
+    return 'hf mf nested o %s %s %s %s %s' % (blk, typ, key, tblk, ttyp)
 
 
 def _reverse_mf_wrbl(m):
@@ -861,17 +868,14 @@ def _normalize_wrbl_response(text):
 # LEGACY: cmdlfem4x.c:266/269 `"\nEM TAG ID      : %s"`.
 # ICEMAN: cmdlfem410x.c:115 `"EM 410x ID <hex>"`.
 # Middleware `lfsearch.REGEX_EM410X = r'EM 410x(?:\s+XL)?\s+ID\s+([0-9A-Fa-f]+)'`.
+# The `Valid EM410x ID found!` sentinel is identical on both firmwares
+# (legacy cmdlf.c:1454 and iceman cmdlf.c:2008) — do NOT rewrite it.
 _RE_LEGACY_EM_TAG_ID = re.compile(r'EM TAG ID\s*:\s*([0-9A-Fa-f]+)')
-# Keyword also differs: legacy `Valid EM410x ID` (no space) vs iceman
-# `Valid EM 410x ID` (space).  Middleware keyword is iceman form.
-_RE_LEGACY_VALID_EM410X = re.compile(r'Valid EM410x ID')
 
 
 def _normalize_em410x_id(text):
     """Rewrite legacy `EM TAG ID      : <hex>` -> iceman `EM 410x ID <hex>`."""
-    text = _RE_LEGACY_EM_TAG_ID.sub(r'EM 410x ID \1', text)
-    text = _RE_LEGACY_VALID_EM410X.sub('Valid EM 410x ID', text)
-    return text
+    return _RE_LEGACY_EM_TAG_ID.sub(r'EM 410x ID \1', text)
 
 
 # -- lf sea: legacy Chipset detection: -> iceman Chipset... --
