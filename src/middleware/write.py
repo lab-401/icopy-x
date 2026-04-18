@@ -185,10 +185,21 @@ def write(listener, infos, bundle, run_on_subthread=True):
                 # FDX-B "0060-030207938416", EM410x "1234567890").
                 # B0_WRITE_MAP and RAW_CLONE_MAP types need raw hex
                 # bytes (e.g., AWID "01deb4ddede7e8b7edbdb7e1").
-                # Dispatch with raw for hex-based writers, data for
-                # parameter-based cloners.  lfwrite.write() routes
-                # to the correct handler internally.
-                if typ in getattr(lfwrite, 'PAR_CLONE_MAP', {}):
+                #
+                # HID Prox (9) and Indala (10) are exceptions within
+                # PAR_CLONE_MAP: their cache `data` field holds a
+                # human display string (e.g., 'FC,CN: 128,54641'),
+                # while the actual clone arg is the raw hex payload
+                # in `raw`.  Both writers expose multiple encoding
+                # paths (formatted FC/CN vs raw hex), but per iceman
+                # cmdlfindala.c:790 _RED_("Warning, encoding with
+                # FC/CN doesn't always work") the raw form is the
+                # universally-correct one for both protocols.
+                # Source: cmdlfhid.c:400 + cmdlfindala.c:786 (iceman).
+                _RAW_CLONE_PAR_TYPES = {9, 10}  # HID Prox, Indala
+                if typ in _RAW_CLONE_PAR_TYPES:
+                    raw_par = raw if raw else data
+                elif typ in getattr(lfwrite, 'PAR_CLONE_MAP', {}):
                     raw_par = data if data else raw
                 else:
                     raw_par = raw if raw else data
