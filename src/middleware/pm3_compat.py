@@ -1042,6 +1042,38 @@ def _normalize_mf_block_grid(text):
     return _RE_LEGACY_MF_BLOCK_GRID.sub(r'data: \1', text)
 
 
+# -- hf mf darkside / nested: legacy found-key line -> iceman `Found valid key [ <hex> ]`
+
+# DARKSIDE LEGACY: cmdhfmf.c:663 `"found valid key: %012" PRIX64` (bare hex, colon).
+# NESTED LEGACY  : mifarehost.c:538/717 uses `sprint_hex` so bytes are
+#                  space-separated inside brackets:
+#                    `found valid key [ 48 45 58 41 43 54 ]`.
+# ICEMAN         : cmdhfmf.c:1275 / mifarehost.c:686 `Found valid key [ %s ]`
+#                  via `sprint_hex_inrow` — no byte separators inside brackets.
+# Middleware `hfmfkeys.py:296/337` regex:
+#   `r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]'` (IGNORECASE).
+# Requires exactly 12 consecutive hex chars between the brackets.
+_RE_LEGACY_FOUND_KEY_COLON = re.compile(
+    r'(?i)found valid key\s*:\s*([A-Fa-f0-9]{12})(?!\s*\])')
+_RE_LEGACY_FOUND_KEY_SPACED = re.compile(
+    r'(?i)(found valid key\s*\[\s*)((?:[A-Fa-f0-9]{2}\s+){5}[A-Fa-f0-9]{2})(\s*\])')
+
+
+def _normalize_mf_found_key(text):
+    """Rewrite legacy found-key forms -> iceman `Found valid key [ <12hex> ]`.
+
+    Handles two legacy variants:
+      - darkside `found valid key: 000000000041`  (bare hex, colon)
+      - nested   `found valid key [ 48 45 58 41 43 54 ]`  (spaced bytes)
+    """
+    text = _RE_LEGACY_FOUND_KEY_COLON.sub(r'Found valid key [ \1 ]', text)
+
+    def _strip_spaces(m):
+        return '%s%s%s' % (m.group(1), m.group(2).replace(' ', ''), m.group(3))
+
+    return _RE_LEGACY_FOUND_KEY_SPACED.sub(_strip_spaces, text)
+
+
 # -- hf iclass rdbl: legacy ' block NN : <hex>' -> iceman ' block N/0xNN : <hex>' --
 
 # LEGACY: cmdhficlass.c:2399 `" block %02X : <hex>"` (capital-hex block number).
@@ -1123,6 +1155,8 @@ _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'hf mf restore': [_normalize_wrbl_response],
     'hf mf rdbl': [_normalize_mf_block_grid],
     'hf mf rdsc': [_normalize_mf_block_grid],
+    'hf mf darkside': [_normalize_mf_found_key],
+    'hf mf nested': [_normalize_mf_found_key],
     'hf 15 restore': [_normalize_hf15_restore],
     'hf 15 csetuid': [_normalize_hf15_csetuid],
     'hf iclass rdbl': [_normalize_iclass_rdbl],
