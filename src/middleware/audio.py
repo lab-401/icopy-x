@@ -55,15 +55,19 @@ import subprocess
 logger = logging.getLogger(__name__)
 
 # Module state
-_volume_level = 2       # 0=Off, 1=Low, 2=Middle, 3=High
+# _volume_pct holds the ALSA percentage (0/30/65/100) — written by
+# setVolume() and read by play() as the per-Sound playback volume.
+# Default 65 = level 2 (Middle).
+_volume_pct = 65
 _key_audio_enabled = True
 _initialized = False
 _mixer_available = False  # True if pygame.mixer initialized successfully
 
-# Volume percentage map: UI level -> ALSA percentage string
-# Ground truth: settings.fromLevelGetVolume() returns 0/30/65/100
-_VOLUME_PCT = {0: '0%', 1: '30%', 2: '65%', 3: '100%'}
-_LEVEL_TO_PCT = {0: 0, 1: 30, 2: 65, 3: 100}
+# Hardware mixer controls to try, in order.  This device exposes only
+# 'Line Out' (the dev cable provides a 3.5mm jack pre-amped through
+# the wm8960); the device-tree variant on other H3 boards uses
+# 'Speaker'.  We sset whichever one exists — silent on miss.
+_AMIXER_CONTROLS = ('Line Out', 'Speaker')
 
 # Audio file base path (real device).  Falls back to a relative path
 # resolved against the lib's parent directory if the device path is
@@ -107,25 +111,47 @@ def init():
 
 
 def setVolume(v):
-    """Set system volume via ALSA amixer.
+    """Apply system-wide volume.
 
     Args:
-        v: int ALSA volume percentage (0, 20, 50, 100) — caller already
+        v: int ALSA volume percentage (0/30/65/100) — caller already
            converted from UI level via settings.fromLevelGetVolume().
+
+    Three side-effects, all best-effort:
+      1. Cache `v` so future per-Sound playback scales correctly.
+      2. Push to the ALSA hardware mixer so non-pygame audio (and
+         the rest of pygame's session output level) follows.
+      3. Re-set the looping music channel if a track is currently
+         playing — pygame.mixer.music.set_volume() takes effect
+         immediately and is the only way the running scroller hears
+         the change.
     """
-    global _volume_level
-    _volume_level = v
-    pct = '%d%%' % int(v)
-    try:
-        subprocess.run(
-            ['amixer', 'sset', 'Speaker', pct],
-            capture_output=True, timeout=5,
-        )
-        logger.debug("audio.setVolume(%s) -> amixer Speaker %s", v, pct)
-    except FileNotFoundError:
-        logger.debug("audio.setVolume(%s) — amixer not found (QEMU)", v)
-    except Exception as e:
-        logger.debug("audio.setVolume(%s) — amixer error: %s", v, e)
+    global _volume_pct
+    _volume_pct = max(0, min(100, int(v)))
+    pct = '%d%%' % _volume_pct
+    for control in _AMIXER_CONTROLS:
+        try:
+            r = subprocess.run(
+                ['amixer', 'sset', control, pct],
+                capture_output=True, timeout=5,
+            )
+            if r.returncode == 0:
+                logger.debug("audio.setVolume(%s) -> amixer %s %s",
+                             v, control, pct)
+                break
+        except FileNotFoundError:
+            logger.debug("audio.setVolume(%s) — amixer not found (QEMU)", v)
+            break
+        except Exception as e:
+            logger.debug("audio.setVolume(%s) — amixer %s error: %s",
+                         v, control, e)
+    if _mixer_available:
+        try:
+            import pygame
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.set_volume(_volume_pct / 100.0)
+        except Exception:
+            pass
 
 
 def setKeyAudioEnable(enable):
@@ -150,7 +176,7 @@ def get_framerate(name):
 
 def play(name):
     """Play named audio file at current volume."""
-    vol = _LEVEL_TO_PCT.get(_volume_level, 65)
+    vol = _volume_pct
     playOfVolumeImpl(name, vol)
 
 
@@ -298,7 +324,7 @@ def startScrollerMusic(ogg_path):
         return
     try:
         import pygame
-        vol = _LEVEL_TO_PCT.get(_volume_level, 65)
+        vol = _volume_pct
         pygame.mixer.music.load(ogg_path)
         pygame.mixer.music.set_volume(max(0.0, min(1.0, vol / 100.0)))
         pygame.mixer.music.play(loops=-1)
