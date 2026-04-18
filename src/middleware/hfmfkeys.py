@@ -223,22 +223,31 @@ def list_split(items, n):
 # fchks — fast dictionary key check
 # PM3: hf mf fchk {size_param} {keyfile}  (timeout=600000)
 # ---------------------------------------------------------------------------
-# Iceman-native key-table row (this device's installed build). Matrix
-# section `hf mf fchk` (divergence_matrix.md L711-736) confirms iceman
-# emits the 4-column `|`-bordered `| Sec | key A | res | key B | res |`
-# shape on this device (20/20 of 22 iceman table-header samples match).
-# Verified via iceman_output.json `hf mf fchk` samples — dominant shape
-# line `| 000 | 484558414354   | 1 | a22ae129c013   | 1 |`.
+# Iceman key-table row.  Two formats are emitted depending on PM3
+# build vintage; this regex matches both:
 #
-# TODO(Phase 4 / firmware bump): /tmp/rrg-pm3 HEAD at cmdhfmf.c:4966-5060
-# (printKeyTable) emits a different 5-column `+`-separated shape. If the
-# device ever upgrades to HEAD iceman, swap this regex to match the new
-# `-----+-----+---...` separators and ` 000 | 003 | FFFFFFFFFFFF | 1 |`
-# row pattern. `pm3_compat.py:1160-1192` `_normalize_fchk_table` already
-# contains the reverse rewrite for legacy-direction; activate it on
-# firmware-bump.
+#   Legacy / older iceman (5 fields, outer `|` borders):
+#     `| 000 | 484558414354 | 1 | a22ae129c013 | 1 |`
+#     Matrix section `hf mf fchk` (divergence_matrix.md L711-736).
+#
+#   Iceman v4.21611+ (6 fields incl. new Blk column, no outer `|`):
+#     `-----+-----+--------------+---+--------------+----`
+#     ` 000 | 003 | 484558414354 | 1 | a22ae129c013 | 1`
+#     Source: cmdhfmf.c:4985 (separator) + cmdhfmf.c:5037 row format
+#     `" %03d | %03d | %s | %s | %s | %s %s"` where col 2 is the
+#     sector-trailer block number from mfSectorTrailerOfSector().
+#     Verified live on iceman v4.21611 — without Blk-column tolerance
+#     the parser captured 0 keys → middleware gave up the read flow.
+#
+# Captures stay 5: (sec, keyA, resA, keyB, resB).  The optional
+# `(?:\d+\s*\|\s*)?` group absorbs the inserted Blk column when
+# present.  Outer `|` is also optional (legacy borders vs iceman bare
+# rows).  ANSI colour codes are stripped upstream by
+# executor._clean_pm3_output (executor.py:67) so no `\x1b\[…m` here.
 _RE_KEY_TABLE = re.compile(
-    r'\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|'
+    r'\|?\s*(\d+)\s*\|\s*(?:\d+\s*\|\s*)?'
+    r'([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*'
+    r'([A-Fa-f0-9-]{12})\s*\|\s*(\d+)'
 )
 _RE_HEX_KEY = re.compile(r'^[A-Fa-f0-9]{12}$')
 
