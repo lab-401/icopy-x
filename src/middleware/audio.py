@@ -26,23 +26,23 @@ OSS reimplementation of audio.so, post-asset-swap revision.
 
 Two layers:
 
-  1) System sounds — five short mp3s in res/audio/ wired into the
-     standard UI events (list navigation, button click, startup,
+  1) System sounds — five short .ogg files in res/audio/ wired into
+     the standard UI events (list navigation, button click, startup,
      shutdown, toast).  Each event has a thin helper here; call
      sites in keymap.py / hmi_driver.py / application.py / widget.py
      invoke the helpers.
 
   2) Generic playback — play(name) / playOfVolume(name, v) for any
-     other asset (pygame.mixer handles both .wav and .mp3).  The
-     legacy named-event stubs (playTagfound, playSniffStep1, etc.)
-     are retained as no-ops for source compatibility with code that
-     still calls them; they no longer attempt to look up the old
-     numbered .wav corpus that was removed.
+     other asset.  The legacy named-event stubs (playTagfound,
+     playSniffStep1, etc.) are retained as no-ops for source
+     compatibility with code that still calls them; they no longer
+     attempt to look up the old numbered .wav corpus that was
+     removed.
 
-Playback path: pygame.mixer (preferred — handles both wav + mp3) →
-no-op log when pygame unavailable (QEMU / no sound HW).  We do NOT
-fall back to `aplay` for mp3 because aplay only handles wav; trying
-mp3 through aplay produces noise instead of audio.
+Playback path: pygame.mixer.Sound (decodes WAV + OGG via SDL_mixer
+— mp3 is NOT supported by Sound, only by the single-stream
+mixer.music API, so all assets are .ogg) → no-op log when pygame
+unavailable (QEMU / no sound HW).
 
 DRM note: The original audio.so contained DRM license checks.
 Per project rules, DRM gate functions are replaced with pass-throughs.
@@ -77,11 +77,11 @@ if not os.path.isdir(_AUDIO_BASE):
 # Named system sounds (post-asset-swap).  Volume preview reuses the
 # toast tone because the new asset set has no dedicated calibration
 # tone — toast is short, distinct, and at a comfortable level.
-_SOUND_NAV_TAP        = 'navigate_tap.mp3'
-_SOUND_NAV_CLICK      = 'navigate_click.mp3'
-_SOUND_SYSTEM_START   = 'system_start.mp3'
-_SOUND_SYSTEM_SHUTDOWN = 'system_shutdown.mp3'
-_SOUND_SYSTEM_TOAST   = 'system_toast.mp3'
+_SOUND_NAV_TAP        = 'navigate_tap.ogg'
+_SOUND_NAV_CLICK      = 'navigate_click.ogg'
+_SOUND_SYSTEM_START   = 'system_start.ogg'
+_SOUND_SYSTEM_SHUTDOWN = 'system_shutdown.ogg'
+_SOUND_SYSTEM_TOAST   = 'system_toast.ogg'
 _VOLUME_EXAM_FILE     = _SOUND_SYSTEM_TOAST
 
 
@@ -163,9 +163,9 @@ def playOfVolume(name, volume):
 def playOfVolumeImpl(n, v):
     """Internal implementation of named-asset playback.
 
-    pygame.mixer is the only path; it handles both .wav and .mp3.
-    No fallback for mp3 because aplay can't decode it.  When
-    pygame is unavailable (QEMU) the call gracefully no-ops.
+    pygame.mixer.Sound is the only path; it decodes WAV + OGG via
+    SDL_mixer.  When pygame is unavailable (QEMU) the call
+    gracefully no-ops.
     """
     wav = os.path.join(_AUDIO_BASE, n) if not os.path.isabs(n) else n
     if not os.path.exists(wav):
