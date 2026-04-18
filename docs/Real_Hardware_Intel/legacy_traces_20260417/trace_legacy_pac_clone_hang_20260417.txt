@@ -1,0 +1,437 @@
+=== FULL TRACE ===
+[   0.008] presspm3 hook OK
+[   0.010] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   5.891] SERIAL_TX> b'pctbat\r\n'
+[   5.908] SERIAL_TX> b'charge\r\n'
+[  15.924] SERIAL_TX> b'pctbat\r\n'
+[  15.938] SERIAL_TX> b'charge\r\n'
+[  25.959] SERIAL_TX> b'pctbat\r\n'
+[  25.973] SERIAL_TX> b'charge\r\n'
+[  35.989] SERIAL_TX> b'pctbat\r\n'
+[  36.002] SERIAL_TX> b'charge\r\n'
+[  46.019] SERIAL_TX> b'pctbat\r\n'
+[  46.033] SERIAL_TX> b'charge\r\n'
+[  56.054] SERIAL_TX> b'pctbat\r\n'
+[  56.068] SERIAL_TX> b'charge\r\n'
+[  66.084] SERIAL_TX> b'pctbat\r\n'
+[  66.098] SERIAL_TX> b'charge\r\n'
+[  76.115] SERIAL_TX> b'pctbat\r\n'
+[  76.128] SERIAL_TX> b'charge\r\n'
+[  86.144] SERIAL_TX> b'pctbat\r\n'
+[  86.157] SERIAL_TX> b'charge\r\n'
+[  96.174] SERIAL_TX> b'pctbat\r\n'
+[  96.187] SERIAL_TX> b'charge\r\n'
+[ 106.204] SERIAL_TX> b'pctbat\r\n'
+[ 106.218] SERIAL_TX> b'charge\r\n'
+[ 116.234] SERIAL_TX> b'pctbat\r\n'
+[ 116.248] SERIAL_TX> b'charge\r\n'
+[ 126.264] SERIAL_TX> b'pctbat\r\n'
+[ 126.278] SERIAL_TX> b'charge\r\n'
+[ 136.294] SERIAL_TX> b'pctbat\r\n'
+[ 136.308] SERIAL_TX> b'charge\r\n'
+[ 146.324] SERIAL_TX> b'pctbat\r\n'
+[ 146.338] SERIAL_TX> b'charge\r\n'
+[ 156.354] SERIAL_TX> b'pctbat\r\n'
+[ 156.368] SERIAL_TX> b'charge\r\n'
+[ 166.390] SERIAL_TX> b'pctbat\r\n'
+[ 166.403] SERIAL_TX> b'charge\r\n'
+[ 176.419] SERIAL_TX> b'pctbat\r\n'
+[ 176.433] SERIAL_TX> b'charge\r\n'
+[ 186.454] SERIAL_TX> b'pctbat\r\n'
+[ 186.468] SERIAL_TX> b'charge\r\n'
+[ 196.484] SERIAL_TX> b'pctbat\r\n'
+[ 196.498] SERIAL_TX> b'charge\r\n'
+[ 206.514] SERIAL_TX> b'pctbat\r\n'
+[ 206.528] SERIAL_TX> b'charge\r\n'
+[ 216.544] SERIAL_TX> b'pctbat\r\n'
+[ 216.558] SERIAL_TX> b'charge\r\n'
+[ 226.579] SERIAL_TX> b'pctbat\r\n'
+[ 226.592] SERIAL_TX> b'charge\r\n'
+[ 236.609] SERIAL_TX> b'pctbat\r\n'
+[ 236.623] SERIAL_TX> b'charge\r\n'
+[ 246.645] SERIAL_TX> b'pctbat\r\n'
+[ 246.658] SERIAL_TX> b'charge\r\n'
+[ 256.679] SERIAL_TX> b'pctbat\r\n'
+[ 256.693] SERIAL_TX> b'charge\r\n'
+[ 266.709] SERIAL_TX> b'pctbat\r\n'
+[ 266.723] SERIAL_TX> b'charge\r\n'
+[ 276.739] SERIAL_TX> b'pctbat\r\n'
+[ 276.753] SERIAL_TX> b'charge\r\n'
+[ 286.769] SERIAL_TX> b'pctbat\r\n'
+[ 286.783] SERIAL_TX> b'charge\r\n'
+[ 296.804] SERIAL_TX> b'pctbat\r\n'
+[ 296.818] SERIAL_TX> b'charge\r\n'
+[ 306.834] SERIAL_TX> b'pctbat\r\n'
+[ 306.848] SERIAL_TX> b'charge\r\n'
+[ 316.864] SERIAL_TX> b'pctbat\r\n'
+[ 316.877] SERIAL_TX> b'charge\r\n'
+[ 326.894] SERIAL_TX> b'pctbat\r\n'
+[ 326.908] SERIAL_TX> b'charge\r\n'
+[ 336.924] SERIAL_TX> b'pctbat\r\n'
+[ 336.938] SERIAL_TX> b'charge\r\n'
+[ 346.954] SERIAL_TX> b'pctbat\r\n'
+[ 346.968] SERIAL_TX> b'charge\r\n'
+[ 356.985] SERIAL_TX> b'pctbat\r\n'
+[ 356.998] SERIAL_TX> b'charge\r\n'
+[ 367.014] SERIAL_TX> b'pctbat\r\n'
+[ 367.028] SERIAL_TX> b'charge\r\n'
+[ 377.044] SERIAL_TX> b'pctbat\r\n'
+[ 377.058] SERIAL_TX> b'charge\r\n'
+[ 387.074] SERIAL_TX> b'pctbat\r\n'
+[ 387.088] SERIAL_TX> b'charge\r\n'
+[ 397.104] SERIAL_TX> b'pctbat\r\n'
+[ 397.118] SERIAL_TX> b'charge\r\n'
+[ 407.134] SERIAL_TX> b'pctbat\r\n'
+[ 407.148] SERIAL_TX> b'charge\r\n'
+[ 417.164] SERIAL_TX> b'pctbat\r\n'
+[ 417.178] SERIAL_TX> b'charge\r\n'
+[ 427.194] SERIAL_TX> b'pctbat\r\n'
+[ 427.208] SERIAL_TX> b'charge\r\n'
+[ 437.224] SERIAL_TX> b'pctbat\r\n'
+[ 437.237] SERIAL_TX> b'charge\r\n'
+[ 447.259] SERIAL_TX> b'pctbat\r\n'
+[ 447.273] SERIAL_TX> b'charge\r\n'
+[ 457.289] SERIAL_TX> b'pctbat\r\n'
+[ 457.303] SERIAL_TX> b'charge\r\n'
+[ 467.319] SERIAL_TX> b'pctbat\r\n'
+[ 467.333] SERIAL_TX> b'charge\r\n'
+[ 477.349] SERIAL_TX> b'pctbat\r\n'
+[ 477.363] SERIAL_TX> b'charge\r\n'
+[ 487.379] SERIAL_TX> b'pctbat\r\n'
+[ 487.393] SERIAL_TX> b'charge\r\n'
+[ 497.409] SERIAL_TX> b'pctbat\r\n'
+[ 497.423] SERIAL_TX> b'charge\r\n'
+[ 507.439] SERIAL_TX> b'pctbat\r\n'
+[ 507.453] SERIAL_TX> b'charge\r\n'
+[ 517.469] SERIAL_TX> b'pctbat\r\n'
+[ 517.482] SERIAL_TX> b'charge\r\n'
+[ 527.500] SERIAL_TX> b'pctbat\r\n'
+[ 527.512] SERIAL_TX> b'charge\r\n'
+[ 537.529] SERIAL_TX> b'pctbat\r\n'
+[ 537.543] SERIAL_TX> b'charge\r\n'
+[ 547.559] SERIAL_TX> b'pctbat\r\n'
+[ 547.573] SERIAL_TX> b'charge\r\n'
+[ 557.589] SERIAL_TX> b'pctbat\r\n'
+[ 557.603] SERIAL_TX> b'charge\r\n'
+[ 567.624] SERIAL_TX> b'pctbat\r\n'
+[ 567.638] SERIAL_TX> b'charge\r\n'
+[ 577.654] SERIAL_TX> b'pctbat\r\n'
+[ 577.668] SERIAL_TX> b'charge\r\n'
+[ 587.684] SERIAL_TX> b'pctbat\r\n'
+[ 587.698] SERIAL_TX> b'charge\r\n'
+[ 597.714] SERIAL_TX> b'pctbat\r\n'
+[ 597.728] SERIAL_TX> b'charge\r\n'
+[ 607.744] SERIAL_TX> b'pctbat\r\n'
+[ 607.758] SERIAL_TX> b'charge\r\n'
+[ 617.774] SERIAL_TX> b'pctbat\r\n'
+[ 617.788] SERIAL_TX> b'charge\r\n'
+[ 627.804] SERIAL_TX> b'pctbat\r\n'
+[ 627.818] SERIAL_TX> b'charge\r\n'
+[ 637.840] SERIAL_TX> b'pctbat\r\n'
+[ 637.853] SERIAL_TX> b'charge\r\n'
+[ 647.870] SERIAL_TX> b'pctbat\r\n'
+[ 647.888] SERIAL_TX> b'charge\r\n'
+[ 657.905] SERIAL_TX> b'pctbat\r\n'
+[ 657.917] SERIAL_TX> b'charge\r\n'
+[ 667.939] SERIAL_TX> b'pctbat\r\n'
+[ 667.952] SERIAL_TX> b'charge\r\n'
+[ 677.969] SERIAL_TX> b'pctbat\r\n'
+[ 677.983] SERIAL_TX> b'charge\r\n'
+[ 687.999] SERIAL_TX> b'pctbat\r\n'
+[ 688.013] SERIAL_TX> b'charge\r\n'
+[ 698.029] SERIAL_TX> b'pctbat\r\n'
+[ 698.043] SERIAL_TX> b'charge\r\n'
+[ 708.064] SERIAL_TX> b'pctbat\r\n'
+[ 708.078] SERIAL_TX> b'charge\r\n'
+[ 718.094] SERIAL_TX> b'pctbat\r\n'
+[ 718.108] SERIAL_TX> b'charge\r\n'
+[ 728.129] SERIAL_TX> b'pctbat\r\n'
+[ 728.143] SERIAL_TX> b'charge\r\n'
+[ 738.159] SERIAL_TX> b'pctbat\r\n'
+[ 738.173] SERIAL_TX> b'charge\r\n'
+[ 748.189] SERIAL_TX> b'pctbat\r\n'
+[ 748.203] SERIAL_TX> b'charge\r\n'
+[ 748.249] KEY> KEYOK_PRES!
+[ 748.381] START(AutoCopyActivity, None) bundle=None
+[ 748.465] PM3> hf 14a info (timeout=5000)
+[ 748.467] CONNECT> connect2PM3()
+[ 748.473] CONNECT< socket=True
+[ 748.526] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[ 748.606] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 748.640] PM3> lf sea (timeout=10000)
+[ 749.714] PM3< ret=1 content_len=288 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nHID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 749.740] CACHE: {"raw": "''", "data": "'FC,CN: 37137,52428'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 750.031] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 750.043] PM3> lf hid reader (timeout=10000)
+[ 750.044] CONNECT> connect2PM3()
+[ 750.047] CONNECT< socket=True
+[ 750.294] PM3< ret=1 content_len=109 HID Prox - 99911119999 (52428) - len: 37 bit - OEM: 000 FC: 37137 Card: 52428\n\nNikola.D: 0\n\nraw: 99911119999\n
+[ 756.079] KEY> KEYM2_PRES!
+[ 756.082] START(WarningWriteActivity, {'return': 1, 'data': '99911119999', 'raw': '99911119999'}) bundle={"return": 1, "data": "99911119999", "raw": "99911119999"}
+[ 756.544] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=9 uid=
+[ 756.677] KEY> KEYM2_PRES!
+[ 756.679] FINISH(top=WarningWriteActivity d=3)
+[ 756.730] START(WriteActivity, {'return': 1, 'data': '99911119999', 'raw': '99911119999'}) bundle={"return": 1, "data": "99911119999", "raw": "99911119999"}
+[ 757.046] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=9 uid=
+[ 757.063] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 757.064] CONNECT> connect2PM3()
+[ 757.068] CONNECT< socket=True
+[ 757.933] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 757.934] PM3> lf t55xx detect (timeout=10000)
+[ 758.207] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 32\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 758.223] PM3> lf hid clone -r FC,CN: 37137,52428 (timeout=10000)
+[ 758.224] SERIAL_TX> b'pctbat\r\n'
+[ 758.238] SERIAL_TX> b'charge\r\n'
+[ 758.255] PM3< ret=1 content_len=64 Preparing to clone HID tag with ID: 000000000\nDone\n\nNikola.D: 0\n
+[ 758.258] PM3> lf sea (timeout=10000)
+[ 759.701] PM3< ret=1 content_len=216 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 759.702] PM3> lf hid reader (timeout=10000)
+[ 759.953] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[ 765.290] KEY> KEY_PWR_CAN_PRES!
+[ 765.543] KEY> KEY_PWR_CAN_PRES!
+[ 765.545] PRESSPM3> called
+[ 765.546] SERIAL_TX> b'presspm3\r\n'
+[ 765.562] PRESSPM3< done
+[ 765.563] PM3_STOP> stopPM3Task()
+[ 765.563] PM3_STOP< ret=None
+[ 765.564] FINISH(top=WriteActivity d=3)
+[ 765.888] KEY> KEY_PWR_CAN_PRES!
+[ 765.891] PRESSPM3> called
+[ 765.892] SERIAL_TX> b'presspm3\r\n'
+[ 765.907] PRESSPM3< done
+[ 765.907] PM3_STOP> stopPM3Task()
+[ 765.908] PM3_STOP< ret=None
+[ 765.909] FINISH(top=AutoCopyActivity d=2)
+[ 766.063] POLL stack=['MainActivity'] type=9 uid=
+[ 766.505] KEY> KEYOK_PRES!
+[ 766.507] START(AutoCopyActivity, None) bundle=None
+[ 766.534] PM3> hf 14a info (timeout=5000)
+[ 766.537] CONNECT> connect2PM3()
+[ 766.541] CONNECT< socket=True
+[ 766.565] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 766.687] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 766.690] PM3> lf sea (timeout=10000)
+[ 767.767] PM3< ret=1 content_len=263 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nIO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 (ok)\n\nValid IO Prox ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 767.781] CACHE: {"data": "'XSF(00)00:00273'", "vn": "'00'", "fc": "'00'", "cn": "'00273'", "raw": "'0078402010188ff7'", "type": "12", "found": "True", "progress": "1", "return": "12"}
+[ 768.052] PM3> lf io reader (timeout=10000)
+[ 768.054] CONNECT> connect2PM3()
+[ 768.058] CONNECT< socket=True
+[ 768.069] POLL stack=['MainActivity', 'AutoCopyActivity'] type=12 uid=
+[ 768.258] SERIAL_TX> b'pctbat\r\n'
+[ 768.272] SERIAL_TX> b'charge\r\n'
+[ 768.317] PM3< ret=1 content_len=67 IO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 (ok)\n\nNikola.D: 0\n
+[ 771.312] KEY> KEYM2_PRES!
+[ 771.330] START(WarningWriteActivity, {'return': 1, 'data': '', 'raw': '0078402010188ff7'}) bundle={"return": 1, "data": "", "raw": "0078402010188ff7"}
+[ 771.575] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=12 uid=
+[ 771.841] KEY> KEYM2_PRES!
+[ 771.843] FINISH(top=WarningWriteActivity d=3)
+[ 771.864] START(WriteActivity, {'return': 1, 'data': '', 'raw': '0078402010188ff7'}) bundle={"return": 1, "data": "", "raw": "0078402010188ff7"}
+[ 772.077] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=12 uid=
+[ 772.202] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 772.204] CONNECT> connect2PM3()
+[ 772.206] CONNECT< socket=True
+[ 773.070] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 773.071] PM3> lf t55xx detect (timeout=10000)
+[ 773.337] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 32\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 773.338] PM3> lf t55xx write -b 1 -d 00784020 (timeout=10000)
+[ 773.444] PM3< ret=1 content_len=57 Writing page 0  block: 01  data: 0x00784020\n\nNikola.D: 0\n
+[ 773.445] PM3> lf t55xx write -b 2 -d 10188ff7 (timeout=10000)
+[ 773.552] PM3< ret=1 content_len=57 Writing page 0  block: 02  data: 0x10188FF7\n\nNikola.D: 0\n
+[ 773.552] PM3> lf t55xx write -b 0 -d 00147040 (timeout=10000)
+[ 773.659] PM3< ret=1 content_len=57 Writing page 0  block: 00  data: 0x00147040\n\nNikola.D: 0\n
+[ 773.659] PM3> lf sea (timeout=10000)
+[ 774.742] PM3< ret=1 content_len=252 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nIO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 (ok)\n\nValid IO Prox ID found!\n\nChipset... T55xx\n\nNikola.D: 0\n
+[ 774.743] PM3> lf io reader (timeout=10000)
+[ 774.998] PM3< ret=1 content_len=67 IO Prox - XSF(00)00:00273, Raw: 0078402010188ff7 (ok)\n\nNikola.D: 0\n
+[ 778.256] KEY> KEY_PWR_CAN_PRES!
+[ 778.293] SERIAL_TX> b'pctbat\r\n'
+[ 778.307] SERIAL_TX> b'charge\r\n'
+[ 778.485] KEY> KEY_PWR_CAN_PRES!
+[ 778.487] PRESSPM3> called
+[ 778.488] SERIAL_TX> b'presspm3\r\n'
+[ 778.502] PRESSPM3< done
+[ 778.502] PM3_STOP> stopPM3Task()
+[ 778.503] PM3_STOP< ret=None
+[ 778.503] FINISH(top=WriteActivity d=3)
+[ 778.595] POLL stack=['MainActivity', 'AutoCopyActivity'] type=12 uid=
+[ 779.779] KEY> KEY_PWR_CAN_PRES!
+[ 779.782] PRESSPM3> called
+[ 779.782] SERIAL_TX> b'presspm3\r\n'
+[ 779.797] PRESSPM3< done
+[ 779.797] PM3_STOP> stopPM3Task()
+[ 779.798] PM3_STOP< ret=None
+[ 779.799] FINISH(top=AutoCopyActivity d=2)
+[ 780.100] POLL stack=['MainActivity'] type=12 uid=
+[ 780.357] KEY> KEYOK_PRES!
+[ 780.360] START(AutoCopyActivity, None) bundle=None
+[ 780.393] PM3> hf 14a info (timeout=5000)
+[ 780.399] CONNECT> connect2PM3()
+[ 780.402] CONNECT< socket=True
+[ 780.529] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 780.533] PM3> lf sea (timeout=10000)
+[ 780.602] POLL stack=['MainActivity', 'AutoCopyActivity'] type=12 uid=
+[ 781.600] PM3< ret=1 content_len=287 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nJablotron - Card: 7270a18, Raw: FFFF011999900079\nPrinted: 1410-01-1999-9000\n\nValid Jablotron ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 781.609] CACHE: {"data": "'7270a18'", "raw": "'FFFF011999900079'", "type": "30", "found": "True", "progress": "1", "return": "30"}
+[ 781.897] PM3> lf jablotron reader (timeout=10000)
+[ 781.899] CONNECT> connect2PM3()
+[ 781.904] CONNECT< socket=True
+[ 782.111] POLL stack=['MainActivity', 'AutoCopyActivity'] type=30 uid=
+[ 782.217] PM3< ret=1 content_len=89 Jablotron - Card: 7270a18, Raw: FFFF011999900079\nPrinted: 1410-01-1999-9000\n\nNikola.D: 0\n
+[ 785.472] KEY> KEYM2_PRES!
+[ 785.481] START(WarningWriteActivity, {'return': 1, 'data': '7270a18', 'raw': 'FFFF011999900079'}) bundle={"return": 1, "data": "7270a18", "raw": "FFFF011999900079"}
+[ 785.620] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=30 uid=
+[ 785.858] KEY> KEYM2_PRES!
+[ 785.860] FINISH(top=WarningWriteActivity d=3)
+[ 785.878] START(WriteActivity, {'return': 1, 'data': '7270a18', 'raw': 'FFFF011999900079'}) bundle={"return": 1, "data": "7270a18", "raw": "FFFF011999900079"}
+[ 786.122] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=30 uid=
+[ 786.190] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 786.191] CONNECT> connect2PM3()
+[ 786.195] CONNECT< socket=True
+[ 786.329] KEY> KEYM2_PRES!
+[ 787.071] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 787.072] PM3> lf t55xx detect (timeout=10000)
+[ 787.364] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 33\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 787.366] PM3> lf t55xx write -b 1 -d FFFF0119 (timeout=10000)
+[ 787.484] PM3< ret=1 content_len=57 Writing page 0  block: 01  data: 0xFFFF0119\n\nNikola.D: 0\n
+[ 787.485] PM3> lf t55xx write -b 2 -d 99900079 (timeout=10000)
+[ 787.592] PM3< ret=1 content_len=57 Writing page 0  block: 02  data: 0x99900079\n\nNikola.D: 0\n
+[ 787.593] PM3> lf t55xx write -b 0 -d 00158040 (timeout=10000)
+[ 787.700] PM3< ret=1 content_len=57 Writing page 0  block: 00  data: 0x00158040\n\nNikola.D: 0\n
+[ 787.701] PM3> lf sea (timeout=10000)
+[ 788.325] SERIAL_TX> b'pctbat\r\n'
+[ 788.337] SERIAL_TX> b'charge\r\n'
+[ 788.854] PM3< ret=1 content_len=276 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nJablotron - Card: 7270a18, Raw: FFFF011999900079\nPrinted: 1410-01-1999-9000\n\nValid Jablotron ID found!\n\nChipset... T55xx\n\nNikola.D: 0\n
+[ 788.855] PM3> lf jablotron reader (timeout=10000)
+[ 789.157] PM3< ret=1 content_len=89 Jablotron - Card: 7270a18, Raw: FFFF011999900079\nPrinted: 1410-01-1999-9000\n\nNikola.D: 0\n
+[ 792.224] KEY> KEY_PWR_CAN_PRES!
+[ 792.638] KEY> KEY_PWR_CAN_PRES!
+[ 792.640] PRESSPM3> called
+[ 792.641] SERIAL_TX> b'presspm3\r\n'
+[ 792.652] PRESSPM3< done
+[ 792.652] PM3_STOP> stopPM3Task()
+[ 792.653] PM3_STOP< ret=None
+[ 792.654] FINISH(top=WriteActivity d=3)
+[ 793.116] KEY> KEY_PWR_CAN_PRES!
+[ 793.118] PRESSPM3> called
+[ 793.119] SERIAL_TX> b'presspm3\r\n'
+[ 793.132] PRESSPM3< done
+[ 793.132] PM3_STOP> stopPM3Task()
+[ 793.133] PM3_STOP< ret=None
+[ 793.133] FINISH(top=AutoCopyActivity d=2)
+[ 793.135] POLL stack=['MainActivity'] type=30 uid=
+[ 793.961] KEY> KEYOK_PRES!
+[ 793.964] START(AutoCopyActivity, None) bundle=None
+[ 793.990] PM3> hf 14a info (timeout=5000)
+[ 793.993] CONNECT> connect2PM3()
+[ 793.997] CONNECT< socket=True
+[ 794.124] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 794.127] PM3> lf sea (timeout=10000)
+[ 794.137] POLL stack=['MainActivity', 'AutoCopyActivity'] type=30 uid=
+[ 795.353] PM3< ret=1 content_len=216 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 795.381] PM3> hf sea (timeout=10000)
+[ 797.217] PM3< ret=1 content_len=762 [-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO 14443-A tag...[|]                                          [/] Searching for ISO 15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO 14443-B tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[ 797.228] PM3> lf t55xx detect (timeout=10000)
+[ 798.355] SERIAL_TX> b'pctbat\r\n'
+[ 798.368] SERIAL_TX> b'charge\r\n'
+[ 798.390] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 798.405] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[ 798.611] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[ 798.614] PM3> hf felica reader (timeout=10000)
+[ 800.608] PM3< ret=1 content_len=27 card timeout\n\nNikola.D: -4\n
+[ 806.310] KEY> KEYM1_PRES!
+[ 806.350] PM3> hf 14a info (timeout=5000)
+[ 806.352] CONNECT> connect2PM3()
+[ 806.356] CONNECT< socket=True
+[ 806.575] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 806.577] PM3> lf sea (timeout=10000)
+[ 807.688] PM3< ret=1 content_len=216 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 807.690] PM3> hf sea (timeout=10000)
+[ 808.385] SERIAL_TX> b'pctbat\r\n'
+[ 808.397] SERIAL_TX> b'charge\r\n'
+[ 809.513] PM3< ret=1 content_len=762 [\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO 14443-A tag...[/]                                          [-] Searching for ISO 15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO 14443-B tag...[\]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[ 809.515] PM3> lf t55xx detect (timeout=10000)
+[ 810.670] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 810.673] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[ 810.954] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[ 810.957] PM3> hf felica reader (timeout=10000)
+[ 812.942] PM3< ret=1 content_len=27 card timeout\n\nNikola.D: -4\n
+[ 817.989] KEY> KEYM1_PRES!
+[ 818.031] PM3> hf 14a info (timeout=5000)
+[ 818.033] CONNECT> connect2PM3()
+[ 818.038] CONNECT< socket=True
+[ 818.261] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 818.264] PM3> lf sea (timeout=10000)
+[ 818.413] SERIAL_TX> b'pctbat\r\n'
+[ 818.427] SERIAL_TX> b'charge\r\n'
+[ 819.381] PM3< ret=1 content_len=216 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 819.384] PM3> hf sea (timeout=10000)
+[ 821.216] PM3< ret=1 content_len=762 [|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO 14443-A tag...[-]                                          [\] Searching for ISO 15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO 14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[ 821.220] PM3> lf t55xx detect (timeout=10000)
+[ 822.289] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 822.292] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[ 822.491] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[ 822.494] PM3> hf felica reader (timeout=10000)
+[ 824.489] PM3< ret=1 content_len=27 card timeout\n\nNikola.D: -4\n
+[ 828.444] SERIAL_TX> b'pctbat\r\n'
+[ 828.465] SERIAL_TX> b'charge\r\n'
+[ 829.916] KEY> KEYM1_PRES!
+[ 829.930] PM3> hf 14a info (timeout=5000)
+[ 829.931] CONNECT> connect2PM3()
+[ 829.936] CONNECT< socket=True
+[ 830.144] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 830.147] PM3> lf sea (timeout=10000)
+[ 831.313] PM3< ret=1 content_len=281 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nPAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 831.315] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 831.573] PM3> lf pac reader (timeout=10000)
+[ 831.575] CONNECT> connect2PM3()
+[ 831.578] CONNECT< socket=True
+[ 831.728] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[ 831.776] PM3< ret=1 content_len=81 PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nNikola.D: 0\n
+[ 834.386] KEY> KEYM2_PRES!
+[ 834.390] START(WarningWriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[ 834.738] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=34 uid=
+[ 834.905] KEY> KEYM2_PRES!
+[ 834.907] FINISH(top=WarningWriteActivity d=3)
+[ 834.933] START(WriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[ 835.240] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=34 uid=
+[ 835.254] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 835.256] CONNECT> connect2PM3()
+[ 835.259] CONNECT< socket=True
+[ 836.114] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 836.114] PM3> lf t55xx detect (timeout=10000)
+[ 836.386] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 32\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 836.387] PM3> lf pac clone -r FF2049906D3B41D0741D0741D0706D23 (timeout=10000)
+[ 838.484] SERIAL_TX> b'pctbat\r\n'
+[ 838.498] SERIAL_TX> b'charge\r\n'
+[ 846.400] REWORK> reworkPM3All()
+[ 846.401] SERIAL_TX> b'restartpm3\r\n'
+[ 848.520] SERIAL_TX> b'pctbat\r\n'
+[ 848.532] SERIAL_TX> b'charge\r\n'
+[ 849.421] CONNECT> connect2PM3()
+[ 849.422] CONNECT< socket=True
+[ 857.562] REWORK< socket=True
+[ 858.549] SERIAL_TX> b'pctbat\r\n'
+[ 858.563] SERIAL_TX> b'charge\r\n'
+[ 867.577] REWORK> reworkPM3All()
+[ 867.577] SERIAL_TX> b'restartpm3\r\n'
+[ 868.579] SERIAL_TX> b'pctbat\r\n'
+[ 868.596] SERIAL_TX> b'charge\r\n'
+[ 870.596] CONNECT> connect2PM3()
+[ 870.597] CONNECT< socket=True
+[ 878.614] SERIAL_TX> b'pctbat\r\n'
+[ 878.628] SERIAL_TX> b'charge\r\n'
+[ 878.738] REWORK< socket=True
+[ 882.060] KEY> KEY_PWR_CAN_PRES!
+[ 882.063] PRESSPM3> called
+[ 882.063] SERIAL_TX> b'presspm3\r\n'
+[ 882.077] PRESSPM3< done
+[ 882.077] PM3_STOP> stopPM3Task()
+[ 888.644] SERIAL_TX> b'pctbat\r\n'
+[ 888.657] SERIAL_TX> b'charge\r\n'
+[ 888.747] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 888.788] PM3_STOP< ret=None
+[ 888.789] FINISH(top=WriteActivity d=3)
+[ 888.823] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[ 892.921] KEY> KEYM2_PRES!
+[ 892.924] START(WarningWriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}

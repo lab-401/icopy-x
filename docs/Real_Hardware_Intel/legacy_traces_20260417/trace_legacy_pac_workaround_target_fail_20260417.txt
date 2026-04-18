@@ -1,0 +1,67 @@
+=== FULL TRACE ===
+[   0.008] presspm3 hook OK
+[   0.010] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.042] SERIAL_TX> b'pctbat\r\n'
+[   6.055] SERIAL_TX> b'charge\r\n'
+[  16.072] SERIAL_TX> b'pctbat\r\n'
+[  16.085] SERIAL_TX> b'charge\r\n'
+[  17.748] KEY> KEYOK_PRES!
+[  17.876] START(AutoCopyActivity, None) bundle=None
+[  17.960] PM3> hf 14a info (timeout=5000)
+[  17.963] CONNECT> connect2PM3()
+[  17.967] CONNECT< socket=True
+[  18.036] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  18.100] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  18.134] PM3> lf sea (timeout=10000)
+[  19.377] PM3< ret=1 content_len=281 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nPAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[  19.421] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[  19.540] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[  19.723] PM3> lf pac reader (timeout=10000)
+[  19.725] CONNECT> connect2PM3()
+[  19.729] CONNECT< socket=True
+[  19.940] PM3< ret=1 content_len=81 PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nNikola.D: 0\n
+[  24.717] KEY> KEYM2_PRES!
+[  24.729] START(WarningWriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[  25.057] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=34 uid=
+[  26.101] SERIAL_TX> b'pctbat\r\n'
+[  26.115] SERIAL_TX> b'charge\r\n'
+[  26.804] KEY> KEYM2_PRES!
+[  26.806] FINISH(top=WarningWriteActivity d=3)
+[  26.826] START(WriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[  27.061] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=34 uid=
+[  27.203] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  27.204] CONNECT> connect2PM3()
+[  27.207] CONNECT< socket=True
+[  28.064] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  28.065] PM3> lf t55xx detect (timeout=10000)
+[  29.229] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  29.232] PM3> lf t55xx wipe (timeout=10000)
+[  30.087] PM3< ret=1 content_len=425 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[  30.088] PM3> lf t55xx detect (timeout=10000)
+[  31.485] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  31.486] PM3> lf t55xx detect -p 20206666 (timeout=10000)
+[  33.818] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  33.825] PM3> lf t55xx chk -f /tmp/.keys/t5577_tmp_keys.dic (timeout=30000)
+[  36.136] SERIAL_TX> b'pctbat\r\n'
+[  36.150] SERIAL_TX> b'charge\r\n'
+[  46.166] SERIAL_TX> b'pctbat\r\n'
+[  46.179] SERIAL_TX> b'charge\r\n'
+[  56.196] SERIAL_TX> b'pctbat\r\n'
+[  56.209] SERIAL_TX> b'charge\r\n'
+[  63.852] REWORK> reworkPM3All()
+[  63.853] SERIAL_TX> b'restartpm3\r\n'
+[  65.040] KEY> KEY_PWR_CAN_PRES!
+[  65.042] PRESSPM3> called
+[  65.043] SERIAL_TX> b'presspm3\r\n'
+[  65.059] PRESSPM3< done
+[  65.060] PM3_STOP> stopPM3Task()
+[  66.226] SERIAL_TX> b'pctbat\r\n'
+[  66.239] SERIAL_TX> b'charge\r\n'
+[  66.873] CONNECT> connect2PM3()
+[  66.877] CONNECT< socket=True
+[  73.854] REWORK< socket=True
+[  73.855] PM3< ret=-1 content_len=3 OK\n
+[  73.887] PM3_STOP< ret=None
+[  73.888] FINISH(top=WriteActivity d=3)
+[  74.140] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=

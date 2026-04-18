@@ -1,0 +1,302 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.035] SERIAL_TX> b'pctbat\r\n'
+[   6.048] SERIAL_TX> b'charge\r\n'
+[  16.071] SERIAL_TX> b'pctbat\r\n'
+[  16.084] SERIAL_TX> b'charge\r\n'
+[  26.100] SERIAL_TX> b'pctbat\r\n'
+[  26.114] SERIAL_TX> b'charge\r\n'
+[  30.257] KEY> KEYOK_PRES!
+[  30.385] START(AutoCopyActivity, None) bundle=None
+[  30.470] PM3> hf 14a info (timeout=5000)
+[  30.473] CONNECT> connect2PM3()
+[  30.478] CONNECT< socket=True
+[  30.556] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  30.609] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  30.643] PM3> lf sea (timeout=10000)
+[  33.151] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[-]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  33.165] PM3> hf sea (timeout=10000)
+[  35.004] PM3< ret=1 content_len=815 [\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO 14443-A tag...[/]                                          [-] Searching for ISO 15693 tag...\nUID.... E0 04 01 3C F9 43 B3 02\nTYPE: NXP(Philips); IC SL2 ICS20/ICS21(SLI) ICS2002/ICS2102(SLIX) ICS2602(SLIX2)\n\nValid ISO 15693 tag found\n\n[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO 14443-B tag...[\]\nNikola.D: 0\n
+[  35.026] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[  35.064] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E004013CF943B302
+[  35.352] PM3> hf 15 dump -f /mnt/upan/dump/icode/ICODE_E004013CF943B302_3 (timeout=38000)
+[  35.354] CONNECT> connect2PM3()
+[  35.358] CONNECT< socket=True
+[  36.131] SERIAL_TX> b'pctbat\r\n'
+[  36.144] SERIAL_TX> b'charge\r\n'
+[  44.618] PM3< ret=1 content_len=1534 \n UID: E0 04 01 3C F9 43 B3 02\nTYPE: NXP(Philips); IC SL2 ICS20/ICS21(SLI) ICS2002/ICS2102(SLIX) ICS2602(SLIX2)\nReading memory from tag UID E0 04 01 3C F9 43 B3 02\n............................[-] Tag returned Error 15: Unknown error.\n\nblock#   | data         |lck| ascii\n---------+--------------+---+----------\n  0/0x00 | E1 40 0E 01  | 0 | @..\n  1/0x01 | 03 00 FE 00  | 0 | ...\n  2/0x02 | 00 00 00 00  | 0 | ....\n  3/0x03 | 00 00 00 00  | 0 | ....\n  4/0x04 | 00 00 00 00  | 0 | ....\n  5/0x05 | 00 00 00 00  | 0 | ....\n  6/0x06 | 00 00 00 00  | 0 | ....\n  7/0x07 | 00 00 00 00  | 0 | ....\n  8/0x08 | 00 00 00 00  | 0 | ....\n  9/0x09 | 00 00 00 00  | 0 | ....\n 10/0x0A | 00 00 00 00  | 0 | ....\n 11/0x0B | 00 00 00 00  | 0 | ....\n 12/0x0C | 00 00 00 00  | 0 | ....\n 13/0x0D | 00 00 00 00  | 0 | ....\n 14/0x0E | 00 00 00 00  | 0 | ....\n 15/0x0F | 00 00 00 00  | 0 | ....\n 16/0x10 | 00 00 00 00  | 0 | ....\n 17/0x11 | 00 00 00 00  | 0 | ....\n 18/0x12 | 00 00 00 00  | 0 | ....\n 19/0x13 | 00 00 00 00  | 0 | ....\n 20/0x14 | 00 00 00 00  | 0 | ....\n 21/0x15 | 00 00 00 00  | 0 | ....\n 22/0x16 | 00 00 00 00  | 0 | ....\n 23/0x17 | 00 00 00 00  | 0 | ....\n 24/0x18 | 00 00 00 00  | 0 | ....\n 25/0x19 | 00 00 00 00  | 0 | ....\n 26/0x1A | 00 00 00 00  | 0 | ....\n 27/0x1B | 00 00 00 00  | 0 | ....\n\n\nsaved 112 bytes to binary file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin\nsaved 28 blocks to text file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.eml\nsaved to json file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.json\n\nNikola.D: 0\n
+[  46.160] SERIAL_TX> b'pctbat\r\n'
+[  46.173] SERIAL_TX> b'charge\r\n'
+[  47.944] KEY> KEYM2_PRES!
+[  47.947] START(WarningWriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin"
+[  48.086] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=19 uid=E004013CF943B302
+[  48.617] KEY> KEYM2_PRES!
+[  48.619] FINISH(top=WarningWriteActivity d=3)
+[  48.659] START(WriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin"
+[  49.001] PM3> hf 15 restore -f /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin (timeout=28888)
+[  49.088] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=19 uid=E004013CF943B302
+[  56.196] SERIAL_TX> b'pctbat\r\n'
+[  56.209] SERIAL_TX> b'charge\r\n'
+[  58.532] PM3< ret=1 content_len=1630 blocksize: 4\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nloaded 112 bytes from binary file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin\nrestoring data blocks\niso15693 writing to page 00 (0x00) | data\nWrite OK\niso15693 writing to page 01 (0x01) | data\nWrite OK\niso15693 writing to page 02 (0x02) | data\nWrite OK\niso15693 writing to page 03 (0x03) | data\nWrite OK\niso15693 writing to page 04 (0x04) | data\nWrite OK\niso15693 writing to page 05 (0x05) | data\nWrite OK\niso15693 writing to page 06 (0x06) | data\nWrite OK\niso15693 writing to page 07 (0x07) | data\nWrite OK\niso15693 writing to page 08 (0x08) | data\nWrite OK\niso15693 writing to page 09 (0x09) | data\nWrite OK\niso15693 writing to page 10 (0x0A) | data\nWrite OK\niso15693 writing to page 11 (0x0B) | data\nWrite OK\niso15693 writing to page 12 (0x0C) | data\nWrite OK\niso15693 writing to page 13 (0x0D) | data\nWrite OK\niso15693 writing to page 14 (0x0E) | data\nWrite OK\niso15693 writing to page 15 (0x0F) | data\nWrite OK\niso15693 writing to page 16 (0x10) | data\nWrite OK\niso15693 writing to page 17 (0x11) | data\nWrite OK\niso15693 writing to page 18 (0x12) | data\nWrite OK\niso15693 writing to page 19 (0x13) | data\nWrite OK\niso15693 writing to page 20 (0x14) | data\nWrite OK\niso15693 writing to page 21 (0x15) | data\nWrite OK\niso15693 writing to page 22 (0x16) | data\nWrite OK\niso15693 writing to page 23 (0x17) | data\nWrite OK\niso15693 writing to page 24 (0x18) | data\nWrite OK\niso15693 writing to page 25 (0x19) | data\nWrite OK\niso15693 writing to page 26 (0x1A) | data\nWrite OK\niso15693 writing to page 27 (0x1B) | data\nWrite OK\ndone\n\nNikola.D: 0\n\nDone!
+[  58.538] PM3> hf 15 csetuid -u E004013CF943B302 (timeout=5000)
+[  59.526] PM3< ret=1 content_len=284 reverse input UID 02 B3 43 F9 3C 01 04 E0\ngetting current card details...\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nupdating tag uid...\ngetting updated card details...\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nSetting new UID ( fail )\n\nNikola.D: -10\n
+[  66.231] SERIAL_TX> b'pctbat\r\n'
+[  66.249] SERIAL_TX> b'charge\r\n'
+[  76.266] SERIAL_TX> b'pctbat\r\n'
+[  76.283] SERIAL_TX> b'charge\r\n'
+[  86.300] SERIAL_TX> b'pctbat\r\n'
+[  86.313] SERIAL_TX> b'charge\r\n'
+[  96.331] SERIAL_TX> b'pctbat\r\n'
+[  96.348] SERIAL_TX> b'charge\r\n'
+[ 106.371] SERIAL_TX> b'pctbat\r\n'
+[ 106.383] SERIAL_TX> b'charge\r\n'
+[ 116.401] SERIAL_TX> b'pctbat\r\n'
+[ 116.418] SERIAL_TX> b'charge\r\n'
+[ 120.289] KEY> KEY_PWR_CAN_PRES!
+[ 120.707] KEY> KEY_PWR_CAN_PRES!
+[ 120.709] PRESSPM3> called
+[ 120.710] SERIAL_TX> b'presspm3\r\n'
+[ 120.723] PRESSPM3< done
+[ 120.723] PM3_STOP> stopPM3Task()
+[ 120.724] PM3_STOP< ret=None
+[ 120.724] FINISH(top=WriteActivity d=3)
+[ 121.176] KEY> KEY_PWR_CAN_PRES!
+[ 121.178] PRESSPM3> called
+[ 121.179] SERIAL_TX> b'presspm3\r\n'
+[ 121.198] PRESSPM3< done
+[ 121.198] PM3_STOP> stopPM3Task()
+[ 121.199] PM3_STOP< ret=None
+[ 121.199] FINISH(top=AutoCopyActivity d=2)
+[ 121.224] POLL stack=['MainActivity'] type=19 uid=E004013CF943B302
+[ 121.963] KEY> KEYOK_PRES!
+[ 121.965] START(AutoCopyActivity, None) bundle=None
+[ 121.987] PM3> hf 14a info (timeout=5000)
+[ 121.989] CONNECT> connect2PM3()
+[ 121.993] CONNECT< socket=True
+[ 122.218] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 122.221] PM3> lf sea (timeout=10000)
+[ 122.226] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E004013CF943B302
+[ 124.733] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[|]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[ 124.736] PM3> hf sea (timeout=10000)
+[ 126.440] SERIAL_TX> b'pctbat\r\n'
+[ 126.454] SERIAL_TX> b'charge\r\n'
+[ 126.568] PM3< ret=1 content_len=762 [/]                                          [-] Searching for ThinFilm tag...[\]                                          [|] Searching for LTO-CM tag...[/]                                          [-] Searching for ISO 14443-A tag...[\]                                          [|] Searching for ISO 15693 tag...\nUID.... E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\n\nValid ISO 15693 tag found\n\n[/]                                          [-] Searching for iCLASS / PicoPass tag...[\]                                          [|] Searching for LEGIC tag...[/]                                          [-] Searching for Topaz tag...[\]                                          [|] Searching for ISO 14443-B tag...[/]\nNikola.D: 0\n
+[ 126.570] CACHE: {"found": "True", "uid": "'E0530110CCA96A11'", "type": "19", "progress": "2", "return": "19"}
+[ 126.734] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E0530110CCA96A11
+[ 126.860] PM3> hf 15 dump -f /mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1 (timeout=38000)
+[ 126.863] CONNECT> connect2PM3()
+[ 126.867] CONNECT< socket=True
+[ 136.470] SERIAL_TX> b'pctbat\r\n'
+[ 136.484] SERIAL_TX> b'charge\r\n'
+[ 146.505] SERIAL_TX> b'pctbat\r\n'
+[ 146.519] SERIAL_TX> b'charge\r\n'
+[ 147.176] PM3< ret=1 content_len=2818 \n UID: E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\nReading memory from tag UID E0 53 01 10 CC A9 6A 11\n................................................................[-] Tag returned Error 16: The specified block is not available (doesn't exist).\n\nblock#   | data         |lck| ascii\n---------+--------------+---+----------\n  0/0x00 | 00 00 00 00  | 0 | ....\n  1/0x01 | 00 00 00 00  | 0 | ....\n  2/0x02 | 00 00 00 00  | 0 | ....\n  3/0x03 | 00 00 00 00  | 0 | ....\n  4/0x04 | 00 00 00 00  | 0 | ....\n  5/0x05 | 00 00 00 00  | 0 | ....\n  6/0x06 | 00 00 00 00  | 0 | ....\n  7/0x07 | 00 00 00 00  | 0 | ....\n  8/0x08 | 00 00 00 00  | 0 | ....\n  9/0x09 | 00 00 00 00  | 0 | ....\n 10/0x0A | 00 00 00 00  | 0 | ....\n 11/0x0B | 00 00 00 00  | 0 | ....\n 12/0x0C | 00 00 00 00  | 0 | ....\n 13/0x0D | 00 00 00 00  | 0 | ....\n 14/0x0E | 00 00 00 00  | 0 | ....\n 15/0x0F | 00 00 00 00  | 0 | ....\n 16/0x10 | 00 00 00 00  | 0 | ....\n 17/0x11 | 00 00 00 00  | 0 | ....\n 18/0x12 | 00 00 00 00  | 0 | ....\n 19/0x13 | 00 00 00 00  | 0 | ....\n 20/0x14 | 00 00 00 00  | 0 | ....\n 21/0x15 | 00 00 00 00  | 0 | ....\n 22/0x16 | 00 00 00 00  | 0 | ....\n 23/0x17 | 00 00 00 00  | 0 | ....\n 24/0x18 | 00 00 00 00  | 0 | ....\n 25/0x19 | 00 00 00 00  | 0 | ....\n 26/0x1A | 00 00 00 00  | 0 | ....\n 27/0x1B | 00 00 00 00  | 0 | ....\n 28/0x1C | 00 00 00 00  | 0 | ....\n 29/0x1D | 00 00 00 00  | 0 | ....\n 30/0x1E | 00 00 00 00  | 0 | ....\n 31/0x1F | 00 00 00 00  | 0 | ....\n 32/0x20 | 00 00 00 00  | 0 | ....\n 33/0x21 | 00 00 00 00  | 0 | ....\n 34/0x22 | 00 00 00 00  | 0 | ....\n 35/0x23 | 00 00 00 00  | 0 | ....\n 36/0x24 | 00 00 00 00  | 0 | ....\n 37/0x25 | 00 00 00 00  | 0 | ....\n 38/0x26 | 00 00 00 00  | 0 | ....\n 39/0x27 | 00 00 00 00  | 0 | ....\n 40/0x28 | 00 00 00 00  | 0 | ....\n 41/0x29 | 00 00 00 00  | 0 | ....\n 42/0x2A | 00 00 00 00  | 0 | ....\n 43/0x2B | 00 00 00 00  | 0 | ....\n 44/0x2C | 00 00 00 00  | 0 | ....\n 45/0x2D | 00 00 00 00  | 0 | ....\n 46
+[ 151.015] KEY> KEYM2_PRES!
+[ 151.052] START(WarningWriteActivity, '/mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin') bundle="/mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin"
+[ 151.274] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=19 uid=E0530110CCA96A11
+[ 151.595] KEY> KEYM2_PRES!
+[ 151.596] FINISH(top=WarningWriteActivity d=3)
+[ 151.617] START(WriteActivity, '/mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin') bundle="/mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin"
+[ 151.776] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=19 uid=E0530110CCA96A11
+[ 151.955] PM3> hf 15 restore -f /mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin (timeout=28888)
+[ 156.540] SERIAL_TX> b'pctbat\r\n'
+[ 156.554] SERIAL_TX> b'charge\r\n'
+[ 166.570] SERIAL_TX> b'pctbat\r\n'
+[ 166.584] SERIAL_TX> b'charge\r\n'
+[ 173.326] PM3< ret=1 content_len=3466 blocksize: 4\n\n UID: E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\nloaded 256 bytes from binary file /mnt/upan/dump/icode/ICODE_E0530110CCA96A11_1.bin\nrestoring data blocks\niso15693 writing to page 00 (0x00) | data\nWrite OK\niso15693 writing to page 01 (0x01) | data\nWrite OK\niso15693 writing to page 02 (0x02) | data\nWrite OK\niso15693 writing to page 03 (0x03) | data\nWrite OK\niso15693 writing to page 04 (0x04) | data\nWrite OK\niso15693 writing to page 05 (0x05) | data\nWrite OK\niso15693 writing to page 06 (0x06) | data\nWrite OK\niso15693 writing to page 07 (0x07) | data\nWrite OK\niso15693 writing to page 08 (0x08) | data\nWrite OK\niso15693 writing to page 09 (0x09) | data\nWrite OK\niso15693 writing to page 10 (0x0A) | data\nWrite OK\niso15693 writing to page 11 (0x0B) | data\nWrite OK\niso15693 writing to page 12 (0x0C) | data\nWrite OK\niso15693 writing to page 13 (0x0D) | data\nWrite OK\niso15693 writing to page 14 (0x0E) | data\nWrite OK\niso15693 writing to page 15 (0x0F) | data\nWrite OK\niso15693 writing to page 16 (0x10) | data\nWrite OK\niso15693 writing to page 17 (0x11) | data\nWrite OK\niso15693 writing to page 18 (0x12) | data\nWrite OK\niso15693 writing to page 19 (0x13) | data\nWrite OK\niso15693 writing to page 20 (0x14) | data\nWrite OK\niso15693 writing to page 21 (0x15) | data\nWrite OK\niso15693 writing to page 22 (0x16) | data\nWrite OK\niso15693 writing to page 23 (0x17) | data\nWrite OK\niso15693 writing to page 24 (0x18) | data\nWrite OK\niso15693 writing to page 25 (0x19) | data\nWrite OK\niso15693 writing to page 26 (0x1A) | data\nWrite OK\niso15693 writing to page 27 (0x1B) | data\nWrite OK\niso15693 writing to page 28 (0x1C) | data\nWrite OK\niso15693 writing to page 29 (0x1D) | data\nWrite OK\niso15693 writing to page 30 (0x1E) | data\nWrite OK\niso15693 writing to page 31 (0x1F) | data\nWrite OK\niso15693 writing to page 32 (0x20) | data\nWrite OK\niso15693 writing to page 33 (0x21) | data\nWrite OK\niso15693 writi
+[ 173.328] PM3> hf 15 csetuid -u E0530110CCA96A11 (timeout=5000)
+[ 174.305] PM3< ret=1 content_len=280 reverse input UID 11 6A A9 CC 10 01 53 E0\ngetting current card details...\n\n UID: E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\nupdating tag uid...\ngetting updated card details...\n\n UID: E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\nSetting new UID ( ok )\n\nNikola.D: 0\n
+[ 176.601] SERIAL_TX> b'pctbat\r\n'
+[ 176.613] SERIAL_TX> b'charge\r\n'
+[ 177.346] KEY> KEYM1_PRES!
+[ 177.657] PM3> hf sea (timeout=10000)
+[ 177.692] KEY> KEYM1_PRES!
+[ 179.573] PM3< ret=1 content_len=762 [-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO 14443-A tag...[|]                                          [/] Searching for ISO 15693 tag...\nUID.... E0 53 01 10 CC A9 6A 11\nTYPE: no tag-info available\n\nValid ISO 15693 tag found\n\n[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO 14443-B tag...[-]\nNikola.D: 0\n
+[ 186.630] SERIAL_TX> b'pctbat\r\n'
+[ 186.643] SERIAL_TX> b'charge\r\n'
+[ 196.660] SERIAL_TX> b'pctbat\r\n'
+[ 196.676] SERIAL_TX> b'charge\r\n'
+[ 206.696] SERIAL_TX> b'pctbat\r\n'
+[ 206.714] SERIAL_TX> b'charge\r\n'
+[ 208.219] KEY> KEY_PWR_CAN_PRES!
+[ 208.556] KEY> KEY_PWR_CAN_PRES!
+[ 208.558] PRESSPM3> called
+[ 208.558] SERIAL_TX> b'presspm3\r\n'
+[ 208.573] PRESSPM3< done
+[ 208.573] PM3_STOP> stopPM3Task()
+[ 208.574] PM3_STOP< ret=None
+[ 208.574] FINISH(top=WriteActivity d=3)
+[ 208.873] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E0530110CCA96A11
+[ 209.043] KEY> KEY_PWR_CAN_PRES!
+[ 209.045] PRESSPM3> called
+[ 209.046] SERIAL_TX> b'presspm3\r\n'
+[ 209.058] PRESSPM3< done
+[ 209.058] PM3_STOP> stopPM3Task()
+[ 209.059] PM3_STOP< ret=None
+[ 209.060] FINISH(top=AutoCopyActivity d=2)
+[ 209.375] POLL stack=['MainActivity'] type=19 uid=E0530110CCA96A11
+[ 216.730] SERIAL_TX> b'pctbat\r\n'
+[ 216.743] SERIAL_TX> b'charge\r\n'
+[ 225.051] KEY> KEYOK_PRES!
+[ 225.054] START(AutoCopyActivity, None) bundle=None
+[ 225.088] PM3> hf 14a info (timeout=5000)
+[ 225.091] CONNECT> connect2PM3()
+[ 225.096] CONNECT< socket=True
+[ 225.317] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 225.320] PM3> lf sea (timeout=10000)
+[ 225.398] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E0530110CCA96A11
+[ 226.525] PM3< ret=1 content_len=301 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nAWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nValid AWID ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 226.546] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 226.765] SERIAL_TX> b'pctbat\r\n'
+[ 226.780] SERIAL_TX> b'charge\r\n'
+[ 226.903] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[ 226.908] PM3> lf awid reader (timeout=10000)
+[ 226.910] CONNECT> connect2PM3()
+[ 226.914] CONNECT< socket=True
+[ 227.169] PM3< ret=1 content_len=108 AWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nNikola.D: 0\n
+[ 231.141] KEY> KEYM2_PRES!
+[ 231.166] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 2001,13371337', 'raw': '0128b12eb1811d7117e22111'}) bundle={"return": 1, "data": "FC,CN: 2001,13371337", "raw": "0128b12eb1811d7117e22111"}
+[ 231.414] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=11 uid=
+[ 231.704] KEY> KEYM2_PRES!
+[ 231.706] FINISH(top=WarningWriteActivity d=3)
+[ 231.728] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 2001,13371337', 'raw': '0128b12eb1811d7117e22111'}) bundle={"return": 1, "data": "FC,CN: 2001,13371337", "raw": "0128b12eb1811d7117e22111"}
+[ 231.915] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=11 uid=
+[ 232.107] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 232.108] CONNECT> connect2PM3()
+[ 232.111] CONNECT< socket=True
+[ 232.966] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 232.967] PM3> lf t55xx detect (timeout=10000)
+[ 233.261] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 33\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 233.276] PM3> lf t55xx write -b 1 -d 0128b12e (timeout=10000)
+[ 233.392] PM3< ret=1 content_len=57 Writing page 0  block: 01  data: 0x0128B12E\n\nNikola.D: 0\n
+[ 233.393] PM3> lf t55xx write -b 2 -d b1811d71 (timeout=10000)
+[ 233.499] PM3< ret=1 content_len=57 Writing page 0  block: 02  data: 0xB1811D71\n\nNikola.D: 0\n
+[ 233.500] PM3> lf t55xx write -b 3 -d 17e22111 (timeout=10000)
+[ 233.606] PM3< ret=1 content_len=57 Writing page 0  block: 03  data: 0x17E22111\n\nNikola.D: 0\n
+[ 233.607] PM3> lf t55xx write -b 0 -d 00107060 (timeout=10000)
+[ 233.713] PM3< ret=1 content_len=57 Writing page 0  block: 00  data: 0x00107060\n\nNikola.D: 0\n
+[ 233.714] PM3> lf sea (timeout=10000)
+[ 234.836] PM3< ret=1 content_len=290 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nAWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nValid AWID ID found!\n\nChipset... T55xx\n\nNikola.D: 0\n
+[ 234.837] PM3> lf awid reader (timeout=10000)
+[ 235.088] PM3< ret=1 content_len=108 AWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nNikola.D: 0\n
+[ 236.650] KEY> KEY_PWR_CAN_PRES!
+[ 236.863] SERIAL_TX> b'pctbat\r\n'
+[ 236.878] SERIAL_TX> b'charge\r\n'
+[ 236.974] KEY> KEY_PWR_CAN_PRES!
+[ 236.976] PRESSPM3> called
+[ 236.977] SERIAL_TX> b'presspm3\r\n'
+[ 236.988] PRESSPM3< done
+[ 236.988] PM3_STOP> stopPM3Task()
+[ 236.989] PM3_STOP< ret=None
+[ 236.989] FINISH(top=WriteActivity d=3)
+[ 237.425] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[ 237.454] KEY> KEY_PWR_CAN_PRES!
+[ 237.456] PRESSPM3> called
+[ 237.457] SERIAL_TX> b'presspm3\r\n'
+[ 237.478] PRESSPM3< done
+[ 237.478] PM3_STOP> stopPM3Task()
+[ 237.479] PM3_STOP< ret=None
+[ 237.479] FINISH(top=AutoCopyActivity d=2)
+[ 237.927] POLL stack=['MainActivity'] type=11 uid=
+[ 243.507] KEY> KEYOK_PRES!
+[ 243.510] START(AutoCopyActivity, None) bundle=None
+[ 243.571] PM3> hf 14a info (timeout=5000)
+[ 243.574] CONNECT> connect2PM3()
+[ 243.579] CONNECT< socket=True
+[ 243.714] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 243.717] PM3> lf sea (timeout=10000)
+[ 243.936] POLL stack=['MainActivity', 'AutoCopyActivity'] type=11 uid=
+[ 244.827] PM3< ret=1 content_len=741 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nEM410x pattern found\n\nEM 410x ID 1111000000\n\nPossible de-scramble patterns\n\nUnique TAG ID  : 8888000000\nHoneyWell IdentKey {\nDEZ 8          : 00000000\nDEZ 10         : 0285212672\nDEZ 5.5        : 04352.00000\nDEZ 3.5A       : 017.00000\nDEZ 3.5B       : 017.00000\nDEZ 3.5C       : 000.00000\nDEZ 14/IK2     : 00073299656704\nDEZ 15/IK3     : 000586397253632\nDEZ 20/ZK      : 08080808000000000000\n}\nOther          : 00000_000_00000000\nPattern Paxton : 286539264 [0x11143E00]\nPattern 1      : 0 [0x0]\nPattern Sebury : 0 0 0  [0x0 0x0 0x0]\n\nValid EM410x ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 244.834] CACHE: {"data": "'1111000000'", "raw": "'1111000000'", "type": "8", "found": "True", "progress": "1", "return": "8"}
+[ 244.939] POLL stack=['MainActivity', 'AutoCopyActivity'] type=8 uid=
+[ 245.106] PM3> lf em 410x reader (timeout=10000)
+[ 245.108] CONNECT> connect2PM3()
+[ 245.111] CONNECT< socket=True
+[ 245.372] PM3< ret=1 content_len=546 EM410x pattern found\n\nEM 410x ID 1111000000\n\nPossible de-scramble patterns\n\nUnique TAG ID  : 8888000000\nHoneyWell IdentKey {\nDEZ 8          : 00000000\nDEZ 10         : 0285212672\nDEZ 5.5        : 04352.00000\nDEZ 3.5A       : 017.00000\nDEZ 3.5B       : 017.00000\nDEZ 3.5C       : 000.00000\nDEZ 14/IK2     : 00073299656704\nDEZ 15/IK3     : 000586397253632\nDEZ 20/ZK      : 08080808000000000000\n}\nOther          : 00000_000_00000000\nPattern Paxton : 286539264 [0x11143E00]\nPattern 1      : 0 [0x0]\nPattern Sebury : 0 0 0  [0x0 0x0 0x0]\n\nNikola.D: 0\n
+[ 246.900] SERIAL_TX> b'pctbat\r\n'
+[ 246.914] SERIAL_TX> b'charge\r\n'
+[ 249.494] KEY> KEYM2_PRES!
+[ 249.517] START(WarningWriteActivity, {'return': 1, 'data': '1111000000', 'raw': ''}) bundle={"return": 1, "data": "1111000000", "raw": ""}
+[ 249.949] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=8 uid=
+[ 250.043] KEY> KEYM2_PRES!
+[ 250.045] FINISH(top=WarningWriteActivity d=3)
+[ 250.066] START(WriteActivity, {'return': 1, 'data': '1111000000', 'raw': ''}) bundle={"return": 1, "data": "1111000000", "raw": ""}
+[ 250.385] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 250.387] CONNECT> connect2PM3()
+[ 250.390] CONNECT< socket=True
+[ 250.450] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=8 uid=
+[ 251.255] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 251.256] PM3> lf t55xx detect (timeout=10000)
+[ 251.530] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 33\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 251.531] PM3> lf em 410x clone --id 1111000000 (timeout=10000)
+[ 251.809] PM3< ret=1 content_len=133 Writing T55x7 tag with UID 0x1111000000 (clock rate: 64)\nClock rate: 64\nTag T55x7 written with 0xff8c631800000000\n\nDone\n\nNikola.D: 0\n
+[ 251.809] PM3> lf sea (timeout=10000)
+[ 252.919] PM3< ret=1 content_len=730 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nEM410x pattern found\n\nEM 410x ID 1111000000\n\nPossible de-scramble patterns\n\nUnique TAG ID  : 8888000000\nHoneyWell IdentKey {\nDEZ 8          : 00000000\nDEZ 10         : 0285212672\nDEZ 5.5        : 04352.00000\nDEZ 3.5A       : 017.00000\nDEZ 3.5B       : 017.00000\nDEZ 3.5C       : 000.00000\nDEZ 14/IK2     : 00073299656704\nDEZ 15/IK3     : 000586397253632\nDEZ 20/ZK      : 08080808000000000000\n}\nOther          : 00000_000_00000000\nPattern Paxton : 286539264 [0x11143E00]\nPattern 1      : 0 [0x0]\nPattern Sebury : 0 0 0  [0x0 0x0 0x0]\n\nValid EM410x ID found!\n\nChipset... T55xx\n\nNikola.D: 0\n
+[ 252.919] PM3> lf em 410x reader (timeout=10000)
+[ 253.178] PM3< ret=1 content_len=546 EM410x pattern found\n\nEM 410x ID 1111000000\n\nPossible de-scramble patterns\n\nUnique TAG ID  : 8888000000\nHoneyWell IdentKey {\nDEZ 8          : 00000000\nDEZ 10         : 0285212672\nDEZ 5.5        : 04352.00000\nDEZ 3.5A       : 017.00000\nDEZ 3.5B       : 017.00000\nDEZ 3.5C       : 000.00000\nDEZ 14/IK2     : 00073299656704\nDEZ 15/IK3     : 000586397253632\nDEZ 20/ZK      : 08080808000000000000\n}\nOther          : 00000_000_00000000\nPattern Paxton : 286539264 [0x11143E00]\nPattern 1      : 0 [0x0]\nPattern Sebury : 0 0 0  [0x0 0x0 0x0]\n\nNikola.D: 0\n
+[ 254.284] KEY> KEY_PWR_CAN_PRES!
+[ 254.548] KEY> KEY_PWR_CAN_PRES!
+[ 254.551] PRESSPM3> called
+[ 254.551] SERIAL_TX> b'presspm3\r\n'
+[ 254.568] PRESSPM3< done
+[ 254.568] PM3_STOP> stopPM3Task()
+[ 254.569] PM3_STOP< ret=None
+[ 254.570] FINISH(top=WriteActivity d=3)
+[ 254.961] POLL stack=['MainActivity', 'AutoCopyActivity'] type=8 uid=
+[ 256.932] SERIAL_TX> b'pctbat\r\n'
+[ 256.949] SERIAL_TX> b'charge\r\n'
+[ 260.415] KEY> KEY_PWR_CAN_PRES!
+[ 260.418] PRESSPM3> called
+[ 260.419] SERIAL_TX> b'presspm3\r\n'
+[ 260.438] PRESSPM3< done
+[ 260.438] PM3_STOP> stopPM3Task()
+[ 260.439] PM3_STOP< ret=None
+[ 260.440] FINISH(top=AutoCopyActivity d=2)
+[ 260.471] POLL stack=['MainActivity'] type=8 uid=
+[ 261.286] KEY> KEYOK_PRES!
+[ 261.289] START(AutoCopyActivity, None) bundle=None
+[ 261.331] PM3> hf 14a info (timeout=5000)
+[ 261.343] CONNECT> connect2PM3()
+[ 261.348] CONNECT< socket=True
+[ 261.473] POLL stack=['MainActivity', 'AutoCopyActivity'] type=8 uid=
+[ 261.487] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 261.490] PM3> lf sea (timeout=10000)
+[ 262.634] PM3< ret=1 content_len=517 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID........... 0112-025880314020\nNational Code      025880314020 (0x6069640A4)\nCountry Code       0112\nReserved/RFU       15956 (0x3E54)\n  Animal bit set?  True\n      Data block?  True  [value 0x800000]\nCRC-16             0xE612 (ok)\nRaw                25 02 69 60 60 38 95 3F\n\nValid FDX-B ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 262.653] CACHE: {"raw": "'0112-025880314020'", "data": "'Country: 0112'", "country": "'0112'", "nc": "'025880314020'", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 262.936] PM3> lf fdxb reader (timeout=10000)
+[ 262.939] CONNECT> connect2PM3()
+[ 262.942] CONNECT< socket=True
+[ 262.977] POLL stack=['MainActivity', 'AutoCopyActivity'] type=28 uid=
+[ 263.210] PM3< ret=1 content_len=325 FDX-B / ISO 11784/5 Animal\nAnimal ID          0112-025880314020\nNational Code      025880314020 (0x6069640A4)\nCountry Code       0112\nReserved/RFU       15956 (0x3E54)\n  Animal bit set?  True\n      Data block?  True  [value 0x800000]\nCRC-16             0xE612 (ok)\nRaw                25 02 69 60 60 38 95 3F\n[\]\nNikola.D: 0\n
+[ 265.860] KEY> KEYM2_PRES!
+[ 266.965] SERIAL_TX> b'pctbat\r\n'
+[ 266.990] SERIAL_TX> b'charge\r\n'
+[ 267.504] KEY> KEYM1_PRES!
+[ 268.017] KEY> KEY_PWR_CAN_PRES!
+[ 268.021] PRESSPM3> called
+[ 268.022] SERIAL_TX> b'presspm3\r\n'
+[ 268.033] PRESSPM3< done
+[ 268.033] PM3_STOP> stopPM3Task()
+[ 268.034] PM3_STOP< ret=None
+[ 268.034] FINISH(top=AutoCopyActivity d=2)
+[ 268.488] POLL stack=['MainActivity'] type=28 uid=
+[ 269.336] KEY> KEYOK_PRES!
+[ 269.338] START(AutoCopyActivity, None) bundle=None
+[ 269.372] PM3> hf 14a info (timeout=5000)
+[ 269.374] CONNECT> connect2PM3()
+[ 269.380] CONNECT< socket=True
+[ 269.490] POLL stack=['MainActivity', 'AutoCopyActivity'] type=28 uid=
+[ 269.520] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 269.523] PM3> lf sea (timeout=10000)
+[ 270.618] PM3< ret=1 content_len=517 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID........... 0112-025880314020\nNational Code      025880314020 (0x6069640A4)\nCountry Code       0112\nReserved/RFU       15956 (0x3E54)\n  Animal bit set?  True\n      Data block?  True  [value 0x800000]\nCRC-16             0xE612 (ok)\nRaw                25 02 69 60 60 38 95 3F\n\nValid FDX-B ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 270.620] CACHE: {"raw": "'0112-025880314020'", "data": "'Country: 0112'", "country": "'0112'", "nc": "'025880314020'", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 270.890] PM3> lf fdxb reader (timeout=10000)
+[ 270.893] CONNECT> connect2PM3()
+[ 270.896] CONNECT< socket=True
+[ 271.160] PM3< ret=1 content_len=325 FDX-B / ISO 11784/5 Animal\nAnimal ID          0112-025880314020\nNational Code      025880314020 (0x6069640A4)\nCountry Code       0112\nReserved/RFU       15956 (0x3E54)\n  Animal bit set?  True\n      Data block?  True  [value 0x800000]\nCRC-16             0xE612 (ok)\nRaw                25 02 69 60 60 38 95 3F\n[|]\nNikola.D: 0\n
+[ 277.005] SERIAL_TX> b'pctbat\r\n'
+[ 277.018] SERIAL_TX> b'charge\r\n'
+[ 287.036] SERIAL_TX> b'pctbat\r\n'
+[ 287.049] SERIAL_TX> b'charge\r\n'

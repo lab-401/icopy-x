@@ -1,0 +1,48 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.035] SERIAL_TX> b'pctbat\r\n'
+[   6.048] SERIAL_TX> b'charge\r\n'
+[  16.071] SERIAL_TX> b'pctbat\r\n'
+[  16.084] SERIAL_TX> b'charge\r\n'
+[  26.100] SERIAL_TX> b'pctbat\r\n'
+[  26.114] SERIAL_TX> b'charge\r\n'
+[  30.257] KEY> KEYOK_PRES!
+[  30.385] START(AutoCopyActivity, None) bundle=None
+[  30.470] PM3> hf 14a info (timeout=5000)
+[  30.473] CONNECT> connect2PM3()
+[  30.478] CONNECT< socket=True
+[  30.556] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  30.609] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  30.643] PM3> lf sea (timeout=10000)
+[  33.151] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[-]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  33.165] PM3> hf sea (timeout=10000)
+[  35.004] PM3< ret=1 content_len=815 [\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO 14443-A tag...[/]                                          [-] Searching for ISO 15693 tag...\nUID.... E0 04 01 3C F9 43 B3 02\nTYPE: NXP(Philips); IC SL2 ICS20/ICS21(SLI) ICS2002/ICS2102(SLIX) ICS2602(SLIX2)\n\nValid ISO 15693 tag found\n\n[\]                                          [|] Searching for iCLASS / PicoPass tag...[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO 14443-B tag...[\]\nNikola.D: 0\n
+[  35.026] CACHE: {"found": "True", "uid": "'E004013CF943B302'", "type": "19", "progress": "2", "return": "19"}
+[  35.064] POLL stack=['MainActivity', 'AutoCopyActivity'] type=19 uid=E004013CF943B302
+[  35.352] PM3> hf 15 dump -f /mnt/upan/dump/icode/ICODE_E004013CF943B302_3 (timeout=38000)
+[  35.354] CONNECT> connect2PM3()
+[  35.358] CONNECT< socket=True
+[  36.131] SERIAL_TX> b'pctbat\r\n'
+[  36.144] SERIAL_TX> b'charge\r\n'
+[  44.618] PM3< ret=1 content_len=1534 \n UID: E0 04 01 3C F9 43 B3 02\nTYPE: NXP(Philips); IC SL2 ICS20/ICS21(SLI) ICS2002/ICS2102(SLIX) ICS2602(SLIX2)\nReading memory from tag UID E0 04 01 3C F9 43 B3 02\n............................[-] Tag returned Error 15: Unknown error.\n\nblock#   | data         |lck| ascii\n---------+--------------+---+----------\n  0/0x00 | E1 40 0E 01  | 0 | @..\n  1/0x01 | 03 00 FE 00  | 0 | ...\n  2/0x02 | 00 00 00 00  | 0 | ....\n  3/0x03 | 00 00 00 00  | 0 | ....\n  4/0x04 | 00 00 00 00  | 0 | ....\n  5/0x05 | 00 00 00 00  | 0 | ....\n  6/0x06 | 00 00 00 00  | 0 | ....\n  7/0x07 | 00 00 00 00  | 0 | ....\n  8/0x08 | 00 00 00 00  | 0 | ....\n  9/0x09 | 00 00 00 00  | 0 | ....\n 10/0x0A | 00 00 00 00  | 0 | ....\n 11/0x0B | 00 00 00 00  | 0 | ....\n 12/0x0C | 00 00 00 00  | 0 | ....\n 13/0x0D | 00 00 00 00  | 0 | ....\n 14/0x0E | 00 00 00 00  | 0 | ....\n 15/0x0F | 00 00 00 00  | 0 | ....\n 16/0x10 | 00 00 00 00  | 0 | ....\n 17/0x11 | 00 00 00 00  | 0 | ....\n 18/0x12 | 00 00 00 00  | 0 | ....\n 19/0x13 | 00 00 00 00  | 0 | ....\n 20/0x14 | 00 00 00 00  | 0 | ....\n 21/0x15 | 00 00 00 00  | 0 | ....\n 22/0x16 | 00 00 00 00  | 0 | ....\n 23/0x17 | 00 00 00 00  | 0 | ....\n 24/0x18 | 00 00 00 00  | 0 | ....\n 25/0x19 | 00 00 00 00  | 0 | ....\n 26/0x1A | 00 00 00 00  | 0 | ....\n 27/0x1B | 00 00 00 00  | 0 | ....\n\n\nsaved 112 bytes to binary file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin\nsaved 28 blocks to text file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.eml\nsaved to json file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.json\n\nNikola.D: 0\n
+[  46.160] SERIAL_TX> b'pctbat\r\n'
+[  46.173] SERIAL_TX> b'charge\r\n'
+[  47.944] KEY> KEYM2_PRES!
+[  47.947] START(WarningWriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin"
+[  48.086] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=19 uid=E004013CF943B302
+[  48.617] KEY> KEYM2_PRES!
+[  48.619] FINISH(top=WarningWriteActivity d=3)
+[  48.659] START(WriteActivity, '/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin') bundle="/mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin"
+[  49.001] PM3> hf 15 restore -f /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin (timeout=28888)
+[  49.088] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=19 uid=E004013CF943B302
+[  56.196] SERIAL_TX> b'pctbat\r\n'
+[  56.209] SERIAL_TX> b'charge\r\n'
+[  58.532] PM3< ret=1 content_len=1630 blocksize: 4\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nloaded 112 bytes from binary file /mnt/upan/dump/icode/ICODE_E004013CF943B302_3.bin\nrestoring data blocks\niso15693 writing to page 00 (0x00) | data\nWrite OK\niso15693 writing to page 01 (0x01) | data\nWrite OK\niso15693 writing to page 02 (0x02) | data\nWrite OK\niso15693 writing to page 03 (0x03) | data\nWrite OK\niso15693 writing to page 04 (0x04) | data\nWrite OK\niso15693 writing to page 05 (0x05) | data\nWrite OK\niso15693 writing to page 06 (0x06) | data\nWrite OK\niso15693 writing to page 07 (0x07) | data\nWrite OK\niso15693 writing to page 08 (0x08) | data\nWrite OK\niso15693 writing to page 09 (0x09) | data\nWrite OK\niso15693 writing to page 10 (0x0A) | data\nWrite OK\niso15693 writing to page 11 (0x0B) | data\nWrite OK\niso15693 writing to page 12 (0x0C) | data\nWrite OK\niso15693 writing to page 13 (0x0D) | data\nWrite OK\niso15693 writing to page 14 (0x0E) | data\nWrite OK\niso15693 writing to page 15 (0x0F) | data\nWrite OK\niso15693 writing to page 16 (0x10) | data\nWrite OK\niso15693 writing to page 17 (0x11) | data\nWrite OK\niso15693 writing to page 18 (0x12) | data\nWrite OK\niso15693 writing to page 19 (0x13) | data\nWrite OK\niso15693 writing to page 20 (0x14) | data\nWrite OK\niso15693 writing to page 21 (0x15) | data\nWrite OK\niso15693 writing to page 22 (0x16) | data\nWrite OK\niso15693 writing to page 23 (0x17) | data\nWrite OK\niso15693 writing to page 24 (0x18) | data\nWrite OK\niso15693 writing to page 25 (0x19) | data\nWrite OK\niso15693 writing to page 26 (0x1A) | data\nWrite OK\niso15693 writing to page 27 (0x1B) | data\nWrite OK\ndone\n\nNikola.D: 0\n\nDone!
+[  58.538] PM3> hf 15 csetuid -u E004013CF943B302 (timeout=5000)
+[  59.526] PM3< ret=1 content_len=284 reverse input UID 02 B3 43 F9 3C 01 04 E0\ngetting current card details...\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nupdating tag uid...\ngetting updated card details...\n\n UID: E0 53 01 10 95 A9 F6 11\nTYPE: no tag-info available\nSetting new UID ( fail )\n\nNikola.D: -10\n
+[  66.231] SERIAL_TX> b'pctbat\r\n'
+[  66.249] SERIAL_TX> b'charge\r\n'
+[  76.266] SERIAL_TX> b'pctbat\r\n'
+[  76.283] SERIAL_TX> b'charge\r\n'

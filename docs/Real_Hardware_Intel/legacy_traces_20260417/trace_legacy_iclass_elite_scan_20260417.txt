@@ -1,0 +1,68 @@
+=== FULL TRACE ===
+[   0.008] presspm3 hook OK
+[   0.010] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.374] SERIAL_TX> b'pctbat\r\n'
+[   6.388] SERIAL_TX> b'charge\r\n'
+[  16.405] SERIAL_TX> b'pctbat\r\n'
+[  16.418] SERIAL_TX> b'charge\r\n'
+[  26.435] SERIAL_TX> b'pctbat\r\n'
+[  26.448] SERIAL_TX> b'charge\r\n'
+[  36.465] SERIAL_TX> b'pctbat\r\n'
+[  36.478] SERIAL_TX> b'charge\r\n'
+[  42.434] KEY> KEYOK_PRES!
+[  42.562] START(AutoCopyActivity, None) bundle=None
+[  42.568] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  42.638] PM3> hf 14a info (timeout=5000)
+[  42.641] CONNECT> connect2PM3()
+[  42.646] CONNECT< socket=True
+[  42.792] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  42.826] PM3> lf sea (timeout=10000)
+[  45.335] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[-]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  45.347] PM3> hf sea (timeout=10000)
+[  46.495] SERIAL_TX> b'pctbat\r\n'
+[  46.509] SERIAL_TX> b'charge\r\n'
+[  47.272] PM3< ret=1 content_len=780 [\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO 14443-A tag...[/]                                          [-] Searching for ISO 15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...\n    CSN: 4A 67 8E 15 FE FF 12 E0\n Config: 12 FF FF FF 7F 1F FF 3C\n\nValid iCLASS tag / PicoPass tag found\n\n[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO 14443-B tag...[\]\nNikola.D: 0\n
+[  47.295] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 (timeout=5000)
+[  47.634] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  47.642] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 (timeout=5000)
+[  47.971] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  47.972] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 (timeout=5000)
+[  48.310] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  48.311] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 --elite (timeout=5000)
+[  48.640] PM3< ret=1 content_len=32 Using elite algo\n\nNikola.D: -16\n
+[  48.641] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 --elite (timeout=5000)
+[  48.981] PM3< ret=1 content_len=74 Using elite algo\n\n block   1/0x01 : 12 FF FF FF 7F 1F FF 3C\n\n\nNikola.D: 0\n
+[  48.982] PM3> hf iclass info (timeout=5000)
+[  49.318] PM3< ret=1 content_len=927 \n    CSN: 4A 67 8E 15 FE FF 12 E0   (uid)\n Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\nE-purse: FF FF FF FF F9 FF FF FF   (Card challenge, CC)\n     Kd: 00 00 00 00 00 00 00 00   (Debit key, hidden)\n     Kc: 00 00 00 00 00 00 00 00   (Credit key, hidden)\n    AIA: FF FF FF FF FF FF FF FF   (Application Issuer area)\n  Mode: Application (locked)\nCoding: ISO 14443-2 B / 15693\n Crypt: Secured page, keys not locked\n    RA: Read access not enabled\nApp limit 0x12, OTP 0xFFFF, Block write lock 0xFF\n     Chip 0x7F, Mem 0x1F, EAS 0xFF, Fuses 0x3C\n    2 KBits/2 App Areas (256 bytes)\n    AA1 blocks 13 { 0x06 - 0x12 (06 - 18) }\n    AA2 blocks 18 { 0x13 - 0x1F (19 - 31) }\n Kd = Debit key (AA1),  Kc = Credit key (AA2)\n     Read A - Kd or Kc\n     Read B - Kd or Kc\n    Write A - Kc\n    Write B - Kc\n      Debit - Kd or Kc\n     Credit - Kc\nCSN is in HID range\nCredential : iCLASS legacy\n Card type : PicoPass 2K\n\nNikola.D: 0\n
+[  49.320] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "18"}
+[  49.581] POLL stack=['MainActivity', 'AutoCopyActivity'] type=18 uid=
+[  49.644] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 (timeout=5000)
+[  49.646] CONNECT> connect2PM3()
+[  49.651] CONNECT< socket=True
+[  49.992] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  49.993] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 (timeout=5000)
+[  50.322] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  50.323] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 (timeout=5000)
+[  50.663] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[  50.664] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 --elite (timeout=5000)
+[  50.993] PM3< ret=1 content_len=32 Using elite algo\n\nNikola.D: -16\n
+[  50.994] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 --elite (timeout=5000)
+[  51.334] PM3< ret=1 content_len=74 Using elite algo\n\n block   1/0x01 : 12 FF FF FF 7F 1F FF 3C\n\n\nNikola.D: 0\n
+[  51.337] PM3> hf iclass dump -k 2020666666668888 -f /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1 --elite (timeout=30000)
+[  52.139] PM3< ret=1 content_len=1280 Using elite algo\nCard has atleast 2 application areas. AA1 limit 18 (0x12) AA2 limit 31 (0x1F)\n.\n\n CSN  |0x00| 4A 67 8E 15 FE FF 12 E0 |\n      |0x01| 12 FF FF FF 7F 1F FF 3C | ...<\n      |0x02| FF FF FF FF F9 FF FF FF | [=]       |0x03| B7 AF 2C 06 F3 7A 3E 83 | ,.z>\n      |0x04| FF FF FF FF FF FF FF FF | [=]       |0x05| FF FF FF FF FF FF FF FF | [=]       |0x06| 03 03 03 03 00 03 E0 17 | .......\n      |0x07| 83 4D 3B 2F 21 96 14 DA | M;/!.\n      |0x08| 2A D4 C8 21 1F 99 68 71 | *!.hq\n      |0x09| 2A D4 C8 21 1F 99 68 71 | *!.hq\n      |0x0A| FF FF FF FF FF FF FF FF | [=]       |0x0B| FF FF FF FF FF FF FF FF | [=]       |0x0C| FF FF FF FF FF FF FF FF | [=]       |0x0D| FF FF FF FF FF FF FF FF | [=]       |0x0E| FF FF FF FF FF FF FF FF | [=]       |0x0F| FF FF FF FF FF FF FF FF | [=]       |0x10| FF FF FF FF FF FF FF FF | [=]       |0x11| FF FF FF FF FF FF FF FF | [=]       |0x12| FF FF FF FF FF FF FF FF | [=] ------+----+-------------------------+----------\nsaving dump file - 19 blocks read\nsaved 152 bytes to binary file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-4.bin\nsaved 19 blocks to text file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-3.eml\nsaved to json file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-4.json\n\n\nNikola.D: 0\n
+[  53.665] KEY> KEYOK_PRES!
+[  53.709] START(WarningWriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[  54.090] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=18 uid=
+[  54.957] KEY> KEYM2_PRES!
+[  54.959] FINISH(top=WarningWriteActivity d=3)
+[  54.980] START(WriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[  55.093] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=18 uid=
+[  55.330] PM3> hf iclass wrbl --blk 6 -d 030303030003E017 -k 2020666666668888 --elite (timeout=10000)
+[  55.678] PM3< ret=1 content_len=45 Wrote block   6/0x06 successful\n\nNikola.D: 0\n
+[  56.530] SERIAL_TX> b'pctbat\r\n'
+[  56.548] SERIAL_TX> b'charge\r\n'
+[  66.566] SERIAL_TX> b'pctbat\r\n'
+[  66.578] SERIAL_TX> b'charge\r\n'
+[  76.595] SERIAL_TX> b'pctbat\r\n'
+[  76.609] SERIAL_TX> b'charge\r\n'

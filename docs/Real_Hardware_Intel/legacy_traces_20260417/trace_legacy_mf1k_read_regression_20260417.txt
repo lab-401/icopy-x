@@ -1,0 +1,164 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.012] POLL stack=['MainActivity'] 
+[   0.012] === ALL INSTALLED ===
+[   6.329] SERIAL_TX> b'pctbat\r\n'
+[   6.341] SERIAL_TX> b'charge\r\n'
+[  16.358] SERIAL_TX> b'pctbat\r\n'
+[  16.371] SERIAL_TX> b'charge\r\n'
+[  26.388] SERIAL_TX> b'pctbat\r\n'
+[  26.401] SERIAL_TX> b'charge\r\n'
+[  34.116] KEY> KEYUP_PRES!
+[  34.462] KEY> KEYUP_PRES!
+[  34.652] KEY> KEYUP_PRES!
+[  36.143] KEY> KEYOK_PRES!
+[  36.271] START(LUAScriptCMDActivity, None) bundle=None
+[  36.418] SERIAL_TX> b'pctbat\r\n'
+[  36.431] SERIAL_TX> b'charge\r\n'
+[  36.562] POLL stack=['MainActivity', 'LUAScriptCMDActivity'] 
+[  37.335] KEY> KEY_PWR_CAN_PRES!
+[  37.338] FINISH(top=LUAScriptCMDActivity d=2)
+[  37.565] POLL stack=['MainActivity'] 
+[  38.109] KEY> KEYDOWN_PRES!
+[  38.429] KEY> KEYOK_PRES!
+[  38.437] START(PluginsMenuActivity, None) bundle=None
+[  38.571] POLL stack=['MainActivity', 'PluginsMenuActivity'] 
+[  39.130] KEY> KEYDOWN_PRES!
+[  39.434] KEY> KEYDOWN_PRES!
+[  39.799] KEY> KEYOK_PRES!
+[  39.817] START(PluginActivity, {'plugin_dir': '/home/pi/ipk_app_main/plugins/pm3_raw', 'manifest': {'name': 'PM3 Raw', 'version': '1.0.0', 'author': 'Lab401', 'description': 'Run hw version and display output', 'entry_class': 'PM3RawPlugin', 'permissions': ['pm3'], 'order': 99}, 'ui_definition': {'plugin': True, 'name': 'PM3 Raw', 'version': '1.0.0', 'initial_state': 'idle', 'states': {'idle': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': "Press OK to run 'hw version'", 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'OK': 'run:do_run', 'M1': 'finish'}}, 'transitions': {'on_result.status==done': 'done', 'on_result.status==error': 'error', 'on_error': 'error'}}, 'done': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{output_lines}', 'size': 'normal'}], 'scrollable': True}, 'buttons': {'left': 'Back', 'right': 'Again'}, 'keys': {'M1': 'finish', 'M2': 'set_state:idle'}}}, 'error': {'screen': {'title': 'PM3 Raw', 'content': {'type': 'text', 'lines': [{'text': '{error_msg}', 'size': 'normal'}]}, 'buttons': {'left': 'Back', 'right': None}, 'keys': {'M1': 'finish'}}}}}, 'entry_class': <class 'plugins.pm3_raw.PM3RawPlugin'>, 'plugin_key': 'pm3_raw'}) bundle={"plugin_dir": "/home/pi/ipk_app_main/plugins/pm3_raw", "manifest": {"name": "PM3 Raw", "version": "1.0.0", "author": "Lab401", "description": "Run hw version and display output", "entry_class": "PM3RawPlugin", "permissions": ["pm3"], "order": 99}, "ui_definition": {"plugin": true, "name": "PM3 Raw", "version": "1.0.0", "initial_state": "idle", "states": {"idle": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "Press OK to run 'hw version'", "size": "normal"}]}, "buttons": {"left": "Back", "right": null}, "keys": {"OK": "run:do_run", "M1": "finish"}}, "transitions": {"on_result.status==done": "done", "on_result.status==error": "error", "on_error": "error"}}, "done": {"screen": {"title": "PM3 Raw", "content": {"type": "text", "lines": [{"text": "{output_lines}", "size": "normal"}], "scrollable": true}, "buttons": {"left": "Back", "right": "Again"}, "keys": {"M1": "finish", "M2": "set_state:idle"}}}, "error": {"screen": {"title": "PM3 Raw", "content": {"typ
+[  40.074] POLL stack=['MainActivity', 'PluginsMenuActivity', 'PluginActivity'] 
+[  40.778] KEY> KEYOK_PRES!
+[  40.791] PM3> hw version (timeout=5000)
+[  40.827] PM3< ret=1 content_len=1114 \n [ Proxmark3 RFID instrument ]\n\n [ CLIENT ]\n  client: RRG/Iceman/master/385d892-dirty-unclean 2022-08-16 04:16:56\n  compiled with GCC 5.4.0 20160609 OS:Linux ARCH:arm\n\n [ PROXMARK3 RDV4 ]\n  external flash:                  present\n  smartcard reader:                absent\n\n [ PROXMARK3 RDV4 Extras ]\n  FPC USART for BT add-on support: absent\n\n [ ARM ]\n  bootrom: RRG/Iceman/master/release (git)\n       os: RRG/Iceman/master/385d892f-dirty-unclean 2022-06-09 14:19:31\n   NIKOLA: v3.1 2022-06-09 14:19:31\n  compiled with GCC 10.1.0\n\n [ FPGA ]\n  LF image built for 2s30vq100 on 2020-04-27 at 06:32:07\n  HF image built for 2s30vq100 on 2020-08-13 at 15:34:17\n  HF FeliCa image built for 2s30vq100 on 2020-04-27 at 08:02:36\n\n [ Hardware ]\n  --= uC: AT91SAM7S512 Rev B\n  --= Embedded Processor: ARM7TDMI\n  --= Nonvolatile Program Memory Size: 512K bytes, Used: 248280 bytes (47%) Free: 276008 bytes (53%)\n  --= Second Nonvolatile Program Memory Size: None\n  --= Internal SRAM Size: 64K bytes\n  --= Architecture Identifier: AT91SAM7Sxx Series\n  --= Nonvolatile Program Memory Type: Embedded Flash Memory\n\n\n\nNikola.D: 0\n
+[  41.937] KEY> KEY_PWR_CAN_PRES!
+[  41.940] FINISH(top=PluginActivity d=3)
+[  42.078] POLL stack=['MainActivity', 'PluginsMenuActivity'] 
+[  42.208] KEY> KEY_PWR_CAN_PRES!
+[  42.211] FINISH(top=PluginsMenuActivity d=2)
+[  42.580] POLL stack=['MainActivity'] 
+[  46.448] SERIAL_TX> b'pctbat\r\n'
+[  46.461] SERIAL_TX> b'charge\r\n'
+[  56.478] SERIAL_TX> b'pctbat\r\n'
+[  56.491] SERIAL_TX> b'charge\r\n'
+[  66.508] SERIAL_TX> b'pctbat\r\n'
+[  66.522] SERIAL_TX> b'charge\r\n'
+[  76.538] SERIAL_TX> b'pctbat\r\n'
+[  76.551] SERIAL_TX> b'charge\r\n'
+[  82.504] KEY> KEYUP_PRES!
+[  82.663] KEY> KEYUP_PRES!
+[  82.799] KEY> KEYUP_PRES!
+[  82.939] KEY> KEYUP_PRES!
+[  83.085] KEY> KEYUP_PRES!
+[  83.218] KEY> KEYUP_PRES!
+[  83.368] KEY> KEYUP_PRES!
+[  83.512] KEY> KEYUP_PRES!
+[  83.648] KEY> KEYUP_PRES!
+[  83.796] KEY> KEYUP_PRES!
+[  84.175] KEY> KEYUP_PRES!
+[  84.361] KEY> KEYUP_PRES!
+[  85.258] KEY> KEYDOWN_PRES!
+[  86.568] SERIAL_TX> b'pctbat\r\n'
+[  86.581] SERIAL_TX> b'charge\r\n'
+[  88.941] KEY> KEYOK_PRES!
+[  88.944] START(ReadListActivity, None) bundle=None
+[  89.144] POLL stack=['MainActivity', 'ReadListActivity'] 
+[  90.774] KEY> KEYOK_PRES!
+[  90.777] START(ReadActivity, {'tag_type': 1, 'tag_name': 'M1 S50 1K 4B'}) bundle={"tag_type": 1, "tag_name": "M1 S50 1K 4B"}
+[  90.861] PM3> hf 14a info (timeout=5000)
+[  90.864] CONNECT> connect2PM3()
+[  90.867] CONNECT< socket=True
+[  91.148] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] 
+[  92.313] PM3< ret=1 content_len=266 \n UID: 7A F2 EC B2\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nPrng detection..... hard\n\nNikola.D: 0\n
+[  92.349] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[  92.558] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[  92.568] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  92.652] POLL stack=['MainActivity', 'ReadListActivity', 'ReadActivity'] type=1 uid=7AF2ECB2
+[  92.908] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[  92.910] CONNECT> connect2PM3()
+[  92.915] CONNECT< socket=True
+[  93.135] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[  93.141] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  96.603] SERIAL_TX> b'pctbat\r\n'
+[  96.617] SERIAL_TX> b'charge\r\n'
+[ 100.118] PM3< ret=1 content_len=1228 Loaded 104 keys from /tmp/.keys/mf_tmp_keys.dic\nRunning strategy 1\n...[=] Chunk: 6.7s | found 29/32 keys (85)\nChunk: 0.3s | found 32/32 keys (19)\ntime in checkkeys (fast) 7.0s\n\n\nfound keys:\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success)\n\n\nNikola.D: 0\n
+[ 100.123] PM3> hf mf rdsc -s 0 -a -k 484558414354 (timeout=15000)
+[ 100.354] PM3< ret=1 content_len=570 --sector no 0, key A - 48 45 58 41 43 54\n\nisOk:01\n  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n  1 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  2 | 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\n  3 | 00 00 00 00 00 00 71 E7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 0  rdAB wrAB incAB dectrAB\n  block 1  rdAB wrB\n  block 2  rdAB wrB\n  block 3  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 100.357] PM3> hf mf rdsc -s 0 -b -k A22AE129C013 (timeout=15000)
+[ 100.589] PM3< ret=1 content_len=570 --sector no 0, key B - A2 2A E1 29 C0 13\n\nisOk:01\n  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n  1 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  2 | 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\n  3 | 00 00 00 00 00 00 71 E7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 0  rdAB wrAB incAB dectrAB\n  block 1  rdAB wrB\n  block 2  rdAB wrB\n  block 3  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 100.593] PM3> hf mf rdsc -s 1 -a -k 484558414354 (timeout=15000)
+[ 100.836] PM3< ret=1 content_len=555 --sector no 1, key A - 48 45 58 41 43 54\n\nisOk:01\n  4 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  5 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  6 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  7 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 4  rdAB wrB\n  block 5  rdAB wrB\n  block 6  rdAB wrB\n  block 7  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 100.837] PM3> hf mf rdsc -s 1 -b -k 49FAE4E3849F (timeout=15000)
+[ 101.058] PM3< ret=1 content_len=555 --sector no 1, key B - 49 FA E4 E3 84 9F\n\nisOk:01\n  4 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  5 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  6 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  7 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 4  rdAB wrB\n  block 5  rdAB wrB\n  block 6  rdAB wrB\n  block 7  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 101.061] PM3> hf mf rdsc -s 2 -a -k 484558414354 (timeout=15000)
+[ 101.294] PM3< ret=1 content_len=557 --sector no 2, key A - 48 45 58 41 43 54\n\nisOk:01\n  8 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  9 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 10 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 11 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 8  rdAB wrB\n  block 9  rdAB wrB\n  block 10  rdAB wrB\n  block 11  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 101.295] PM3> hf mf rdsc -s 2 -b -k 38FCF33072E0 (timeout=15000)
+[ 101.516] PM3< ret=1 content_len=557 --sector no 2, key B - 38 FC F3 30 72 E0\n\nisOk:01\n  8 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  9 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 10 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 11 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 8  rdAB wrB\n  block 9  rdAB wrB\n  block 10  rdAB wrB\n  block 11  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 101.520] PM3> hf mf rdsc -s 3 -a -k 484558414354 (timeout=15000)
+[ 101.742] PM3< ret=1 content_len=559 --sector no 3, key A - 48 45 58 41 43 54\n\nisOk:01\n 12 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 13 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 14 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 15 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 12  rdAB wrB\n  block 13  rdAB wrB\n  block 14  rdAB wrB\n  block 15  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 101.743] PM3> hf mf rdsc -s 3 -b -k 8AD5517B4B18 (timeout=15000)
+[ 101.974] PM3< ret=1 content_len=559 --sector no 3, key B - 8A D5 51 7B 4B 18\n\nisOk:01\n 12 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 13 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 14 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 15 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 12  rdAB wrB\n  block 13  rdAB wrB\n  block 14  rdAB wrB\n  block 15  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 101.978] PM3> hf mf rdsc -s 4 -a -k 484558414354 (timeout=15000)
+[ 102.200] PM3< ret=1 content_len=559 --sector no 4, key A - 48 45 58 41 43 54\n\nisOk:01\n 16 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 17 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 18 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 19 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 16  rdAB wrB\n  block 17  rdAB wrB\n  block 18  rdAB wrB\n  block 19  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 102.202] PM3> hf mf rdsc -s 4 -b -k 509359F131B1 (timeout=15000)
+[ 102.432] PM3< ret=1 content_len=559 --sector no 4, key B - 50 93 59 F1 31 B1\n\nisOk:01\n 16 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 17 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 18 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 19 | 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 16  rdAB wrB\n  block 17  rdAB wrB\n  block 18  rdAB wrB\n  block 19  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 102.436] PM3> hf mf rdsc -s 5 -a -k 484558414354 (timeout=15000)
+[ 102.679] PM3< ret=1 content_len=580 --sector no 5, key A - 48 45 58 41 43 54\n\nisOk:01\n 20 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 21 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 22 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 23 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 20  rdAB wrB\n  block 21  rdAB wrB\n  block 22  rdAB wrB\n  block 23  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 102.680] PM3> hf mf rdsc -s 5 -b -k 6C78928E1317 (timeout=15000)
+[ 102.901] PM3< ret=1 content_len=580 --sector no 5, key B - 6C 78 92 8E 13 17\n\nisOk:01\n 20 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 21 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 22 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 23 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 20  rdAB wrB\n  block 21  rdAB wrB\n  block 22  rdAB wrB\n  block 23  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 102.904] PM3> hf mf rdsc -s 6 -a -k 484558414354 (timeout=15000)
+[ 103.137] PM3< ret=1 content_len=580 --sector no 6, key A - 48 45 58 41 43 54\n\nisOk:01\n 24 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 25 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 26 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 27 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 24  rdAB wrB\n  block 25  rdAB wrB\n  block 26  rdAB wrB\n  block 27  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 103.138] PM3> hf mf rdsc -s 6 -b -k AA0720018738 (timeout=15000)
+[ 103.359] PM3< ret=1 content_len=580 --sector no 6, key B - AA 07 20 01 87 38\n\nisOk:01\n 24 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 25 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 26 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 27 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 24  rdAB wrB\n  block 25  rdAB wrB\n  block 26  rdAB wrB\n  block 27  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 103.362] PM3> hf mf rdsc -s 7 -a -k 484558414354 (timeout=15000)
+[ 103.585] PM3< ret=1 content_len=580 --sector no 7, key A - 48 45 58 41 43 54\n\nisOk:01\n 28 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 29 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 30 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 31 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 28  rdAB wrB\n  block 29  rdAB wrB\n  block 30  rdAB wrB\n  block 31  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 103.586] PM3> hf mf rdsc -s 7 -b -k A6CAC2886412 (timeout=15000)
+[ 103.817] PM3< ret=1 content_len=580 --sector no 7, key B - A6 CA C2 88 64 12\n\nisOk:01\n 28 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 29 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 30 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 31 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 28  rdAB wrB\n  block 29  rdAB wrB\n  block 30  rdAB wrB\n  block 31  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 103.821] PM3> hf mf rdsc -s 8 -a -k 484558414354 (timeout=15000)
+[ 104.043] PM3< ret=1 content_len=580 --sector no 8, key A - 48 45 58 41 43 54\n\nisOk:01\n 32 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 33 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 34 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 35 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 32  rdAB wrB\n  block 33  rdAB wrB\n  block 34  rdAB wrB\n  block 35  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 104.045] PM3> hf mf rdsc -s 8 -b -k 62D0C424ED8E (timeout=15000)
+[ 104.276] PM3< ret=1 content_len=580 --sector no 8, key B - 62 D0 C4 24 ED 8E\n\nisOk:01\n 32 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 33 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 34 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 35 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 32  rdAB wrB\n  block 33  rdAB wrB\n  block 34  rdAB wrB\n  block 35  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 104.281] PM3> hf mf rdsc -s 9 -a -k 484558414354 (timeout=15000)
+[ 104.523] PM3< ret=1 content_len=580 --sector no 9, key A - 48 45 58 41 43 54\n\nisOk:01\n 36 | 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\n 37 | 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\n 38 | FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\n 39 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 36  rdAB wrB\n  block 37  rdAB wrB\n  block 38  rdAB wrB\n  block 39  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 104.524] PM3> hf mf rdsc -s 9 -b -k E64A986A5D94 (timeout=15000)
+[ 104.746] PM3< ret=1 content_len=580 --sector no 9, key B - E6 4A 98 6A 5D 94\n\nisOk:01\n 36 | 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\n 37 | 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\n 38 | FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\n 39 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 36  rdAB wrB\n  block 37  rdAB wrB\n  block 38  rdAB wrB\n  block 39  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 104.749] PM3> hf mf rdsc -s 10 -a -k 484558414354 (timeout=15000)
+[ 104.982] PM3< ret=1 content_len=581 --sector no 10, key A - 48 45 58 41 43 54\n\nisOk:01\n 40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 41 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 42 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 43 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 40  rdAB wrB\n  block 41  rdAB wrB\n  block 42  rdAB wrB\n  block 43  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 104.983] PM3> hf mf rdsc -s 10 -b -k 8FA1D601D0A2 (timeout=15000)
+[ 105.205] PM3< ret=1 content_len=581 --sector no 10, key B - 8F A1 D6 01 D0 A2\n\nisOk:01\n 40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 41 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 42 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 43 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 40  rdAB wrB\n  block 41  rdAB wrB\n  block 42  rdAB wrB\n  block 43  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 105.208] PM3> hf mf rdsc -s 11 -a -k 484558414354 (timeout=15000)
+[ 105.430] PM3< ret=1 content_len=581 --sector no 11, key A - 48 45 58 41 43 54\n\nisOk:01\n 44 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 45 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 46 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 47 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 44  rdAB wrB\n  block 45  rdAB wrB\n  block 46  rdAB wrB\n  block 47  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 105.432] PM3> hf mf rdsc -s 11 -b -k 89347350BD36 (timeout=15000)
+[ 105.663] PM3< ret=1 content_len=581 --sector no 11, key B - 89 34 73 50 BD 36\n\nisOk:01\n 44 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 45 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 46 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 47 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 44  rdAB wrB\n  block 45  rdAB wrB\n  block 46  rdAB wrB\n  block 47  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 105.666] PM3> hf mf rdsc -s 12 -a -k 484558414354 (timeout=15000)
+[ 105.889] PM3< ret=1 content_len=581 --sector no 12, key A - 48 45 58 41 43 54\n\nisOk:01\n 48 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 49 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 50 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 51 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 48  rdAB wrB\n  block 49  rdAB wrB\n  block 50  rdAB wrB\n  block 51  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 105.890] PM3> hf mf rdsc -s 12 -b -k 66D2B7DC39EF (timeout=15000)
+[ 106.122] PM3< ret=1 content_len=581 --sector no 12, key B - 66 D2 B7 DC 39 EF\n\nisOk:01\n 48 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 49 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 50 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 51 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 48  rdAB wrB\n  block 49  rdAB wrB\n  block 50  rdAB wrB\n  block 51  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 106.125] PM3> hf mf rdsc -s 13 -a -k 484558414354 (timeout=15000)
+[ 106.368] PM3< ret=1 content_len=581 --sector no 13, key A - 48 45 58 41 43 54\n\nisOk:01\n 52 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 53 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 54 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 55 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 52  rdAB wrB\n  block 53  rdAB wrB\n  block 54  rdAB wrB\n  block 55  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 106.369] PM3> hf mf rdsc -s 13 -b -k 6BC1E1AE547D (timeout=15000)
+[ 106.591] PM3< ret=1 content_len=581 --sector no 13, key B - 6B C1 E1 AE 54 7D\n\nisOk:01\n 52 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 53 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 54 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 55 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 52  rdAB wrB\n  block 53  rdAB wrB\n  block 54  rdAB wrB\n  block 55  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 106.594] PM3> hf mf rdsc -s 14 -a -k 484558414354 (timeout=15000)
+[ 106.633] SERIAL_TX> b'pctbat\r\n'
+[ 106.647] SERIAL_TX> b'charge\r\n'
+[ 106.827] PM3< ret=1 content_len=581 --sector no 14, key A - 48 45 58 41 43 54\n\nisOk:01\n 56 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 57 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 58 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 59 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 56  rdAB wrB\n  block 57  rdAB wrB\n  block 58  rdAB wrB\n  block 59  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 106.828] PM3> hf mf rdsc -s 14 -b -k 22729A9BD40F (timeout=15000)
+[ 107.049] PM3< ret=1 content_len=581 --sector no 14, key B - 22 72 9A 9B D4 0F\n\nisOk:01\n 56 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 57 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 58 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 59 | 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 56  rdAB wrB\n  block 57  rdAB wrB\n  block 58  rdAB wrB\n  block 59  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 107.053] PM3> hf mf rdsc -s 15 -a -k 484558414354 (timeout=15000)
+[ 107.275] PM3< ret=1 content_len=548 --sector no 15, key A - 48 45 58 41 43 54\n\nisOk:01\n 60 | 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\n 61 | 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\n 62 | 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\n 63 | 00 00 00 00 00 00 07 87 8F 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 60  rdAB\n  block 61  rdAB\n  block 62  rdAB\n  block 63  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 107.276] PM3> hf mf rdsc -s 15 -b -k 484558414354 (timeout=15000)
+[ 107.507] PM3< ret=1 content_len=548 --sector no 15, key B - 48 45 58 41 43 54\n\nisOk:01\n 60 | 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\n 61 | 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\n 62 | 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\n 63 | 00 00 00 00 00 00 07 87 8F 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 60  rdAB\n  block 61  rdAB\n  block 62  rdAB\n  block 63  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 116.663] SERIAL_TX> b'pctbat\r\n'
+[ 116.682] SERIAL_TX> b'charge\r\n'
+[ 126.699] SERIAL_TX> b'pctbat\r\n'
+[ 126.711] SERIAL_TX> b'charge\r\n'
+[ 130.572] KEY> KEY_PWR_CAN_PRES!
+[ 130.586] FINISH(top=ReadActivity d=3)
+[ 130.733] POLL stack=['MainActivity', 'ReadListActivity'] type=1 uid=7AF2ECB2
+[ 131.361] KEY> KEY_PWR_CAN_PRES!
+[ 131.364] FINISH(top=ReadListActivity d=2)
+[ 131.736] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 136.728] SERIAL_TX> b'pctbat\r\n'
+[ 136.741] SERIAL_TX> b'charge\r\n'
+[ 146.758] SERIAL_TX> b'pctbat\r\n'
+[ 146.772] SERIAL_TX> b'charge\r\n'
