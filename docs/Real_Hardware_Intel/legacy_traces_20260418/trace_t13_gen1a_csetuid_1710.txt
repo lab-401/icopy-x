@@ -1,0 +1,478 @@
+=== FULL TRACE ===
+[   0.056] presspm3 hook OK
+[   0.058] POLL stack=['MainActivity'] 
+[   0.058] === ALL INSTALLED ===
+[   6.587] SERIAL_TX> b'pctbat\r\n'
+[   6.601] SERIAL_TX> b'charge\r\n'
+[  16.618] SERIAL_TX> b'pctbat\r\n'
+[  16.631] SERIAL_TX> b'charge\r\n'
+[  26.648] SERIAL_TX> b'pctbat\r\n'
+[  26.661] SERIAL_TX> b'charge\r\n'
+[  36.682] SERIAL_TX> b'pctbat\r\n'
+[  36.696] SERIAL_TX> b'charge\r\n'
+[  46.713] SERIAL_TX> b'pctbat\r\n'
+[  46.726] SERIAL_TX> b'charge\r\n'
+[  56.743] SERIAL_TX> b'pctbat\r\n'
+[  56.756] SERIAL_TX> b'charge\r\n'
+[  66.777] SERIAL_TX> b'pctbat\r\n'
+[  66.791] SERIAL_TX> b'charge\r\n'
+[  76.808] SERIAL_TX> b'pctbat\r\n'
+[  76.826] SERIAL_TX> b'charge\r\n'
+[  86.843] SERIAL_TX> b'pctbat\r\n'
+[  86.856] SERIAL_TX> b'charge\r\n'
+[  96.873] SERIAL_TX> b'pctbat\r\n'
+[  96.886] SERIAL_TX> b'charge\r\n'
+[ 106.902] SERIAL_TX> b'pctbat\r\n'
+[ 106.916] SERIAL_TX> b'charge\r\n'
+[ 116.933] SERIAL_TX> b'pctbat\r\n'
+[ 116.946] SERIAL_TX> b'charge\r\n'
+[ 126.963] SERIAL_TX> b'pctbat\r\n'
+[ 126.976] SERIAL_TX> b'charge\r\n'
+[ 136.998] SERIAL_TX> b'pctbat\r\n'
+[ 137.011] SERIAL_TX> b'charge\r\n'
+[ 147.033] SERIAL_TX> b'pctbat\r\n'
+[ 147.046] SERIAL_TX> b'charge\r\n'
+[ 157.063] SERIAL_TX> b'pctbat\r\n'
+[ 157.076] SERIAL_TX> b'charge\r\n'
+[ 162.782] KEY> KEYDOWN_PRES!
+[ 163.098] KEY> KEYDOWN_PRES!
+[ 163.416] KEY> KEYOK_PRES!
+[ 164.390] START(ScanActivity, None) bundle=None
+[ 164.573] PM3> hf 14a info (timeout=5000)
+[ 164.576] CONNECT> connect2PM3()
+[ 164.578] CONNECT< socket=True
+[ 164.706] POLL stack=['MainActivity', 'ScanActivity'] 
+[ 164.719] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 164.757] PM3> lf sea (timeout=10000)
+[ 165.852] PM3< ret=1 content_len=302 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nHID Prox - 200501aae3 (54641) - len: 26 bit - OEM: 000 FC: 128 Card: 54641\n\nValid HID Prox ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n\nraw: 200501aae3\n
+[ 165.925] CACHE: {"raw": "'200501aae3'", "data": "'FC,CN: 128,54641'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 166.109] CACHE: {"raw": "'200501aae3'", "data": "'FC,CN: 128,54641'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 166.209] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 167.092] SERIAL_TX> b'pctbat\r\n'
+[ 167.106] SERIAL_TX> b'charge\r\n'
+[ 177.123] SERIAL_TX> b'pctbat\r\n'
+[ 177.136] SERIAL_TX> b'charge\r\n'
+[ 187.152] SERIAL_TX> b'pctbat\r\n'
+[ 187.166] SERIAL_TX> b'charge\r\n'
+[ 197.182] SERIAL_TX> b'pctbat\r\n'
+[ 197.196] SERIAL_TX> b'charge\r\n'
+[ 207.213] SERIAL_TX> b'pctbat\r\n'
+[ 207.226] SERIAL_TX> b'charge\r\n'
+[ 217.247] SERIAL_TX> b'pctbat\r\n'
+[ 217.261] SERIAL_TX> b'charge\r\n'
+[ 227.278] SERIAL_TX> b'pctbat\r\n'
+[ 227.291] SERIAL_TX> b'charge\r\n'
+[ 237.308] SERIAL_TX> b'pctbat\r\n'
+[ 237.325] SERIAL_TX> b'charge\r\n'
+[ 244.087] KEY> KEY_PWR_CAN_PRES!
+[ 244.090] FINISH(top=ScanActivity d=2)
+[ 244.334] POLL stack=['MainActivity'] type=9 uid=
+[ 247.346] SERIAL_TX> b'pctbat\r\n'
+[ 247.361] SERIAL_TX> b'charge\r\n'
+[ 257.377] SERIAL_TX> b'pctbat\r\n'
+[ 257.391] SERIAL_TX> b'charge\r\n'
+[ 259.402] KEY> KEYUP_PRES!
+[ 259.579] KEY> KEYUP_PRES!
+[ 260.088] KEY> KEYOK_PRES!
+[ 260.091] START(AutoCopyActivity, None) bundle=None
+[ 260.126] PM3> hf 14a info (timeout=5000)
+[ 260.129] CONNECT> connect2PM3()
+[ 260.132] CONNECT< socket=True
+[ 260.279] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 260.282] PM3> lf sea (timeout=10000)
+[ 260.358] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 261.548] PM3< ret=1 content_len=281 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nPAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nCouldn't identify a chipset\n\nNikola.D: 0\n
+[ 261.579] CACHE: {"data": "'9AAAAAA0'", "raw": "'FF2049906D3B41D0741D0741D0706D23'", "type": "34", "found": "True", "progress": "1", "return": "34"}
+[ 261.861] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[ 262.042] PM3> lf pac reader (timeout=10000)
+[ 262.044] CONNECT> connect2PM3()
+[ 262.047] CONNECT< socket=True
+[ 262.255] PM3< ret=1 content_len=81 PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nNikola.D: 0\n
+[ 265.438] KEY> KEYM2_PRES!
+[ 265.454] START(WarningWriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[ 265.869] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=34 uid=
+[ 266.179] KEY> KEYM2_PRES!
+[ 266.181] FINISH(top=WarningWriteActivity d=3)
+[ 266.208] START(WriteActivity, {'return': 1, 'data': '9AAAAAA0', 'raw': 'FF2049906D3B41D0741D0741D0706D23'}) bundle={"return": 1, "data": "9AAAAAA0", "raw": "FF2049906D3B41D0741D0741D0706D23"}
+[ 266.371] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=34 uid=
+[ 266.603] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 266.605] CONNECT> connect2PM3()
+[ 266.608] CONNECT< socket=True
+[ 267.407] SERIAL_TX> b'pctbat\r\n'
+[ 267.421] SERIAL_TX> b'charge\r\n'
+[ 267.463] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 267.464] PM3> lf t55xx detect (timeout=10000)
+[ 268.959] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 268.961] PM3> lf t55xx wipe (timeout=10000)
+[ 269.816] PM3< ret=1 content_len=425 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 269.816] PM3> lf t55xx detect (timeout=10000)
+[ 270.858] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 270.859] PM3> lf t55xx detect -p 20206666 (timeout=10000)
+[ 273.199] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 273.205] PM3> lf t55xx chk -f /tmp/.keys/t5577_tmp_keys.dic (timeout=30000)
+[ 277.437] SERIAL_TX> b'pctbat\r\n'
+[ 277.456] SERIAL_TX> b'charge\r\n'
+[ 287.472] SERIAL_TX> b'pctbat\r\n'
+[ 287.486] SERIAL_TX> b'charge\r\n'
+[ 297.502] SERIAL_TX> b'pctbat\r\n'
+[ 297.516] SERIAL_TX> b'charge\r\n'
+[ 303.215] REWORK> reworkPM3All()
+[ 303.216] SERIAL_TX> b'restartpm3\r\n'
+[ 306.234] CONNECT> connect2PM3()
+[ 306.238] CONNECT< socket=True
+[ 307.532] SERIAL_TX> b'pctbat\r\n'
+[ 307.546] SERIAL_TX> b'charge\r\n'
+[ 313.222] REWORK< socket=True
+[ 317.562] SERIAL_TX> b'pctbat\r\n'
+[ 317.576] SERIAL_TX> b'charge\r\n'
+[ 327.593] SERIAL_TX> b'pctbat\r\n'
+[ 327.605] SERIAL_TX> b'charge\r\n'
+[ 337.622] SERIAL_TX> b'pctbat\r\n'
+[ 337.636] SERIAL_TX> b'charge\r\n'
+[ 343.255] REWORK> reworkPM3All()
+[ 343.256] SERIAL_TX> b'restartpm3\r\n'
+[ 346.275] CONNECT> connect2PM3()
+[ 346.278] CONNECT< socket=True
+[ 347.652] SERIAL_TX> b'pctbat\r\n'
+[ 347.666] SERIAL_TX> b'charge\r\n'
+[ 354.437] REWORK< socket=True
+[ 357.682] SERIAL_TX> b'pctbat\r\n'
+[ 357.696] SERIAL_TX> b'charge\r\n'
+[ 367.714] SERIAL_TX> b'pctbat\r\n'
+[ 367.726] SERIAL_TX> b'charge\r\n'
+[ 377.743] SERIAL_TX> b'pctbat\r\n'
+[ 377.756] SERIAL_TX> b'charge\r\n'
+[ 384.471] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 386.428] KEY> KEY_PWR_CAN_PRES!
+[ 387.773] SERIAL_TX> b'pctbat\r\n'
+[ 387.786] SERIAL_TX> b'charge\r\n'
+[ 397.802] SERIAL_TX> b'pctbat\r\n'
+[ 397.816] SERIAL_TX> b'charge\r\n'
+[ 407.832] SERIAL_TX> b'pctbat\r\n'
+[ 407.846] SERIAL_TX> b'charge\r\n'
+[ 417.862] SERIAL_TX> b'pctbat\r\n'
+[ 417.876] SERIAL_TX> b'charge\r\n'
+[ 427.893] SERIAL_TX> b'pctbat\r\n'
+[ 427.906] SERIAL_TX> b'charge\r\n'
+[ 437.922] SERIAL_TX> b'pctbat\r\n'
+[ 437.936] SERIAL_TX> b'charge\r\n'
+[ 447.952] SERIAL_TX> b'pctbat\r\n'
+[ 447.966] SERIAL_TX> b'charge\r\n'
+[ 457.987] SERIAL_TX> b'pctbat\r\n'
+[ 458.001] SERIAL_TX> b'charge\r\n'
+[ 468.018] SERIAL_TX> b'pctbat\r\n'
+[ 468.031] SERIAL_TX> b'charge\r\n'
+[ 478.053] SERIAL_TX> b'pctbat\r\n'
+[ 478.066] SERIAL_TX> b'charge\r\n'
+[ 488.082] SERIAL_TX> b'pctbat\r\n'
+[ 488.096] SERIAL_TX> b'charge\r\n'
+[ 498.113] SERIAL_TX> b'pctbat\r\n'
+[ 498.126] SERIAL_TX> b'charge\r\n'
+[ 508.143] SERIAL_TX> b'pctbat\r\n'
+[ 508.161] SERIAL_TX> b'charge\r\n'
+[ 518.177] SERIAL_TX> b'pctbat\r\n'
+[ 518.191] SERIAL_TX> b'charge\r\n'
+[ 528.208] SERIAL_TX> b'pctbat\r\n'
+[ 528.221] SERIAL_TX> b'charge\r\n'
+[ 538.238] SERIAL_TX> b'pctbat\r\n'
+[ 538.251] SERIAL_TX> b'charge\r\n'
+[ 548.268] SERIAL_TX> b'pctbat\r\n'
+[ 548.281] SERIAL_TX> b'charge\r\n'
+[ 558.298] SERIAL_TX> b'pctbat\r\n'
+[ 558.311] SERIAL_TX> b'charge\r\n'
+[ 568.328] SERIAL_TX> b'pctbat\r\n'
+[ 568.341] SERIAL_TX> b'charge\r\n'
+[ 578.362] SERIAL_TX> b'pctbat\r\n'
+[ 578.376] SERIAL_TX> b'charge\r\n'
+[ 588.393] SERIAL_TX> b'pctbat\r\n'
+[ 588.406] SERIAL_TX> b'charge\r\n'
+[ 598.423] SERIAL_TX> b'pctbat\r\n'
+[ 598.436] SERIAL_TX> b'charge\r\n'
+[ 608.452] SERIAL_TX> b'pctbat\r\n'
+[ 608.466] SERIAL_TX> b'charge\r\n'
+[ 618.482] SERIAL_TX> b'pctbat\r\n'
+[ 618.496] SERIAL_TX> b'charge\r\n'
+[ 628.513] SERIAL_TX> b'pctbat\r\n'
+[ 628.526] SERIAL_TX> b'charge\r\n'
+[ 638.542] SERIAL_TX> b'pctbat\r\n'
+[ 638.556] SERIAL_TX> b'charge\r\n'
+[ 648.572] SERIAL_TX> b'pctbat\r\n'
+[ 648.586] SERIAL_TX> b'charge\r\n'
+[ 658.602] SERIAL_TX> b'pctbat\r\n'
+[ 658.616] SERIAL_TX> b'charge\r\n'
+[ 668.633] SERIAL_TX> b'pctbat\r\n'
+[ 668.646] SERIAL_TX> b'charge\r\n'
+[ 678.663] SERIAL_TX> b'pctbat\r\n'
+[ 678.676] SERIAL_TX> b'charge\r\n'
+[ 688.693] SERIAL_TX> b'pctbat\r\n'
+[ 688.706] SERIAL_TX> b'charge\r\n'
+[ 698.723] SERIAL_TX> b'pctbat\r\n'
+[ 698.736] SERIAL_TX> b'charge\r\n'
+[ 699.488] KEY> KEYM2_PRES!
+[ 699.801] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 699.807] CONNECT> connect2PM3()
+[ 699.810] CONNECT< socket=True
+[ 700.680] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 700.681] PM3> lf t55xx detect (timeout=10000)
+[ 700.947] PM3< ret=1 content_len=287      Chip type......... T55x7\n     Modulation........ ASK\n     Bit Rate       : 2 - RF/32\n     Inverted       : No\n     Offset         : 33\n     Seq. Term.     : Yes\n     Block0............ 000880E0\n     Downlink Mode  : default/fixed bit length\n     Password set...... No\n\n\nNikola.D: 0\n
+[ 700.965] PM3> lf t55xx write -b 1 -d FF204990 (timeout=10000)
+[ 701.073] PM3< ret=1 content_len=57 Writing page 0  block: 01  data: 0xFF204990\n\nNikola.D: 0\n
+[ 701.074] PM3> lf t55xx write -b 2 -d 6D3B41D0 (timeout=10000)
+[ 701.182] PM3< ret=1 content_len=57 Writing page 0  block: 02  data: 0x6D3B41D0\n\nNikola.D: 0\n
+[ 701.182] PM3> lf t55xx write -b 3 -d 741D0741 (timeout=10000)
+[ 701.290] PM3< ret=1 content_len=57 Writing page 0  block: 03  data: 0x741D0741\n\nNikola.D: 0\n
+[ 701.291] PM3> lf t55xx write -b 4 -d D0706D23 (timeout=10000)
+[ 701.398] PM3< ret=1 content_len=57 Writing page 0  block: 04  data: 0xD0706D23\n\nNikola.D: 0\n
+[ 701.399] PM3> lf t55xx write -b 0 -d 00080080 (timeout=10000)
+[ 701.507] PM3< ret=1 content_len=57 Writing page 0  block: 00  data: 0x00080080\n\nNikola.D: 0\n
+[ 701.508] PM3> lf sea (timeout=10000)
+[ 702.813] PM3< ret=1 content_len=270 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nPAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nValid PAC/Stanley ID found!\n\nChipset... T55xx\n\nNikola.D: 0\n
+[ 702.814] PM3> lf pac reader (timeout=10000)
+[ 703.024] PM3< ret=1 content_len=81 PAC/Stanley - Card: 9AAAAAA0, Raw: FF2049906D3B41D0741D0741D0706D23\n\nNikola.D: 0\n
+[ 708.765] SERIAL_TX> b'pctbat\r\n'
+[ 708.781] SERIAL_TX> b'charge\r\n'
+[ 718.807] SERIAL_TX> b'pctbat\r\n'
+[ 718.826] SERIAL_TX> b'charge\r\n'
+[ 728.843] SERIAL_TX> b'pctbat\r\n'
+[ 728.856] SERIAL_TX> b'charge\r\n'
+[ 738.874] SERIAL_TX> b'pctbat\r\n'
+[ 738.892] SERIAL_TX> b'charge\r\n'
+[ 748.908] SERIAL_TX> b'pctbat\r\n'
+[ 748.926] SERIAL_TX> b'charge\r\n'
+[ 758.942] SERIAL_TX> b'pctbat\r\n'
+[ 758.961] SERIAL_TX> b'charge\r\n'
+[ 768.995] SERIAL_TX> b'pctbat\r\n'
+[ 769.012] SERIAL_TX> b'charge\r\n'
+[ 779.031] SERIAL_TX> b'pctbat\r\n'
+[ 779.046] SERIAL_TX> b'charge\r\n'
+[ 789.062] SERIAL_TX> b'pctbat\r\n'
+[ 789.081] SERIAL_TX> b'charge\r\n'
+[ 791.495] KEY> KEY_PWR_CAN_PRES!
+[ 791.864] KEY> KEY_PWR_CAN_PRES!
+[ 791.866] PRESSPM3> called
+[ 791.867] SERIAL_TX> b'presspm3\r\n'
+[ 791.880] PRESSPM3< done
+[ 791.880] PM3_STOP> stopPM3Task()
+[ 791.881] PM3_STOP< ret=None
+[ 791.881] FINISH(top=WriteActivity d=3)
+[ 792.226] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[ 792.344] KEY> KEY_PWR_CAN_PRES!
+[ 792.346] PRESSPM3> called
+[ 792.346] SERIAL_TX> b'presspm3\r\n'
+[ 792.360] PRESSPM3< done
+[ 792.360] PM3_STOP> stopPM3Task()
+[ 792.361] PM3_STOP< ret=None
+[ 792.361] FINISH(top=AutoCopyActivity d=2)
+[ 792.728] POLL stack=['MainActivity'] type=34 uid=
+[ 799.122] SERIAL_TX> b'pctbat\r\n'
+[ 799.136] SERIAL_TX> b'charge\r\n'
+[ 801.853] KEY> KEYOK_PRES!
+[ 801.857] START(AutoCopyActivity, None) bundle=None
+[ 801.890] PM3> hf 14a info (timeout=5000)
+[ 801.893] CONNECT> connect2PM3()
+[ 801.898] CONNECT< socket=True
+[ 802.030] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 802.033] PM3> lf sea (timeout=10000)
+[ 802.242] POLL stack=['MainActivity', 'AutoCopyActivity'] type=34 uid=
+[ 804.551] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[/]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[ 804.554] PM3> hf sea (timeout=10000)
+[ 806.486] PM3< ret=1 content_len=780 [-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO 14443-A tag...[|]                                          [/] Searching for ISO 15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...\n    CSN: 4A 67 8E 15 FE FF 12 E0\n Config: 12 FF FF FF 7F 1F FF 3C\n\nValid iCLASS tag / PicoPass tag found\n\n[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO 14443-B tag...[-]\nNikola.D: 0\n
+[ 806.547] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 (timeout=5000)
+[ 806.886] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 806.893] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 (timeout=5000)
+[ 807.222] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 807.223] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 (timeout=5000)
+[ 807.562] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 807.563] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 --elite (timeout=5000)
+[ 807.892] PM3< ret=1 content_len=32 Using elite algo\n\nNikola.D: -16\n
+[ 807.893] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 --elite (timeout=5000)
+[ 808.233] PM3< ret=1 content_len=74 Using elite algo\n\n block   1/0x01 : 12 FF FF FF 7F 1F FF 3C\n\n\nNikola.D: 0\n
+[ 808.235] PM3> hf iclass info (timeout=5000)
+[ 808.571] PM3< ret=1 content_len=927 \n    CSN: 4A 67 8E 15 FE FF 12 E0   (uid)\n Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\nE-purse: FF FF FF FF F9 FF FF FF   (Card challenge, CC)\n     Kd: 00 00 00 00 00 00 00 00   (Debit key, hidden)\n     Kc: 00 00 00 00 00 00 00 00   (Credit key, hidden)\n    AIA: FF FF FF FF FF FF FF FF   (Application Issuer area)\n  Mode: Application (locked)\nCoding: ISO 14443-2 B / 15693\n Crypt: Secured page, keys not locked\n    RA: Read access not enabled\nApp limit 0x12, OTP 0xFFFF, Block write lock 0xFF\n     Chip 0x7F, Mem 0x1F, EAS 0xFF, Fuses 0x3C\n    2 KBits/2 App Areas (256 bytes)\n    AA1 blocks 13 { 0x06 - 0x12 (06 - 18) }\n    AA2 blocks 18 { 0x13 - 0x1F (19 - 31) }\n Kd = Debit key (AA1),  Kc = Credit key (AA2)\n     Read A - Kd or Kc\n     Read B - Kd or Kc\n    Write A - Kc\n    Write B - Kc\n      Debit - Kd or Kc\n     Credit - Kc\nCSN is in HID range\nCredential : iCLASS legacy\n Card type : PicoPass 2K\n\nNikola.D: 0\n
+[ 808.573] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "key": "'2020666666668888'", "progress": "2", "return": "18"}
+[ 808.753] POLL stack=['MainActivity', 'AutoCopyActivity'] type=18 uid=
+[ 808.887] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 (timeout=5000)
+[ 808.889] CONNECT> connect2PM3()
+[ 808.893] CONNECT< socket=True
+[ 809.153] SERIAL_TX> b'pctbat\r\n'
+[ 809.166] SERIAL_TX> b'charge\r\n'
+[ 809.226] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 809.227] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 (timeout=5000)
+[ 809.556] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 809.557] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 (timeout=5000)
+[ 809.898] PM3< ret=1 content_len=15 \nNikola.D: -16\n
+[ 809.899] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 --elite (timeout=5000)
+[ 810.229] PM3< ret=1 content_len=32 Using elite algo\n\nNikola.D: -16\n
+[ 810.231] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 --elite (timeout=5000)
+[ 810.570] PM3< ret=1 content_len=74 Using elite algo\n\n block   1/0x01 : 12 FF FF FF 7F 1F FF 3C\n\n\nNikola.D: 0\n
+[ 810.575] PM3> hf iclass dump -k 2020666666668888 -f /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1 --elite (timeout=30000)
+[ 811.375] PM3< ret=1 content_len=1280 Using elite algo\nCard has atleast 2 application areas. AA1 limit 18 (0x12) AA2 limit 31 (0x1F)\n.\n\n CSN  |0x00| 4A 67 8E 15 FE FF 12 E0 |\n      |0x01| 12 FF FF FF 7F 1F FF 3C | ...<\n      |0x02| FF FF FF FF F9 FF FF FF | [=]       |0x03| B7 AF 2C 06 F3 7A 3E 83 | ,.z>\n      |0x04| FF FF FF FF FF FF FF FF | [=]       |0x05| FF FF FF FF FF FF FF FF | [=]       |0x06| 03 03 03 03 00 03 E0 17 | .......\n      |0x07| 83 4D 3B 2F 21 96 14 DA | M;/!.\n      |0x08| 2A D4 C8 21 1F 99 68 71 | *!.hq\n      |0x09| 2A D4 C8 21 1F 99 68 71 | *!.hq\n      |0x0A| FF FF FF FF FF FF FF FF | [=]       |0x0B| FF FF FF FF FF FF FF FF | [=]       |0x0C| FF FF FF FF FF FF FF FF | [=]       |0x0D| FF FF FF FF FF FF FF FF | [=]       |0x0E| FF FF FF FF FF FF FF FF | [=]       |0x0F| FF FF FF FF FF FF FF FF | [=]       |0x10| FF FF FF FF FF FF FF FF | [=]       |0x11| FF FF FF FF FF FF FF FF | [=]       |0x12| FF FF FF FF FF FF FF FF | [=] ------+----+-------------------------+----------\nsaving dump file - 19 blocks read\nsaved 152 bytes to binary file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-6.bin\nsaved 19 blocks to text file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-5.eml\nsaved to json file /mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1-6.json\n\n\nNikola.D: 0\n
+[ 817.222] KEY> KEYM2_PRES!
+[ 817.225] START(WarningWriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[ 817.269] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=18 uid=
+[ 817.815] KEY> KEYM2_PRES!
+[ 817.817] FINISH(top=WarningWriteActivity d=3)
+[ 817.838] START(WriteActivity, {'file': '/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1', 'key': '2020666666668888'}) bundle={"file": "/mnt/upan/dump/iclass/Iclass-Elite_4A678E15FEFF12E0_1", "key": "2020666666668888"}
+[ 818.183] PM3> hf iclass wrbl --blk 6 -d 030303030003E017 -k 2020666666668888 --elite (timeout=10000)
+[ 818.271] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=18 uid=
+[ 818.541] PM3< ret=1 content_len=43 Wrote block   6 / 0x06 ( ok )\n\nNikola.D: 0\n
+[ 818.544] PM3> hf iclass wrbl --blk 7 -d 834D3B2F219614DA -k 2020666666668888 --elite (timeout=10000)
+[ 818.893] PM3< ret=1 content_len=43 Wrote block   7 / 0x07 ( ok )\n\nNikola.D: 0\n
+[ 818.894] PM3> hf iclass wrbl --blk 8 -d 2AD4C8211F996871 -k 2020666666668888 --elite (timeout=10000)
+[ 819.188] SERIAL_TX> b'pctbat\r\n'
+[ 819.201] SERIAL_TX> b'charge\r\n'
+[ 819.243] PM3< ret=1 content_len=43 Wrote block   8 / 0x08 ( ok )\n\nNikola.D: 0\n
+[ 819.245] PM3> hf iclass wrbl --blk 9 -d 2AD4C8211F996871 -k 2020666666668888 --elite (timeout=10000)
+[ 819.583] PM3< ret=1 content_len=43 Wrote block   9 / 0x09 ( ok )\n\nNikola.D: 0\n
+[ 819.585] PM3> hf iclass wrbl --blk 10 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 819.933] PM3< ret=1 content_len=43 Wrote block  10 / 0x0A ( ok )\n\nNikola.D: 0\n
+[ 819.935] PM3> hf iclass wrbl --blk 11 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 820.284] PM3< ret=1 content_len=43 Wrote block  11 / 0x0B ( ok )\n\nNikola.D: 0\n
+[ 820.286] PM3> hf iclass wrbl --blk 12 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 820.636] PM3< ret=1 content_len=43 Wrote block  12 / 0x0C ( ok )\n\nNikola.D: 0\n
+[ 820.638] PM3> hf iclass wrbl --blk 13 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 820.988] PM3< ret=1 content_len=43 Wrote block  13 / 0x0D ( ok )\n\nNikola.D: 0\n
+[ 820.990] PM3> hf iclass wrbl --blk 14 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 821.340] PM3< ret=1 content_len=43 Wrote block  14 / 0x0E ( ok )\n\nNikola.D: 0\n
+[ 821.342] PM3> hf iclass wrbl --blk 15 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 821.692] PM3< ret=1 content_len=43 Wrote block  15 / 0x0F ( ok )\n\nNikola.D: 0\n
+[ 821.693] PM3> hf iclass wrbl --blk 16 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 822.044] PM3< ret=1 content_len=43 Wrote block  16 / 0x10 ( ok )\n\nNikola.D: 0\n
+[ 822.045] PM3> hf iclass wrbl --blk 17 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 822.386] PM3< ret=1 content_len=43 Wrote block  17 / 0x11 ( ok )\n\nNikola.D: 0\n
+[ 822.387] PM3> hf iclass wrbl --blk 18 -d FFFFFFFFFFFFFFFF -k 2020666666668888 --elite (timeout=10000)
+[ 822.737] PM3< ret=1 content_len=43 Wrote block  18 / 0x12 ( ok )\n\nNikola.D: 0\n
+[ 829.217] SERIAL_TX> b'pctbat\r\n'
+[ 829.231] SERIAL_TX> b'charge\r\n'
+[ 839.267] SERIAL_TX> b'pctbat\r\n'
+[ 839.281] SERIAL_TX> b'charge\r\n'
+[ 849.299] SERIAL_TX> b'pctbat\r\n'
+[ 849.311] SERIAL_TX> b'charge\r\n'
+[ 859.328] SERIAL_TX> b'pctbat\r\n'
+[ 859.341] SERIAL_TX> b'charge\r\n'
+[ 869.358] SERIAL_TX> b'pctbat\r\n'
+[ 869.371] SERIAL_TX> b'charge\r\n'
+[ 879.392] SERIAL_TX> b'pctbat\r\n'
+[ 879.406] SERIAL_TX> b'charge\r\n'
+[ 889.423] SERIAL_TX> b'pctbat\r\n'
+[ 889.441] SERIAL_TX> b'charge\r\n'
+[ 899.458] SERIAL_TX> b'pctbat\r\n'
+[ 899.476] SERIAL_TX> b'charge\r\n'
+[ 909.494] SERIAL_TX> b'pctbat\r\n'
+[ 909.511] SERIAL_TX> b'charge\r\n'
+[ 914.130] KEY> KEY_PWR_CAN_PRES!
+[ 914.504] KEY> KEY_PWR_CAN_PRES!
+[ 914.507] PRESSPM3> called
+[ 914.507] SERIAL_TX> b'presspm3\r\n'
+[ 914.520] PRESSPM3< done
+[ 914.521] PM3_STOP> stopPM3Task()
+[ 914.521] PM3_STOP< ret=None
+[ 914.522] FINISH(top=WriteActivity d=3)
+[ 915.008] POLL stack=['MainActivity', 'AutoCopyActivity'] type=18 uid=
+[ 915.023] KEY> KEY_PWR_CAN_PRES!
+[ 915.025] PRESSPM3> called
+[ 915.026] SERIAL_TX> b'presspm3\r\n'
+[ 915.040] PRESSPM3< done
+[ 915.041] PM3_STOP> stopPM3Task()
+[ 915.041] PM3_STOP< ret=None
+[ 915.042] FINISH(top=AutoCopyActivity d=2)
+[ 915.509] POLL stack=['MainActivity'] type=18 uid=
+[ 916.130] KEY> KEYOK_PRES!
+[ 916.133] START(AutoCopyActivity, None) bundle=None
+[ 916.191] PM3> hf 14a info (timeout=5000)
+[ 916.193] CONNECT> connect2PM3()
+[ 916.199] CONNECT< socket=True
+[ 916.512] POLL stack=['MainActivity', 'AutoCopyActivity'] type=18 uid=
+[ 917.734] PM3< ret=1 content_len=266 \n UID: 7A F2 EC B2\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nPrng detection..... hard\n\nNikola.D: 0\n
+[ 917.740] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[ 917.960] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[ 917.971] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[ 918.015] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[ 918.411] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[ 918.413] CONNECT> connect2PM3()
+[ 918.417] CONNECT< socket=True
+[ 918.616] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[ 918.622] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 919.528] SERIAL_TX> b'pctbat\r\n'
+[ 919.541] SERIAL_TX> b'charge\r\n'
+[ 925.589] PM3< ret=1 content_len=1228 Loaded 104 keys from /tmp/.keys/mf_tmp_keys.dic\nRunning strategy 1\n...[=] Chunk: 6.6s | found 29/32 keys (85)\nChunk: 0.3s | found 32/32 keys (19)\ntime in checkkeys (fast) 7.0s\n\n\nfound keys:\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success)\n\n\nNikola.D: 0\n
+[ 925.594] PM3> hf mf rdsc -s 0 -a -k 484558414354 (timeout=15000)
+[ 925.836] PM3< ret=1 content_len=570 --sector no 0, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00\ndata: 00 00 00 00 00 00 71 E7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 0  rdAB wrAB incAB dectrAB\n  block 1  rdAB wrB\n  block 2  rdAB wrB\n  block 3  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 925.842] PM3> hf mf rdsc -s 1 -a -k 484558414354 (timeout=15000)
+[ 926.085] PM3< ret=1 content_len=555 --sector no 1, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 4  rdAB wrB\n  block 5  rdAB wrB\n  block 6  rdAB wrB\n  block 7  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 926.089] PM3> hf mf rdsc -s 2 -a -k 484558414354 (timeout=15000)
+[ 926.332] PM3< ret=1 content_len=557 --sector no 2, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 8  rdAB wrB\n  block 9  rdAB wrB\n  block 10  rdAB wrB\n  block 11  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 926.336] PM3> hf mf rdsc -s 3 -a -k 484558414354 (timeout=15000)
+[ 926.558] PM3< ret=1 content_len=559 --sector no 3, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 12  rdAB wrB\n  block 13  rdAB wrB\n  block 14  rdAB wrB\n  block 15  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 926.564] PM3> hf mf rdsc -s 4 -a -k 484558414354 (timeout=15000)
+[ 926.787] PM3< ret=1 content_len=559 --sector no 4, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 16  rdAB wrB\n  block 17  rdAB wrB\n  block 18  rdAB wrB\n  block 19  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 926.790] PM3> hf mf rdsc -s 5 -a -k 484558414354 (timeout=15000)
+[ 927.013] PM3< ret=1 content_len=580 --sector no 5, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 20  rdAB wrB\n  block 21  rdAB wrB\n  block 22  rdAB wrB\n  block 23  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 927.017] PM3> hf mf rdsc -s 6 -a -k 484558414354 (timeout=15000)
+[ 927.240] PM3< ret=1 content_len=580 --sector no 6, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 24  rdAB wrB\n  block 25  rdAB wrB\n  block 26  rdAB wrB\n  block 27  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 927.243] PM3> hf mf rdsc -s 7 -a -k 484558414354 (timeout=15000)
+[ 927.476] PM3< ret=1 content_len=580 --sector no 7, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 28  rdAB wrB\n  block 29  rdAB wrB\n  block 30  rdAB wrB\n  block 31  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 927.480] PM3> hf mf rdsc -s 8 -a -k 484558414354 (timeout=15000)
+[ 927.723] PM3< ret=1 content_len=580 --sector no 8, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 32  rdAB wrB\n  block 33  rdAB wrB\n  block 34  rdAB wrB\n  block 35  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 927.726] PM3> hf mf rdsc -s 9 -a -k 484558414354 (timeout=15000)
+[ 927.970] PM3< ret=1 content_len=580 --sector no 9, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86\ndata: 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE\ndata: FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 36  rdAB wrB\n  block 37  rdAB wrB\n  block 38  rdAB wrB\n  block 39  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 927.974] PM3> hf mf rdsc -s 10 -a -k 484558414354 (timeout=15000)
+[ 928.217] PM3< ret=1 content_len=581 --sector no 10, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 40  rdAB wrB\n  block 41  rdAB wrB\n  block 42  rdAB wrB\n  block 43  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 928.220] PM3> hf mf rdsc -s 11 -a -k 484558414354 (timeout=15000)
+[ 928.443] PM3< ret=1 content_len=581 --sector no 11, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 44  rdAB wrB\n  block 45  rdAB wrB\n  block 46  rdAB wrB\n  block 47  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 928.446] PM3> hf mf rdsc -s 12 -a -k 484558414354 (timeout=15000)
+[ 928.669] PM3< ret=1 content_len=581 --sector no 12, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 48  rdAB wrB\n  block 49  rdAB wrB\n  block 50  rdAB wrB\n  block 51  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 928.672] PM3> hf mf rdsc -s 13 -a -k 484558414354 (timeout=15000)
+[ 928.905] PM3< ret=1 content_len=581 --sector no 13, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 52  rdAB wrB\n  block 53  rdAB wrB\n  block 54  rdAB wrB\n  block 55  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 928.908] PM3> hf mf rdsc -s 14 -a -k 484558414354 (timeout=15000)
+[ 929.151] PM3< ret=1 content_len=581 --sector no 14, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 56  rdAB wrB\n  block 57  rdAB wrB\n  block 58  rdAB wrB\n  block 59  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 929.154] PM3> hf mf rdsc -s 15 -a -k 484558414354 (timeout=15000)
+[ 929.397] PM3< ret=1 content_len=548 --sector no 15, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20\ndata: 00 00 00 00 00 00 07 87 8F 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 60  rdAB\n  block 61  rdAB\n  block 62  rdAB\n  block 63  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[ 929.563] SERIAL_TX> b'pctbat\r\n'
+[ 929.586] SERIAL_TX> b'charge\r\n'
+[ 932.744] KEY> KEYM2_PRES!
+[ 932.778] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin"
+[ 932.980] KEY> KEYM2_PRES!
+[ 932.982] FINISH(top=WarningWriteActivity d=3)
+[ 933.002] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin"
+[ 933.041] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=1 uid=7AF2ECB2
+[ 933.369] PM3> hf 14a info (timeout=10000)
+[ 933.370] CONNECT> connect2PM3()
+[ 933.373] CONNECT< socket=True
+[ 934.023] PM3< ret=1 content_len=318 \n UID: 7A F2 EC B2\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities... Gen 1a\n1 static nonce 01200145\nStatic nonce....... yes\n\nNikola.D: 0\n
+[ 934.024] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[ 934.257] PM3< ret=1 content_len=85 --block number: 0\ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n\nNikola.D: 0\n
+[ 934.263] PM3> hf mf cload -f /mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin (timeout=10000)
+[ 936.173] PM3< ret=1 content_len=212 loaded 1024 bytes from binary file /mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_16.bin\nCopying to magic card\n................................................................\n\nCard loaded 64 blocks from file\n\nNikola.D: 0\n
+[ 936.176] PM3> hf 14a raw -k -a -b 7 40 (timeout=10000)
+[ 936.375] PM3< ret=1 content_len=33 received 1 bytes\n0A\n\nNikola.D: 0\n
+[ 936.376] PM3> hf 14a raw -c -k -a 43 (timeout=10000)
+[ 936.583] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[ 936.584] PM3> hf 14a raw -c -k -a e000 (timeout=10000)
+[ 936.790] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[ 936.791] PM3> hf 14a raw -c -k -a 85000000000000000000000000000008 (timeout=10000)
+[ 937.008] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[ 937.008] PM3> hf 14a raw -c -a 5000 (timeout=10000)
+[ 937.216] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[ 937.216] PM3> hf 14a info (timeout=10000)
+[ 937.860] PM3< ret=1 content_len=318 \n UID: 7A F2 EC B2\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities... Gen 1a\n1 static nonce 01200145\nStatic nonce....... yes\n\nNikola.D: 0\n
+[ 937.861] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[ 938.095] PM3< ret=1 content_len=85 --block number: 0\ndata: 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22\n\nNikola.D: 0\n
+[ 939.608] SERIAL_TX> b'pctbat\r\n'
+[ 939.626] SERIAL_TX> b'charge\r\n'
+[ 949.643] SERIAL_TX> b'pctbat\r\n'
+[ 949.656] SERIAL_TX> b'charge\r\n'
+[ 959.681] SERIAL_TX> b'pctbat\r\n'
+[ 959.695] SERIAL_TX> b'charge\r\n'
+[ 969.712] SERIAL_TX> b'pctbat\r\n'
+[ 969.726] SERIAL_TX> b'charge\r\n'
+[ 979.742] SERIAL_TX> b'pctbat\r\n'
+[ 979.757] SERIAL_TX> b'charge\r\n'
+[ 989.779] SERIAL_TX> b'pctbat\r\n'
+[ 989.796] SERIAL_TX> b'charge\r\n'
+[ 999.814] SERIAL_TX> b'pctbat\r\n'
+[ 999.831] SERIAL_TX> b'charge\r\n'
+[1009.848] SERIAL_TX> b'pctbat\r\n'
+[1009.861] SERIAL_TX> b'charge\r\n'
+[1019.878] SERIAL_TX> b'pctbat\r\n'
+[1019.891] SERIAL_TX> b'charge\r\n'
