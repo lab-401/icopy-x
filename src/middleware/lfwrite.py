@@ -142,6 +142,19 @@ B0_WRITE_MAP = {
     30: '00158040',   # JABLOTRON
     13: '00150060',   # GPROX_II
     32: '907F0042',   # NEDAP
+    # GROUND-TRUTH DEVIATION (Phase 6 workaround):
+    # PAC/Stanley is normally cloned via `lf pac clone b <raw>`, which
+    # the iCopy-X Community fork PM3 firmware accepts syntactically but
+    # hangs during clone_t55xx_tag() on this hardware (observed: no
+    # response + 3-4 reworks + eventual timeout; device requires app
+    # restart to recover).  Computed config word from cmdlfpac.c:244:
+    #   blocks[0] = T55x7_MODULATION_DIRECT (0)
+    #             | T55x7_BITRATE_RF_32     (0x00080000)
+    #             | 4 << T55x7_MAXBLOCK_SHIFT (4 << 5 = 0x80)
+    #           = 0x00080080
+    # Bypassing `lf pac clone` by doing direct `lf t55xx write` block
+    # writes via the standard B0_WRITE_MAP path.
+    34: '00080080',   # PAC/STANLEY (see deviation note above)
 }
 
 # RAW_CLONE_MAP: tag type ID -> PM3 clone command template
@@ -159,7 +172,8 @@ B0_WRITE_MAP = {
 RAW_CLONE_MAP = {
     14: 'lf securakey clone -r {}',
     29: 'lf gallagher clone -r {}',
-    34: 'lf pac clone -r {}',
+    # 34 (PAC/STANLEY) moved to B0_WRITE_MAP — `lf pac clone` hangs on
+    # this firmware's clone_t55xx_tag() implementation.  See note above.
     35: 'lf paradox clone -r {}',
     45: 'lf nexwatch clone -r {}',
 }
