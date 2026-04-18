@@ -340,7 +340,18 @@ _COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
     (re.compile(r'^hf iclass rdbl\s+--blk\s+(\S+)\s+-k\s+(\S+)$'),
      r'hf iclass rdbl b \1 k \2'),
 
-    # hf iclass chk --vb6kdf -> hf iclass chk
+    # hf iclass chk -- iCopy-X Community fork legacy uses single-char parser:
+    #   `hf iclass chk [h|e|r] [f <file>]`
+    # (Device binary string: `Usage: hf iclass chk [h|e|r] [f  (*.dic)]`.)
+    # Examples from binary:
+    #   hf iclass chk f dictionaries/iclass_default_keys.dic
+    #   hf iclass chk f dictionaries/iclass_default_keys.dic e
+    (re.compile(r'^hf iclass chk\s+-f\s+(\S+)\s+--elite$'),
+     r'hf iclass chk f \1 e'),
+    (re.compile(r'^hf iclass chk\s+-f\s+(\S+)$'), r'hf iclass chk f \1'),
+    # --vb6kdf is an iceman-only built-in elite KDF fallback.  Legacy has
+    # no equivalent; strip the flag (bare `hf iclass chk` emits usage,
+    # which upstream chkKeys treats as a no-op).
     (re.compile(r'^hf iclass chk\s+--vb6kdf$'), 'hf iclass chk'),
 
     # hf iclass dump -k {key} -f {path} --elite -> hf iclass dump k {key} f {path} e
@@ -356,17 +367,25 @@ _COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
     (re.compile(r'^hf iclass dump\s+-k\s+(\S+)$'),
      r'hf iclass dump k \1'),
 
-    # hf iclass calcnewkey --old {old} --new {new} --elite
+    # hf iclass calcnewkey -- iCopy-X Community fork legacy uses single-char:
+    #   `hf iclass calcnewkey o <old> n <new> [s <csn>] [e]`
+    # (Device binary examples:
+    #    hf iclass calcnewkey o 1122334455667788 n 2233445566778899
+    #    hf iclass calcnewkey o 1122334455667788 n 2233445566778899 e
+    #    hf iclass calcnewkey o 1122334455667788 n 2233445566778899 s deadbeaf.. ee
+    #  single-char token parser, no `-` case.)
     (re.compile(r'^hf iclass calcnewkey\s+--old\s+(\S+)\s+--new\s+(\S+)\s+--elite$'),
-     r'hf iclass calcnewkey o \1 n \2 --elite'),
-    # hf iclass calcnewkey --old {old} --new {new}
+     r'hf iclass calcnewkey o \1 n \2 e'),
     (re.compile(r'^hf iclass calcnewkey\s+--old\s+(\S+)\s+--new\s+(\S+)$'),
      r'hf iclass calcnewkey o \1 n \2'),
 
-    # hf iclass wrbl --blk {blk} -d {data} -k {key} --elite
+    # hf iclass wrbl --blk {blk} -d {data} -k {key} [--elite]
+    # Legacy iCopy-X fork uses `-b <block>` (short flag), not `--blk`.
+    # Ground truth: autocopy_mf4k_mf1k7b_t55_trace_20260329.txt:
+    #   `hf iclass wrbl -b 6 -d 030303030003E017 -k 2020666666668888`
+    # Simple long->short rename; `-d`/`-k`/`--elite` already match.
     (re.compile(r'^hf iclass wrbl\s+--blk\s+(\S+)\s+-d\s+(\S+)\s+-k\s+(\S+)\s+--elite$'),
      r'hf iclass wrbl -b \1 -d \2 -k \3 --elite'),
-    # hf iclass wrbl --blk {blk} -d {data} -k {key}
     (re.compile(r'^hf iclass wrbl\s+--blk\s+(\S+)\s+-d\s+(\S+)\s+-k\s+(\S+)$'),
      r'hf iclass wrbl -b \1 -d \2 -k \3'),
 
@@ -1027,15 +1046,18 @@ def _normalize_hf15_restore(text):
 # LEGACY: cmdhficlass.c:2149 `"Wrote block %02X successful"`.
 # ICEMAN: cmdhficlass.c:3134 `"Wrote block %d / 0x%02X ( ok )"`.
 # Middleware `iclasswrite._KW_WRBL_SUCCESS = r'\( ok \)'`.
+# Device binary emits `Wrote block %3d/0x%02X successful`
+# (e.g. `Wrote block   6/0x06 successful`).  Middleware iceman regex
+# at iclasswrite.py:119 is `\( ok \)`, so rewrite to iceman shape.
 _RE_LEGACY_ICLASS_WROTE = re.compile(
-    r'Wrote block ([0-9A-Fa-f]+)\s+successful')
+    r'Wrote block\s+(\d+)(?:\s*/\s*0x[0-9A-Fa-f]+)?\s+successful')
 
 
 def _normalize_iclass_wrbl(text):
-    """Rewrite legacy `Wrote block NN successful` -> iceman ` ( ok )` form."""
+    """Rewrite legacy `Wrote block NN[/0xNN] successful` -> iceman ` ( ok )`."""
     def _lg_replace(m):
-        return 'Wrote block %s / 0x%s ( ok )' % (
-            m.group(1), m.group(1).zfill(2).upper())
+        blk_dec = int(m.group(1))
+        return 'Wrote block %3d / 0x%02X ( ok )' % (blk_dec, blk_dec)
     return _RE_LEGACY_ICLASS_WROTE.sub(_lg_replace, text)
 
 
