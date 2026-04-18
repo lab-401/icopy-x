@@ -298,8 +298,12 @@ _COMMAND_TRANSLATION_RULES = [] if not LEGACY_COMPAT else [
     (re.compile(r'^hf mf csetuid\s+-u\s+(\S+)\s+-s\s+(\S+)\s+-a\s+(\S+)(?:\s+(-w))?$'),
      _reverse_mf_csetuid),
 
-    # hf mfu restore -s -e -f {file} -> hf mfu restore s e f {file}
+    # hf mfu restore -s -e -f {file} -> hf mfu restore s e f {file}   (EV1)
     (re.compile(r'^hf mfu restore\s+-s\s+-e\s+-f\s+(\S+)$'), r'hf mfu restore s e f \1'),
+    # hf mfu restore -e -f {file}    -> hf mfu restore e f {file}     (NTAG)
+    (re.compile(r'^hf mfu restore\s+-e\s+-f\s+(\S+)$'), r'hf mfu restore e f \1'),
+    # hf mfu restore -f {file}       -> hf mfu restore f {file}       (plain UL/UL-C)
+    (re.compile(r'^hf mfu restore\s+-f\s+(\S+)$'), r'hf mfu restore f \1'),
 
     # -----------------------------------------------------------------------
     # Flow 4: Erase — reverse rules (iceman → factory)
@@ -1074,6 +1078,19 @@ def _normalize_mf_found_key(text):
     return _RE_LEGACY_FOUND_KEY_SPACED.sub(_strip_spaces, text)
 
 
+# -- hf mfu restore: legacy `Finish restore` -> iceman `Done!` --
+
+# LEGACY: cmdhfmfu.c CmdHF14AMfURestore L2220 `PrintAndLogEx(INFO, "Finish restore")`.
+# ICEMAN: cmdhfmfu.c:4218 `PrintAndLogEx(INFO, "Done!")`.
+# Middleware `hfmfuwrite.py:159` matches literal `Done!` via hasKeyword.
+_RE_LEGACY_MFU_RESTORE_DONE = re.compile(r'^(\s*)Finish restore\b', re.MULTILINE)
+
+
+def _normalize_mfu_restore(text):
+    """Rewrite legacy `Finish restore` -> iceman `Done!` sentinel."""
+    return _RE_LEGACY_MFU_RESTORE_DONE.sub(r'\1Done!', text)
+
+
 # -- hf iclass rdbl: legacy ' block NN : <hex>' -> iceman ' block N/0xNN : <hex>' --
 
 # LEGACY: cmdhficlass.c:2399 `" block %02X : <hex>"` (capital-hex block number).
@@ -1157,6 +1174,7 @@ _RESPONSE_NORMALIZERS = {} if not LEGACY_COMPAT else {
     'hf mf rdsc': [_normalize_mf_block_grid],
     'hf mf darkside': [_normalize_mf_found_key],
     'hf mf nested': [_normalize_mf_found_key],
+    'hf mfu restore': [_normalize_mfu_restore],
     'hf 15 restore': [_normalize_hf15_restore],
     'hf 15 csetuid': [_normalize_hf15_csetuid],
     'hf iclass rdbl': [_normalize_iclass_rdbl],
