@@ -1,0 +1,238 @@
+=== FULL TRACE ===
+[   0.013] presspm3 hook OK
+[   0.016] POLL stack=['MainActivity'] 
+[   0.016] === ALL INSTALLED ===
+[   6.218] SERIAL_TX> b'pctbat\r\n'
+[   6.231] SERIAL_TX> b'charge\r\n'
+[  16.248] SERIAL_TX> b'pctbat\r\n'
+[  16.261] SERIAL_TX> b'charge\r\n'
+[  26.279] SERIAL_TX> b'pctbat\r\n'
+[  26.296] SERIAL_TX> b'charge\r\n'
+[  36.312] SERIAL_TX> b'pctbat\r\n'
+[  36.326] SERIAL_TX> b'charge\r\n'
+[  46.130] KEY> KEYDOWN_PRES!
+[  46.343] SERIAL_TX> b'pctbat\r\n'
+[  46.356] SERIAL_TX> b'charge\r\n'
+[  46.452] KEY> KEYDOWN_PRES!
+[  47.018] KEY> KEYOK_PRES!
+[  47.146] START(ScanActivity, None) bundle=None
+[  47.225] PM3> hf 14a info (timeout=5000)
+[  47.228] CONNECT> connect2PM3()
+[  47.232] CONNECT< socket=True
+[  47.358] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[  47.392] PM3> lf sea (timeout=10000)
+[  47.587] POLL stack=['MainActivity', 'ScanActivity'] 
+[  48.482] PM3< ret=1 content_len=298 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\nAWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nValid AWID ID found!\n\nChipset detection: T55xx\n\nNikola.D: 0\n
+[  48.511] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[  48.600] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[  48.708] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[  56.373] SERIAL_TX> b'pctbat\r\n'
+[  56.386] SERIAL_TX> b'charge\r\n'
+[  66.402] SERIAL_TX> b'pctbat\r\n'
+[  66.416] SERIAL_TX> b'charge\r\n'
+[  76.433] SERIAL_TX> b'pctbat\r\n'
+[  76.446] SERIAL_TX> b'charge\r\n'
+[  86.462] SERIAL_TX> b'pctbat\r\n'
+[  86.476] SERIAL_TX> b'charge\r\n'
+[  96.493] SERIAL_TX> b'pctbat\r\n'
+[  96.506] SERIAL_TX> b'charge\r\n'
+[ 106.523] SERIAL_TX> b'pctbat\r\n'
+[ 106.536] SERIAL_TX> b'charge\r\n'
+[ 116.553] SERIAL_TX> b'pctbat\r\n'
+[ 116.566] SERIAL_TX> b'charge\r\n'
+[ 126.583] SERIAL_TX> b'pctbat\r\n'
+[ 126.596] SERIAL_TX> b'charge\r\n'
+[ 136.613] SERIAL_TX> b'pctbat\r\n'
+[ 136.626] SERIAL_TX> b'charge\r\n'
+[ 146.643] SERIAL_TX> b'pctbat\r\n'
+[ 146.656] SERIAL_TX> b'charge\r\n'
+[ 156.673] SERIAL_TX> b'pctbat\r\n'
+[ 156.686] SERIAL_TX> b'charge\r\n'
+[ 166.707] SERIAL_TX> b'pctbat\r\n'
+[ 166.721] SERIAL_TX> b'charge\r\n'
+[ 176.738] SERIAL_TX> b'pctbat\r\n'
+[ 176.751] SERIAL_TX> b'charge\r\n'
+[ 186.768] SERIAL_TX> b'pctbat\r\n'
+[ 186.781] SERIAL_TX> b'charge\r\n'
+[ 196.798] SERIAL_TX> b'pctbat\r\n'
+[ 196.811] SERIAL_TX> b'charge\r\n'
+[ 206.827] SERIAL_TX> b'pctbat\r\n'
+[ 206.841] SERIAL_TX> b'charge\r\n'
+[ 216.858] SERIAL_TX> b'pctbat\r\n'
+[ 216.871] SERIAL_TX> b'charge\r\n'
+[ 226.887] SERIAL_TX> b'pctbat\r\n'
+[ 226.901] SERIAL_TX> b'charge\r\n'
+[ 236.918] SERIAL_TX> b'pctbat\r\n'
+[ 236.931] SERIAL_TX> b'charge\r\n'
+[ 246.952] SERIAL_TX> b'pctbat\r\n'
+[ 246.966] SERIAL_TX> b'charge\r\n'
+[ 256.988] SERIAL_TX> b'pctbat\r\n'
+[ 257.001] SERIAL_TX> b'charge\r\n'
+[ 267.022] SERIAL_TX> b'pctbat\r\n'
+[ 267.036] SERIAL_TX> b'charge\r\n'
+[ 277.053] SERIAL_TX> b'pctbat\r\n'
+[ 277.066] SERIAL_TX> b'charge\r\n'
+[ 287.083] SERIAL_TX> b'pctbat\r\n'
+[ 287.096] SERIAL_TX> b'charge\r\n'
+[ 297.112] SERIAL_TX> b'pctbat\r\n'
+[ 297.126] SERIAL_TX> b'charge\r\n'
+[ 307.143] SERIAL_TX> b'pctbat\r\n'
+[ 307.161] SERIAL_TX> b'charge\r\n'
+[ 317.183] SERIAL_TX> b'pctbat\r\n'
+[ 317.196] SERIAL_TX> b'charge\r\n'
+[ 327.213] SERIAL_TX> b'pctbat\r\n'
+[ 327.226] SERIAL_TX> b'charge\r\n'
+[ 337.243] SERIAL_TX> b'pctbat\r\n'
+[ 337.256] SERIAL_TX> b'charge\r\n'
+[ 347.273] SERIAL_TX> b'pctbat\r\n'
+[ 347.286] SERIAL_TX> b'charge\r\n'
+[ 357.308] SERIAL_TX> b'pctbat\r\n'
+[ 357.321] SERIAL_TX> b'charge\r\n'
+[ 367.338] SERIAL_TX> b'pctbat\r\n'
+[ 367.351] SERIAL_TX> b'charge\r\n'
+[ 367.959] KEY> KEY_PWR_CAN_PRES!
+[ 367.962] FINISH(top=ScanActivity d=2)
+[ 368.057] POLL stack=['MainActivity'] type=11 uid=
+[ 377.367] SERIAL_TX> b'pctbat\r\n'
+[ 377.381] SERIAL_TX> b'charge\r\n'
+[ 387.403] SERIAL_TX> b'pctbat\r\n'
+[ 387.416] SERIAL_TX> b'charge\r\n'
+[ 394.986] KEY> KEYOK_PRES!
+[ 394.989] START(ScanActivity, None) bundle=None
+[ 395.046] PM3> hf 14a info (timeout=5000)
+[ 395.049] CONNECT> connect2PM3()
+[ 395.053] CONNECT< socket=True
+[ 395.106] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 396.100] PM3< ret=1 content_len=294 \n UID: 04 10 76 BD 96 CA 89\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 396.102] PM3> hf mfu info (timeout=8888)
+[ 397.438] SERIAL_TX> b'pctbat\r\n'
+[ 397.451] SERIAL_TX> b'charge\r\n'
+[ 398.090] PM3< ret=1 content_len=1913 \n      TYPE: NTAG 213 144bytes (NT2H1311G0DU)\n       UID: 04 10 76 BD 96 CA 89\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: EA (ok)\n      BCC1: 68 (ok)\n  Internal: 48 (default)\n      Lock: 00 00  - 00\nOneTimePad: E1 10 12 00  - 2110\n\n--- NDEF Message\nCapability Container: E1 10 12 00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  12: Physical Memory Size: 144 bytes\n  12: NDEF Memory Size: 144 bytes\n  Additional feature information\n  00\n  00000000\n  xxx      - 00: RFU (ok)\n     x     - 00: don't support special frame\n      x    - 00: don't support lock block\n       xx  - 00: RFU (ok)\n         x - 00: IC don't support multiple block reads\n\n--- Tag Counter\n       [02]: 00 00 00\n            - 00 tearing (failure)\n\nSignature verification failed\n\n--- Tag Version\n       Raw bytes: 00 04 04 02 01 00 0F 03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: 04, NTAG\n Product subtype: 02, 50pF\n   Major version: 01\n   Minor version: 00\n            Size: 0F, (256 <-> 128 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [41/0x29]: 04 00 00 FF\n                    - strong modulation mode disabled\n                    - pages don't need authentication\n  cfg1 [42/0x2A]: 00 05 00 00\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [43/0x2B]: 00 00 00 00 - (cannot be read)\n  PACK [44/0x2C]: 00 00       - (cannot be read)\n  RFU  [44/0x2C]:       00 00 - (cannot be read)\n\n--- Known EV1/NTAG passwords\nFound a default password: FF FF FF FF  || Pack: 00 00\n\n\nNikola.D: 0\n
+[ 398.093] CACHE: {"found": "True", "type": "5", "isMFU": "True", "uid": "'041076BD96CA89'"}
+[ 398.117] POLL stack=['MainActivity', 'ScanActivity'] type=5 uid=041076BD96CA89
+[ 398.277] CACHE: {"found": "True", "type": "5", "isMFU": "True", "uid": "'041076BD96CA89'"}
+[ 407.467] SERIAL_TX> b'pctbat\r\n'
+[ 407.481] SERIAL_TX> b'charge\r\n'
+[ 415.951] KEY> KEYM1_PRES!
+[ 415.967] PM3> hf 14a info (timeout=5000)
+[ 415.970] CONNECT> connect2PM3()
+[ 415.974] CONNECT< socket=True
+[ 417.092] PM3< ret=1 content_len=294 \n UID: 04 CC 9E 51 47 C7 88\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 417.093] PM3> hf mfu info (timeout=8888)
+[ 417.497] SERIAL_TX> b'pctbat\r\n'
+[ 417.511] SERIAL_TX> b'charge\r\n'
+[ 419.089] PM3< ret=1 content_len=1918 \n      TYPE: NTAG 215 504bytes (NT2H1511G0DU)\n       UID: 04 CC 9E 51 47 C7 88\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: DE (ok)\n      BCC1: 59 (ok)\n  Internal: 48 (default)\n      Lock: 00 00  - 00\nOneTimePad: E1 10 3E 00  - 2160\n\n--- NDEF Message\nCapability Container: E1 10 3E 00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  3E: Physical Memory Size: 496 bytes\n  3E: NDEF Memory Size: 496 bytes\n  Additional feature information\n  00\n  00000000\n  xxx      - 00: RFU (ok)\n     x     - 00: don't support special frame\n      x    - 00: don't support lock block\n       xx  - 00: RFU (ok)\n         x - 00: IC don't support multiple block reads\n\n--- Tag Counter\n       [02]: 00 00 00\n            - 00 tearing (failure)\n\nSignature verification failed\n\n--- Tag Version\n       Raw bytes: 00 04 04 02 01 00 11 03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: 04, NTAG\n Product subtype: 02, 50pF\n   Major version: 01\n   Minor version: 00\n            Size: 11, (512 <-> 256 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [131/0x83]: 04 00 00 FF\n                    - strong modulation mode disabled\n                    - pages don't need authentication\n  cfg1 [132/0x84]: 00 05 00 00\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [133/0x85]: 00 00 00 00 - (cannot be read)\n  PACK [134/0x86]: 00 00       - (cannot be read)\n  RFU  [134/0x86]:       00 00 - (cannot be read)\n\n--- Known EV1/NTAG passwords\nFound a default password: FF FF FF FF  || Pack: 00 00\n\n\nNikola.D: 0\n
+[ 419.092] CACHE: {"found": "True", "type": "6", "isMFU": "True", "uid": "'04CC9E5147C788'"}
+[ 419.151] POLL stack=['MainActivity', 'ScanActivity'] type=6 uid=04CC9E5147C788
+[ 419.311] CACHE: {"found": "True", "type": "6", "isMFU": "True", "uid": "'04CC9E5147C788'"}
+[ 427.528] SERIAL_TX> b'pctbat\r\n'
+[ 427.541] SERIAL_TX> b'charge\r\n'
+[ 431.188] KEY> KEYM1_PRES!
+[ 431.204] PM3> hf 14a info (timeout=5000)
+[ 431.207] CONNECT> connect2PM3()
+[ 431.211] CONNECT< socket=True
+[ 432.329] PM3< ret=1 content_len=294 \n UID: 04 05 C3 03 61 65 80\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 432.331] PM3> hf mfu info (timeout=8888)
+[ 434.317] PM3< ret=1 content_len=1919 \n      TYPE: NTAG 216 888bytes (NT2H1611G0DU)\n       UID: 04 05 C3 03 61 65 80\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: 4A (ok)\n      BCC1: 87 (ok)\n  Internal: 48 (default)\n      Lock: 00 00  - 00\nOneTimePad: E1 10 6D 00  - 2110\n\n--- NDEF Message\nCapability Container: E1 10 6D 00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  6D: Physical Memory Size: 872 bytes\n  6D: NDEF Memory Size: 872 bytes\n  Additional feature information\n  00\n  00000000\n  xxx      - 00: RFU (ok)\n     x     - 00: don't support special frame\n      x    - 00: don't support lock block\n       xx  - 00: RFU (ok)\n         x - 00: IC don't support multiple block reads\n\n--- Tag Counter\n       [02]: 00 00 00\n            - 00 tearing (failure)\n\nSignature verification failed\n\n--- Tag Version\n       Raw bytes: 00 04 04 02 01 00 13 03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: 04, NTAG\n Product subtype: 02, 50pF\n   Major version: 01\n   Minor version: 00\n            Size: 13, (1024 <-> 512 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [227/0xE3]: 04 00 00 FF\n                    - strong modulation mode disabled\n                    - pages don't need authentication\n  cfg1 [228/0xE4]: 00 05 00 00\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [229/0xE5]: 00 00 00 00 - (cannot be read)\n  PACK [230/0xE6]: 00 00       - (cannot be read)\n  RFU  [230/0xE6]:       00 00 - (cannot be read)\n\n--- Known EV1/NTAG passwords\nFound a default password: FF FF FF FF  || Pack: 00 00\n\n\nNikola.D: 0\n
+[ 434.320] CACHE: {"found": "True", "type": "7", "isMFU": "True", "uid": "'0405C303616580'"}
+[ 434.502] CACHE: {"found": "True", "type": "7", "isMFU": "True", "uid": "'0405C303616580'"}
+[ 434.675] POLL stack=['MainActivity', 'ScanActivity'] type=7 uid=0405C303616580
+[ 437.563] SERIAL_TX> b'pctbat\r\n'
+[ 437.576] SERIAL_TX> b'charge\r\n'
+[ 447.592] SERIAL_TX> b'pctbat\r\n'
+[ 447.606] SERIAL_TX> b'charge\r\n'
+[ 456.483] KEY> KEYM1_PRES!
+[ 456.499] PM3> hf 14a info (timeout=5000)
+[ 456.502] CONNECT> connect2PM3()
+[ 456.505] CONNECT< socket=True
+[ 457.623] SERIAL_TX> b'pctbat\r\n'
+[ 457.636] SERIAL_TX> b'charge\r\n'
+[ 457.654] PM3< ret=1 content_len=294 \n UID: 04 A6 69 F7 4E 08 8D\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 457.658] PM3> hf mfu info (timeout=8888)
+[ 458.397] PM3< ret=1 content_len=850 \n      TYPE: NTAG I2C 888bytes (NT3H1101FHK)\n       UID: 04 A6 69 4E 08 8D 00\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: F7, crc should be 43\n      BCC1: 44, crc should be CB\n  Internal: 00 (not default)\n      Lock: 00 00  - 00\nOneTimePad: E1 10 6D 00  - 2110\n\n--- NDEF Message\nCapability Container: E1 10 6D 00\n  E1: NDEF Magic Number\n  10: version 0.1 supported by tag\n       : Read access granted without any security / Write access granted without any security\n  6D: Physical Memory Size: 872 bytes\n  6D: NDEF Memory Size: 872 bytes\n  Additional feature information\n  00\n  00000000\n  xxx      - 00: RFU (ok)\n     x     - 00: don't support special frame\n      x    - 00: don't support lock block\n       xx  - 00: RFU (ok)\n         x - 00: IC don't support multiple block reads\nError: tag didn't answer to READ SIGNATURE\n\nNikola.D: -10\n
+[ 458.405] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04A669F74E088D'"}
+[ 458.585] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'04A669F74E088D'"}
+[ 458.711] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=04A669F74E088D
+[ 467.656] SERIAL_TX> b'pctbat\r\n'
+[ 467.671] SERIAL_TX> b'charge\r\n'
+[ 477.688] SERIAL_TX> b'pctbat\r\n'
+[ 477.701] SERIAL_TX> b'charge\r\n'
+[ 482.009] KEY> KEYM1_PRES!
+[ 482.026] PM3> hf 14a info (timeout=5000)
+[ 482.028] CONNECT> connect2PM3()
+[ 482.032] CONNECT< socket=True
+[ 483.150] PM3< ret=1 content_len=294 \n UID: 04 52 A9 DF C7 41 81\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 483.152] PM3> hf mfu info (timeout=8888)
+[ 484.389] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[ 484.391] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'0452A9DFC74181'"}
+[ 484.584] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'0452A9DFC74181'"}
+[ 484.750] POLL stack=['MainActivity', 'ScanActivity'] type=2 uid=0452A9DFC74181
+[ 487.722] SERIAL_TX> b'pctbat\r\n'
+[ 487.735] SERIAL_TX> b'charge\r\n'
+[ 494.147] KEY> KEYM1_PRES!
+[ 494.163] PM3> hf 14a info (timeout=5000)
+[ 494.165] CONNECT> connect2PM3()
+[ 494.169] CONNECT< socket=True
+[ 495.291] PM3< ret=1 content_len=294 \n UID: 04 6B F0 8A 40 5B 81\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities : Gen 3 / APDU\n\nNikola.D: 0\n
+[ 495.293] PM3> hf mfu info (timeout=8888)
+[ 497.172] PM3< ret=1 content_len=1082 \n      TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101)\n       UID: 04 6B F0 8A 40 5B 81\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: 17 (ok)\n      BCC1: 10 (ok)\n  Internal: 48 (default)\n      Lock: 08 00  - 80\nOneTimePad: 40 02 FB 1E  - 62230\n\n--- Tag Counters\n       [0]: 00 00 00\n            - BD tearing (ok)\n       [1]: 00 00 00\n            - BD tearing (ok)\n       [2]: 00 00 00\n            - BD tearing (ok)\n\n--- Tag Signature\n IC signature public key name: NXP Ultralight Ev1\nIC signature public key value: 0490933BDCD6E99B4E255E3DA55389A827564E11718E017292FAF23226A96614B8\n    Elliptic curve parameters: NID_secp128r1\n             TAG IC Signature: 53C5A03EEFC1552D9144EE47A5CEAE93E9CFAE473F3994F93B659A368CBA2E35\n           Signature verified: successful\n\n--- Tag Version\n       Raw bytes: 00 04 03 01 01 00 0B 03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: 03, Ultralight\n Product subtype: 01, 17 pF\n   Major version: 01\n   Minor version: 00\n            Size: 0B, (64 <-> 32 bytes)\n   Protocol type: 03, ISO14443-3 Compliant\n\n\nNikola.D: 0\n
+[ 497.174] CACHE: {"found": "True", "type": "4", "isMFU": "True", "uid": "'046BF08A405B81'"}
+[ 497.270] POLL stack=['MainActivity', 'ScanActivity'] type=4 uid=046BF08A405B81
+[ 497.338] CACHE: {"found": "True", "type": "4", "isMFU": "True", "uid": "'046BF08A405B81'"}
+[ 497.752] SERIAL_TX> b'pctbat\r\n'
+[ 497.766] SERIAL_TX> b'charge\r\n'
+[ 507.785] SERIAL_TX> b'pctbat\r\n'
+[ 507.801] SERIAL_TX> b'charge\r\n'
+[ 517.817] SERIAL_TX> b'pctbat\r\n'
+[ 517.831] SERIAL_TX> b'charge\r\n'
+[ 527.852] SERIAL_TX> b'pctbat\r\n'
+[ 527.866] SERIAL_TX> b'charge\r\n'
+[ 537.883] SERIAL_TX> b'pctbat\r\n'
+[ 537.896] SERIAL_TX> b'charge\r\n'
+[ 547.913] SERIAL_TX> b'pctbat\r\n'
+[ 547.926] SERIAL_TX> b'charge\r\n'
+[ 557.943] SERIAL_TX> b'pctbat\r\n'
+[ 557.956] SERIAL_TX> b'charge\r\n'
+[ 567.973] SERIAL_TX> b'pctbat\r\n'
+[ 567.986] SERIAL_TX> b'charge\r\n'
+[ 570.589] KEY> KEYM1_PRES!
+[ 570.605] PM3> hf 14a info (timeout=5000)
+[ 570.608] CONNECT> connect2PM3()
+[ 570.612] CONNECT< socket=True
+[ 570.809] PM3< ret=1 content_len=13 \nNikola.D: 0\n
+[ 570.812] PM3> lf sea (timeout=10000)
+[ 573.338] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[-]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[ 573.341] PM3> hf sea (timeout=10000)
+[ 575.273] PM3< ret=1 content_len=777 [\]                                          [|] Searching for ThinFilm tag...[/]                                          [-] Searching for LTO-CM tag...[\]                                          [|] Searching for ISO14443-A tag...[/]                                          [-] Searching for ISO15693 tag...[\]                                          [|] Searching for iCLASS / PicoPass tag...\n    CSN: 4A 67 8E 15 FE FF 12 E0\n Config: 12 FF FF FF 7F 1F FF 3C\n\nValid iCLASS tag / PicoPass tag found\n\n[/]                                          [-] Searching for LEGIC tag...[\]                                          [|] Searching for Topaz tag...[/]                                          [-] Searching for ISO14443-B tag...[\]\nNikola.D: 0\n
+[ 575.363] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 (timeout=5000)
+[ 575.370] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.377] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 (timeout=5000)
+[ 575.384] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.385] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 (timeout=5000)
+[ 575.391] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.393] PM3> hf iclass rdbl --blk 01 -k AFA785A7DAB33378 --elite (timeout=5000)
+[ 575.399] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.401] PM3> hf iclass rdbl --blk 01 -k 2020666666668888 --elite (timeout=5000)
+[ 575.407] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.408] PM3> hf iclass rdbl --blk 01 -k 6666202066668888 --elite (timeout=5000)
+[ 575.415] PM3< ret=1 content_len=561 unknown parameter '-'\n\nRead a iCLASS block from tag\n\nUsage:  hf iclass rdbl b <block> k <key> [c|e|r|v]\n\nOptions:\n  h         : Show this help\n  b <block> : The block number as 2 hex symbols\n  k <key>   : Access Key as 16 hex symbols or 1 hex to select key from memory\n  c         : credit key assumed\n\n  e         : elite computations applied to key\n  r         : raw, no computations applied to key\n  v         : verbose output\nExamples:\n	hf iclass rdbl b 06 k 0011223344556677\n	hf iclass rdbl b 1B k 0011223344556677 c\n	hf iclass rdbl b 0A k 0\n\n\nNikola.D: 0\n
+[ 575.416] PM3> hf iclass chk --vb6kdf (timeout=30000)
+[ 575.422] PM3< ret=1 content_len=502 unknown parameter '-'\n\nCheckkeys loads a dictionary text file with 8byte hex keys to test authenticating against a iClass tag\n\nUsage: hf iclass chk [h|e|r] [f  (*.dic)]\n\nOptions:\n  h             Show this help\n  f <filename>  Dictionary file with default iclass keys\n  r             raw\n  e             elite\n  c             credit key  (if not use, default is debit)\nExamples:\n	hf iclass chk f dictionaries/iclass_default_keys.dic\n	hf iclass chk f dictionaries/iclass_default_keys.dic e\n\n\nNikola.D: 0\n
+[ 575.423] PM3> hf iclass info (timeout=5000)
+[ 575.756] PM3< ret=1 content_len=927 \n    CSN: 4A 67 8E 15 FE FF 12 E0   (uid)\n Config: 12 FF FF FF 7F 1F FF 3C   (Card configuration)\nE-purse: FF FF FF FF F9 FF FF FF   (Card challenge, CC)\n     Kd: 00 00 00 00 00 00 00 00   (Debit key, hidden)\n     Kc: 00 00 00 00 00 00 00 00   (Credit key, hidden)\n    AIA: FF FF FF FF FF FF FF FF   (Application Issuer area)\n  Mode: Application (locked)\nCoding: ISO 14443-2 B / 15693\n Crypt: Secured page, keys not locked\n    RA: Read access not enabled\nApp limit 0x12, OTP 0xFFFF, Block write lock 0xFF\n     Chip 0x7F, Mem 0x1F, EAS 0xFF, Fuses 0x3C\n    2 KBits/2 App Areas (256 bytes)\n    AA1 blocks 13 { 0x06 - 0x12 (06 - 18) }\n    AA2 blocks 18 { 0x13 - 0x1F (19 - 31) }\n Kd = Debit key (AA1),  Kc = Credit key (AA2)\n     Read A - Kd or Kc\n     Read B - Kd or Kc\n    Write A - Kc\n    Write B - Kc\n      Debit - Kd or Kc\n     Credit - Kc\nCSN is in HID range\nCredential : iCLASS legacy\n Card type : PicoPass 2K\n\nNikola.D: 0\n
+[ 575.758] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "progress": "2", "return": "18"}
+[ 575.895] POLL stack=['MainActivity', 'ScanActivity'] type=18 uid=
+[ 575.946] CACHE: {"found": "True", "type": "18", "csn": "'4A678E15FEFF12E0'", "progress": "2", "return": "18", "chip": "'Elite'"}
+[ 578.003] SERIAL_TX> b'pctbat\r\n'
+[ 578.016] SERIAL_TX> b'charge\r\n'
+[ 584.639] KEY> KEY_PWR_CAN_PRES!
+[ 584.642] FINISH(top=ScanActivity d=2)
+[ 584.915] POLL stack=['MainActivity'] type=18 uid=
+[ 588.032] SERIAL_TX> b'pctbat\r\n'
+[ 588.046] SERIAL_TX> b'charge\r\n'
+[ 598.063] SERIAL_TX> b'pctbat\r\n'
+[ 598.076] SERIAL_TX> b'charge\r\n'
+[ 608.093] SERIAL_TX> b'pctbat\r\n'
+[ 608.106] SERIAL_TX> b'charge\r\n'
+[ 618.123] SERIAL_TX> b'pctbat\r\n'
+[ 618.136] SERIAL_TX> b'charge\r\n'

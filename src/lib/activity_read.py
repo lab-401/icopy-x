@@ -361,7 +361,10 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 if self._handlePWR():
                     return
                 self.finish()
-            elif key in (KEY_M1, KEY_M2, KEY_OK):
+            elif key == KEY_M2:
+                # Only M2 ("Rescan") triggers rescan.  M1 is unset in this
+                # state and OK has no binding — the UI shows a single
+                # right-side "Rescan" button.
                 self._startScan()
             return
 
@@ -883,11 +886,17 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             return
         self._clearContent()
         msg = message or resources.get_str('no_tag_found2')
+        # Draw the action bar FIRST so Toast's "don't dim the button bar"
+        # check (find_withtag('tags_btn_bg')) actually finds the bar.
+        # Previously the toast was created before the buttons, so the dim
+        # overlay covered the whole screen including the Rescan text.
+        # Only the right button is labelled "Rescan"; left is unset so M1
+        # doesn't appear active for a no-op.
+        self.setLeftButton('')
+        self.setRightButton(resources.get_str('rescan'))
         if self._toast is not None:
             self._toast.show(msg, mode=Toast.MASK_CENTER, icon='error',
                              duration_ms=0)
-        self.setLeftButton(resources.get_str('rescan'))
-        self.setRightButton(resources.get_str('rescan'))
 
     def _showReadSuccess(self, partial=False):
         """Show read success toast with tag info template visible underneath.

@@ -24,10 +24,17 @@
 
 Reimplemented from hficlass.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
+Phase 3 (compat-flip, P3.7): middleware is now iceman-native. Every regex
+targets exactly what iceman PM3 `PrintAndLogEx` emits. Legacy-form handling
+(if any) belongs in `pm3_compat.py` adapters, not here.
+
 Ground truth:
     Strings:    docs/v1090_strings/hficlass_strings.txt
     Spec:       docs/middleware-integration/3-scan_spec.md
     Analysis:   docs/HOW_TO_BUILD_FLOWS.md (section 12.5)
+    Matrix:     tools/ground_truth/divergence_matrix.md#hf-iclass-info
+                tools/ground_truth/divergence_matrix.md#hf-iclass-rdbl
+                tools/ground_truth/divergence_matrix.md#hf-iclass-chk
 
 API (scan-related subset):
     parser() -> dict
@@ -45,13 +52,46 @@ _KEY_LEGACY_2 = '2020666666668888'
 _KEY_LEGACY_3 = '6666202066668888'
 
 # PM3 commands
-_CMD_RDBL = 'hf iclass rdbl b {:02d} k {}'
+_CMD_RDBL = 'hf iclass rdbl --blk {:02d} -k {}'
 _CMD_INFO = 'hf iclass info'
-_CMD_CHK = 'hf iclass chk f '
+_CMD_CHK = 'hf iclass chk -f '
 
-# Regex patterns
+# Regex patterns — iceman-native (compat-flip P3.7)
+#
+# _RE_CSN — matches iceman's `hf iclass info` CSN line
+#   Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:8032
+#     PrintAndLogEx(SUCCESS, "    CSN: " _GREEN_("%s") " uid", ...)
+#   Iceman emits `    CSN: 75 D0 E0 13 FE FF 12 E0 uid` (4-space indent,
+#   `uid` suffix after hex). Matrix v2 correction (line 433) confirms the
+#   pattern `CSN:*\s([A-Fa-f0-9 ]+)` matches iceman verbatim: `CSN:` is
+#   followed by a literal space, then the hex run. The `:*` allows zero
+#   or more colons to absorb Fingerprint-banner variants where iceman
+#   uses dotted form `CSN..........` (cmdhficlass.c:8088/8098). The hex
+#   class captures until a non-hex char (space before `uid` still
+#   matches the class; trailing text is discarded at regex boundary).
 _RE_CSN = r'CSN:*\s([A-Fa-f0-9 ]+)'
+
+# _RE_BLK7 — Blk7#: hex is a legacy iCopy-X-specific line fed by the
+# original .so's own synthesised output (not a PM3 string). Retained for
+# API compatibility with callers that still consume the `blk7` dict field.
+# No iceman source emits this shape; consumer paths that depend on it are
+# logged in the P3.7 gap log.
 _RE_BLK7 = r'Blk7#:([0-9a-fA-F]+)'
+
+# _RE_BLOCK_READ — matches iceman `hf iclass rdbl` output.
+#   Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:3501
+#     PrintAndLogEx(SUCCESS, " block %3d/0x%02X : " _GREEN_("%s"), ...)
+#   Iceman emits ` block   6/0x06 : 12 FF FF FF 7F 1F FF 3C` (leading
+#   space, 3-space-padded decimal, slash, 0x + 2-hex-digit, space, colon,
+#   space, hex run).
+#   Matrix divergence (line 508) flagged the prior regex
+#   `r'[Bb]lock \d+ : ...'` as matching NEITHER iceman nor legacy raw
+#   forms — legacy is ` block %02X : ` (uppercase hex block ≥10
+#   unmatchable by `\d+`); iceman inserts `/0x%02X` between digit and
+#   colon. The iceman-native regex below captures the decimal block
+#   number and the hex payload; Phase 4 will rely on `_normalize_iclass_rdbl`
+#   to rewrite legacy hex block numbers to decimal for cross-fw parity.
+_RE_BLOCK_READ = r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+([A-Fa-f0-9 ]+)'
 
 
 def checkKey(typ_or_key, key=None, block=1, elite=False):
@@ -61,8 +101,9 @@ def checkKey(typ_or_key, key=None, block=1, elite=False):
     Original .so signature: checkKey(typ, key) where typ is a string type name.
     iclasswrite.so calls: hficlass.checkKey(typ, key)
 
-    Sends 'hf iclass rdbl b 01 k <key>' and checks for 'Block' (capital B)
-    in response. Error messages contain lowercase 'block' and must NOT match.
+    Sends 'hf iclass rdbl --blk 01 -k <key>' and checks for an iceman-shaped
+    block-read success line (` block   1/0x01 : 12 FF ...`). Error messages
+    lack the `/0x%02X` infix and must NOT match.
 
     Returns True if key is valid, False otherwise.
     """
@@ -86,17 +127,17 @@ def checkKey(typ_or_key, key=None, block=1, elite=False):
 
     cmd = _CMD_RDBL.format(block, actual_key)
     if elite:
-        cmd += ' e'
+        cmd += ' --elite'
     ret = executor.startPM3Task(cmd, 5000)
     if ret == -1:
         return False
 
-    # Ground truth (hficlass.so, string at 0x00022a2c):
-    # Original .so uses getContentFromRegexG with pattern
-    #   'block \d+ : ([a-fA-F0-9 ]+)'
-    # This matches success output like "Block 01 : 12 FF FF FF 7F 1F FF 3C"
-    # but NOT error messages like "[-] Error reading block" (no " \d+ : hex").
-    content = executor.getContentFromRegex(r'[Bb]lock \d+ : ([a-fA-F0-9 ]+)')
+    # Ground truth: iceman emits ` block %3d/0x%02X : %s` at
+    # /tmp/rrg-pm3/client/src/cmdhficlass.c:3501. The regex targets the
+    # iceman-native shape directly. Error paths (e.g. auth failure,
+    # tag-not-present) do NOT emit the `block .../0x.. : hex` pattern
+    # so the regex naturally rejects them.
+    content = executor.getContentFromRegex(_RE_BLOCK_READ)
     return bool(content and content.strip())
 
 
@@ -137,7 +178,7 @@ def readTagBlock(typ_or_key, block_or_key=None, key=None, elite=False):
 
     cmd = _CMD_RDBL.format(actual_block, actual_key)
     if elite:
-        cmd += ' e'
+        cmd += ' --elite'
     ret = executor.startPM3Task(cmd, 5000)
     if ret == -1:
         return ''
@@ -146,10 +187,12 @@ def readTagBlock(typ_or_key, block_or_key=None, key=None, elite=False):
     if not content or not content.strip():
         return ''
 
-    # Ground truth: PM3 iCLASS rdbl output contains 'block' keyword.
-    # Note: [+] prefix is stripped by pm3_compat._pre_normalize on iceman,
-    # so only check for 'block' presence.
-    if 'block' in content.lower():
+    # Ground truth: iceman block-read line ` block %3d/0x%02X : <hex>` is a
+    # reliable positive sentinel; error outputs do NOT contain the
+    # `/0x..` infix. Matching on the regex (not on a naked `block`
+    # substring) reduces false-positives from help text and other noise.
+    # Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:3501
+    if re.search(_RE_BLOCK_READ, content):
         return content
     return ''
 
@@ -216,11 +259,18 @@ def chkKeys(infos):
     # Fallback: file-based key check via 'hf iclass chk'
     # Ground truth: archive/lib_transliterated/hficlass.py line 254
     # Original .so falls back to 'hf iclass chk f <keyfile>' when rdbl fails
-    cmd = 'hf iclass chk'
+    cmd = 'hf iclass chk --vb6kdf'
     ret = executor.startPM3Task(cmd, 30000)
     if ret == -1:
         return None
 
+    # Iceman `CmdHFiClassCheckKeys` emits `Found valid key <hex>` on success.
+    # Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:5925 and :7016
+    #   PrintAndLogEx(NORMAL, "Found valid key " _GREEN_("%s") ...)
+    #   PrintAndLogEx(SUCCESS, "Found valid key " _GREEN_("%s"), ...)
+    # sprint_hex_inrow emits uppercase hex pairs separated by single spaces;
+    # the regex below accepts either case and collapses spaces after match.
+    # Matrix citation: divergence_matrix.md "hf iclass chk" (line 445).
     content = executor.getPrintContent()
     if content and 'Found valid key' in content:
         m = _re.search(r'Found valid key\s+([0-9a-fA-F ]+)', content)

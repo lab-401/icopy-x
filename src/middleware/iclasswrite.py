@@ -24,10 +24,18 @@
 
 Reimplemented from iclasswrite.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
+Phase 3 (compat-flip, P3.7): middleware is iceman-native. All regex and
+keywords target exactly what iceman PM3 emits (source citations in each
+pattern). Legacy colon-separator, `successful` keyword, and hex-block
+formats are handled only by pm3_compat.py adapters.
+
 Ground truth:
     Archive:    archive/lib_transliterated/iclasswrite.py
     Spec:       docs/middleware-integration/6-write_spec.md (section on iclasswrite)
     Strings:    docs/v1090_strings/iclasswrite_strings.txt
+    Matrix:     tools/ground_truth/divergence_matrix.md#hf-iclass-wrbl
+                tools/ground_truth/divergence_matrix.md#hf-iclass-calcnewkey
+                tools/ground_truth/divergence_matrix.md#hf-iclass-rdbl
 
 API:
     readBlockHex(file, block, block_size=8) -> str
@@ -77,8 +85,38 @@ ICLASS_L_WRITE_BLOCK = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 
 TIMEOUT = 10000
 
-# Regex for key calculation result
-_RE_XOR_DIV_KEY = r'Xor div key\s*:\s*([0-9A-Fa-f ]+)'
+# _RE_XOR_DIV_KEY — iceman `hf iclass calcnewkey` success result.
+#   Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:5419
+#     PrintAndLogEx(SUCCESS, "Xor div key.... " _YELLOW_("%s") "\n", ...)
+#   Iceman emits `Xor div key.... <hex>` with a **4-dot** separator
+#   (verified by reading source L5419; the prior matrix note at line 1361
+#   claimed a colon separator which was incorrect — corrected by this
+#   refactor). `sprint_hex_inrow` emits uppercase hex bytes separated by
+#   spaces. The regex anchors on `Xor div key` followed by one-or-more
+#   dots and whitespace, then captures the hex run.
+#
+# Matrix citation: divergence_matrix.md "hf iclass calcnewkey" (line 1350).
+# Systemic #7 (dotted-separator) applies — pm3_compat.py _RE_DOTTED_SEPARATOR
+# converts iceman dots to colon globally, which breaks this regex when
+# the adapter is active; Phase 4 must disable that normalizer for
+# Xor div key. Entry logged in phase3_phase4_gap_log.md under P3.7.
+_RE_XOR_DIV_KEY = r'Xor div key\.+\s+([0-9A-Fa-f ]+)'
+
+# _KW_WRBL_SUCCESS — iceman `hf iclass wrbl` success sentinel.
+#   Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:3134
+#     PrintAndLogEx(SUCCESS,
+#       "Wrote block " _YELLOW_("%d") " / " _YELLOW_("0x%02X") " ( "
+#       _GREEN_("ok") " )", ...)
+#   Iceman emits `Wrote block 6 / 0x06 ( ok )` with literal ` ( ok )`.
+#   Legacy emits `Wrote block 07 successful` (uppercase hex block,
+#   trailing word `successful`). Matrix "hf iclass wrbl" (line 518)
+#   marks this a FORMAT divergence; pm3_compat._normalize_iclass_wrbl
+#   rewrites iceman's `( ok )` to `successful` for back-compat.
+#
+# After compat flip: middleware targets the iceman-native `( ok )`
+# sentinel directly. The adapter normalizer becomes obsolete; Phase 4
+# will remove the normalizer, the iceman-native keyword will still match.
+_KW_WRBL_SUCCESS = r'\( ok \)'
 
 
 # ===========================================================================
@@ -143,9 +181,9 @@ def calcNewKey(typ, oldkey, newkey, l2e=False):
     Returns calculated key hex string, or -10 on failure.
     """
     if l2e:
-        cmd = 'hf iclass calcnewkey o {} n {} --elite'.format(oldkey, newkey)
+        cmd = 'hf iclass calcnewkey --old {} --new {} --elite'.format(oldkey, newkey)
     else:
-        cmd = 'hf iclass calcnewkey o {} n {}'.format(oldkey, newkey)
+        cmd = 'hf iclass calcnewkey --old {} --new {}'.format(oldkey, newkey)
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
@@ -169,15 +207,16 @@ def writeDataBlock(typ, block, data, key):
     """
     # Elite cards (type 18) need --elite for key derivation
     is_elite = (typ == getattr(tagtypes, 'ICLASS_ELITE', 18))
-    cmd = 'hf iclass wrbl -b {} -d {} -k {}'.format(block, data, key)
+    cmd = 'hf iclass wrbl --blk {} -d {} -k {}'.format(block, data, key)
     if is_elite:
         cmd += ' --elite'
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -10
 
-    # Check for success
-    if executor.hasKeyword('successful'):
+    # Iceman success: `Wrote block <N> / 0x<NN> ( ok )`
+    # (cmdhficlass.c:3134). See _KW_WRBL_SUCCESS for citation detail.
+    if executor.hasKeyword(_KW_WRBL_SUCCESS):
         return 0
     return -10
 
@@ -304,9 +343,9 @@ def verify(infos, bundle):
             content = hficlass.readTagBlock(typ, block_num, read_key,
                                             elite=is_elite)
         else:
-            cmd = 'hf iclass rdbl b {:02d} k {}'.format(block_num, read_key)
+            cmd = 'hf iclass rdbl --blk {:02d} -k {}'.format(block_num, read_key)
             if is_elite:
-                cmd += ' e'
+                cmd += ' --elite'
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1
@@ -315,8 +354,15 @@ def verify(infos, bundle):
         if not content:
             return -1
 
-        # Extract hex data from response
-        m = re.search(r'[Bb]lock\s*[0-9a-fA-F]+\s*:\s*([A-Fa-f0-9 ]+)', content)
+        # Iceman rdbl block line:
+        #   ` block %3d/0x%02X : <hex>` (cmdhficlass.c:3501)
+        # The regex targets the iceman-native shape directly — prior form
+        # `[Bb]lock\s*[0-9a-fA-F]+\s*:\s*...` matched neither iceman (had
+        # `/0x..` infix) nor legacy blocks ≥10 (regex used `[0-9a-fA-F]`
+        # which accepted hex, but the `\s*:` split failed on iceman). See
+        # divergence_matrix.md "hf iclass rdbl" (line 493, Systemic #4).
+        m = re.search(r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+([A-Fa-f0-9 ]+)',
+                      content)
         if m:
             read_data = m.group(1).strip().replace(' ', '').upper()
             if read_data != expected.upper():

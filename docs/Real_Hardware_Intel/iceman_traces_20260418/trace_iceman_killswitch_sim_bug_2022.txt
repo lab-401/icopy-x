@@ -1,0 +1,80 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.188] SERIAL_TX> b'pctbat\r\n'
+[   6.205] SERIAL_TX> b'charge\r\n'
+[  16.226] SERIAL_TX> b'pctbat\r\n'
+[  16.240] SERIAL_TX> b'charge\r\n'
+[  26.256] SERIAL_TX> b'pctbat\r\n'
+[  26.269] SERIAL_TX> b'charge\r\n'
+[  30.367] KEY> KEYDOWN_PRES!
+[  30.635] KEY> KEYDOWN_PRES!
+[  31.209] KEY> KEYOK_PRES!
+[  32.134] START(ScanActivity, None) bundle=None
+[  32.200] PM3> hf 14a info (timeout=5000)
+[  32.203] CONNECT> connect2PM3()
+[  32.212] CONNECT< socket=True
+[  32.309] PM3< ret=1 content_len=1 \n
+[  32.344] PM3> lf sea (timeout=10000)
+[  32.527] POLL stack=['MainActivity', 'ScanActivity'] 
+[  33.650] PM3< ret=1 content_len=690 \nNote: False Positives ARE possible\nChecking for known tags...\n[PW39    ] Pyramid 39-bit wiegand format    FC: 51341  CN: 351646  parity ( fail )\nfound 1 matching 39-bit format\nParity tests failed\n\nTrying with a preamble bit...\n[P10001  ] HID P10001 Honeywell 40-bit      FC: 2321  CN: 43707\n[Casi40  ] Casi-Rusco 40-bit                  CN: 53835292062\n[Verkada40] Verkada 40-bit                   FC: 200  CN: 148200862  parity ( ok )\n[BC40    ] Bundy TimeClock 40-bit           FC: 2189  CN: 175823  OEM: 76  parity ( fail )\nfound 4 matching 40-bit formats\n\nraw: 000000000000009911aabb3c\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  33.671] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  33.829] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  34.035] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  36.286] SERIAL_TX> b'pctbat\r\n'
+[  36.299] SERIAL_TX> b'charge\r\n'
+[  43.282] KEY> KEYM2_PRES!
+[  43.285] START(SimulationActivity, {'raw': '000000000000009911aabb3c', 'data': 'FC,CN: 51341,351646', 'type': 9, 'found': True, 'progress': 1, 'return': 9}) bundle={"raw": "000000000000009911aabb3c", "data": "FC,CN: 51341,351646", "type": 9, "found": true, "progress": 1, "return": 9}
+[  43.387] PM3> lf hid sim -r FC,CN: 51341 (timeout=-1)
+[  43.395] PM3< ret=1 content_len=88 lf hid sim: unexpected argument "51341"\nTry 'lf hid sim --help' for more information.\n\n\n
+[  43.557] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=9 uid=
+[  46.322] SERIAL_TX> b'pctbat\r\n'
+[  46.334] SERIAL_TX> b'charge\r\n'
+[  56.368] SERIAL_TX> b'pctbat\r\n'
+[  56.387] SERIAL_TX> b'charge\r\n'
+[  66.407] SERIAL_TX> b'pctbat\r\n'
+[  66.420] SERIAL_TX> b'charge\r\n'
+[  67.504] KEY> KEYM1_PRES!
+[  68.215] KEY> KEY_PWR_CAN_PRES!
+[  76.441] SERIAL_TX> b'pctbat\r\n'
+[  76.454] SERIAL_TX> b'charge\r\n'
+[  86.476] SERIAL_TX> b'pctbat\r\n'
+[  86.489] SERIAL_TX> b'charge\r\n'
+[  96.506] SERIAL_TX> b'pctbat\r\n'
+[  96.520] SERIAL_TX> b'charge\r\n'
+[ 106.541] SERIAL_TX> b'pctbat\r\n'
+[ 106.554] SERIAL_TX> b'charge\r\n'
+[ 116.571] SERIAL_TX> b'pctbat\r\n'
+[ 116.585] SERIAL_TX> b'charge\r\n'
+[ 126.601] SERIAL_TX> b'pctbat\r\n'
+[ 126.614] SERIAL_TX> b'charge\r\n'
+[ 136.631] SERIAL_TX> b'pctbat\r\n'
+[ 136.644] SERIAL_TX> b'charge\r\n'
+[ 146.661] SERIAL_TX> b'pctbat\r\n'
+[ 146.674] SERIAL_TX> b'charge\r\n'
+[ 156.691] SERIAL_TX> b'pctbat\r\n'
+[ 156.704] SERIAL_TX> b'charge\r\n'
+[ 166.726] SERIAL_TX> b'pctbat\r\n'
+[ 166.739] SERIAL_TX> b'charge\r\n'
+[ 176.756] SERIAL_TX> b'pctbat\r\n'
+[ 176.770] SERIAL_TX> b'charge\r\n'
+[ 186.786] SERIAL_TX> b'pctbat\r\n'
+[ 186.800] SERIAL_TX> b'charge\r\n'
+[ 196.816] SERIAL_TX> b'pctbat\r\n'
+[ 196.829] SERIAL_TX> b'charge\r\n'
+[ 197.961] KEY> KEY_PWR_CAN_PRES!
+[ 197.964] FINISH(top=SimulationActivity d=3)
+[ 198.299] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[ 198.405] KEY> KEY_PWR_CAN_PRES!
+[ 198.407] FINISH(top=ScanActivity d=2)
+[ 198.801] POLL stack=['MainActivity'] type=9 uid=
+[ 198.867] KEY> KEY_PWR_CAN_PRES!
+[ 206.846] SERIAL_TX> b'pctbat\r\n'
+[ 206.860] SERIAL_TX> b'charge\r\n'
+[ 216.876] SERIAL_TX> b'pctbat\r\n'
+[ 216.889] SERIAL_TX> b'charge\r\n'
+[ 226.906] SERIAL_TX> b'pctbat\r\n'
+[ 226.919] SERIAL_TX> b'charge\r\n'
+[ 236.936] SERIAL_TX> b'pctbat\r\n'
+[ 236.949] SERIAL_TX> b'charge\r\n'

@@ -165,7 +165,7 @@ class StringEN:
         'wipe_failed': 'Erase failed',
         'keys_check_failed': 'Time out',
         'wipe_no_valid_keys': "No valid keys\uff0cPlease use 'Auto Copy' first, Then erase",
-        'err_at_wiping': 'Unknown error',
+        'err_at_wiping': 'Erase Failed: ACL Locked Sectors',
         'time_syncing': 'Synchronizing system time',
         'time_syncok': 'Synchronization successful!',
         'device_disconnected': 'USB device is removed!',

@@ -26,9 +26,15 @@ This module shadows iclassread.so and handles the iCLASS read flow
 using our hficlass.py middleware. The original .so has compatibility
 issues when combined with our Python middleware modules.
 
+Phase 3 (compat-flip, P3.7): middleware is iceman-native. The dump-success
+keyword targets iceman's `saving dump file - %u blocks read` emission
+verbatim (both firmwares emit the identical substring — matrix v2
+correction at divergence_matrix.md line 484-487).
+
 Ground truth:
     Archive: archive/lib_transliterated/iclassread.py
     Strings: docs/v1090_strings/iclassread_strings.txt
+    Matrix:  tools/ground_truth/divergence_matrix.md#hf-iclass-dump
 
 API matches original:
     read(infos) -> dict
@@ -70,9 +76,15 @@ except ImportError:
             ICLASS_SE = 47
 
 # ---------------------------------------------------------------------------
-# Constants -- from binary strings extraction
+# Constants -- iceman-native (compat-flip P3.7)
 # ---------------------------------------------------------------------------
 TIMEOUT = 30000
+
+# _KW_DUMP_SUCCESS — iceman emits `saving dump file - %u blocks read`
+# at /tmp/rrg-pm3/client/src/cmdhficlass.c:2978 (verified by matrix v2
+# correction; both firmwares emit the identical substring — see
+# divergence_matrix.md line 484-487). The short `saving dump file` prefix
+# is a stable substring match for both iceman and legacy dump output.
 _KW_DUMP_SUCCESS = 'saving dump file'
 
 # iclassread module state -- read.so accesses these after read() returns
@@ -106,11 +118,11 @@ def readFromKey(infos, key, typ):
         file_path = '/tmp/iclass_dump.bin'
 
     # Build dump command
-    cmd = 'hf iclass dump k %s' % key
+    cmd = 'hf iclass dump -k %s' % key
     if file_path:
-        cmd += ' f %s' % file_path
+        cmd += ' -f %s' % file_path
     if typ == 'Elite':
-        cmd += ' e'
+        cmd += ' --elite'
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
 

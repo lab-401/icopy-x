@@ -856,8 +856,21 @@ class AboutActivity(BaseActivity):
         else:
             self._start_scroller()
 
+    # Scroller easter-egg asset paths.  Resolved relative to this lib
+    # so they work both on the device (/home/pi/ipk_app_main/lib/...)
+    # and against the source tree (development).
+    _SCROLLER_OGG = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), '..', 'res', 'audio', 'scroller.ogg'))
+
     def _start_scroller(self):
-        """Create and embed the about scroller easter egg."""
+        """Create and embed the about scroller easter egg.
+
+        Audio: loop res/audio/scroller.ogg via pygame.mixer.music for
+        the lifetime of the scroller page; killed by _stop_scroller()
+        on page change or activity finish.  Missing-file handling is
+        graceful — the scroller stays silent but the visual still
+        works.
+        """
         canvas = self.getCanvas()
         if canvas is None:
             return
@@ -872,9 +885,25 @@ class AboutActivity(BaseActivity):
         except Exception:
             logger.exception("Failed to start about scroller")
             self._scroller = None
+        # Music is independent of the visual — start it even if the
+        # scroller widget itself failed (no point silencing the song
+        # because of a draw glitch).
+        try:
+            from lib import audio
+            audio.startScrollerMusic(self._SCROLLER_OGG)
+        except Exception:
+            logger.exception("Failed to start scroller music")
 
     def _stop_scroller(self):
-        """Stop and destroy the embedded scroller if running."""
+        """Stop and destroy the embedded scroller + its music."""
+        # Music first — stop the subprocess before tearing down the
+        # canvas so the audio cuts cleanly on page change rather than
+        # tailing into the next page's render.
+        try:
+            from lib import audio
+            audio.stopScrollerMusic()
+        except Exception:
+            pass
         if self._scroller is not None:
             self._scroller.stop()
             try:
@@ -2923,8 +2952,9 @@ class WipeTagActivity(BaseActivity):
 
         elif self._state in (self.STATE_SUCCESS, self.STATE_FAILED,
                              self.STATE_NO_KEYS):
-            # M1/M2/OK: re-erase with saved type (state table)
-            if key in (KEY_M1, KEY_M2, KEY_OK):
+            # Only M2 ("Erase") triggers re-erase.  M1 is unset in these
+            # result states — the UI shouldn't show two identical buttons.
+            if key == KEY_M2:
                 self._startErase()
             elif key == KEY_PWR:
                 if self._handlePWR():
@@ -3103,57 +3133,41 @@ class WipeTagActivity(BaseActivity):
         if self._progress is not None:
             self._progress.hide()
 
+        # Restore buttons FIRST so Toast's "don't dim the button bar" check
+        # sees the action-bar background on the canvas.  If the toast is
+        # shown before the buttons are drawn, the dim overlay covers the
+        # whole screen and the Erase label appears greyed out.
+        # M2="Erase", M1 unset — avoid two identically-labelled buttons
+        # for a single action.
+        self.setLeftButton('')
+        self.setRightButton(resources.get_str('wipe'))
+
         # Show result toast
         if result == 'success':
             self._state = self.STATE_SUCCESS
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_success'),
-                    mode=Toast.MASK_CENTER,
-                    icon='check',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('wipe_success')
+            toast_icon = 'check'
         elif result == 'no_keys':
             self._state = self.STATE_NO_KEYS
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_no_valid_keys'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('wipe_no_valid_keys')
+            toast_icon = 'error'
         elif result == 'no_tag':
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('no_tag_found'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('no_tag_found')
+            toast_icon = 'error'
         elif result == 'error':
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('err_at_wiping'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
+            toast_msg = resources.get_str('err_at_wiping')
+            toast_icon = 'error'
         else:
             self._state = self.STATE_FAILED
-            if self._toast is not None:
-                self._toast.show(
-                    resources.get_str('wipe_failed'),
-                    mode=Toast.MASK_CENTER,
-                    icon='error',
-                    duration_ms=0,
-                )
-
-        # Restore buttons: M1="Erase", M2="Erase"
-        # Ground truth: screenshots menu_6, unknown_error
-        self.setLeftButton(resources.get_str('wipe'))
-        self.setRightButton(resources.get_str('wipe'))
+            toast_msg = resources.get_str('wipe_failed')
+            toast_icon = 'error'
+        if self._toast is not None:
+            self._toast.show(
+                toast_msg, mode=Toast.MASK_CENTER,
+                icon=toast_icon, duration_ms=0,
+            )
 
     @property
     def state(self):
@@ -3219,11 +3233,11 @@ class SniffActivity(BaseActivity):
     # Sniff type definitions: (resource_key, pm3_start_cmd, pm3_list_cmd, type_id)
     # Ground truth: trace_sniff_flow_20260403.txt — real device PM3 commands
     SNIFF_TYPES = [
-        ('sniff_item1', 'hf 14a sniff', 'hf list mf', '14a'),       # trace: hf list mf NOT hf 14a list
-        ('sniff_item2', 'hf 14b sniff', 'hf list 14b', '14b'),
-        ('sniff_item3', 'hf iclass sniff', 'hf list iclass', 'iclass'),
-        ('sniff_item4', 'hf topaz sniff', 'hf list topaz', 'topaz'),
-        ('sniff_item5', 'lf t55xx sniff', None, '125k'),             # trace: lf t55xx sniff NOT lf sniff
+        ('sniff_item1', 'hf 14a sniff', 'hf mf list', '14a'),        # iceman: hf mf list (factory was: hf list mf)
+        ('sniff_item2', 'hf 14b sniff', 'hf 14b list', '14b'),       # iceman: hf 14b list
+        ('sniff_item3', 'hf iclass sniff', 'hf iclass list', 'iclass'),
+        ('sniff_item4', 'hf topaz sniff', 'hf topaz list', 'topaz'),
+        ('sniff_item5', 'lf t55xx sniff', None, '125k'),
     ]
 
     # Instruction pages for HF types (Steps 1-4)
@@ -5923,22 +5937,22 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
 # =====================================================================
 
 SIM_MAP = [
-    ('M1 S50 1k',     1,  'HF', 'hf_4b',     'uid',     'hf 14a sim t 1 u {}'),
-    ('M1 S70 4k',     0,  'HF', 'hf_4b',     'uid',     'hf 14a sim t 2 u {}'),
-    ('Ultralight',    2,  'HF', 'single_7b', 'uid',     'hf 14a sim t 7 u {}'),
-    ('Ntag215',       6,  'HF', 'single_7b', 'uid',     'hf 14a sim t 8 u {}'),
-    ('FM11RF005SH',   40, 'HF', 'single_4b', 'uid',     'hf 14a sim t 9 u {}'),
-    ('Em410x ID',     8,  'LF', 'lf_4b',     'uid',     'lf em 410x_sim {}'),
-    ('HID Prox ID',   9,  'LF', 'lf_5b',     'data',    'lf hid sim {}'),
-    ('AWID ID',       11, 'LF', 'lf_awid',   'fccn',    'lf awid sim {} {} {}'),
-    ('IO Prox ID',    12, 'LF', 'lf_io',     'ioporx',  'lf io sim {} {} {}'),
-    ('G-Prox II ID',  13, 'LF', 'lf_gporx',  'fccn',    'lf gproxii sim {} {} {}'),
-    ('Viking ID',     15, 'LF', 'single_4b', 'uid',     'lf Viking sim {}'),
-    ('Pyramid ID',    16, 'LF', 'lf_pyramid','pyramid', 'lf Pyramid sim {} {}'),
-    ('Jablotron ID',  30, 'LF', 'lf_jab',    'jabdat',  'lf Jablotron sim {}'),
-    ('Nedap ID',      32, 'LF', 'lf_nedap',  'nedap',   'lf nedap sim s {} c {} i {}'),
-    ('FDX-B Animal',  28, 'LF', 'lf_fdx_a',  'fdx',     'lf FDX sim c {} n {} s'),
-    ('FDX-B Data',    28, 'LF', 'lf_fdx_d',  'fdx',     'lf FDX sim c {} n {} e {}'),
+    ('M1 S50 1k',     1,  'HF', 'hf_4b',     'uid',     'hf 14a sim -t 1 --uid {}'),
+    ('M1 S70 4k',     0,  'HF', 'hf_4b',     'uid',     'hf 14a sim -t 2 --uid {}'),
+    ('Ultralight',    2,  'HF', 'single_7b', 'uid',     'hf 14a sim -t 7 --uid {}'),
+    ('Ntag215',       6,  'HF', 'single_7b', 'uid',     'hf 14a sim -t 8 --uid {}'),
+    ('FM11RF005SH',   40, 'HF', 'single_4b', 'uid',     'hf 14a sim -t 9 --uid {}'),
+    ('Em410x ID',     8,  'LF', 'lf_4b',     'uid',     'lf em 410x sim --id {}'),
+    ('HID Prox ID',   9,  'LF', 'lf_5b',     'raw',     'lf hid sim -r {}'),
+    ('AWID ID',       11, 'LF', 'lf_awid',   'fccn',    'lf awid sim --fmt {} --fc {} --cn {}'),
+    ('IO Prox ID',    12, 'LF', 'lf_io',     'ioporx',  'lf io sim --vn {} --fc {} --cn {}'),
+    ('G-Prox II ID',  13, 'LF', 'lf_gporx',  'fccn',    'lf gproxii sim --xor 0 --fmt {} --fc {} --cn {}'),
+    ('Viking ID',     15, 'LF', 'single_4b', 'uid',     'lf viking sim --cn {}'),
+    ('Pyramid ID',    16, 'LF', 'lf_pyramid','pyramid', 'lf pyramid sim --fc {} --cn {}'),
+    ('Jablotron ID',  30, 'LF', 'lf_jab',    'jabdat',  'lf jablotron sim --cn {}'),
+    ('Nedap ID',      32, 'LF', 'lf_nedap',  'nedap',   'lf nedap sim --st {} --cc {} --id {}'),
+    ('FDX-B Animal',  28, 'LF', 'lf_fdx_a',  'fdx',     'lf fdxb sim --country {} --national {} --animal'),
+    ('FDX-B Data',    28, 'LF', 'lf_fdx_d',  'fdx',     'lf fdxb sim --country {} --national {} --extended {}'),
 ]
 
 # QEMU-verified defaults from real .so binary (sim_common.sh lines 203-210).
@@ -5951,7 +5965,12 @@ SIM_FIELDS = {
     'single_7b': [('UID:', '123456789ABCDE',   'hex', 14)],
     'single_4b': [('UID:', '12345678',         'hex', 8)],
     'lf_4b':     [('UID:', '1234567890',       'hex', 10)],
-    'lf_5b':     [('ID:',  '112233445566',     'hex', 12)],
+    'lf_5b':     [('ID:',  '000000000000112233445566', 'hex', 24)],
+    # HID Prox raw payload: iceman cmdlfhid.c:235 emits `raw: %08x%08x%08x`
+    # (3 dwords = 24 hex chars).  Form sized to fit the iceman-native
+    # raw form so scan→sim prepop doesn't truncate to all-zero leading
+    # bytes.  PM3 'lf hid sim -r <hex>' accepts variable-length hex
+    # (26/35/40/48-bit formats), but the upper bound is 24 chars.
     'lf_awid':   [('Format:', '50',   'dec', 99),       # 2 digits max 99
                   ('FC:',  '2001',    'dec', 9999),      # 4 digits max 9999
                   ('CN:',  '13371337','dec', 99999999)],  # 8 digits, .so passes raw (user confirmed)
@@ -6000,6 +6019,7 @@ class SimulationActivity(BaseActivity):
         self._sim_stopping = False
         self._auto_start = False
         self._defdata = None
+        self._defbundle = None
         self._trace_data = None
         self._last_pm3_cmd = None
         super().__init__(bundle)
@@ -6025,9 +6045,25 @@ class SimulationActivity(BaseActivity):
                         break
                 if sim_idx is not None:
                     self._sim_entry = SIM_MAP[sim_idx]
-                    # Extract UID/data using the appropriate parser
-                    data_key = self._sim_entry[4]  # 'uid', 'data', 'fccn', etc.
-                    self._defdata = bundle.get('uid', bundle.get('data', ''))
+                    # Extract UID/data using the appropriate parser.  data_key
+                    # names the cache field this tag's prepop should pull from
+                    # (e.g. HID Prox uses 'raw' because cache.data is the
+                    # descriptive 'FC,CN: ...' string while cache.raw holds
+                    # the parseable hex payload that 'lf hid sim -r' expects).
+                    # Multi-field tags (AWID 'fccn', Pyramid 'pyramid', etc.)
+                    # have synthetic keys that don't exist in the cache —
+                    # they fall through the chain to the legacy uid/data
+                    # behaviour, which is harmless because _defbundle drives
+                    # their multi-field forms in _showSimUi anyway.
+                    data_key = self._sim_entry[4]  # 'uid', 'raw', 'data', 'fccn', etc.
+                    self._defdata = bundle.get(
+                        data_key,
+                        bundle.get('uid', bundle.get('data', '')))
+                    # Keep the full scan bundle so _showSimUi can populate
+                    # multi-field forms (FC/CN/Subtype/etc.) from individual
+                    # keys (bundle['fc'], bundle['cn'], ...) rather than
+                    # stuffing the formatted 'data' string into field 0.
+                    self._defbundle = bundle
                     self._auto_start = True
                     self._showSimUi()
                     self._startSimForData()
@@ -6122,14 +6158,59 @@ class SimulationActivity(BaseActivity):
         fields = SIM_FIELDS.get(draw_key, [])
         from lib.widget import SimFields
         self._sim_fields = SimFields(canvas, y_start=78)
+        # Label → scan-cache bundle key.  When the activity was entered
+        # from a scan (self._defbundle is set), the field's default is
+        # replaced by the matching cache key.  Without this lookup every
+        # scanned multi-field tag (Pyramid, AWID, KERI, IOProx, GProxII,
+        # Paradox, etc.) stuffed the formatted display string
+        # (e.g. "FC,CN: 153,39312") into field 0 and the PM3 sim command
+        # then rejected the bad input.  Labels that aren't mapped fall
+        # through to the widget default — avoids corrupting Nedap/FDX
+        # specific fields when we don't know the cache-key naming.
+        _LABEL_TO_CACHE_KEY = {
+            'UID:': ('uid', 'data'),
+            'ID:':  ('data', 'raw'),
+            'FC:':  ('fc',),
+            'CN:':  ('cn',),
+            'Format:': ('len',),
+            'Country:': ('country',),
+            'NC:':  ('nc',),
+            'Version:': ('vn',),   # IO Prox XSF version field
+        }
+        # Per-tag override key (field 0 only): SIM_MAP entry[4] names the
+        # cache field this tag's prepop should pull from.  Necessary for
+        # tags where the label-based lookup picks the wrong field — e.g.
+        # HID Prox uses label 'ID:' which _LABEL_TO_CACHE_KEY maps to
+        # ('data', 'raw'); but HID's cache.data is the descriptive
+        # 'FC,CN: x,y' string while cache.raw holds the parseable hex
+        # payload that 'lf hid sim -r' expects.  Multi-field tags
+        # (AWID 'fccn', Pyramid 'pyramid', etc.) use synthetic keys that
+        # don't exist in the cache so the override gracefully misses
+        # and falls through to the label-based lookup.
+        sim_override_key = self._sim_entry[4] if self._sim_entry else None
         for i, (label, default, input_type, max_val) in enumerate(fields):
             fmt = 'hex' if input_type in ('hex', 'hex_val') else ('dec' if input_type == 'dec' else 'sel')
-            # Ground truth (original trace line 52): when entering from
-            # Scan/Dump, the UID from the scan cache replaces the first
-            # field's default.  Original: PM3> hf 14a sim t 1 u DAEFB416
-            # OSS bug: was using default '12345678' instead.
             val = default
-            if i == 0 and self._defdata:
+            populated = False
+            # Per-tag override (field 0 only).
+            if (i == 0 and sim_override_key
+                    and isinstance(self._defbundle, dict)):
+                v = self._defbundle.get(sim_override_key)
+                if v not in (None, '', 'X'):
+                    val = v
+                    populated = True
+            # Per-label lookup from scan bundle.
+            if not populated and isinstance(self._defbundle, dict):
+                for k in _LABEL_TO_CACHE_KEY.get(label, ()):
+                    v = self._defbundle.get(k)
+                    if v not in (None, '', 'X'):  # 'X' = lfsearch "unknown FC"
+                        val = v
+                        populated = True
+                        break
+            # Fallback: legacy single-defdata path (first field only)
+            # preserves behaviour for non-scan entrypoints (Dump Files)
+            # where the bundle has {'sim_index': N, 'defdata': '...'}.
+            if not populated and i == 0 and self._defdata:
                 val = self._defdata
             self._sim_fields.addField(label, val, fmt, max_val)
         self._sim_fields.show()
@@ -6262,7 +6343,17 @@ class SimulationActivity(BaseActivity):
         if self._sim_entry and self._sim_entry[2] == 'HF':
             self._on14ASimStop()
         else:
+            # LF sims redraw the sim UI in-place; dismiss the transient
+            # "Processing..." toast once the UI is back (HF path hands off
+            # to SimulationTraceActivity which shows its own toast, so
+            # only LF needs the explicit cancel).  Without this the toast
+            # stays visible forever over the sim fields.
             self._showSimUi()
+            if self._toast:
+                try:
+                    self._toast.cancel()
+                except Exception:
+                    pass
 
     def _onSim(self, result=None):
         self.setidle()
@@ -6411,6 +6502,9 @@ class SimulationActivity(BaseActivity):
             if sf and sf.editing:
                 sf.exitEdit()
                 self._editing = False
+            elif self._defbundle is not None:
+                # Entered from scan/dump — M1 pops back to caller, not list.
+                self.finish()
             else:
                 self._showListUI()
         elif key == KEY_M2:
@@ -6419,7 +6513,11 @@ class SimulationActivity(BaseActivity):
         elif key == KEY_PWR:
             if self._handlePWR():
                 return
-            self._showListUI()
+            if self._defbundle is not None:
+                # Entered from scan/dump — PWR pops back to caller, not list.
+                self.finish()
+            else:
+                self._showListUI()
         elif key == KEY_UP:
             if sf:
                 if sf.editing:

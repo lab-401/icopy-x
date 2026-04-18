@@ -1213,6 +1213,15 @@ class Toast:
             duration_ms = self._duration_ms
         self._showing = True
 
+        # Audio: short chime when a toast appears.  Local import to
+        # avoid pulling pygame in for the hundreds of widgets that
+        # never call show().
+        try:
+            from lib import audio
+            audio.playSystemToast()
+        except Exception:
+            pass
+
         self._draw(message, icon, wrap=wrap)
 
         # Re-raise toast elements to top of z-order — ensures toast
@@ -1220,6 +1229,30 @@ class Toast:
         try:
             self._canvas.tag_raise(self._tag_mask)
             self._canvas.tag_raise(self._tag_text)
+        except Exception:
+            pass
+
+        # Defensive: some activities redraw widgets every keypress
+        # (e.g. SimulationActivity's SimFields creates new canvas items
+        # when focus moves or edit mode toggles).  Each new item lands at
+        # the top of the z-order and covers the toast.  Re-raise on a
+        # 50 ms poll while the toast is showing so the toast stays on top
+        # regardless of what other widgets draw.  Polling ends when the
+        # toast is cancelled (self._showing flips to False in _clear).
+        def _reraise_loop():
+            if not self._showing:
+                return
+            try:
+                self._canvas.tag_raise(self._tag_mask)
+                self._canvas.tag_raise(self._tag_text)
+            except Exception:
+                pass
+            try:
+                self._canvas.after(50, _reraise_loop)
+            except Exception:
+                pass
+        try:
+            self._canvas.after(50, _reraise_loop)
         except Exception:
             pass
 
@@ -1298,9 +1331,16 @@ class Toast:
 
         # --- Build RGBA mask: dim + toast box + icon ---
         # Ground truth (user-observed on original device): when the action bar
-        # is visible, the dim overlay does NOT cover the buttons.
+        # is visible, the dim overlay does NOT cover the buttons so the
+        # Rescan/Erase/etc label stays fully readable.
+        # The legacy constant TAG_BTN_BG ('tags_btn_bg') was never drawn by
+        # the current renderer (which uses 'button_bar' instead), so the
+        # check below always missed and the mask covered the whole screen.
+        # Match both tag names so this works no matter which renderer path
+        # created the bar.
         from lib._constants import TAG_BTN_BG, BTN_BAR_Y0
-        has_btn_bar = bool(self._canvas.find_withtag(TAG_BTN_BG))
+        has_btn_bar = bool(self._canvas.find_withtag(TAG_BTN_BG)) or \
+                      bool(self._canvas.find_withtag('button_bar'))
         dim_h = BTN_BAR_Y0 if has_btn_bar else H
 
         mask = Image.new('RGBA', (W, H), (0, 0, 0, 0))

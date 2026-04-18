@@ -29,6 +29,26 @@ Ground truth:
     Spec:       docs/middleware-integration/6-write_spec.md (section 3)
     Strings:    docs/v1090_strings/lfwrite_strings.txt
 
+Compat-flip status (P3.6 Write LF):
+    All PM3 commands emitted by this module are iceman-native per the
+    CLIParserInit signatures in /tmp/rrg-pm3/client/src/cmdlf*.c. Every
+    command below cites the iceman dispatch entry + CLI spec; response
+    parsing relies on `executor.startPM3Task` return code only (no
+    output-keyword inspection in this module's critical paths), so the
+    iceman divergence surface here is strictly on the SEND side (flag
+    spelling). The Phase-4-deferred adapter (`pm3_compat.py`) handles
+    the LEGACY-direction reverse translation for live-firmware
+    compatibility; middleware remains iceman-canonical.
+
+    See tools/ground_truth/divergence_matrix.md:
+        L1053  lf em 410x clone
+        L1126  lf fdxb clone
+        L1158  lf hid clone
+        L1176  lf indala clone
+        L1189  RAW_CLONE_MAP (securakey/gallagher/pac/paradox/nexwatch)
+        L1040  lf em 4x05 read/write/dump
+        L1278  lf t55xx write/restore
+
 API:
     write(listener, typ, infos, raw_par, key=None) -> int
     write_b0_need(typ, key=None) -> None
@@ -122,15 +142,40 @@ B0_WRITE_MAP = {
     30: '00158040',   # JABLOTRON
     13: '00150060',   # GPROX_II
     32: '907F0042',   # NEDAP
+    # GROUND-TRUTH DEVIATION (Phase 6 workaround):
+    # PAC/Stanley is normally cloned via `lf pac clone b <raw>`, which
+    # the iCopy-X Community fork PM3 firmware accepts syntactically but
+    # hangs during clone_t55xx_tag() on this hardware (observed: no
+    # response + 3-4 reworks + eventual timeout; device requires app
+    # restart to recover).  Computed config word from cmdlfpac.c:244:
+    #   blocks[0] = T55x7_MODULATION_DIRECT (0)
+    #             | T55x7_BITRATE_RF_32     (0x00080000)
+    #             | 4 << T55x7_MAXBLOCK_SHIFT (4 << 5 = 0x80)
+    #           = 0x00080080
+    # Bypassing `lf pac clone` by doing direct `lf t55xx write` block
+    # writes via the standard B0_WRITE_MAP path.
+    34: '00080080',   # PAC/STANLEY (see deviation note above)
 }
 
 # RAW_CLONE_MAP: tag type ID -> PM3 clone command template
+#
+# Iceman-native: all five accept `-r <hex>` (short form of `--raw`) via
+# CLIParserInit argtable `arg_str0/1("r", "raw", ...)`:
+#   - lf securakey clone  -- cmdlfsecurakey.c:172 (dispatch :301)
+#   - lf gallagher clone  -- cmdlfgallagher.c:175 (dispatch :387)
+#   - lf pac clone        -- cmdlfpac.c:225       (dispatch :402)
+#   - lf paradox clone    -- cmdlfparadox.c:296   (dispatch :478)
+#   - lf nexwatch clone   -- cmdlfnexwatch.c:296  (dispatch :586)
+# Divergence matrix L1189-1214. No structural divergence on the SEND side.
+# Response emits "Done!" on success (e.g. cmdlfparadox.c success path) but
+# this module only checks the PM3 return code via startPM3Task.
 RAW_CLONE_MAP = {
-    14: 'lf securakey clone b {}',
-    29: 'lf gallagher clone b {}',
-    34: 'lf pac clone b {}',
-    35: 'lf paradox clone b {}',
-    45: 'lf nexwatch clone r {}',
+    14: 'lf securakey clone -r {}',
+    29: 'lf gallagher clone -r {}',
+    # 34 (PAC/STANLEY) moved to B0_WRITE_MAP — `lf pac clone` hangs on
+    # this firmware's clone_t55xx_tag() implementation.  See note above.
+    35: 'lf paradox clone -r {}',
+    45: 'lf nexwatch clone -r {}',
 }
 
 # Lock-unavailable types (from __pyx_k_lock_unavailable_list)
@@ -144,10 +189,14 @@ LOCK_UNAVAILABLE_LIST = []
 def write_em410x(em410x_id):
     """Write EM410x ID to T5577 card.
 
-    QEMU-verified: sends 'lf em 410x_write <id> 1'
-    Returns 1 on success, -1 on error.
+    Iceman-native: sends `lf em 410x clone --id <hex>`.
+    CLI spec: cmdlfem410x.c:625 CLIParserInit "lf em 410x clone", argtable
+    arg_str1(NULL, "id", "<hex>", ...). Dispatch at cmdlfem410x.c:896
+    `{"clone", CmdEM410xClone, ...}`. Divergence matrix L1053-1069.
+
+    Returns 1 on success, -1 on error (PM3 task return).
     """
-    cmd = 'lf em 410x_write {} 1'.format(em410x_id)
+    cmd = 'lf em 410x clone --id {}'.format(em410x_id)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -157,9 +206,13 @@ def write_em410x(em410x_id):
 def write_hid(hid_id):
     """Clone HID Prox to T5577.
 
-    QEMU-verified: sends 'lf hid clone {}'.
+    Iceman-native: sends `lf hid clone -r <hex>` (short form of `--raw`).
+    CLI spec: cmdlfhid.c:400 CmdHIDClone / CLIParserInit "lf hid clone",
+    argtable arg_str0("r", "raw", "<hex>", ...). Dispatch at
+    cmdlfhid.c:724. Divergence matrix L1158-1172. Legacy firmware also
+    accepted `-r <hex>`; the SEND-side divergence is dormant.
     """
-    cmd = 'lf hid clone {}'.format(hid_id)
+    cmd = 'lf hid clone -r {}'.format(hid_id)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -167,11 +220,14 @@ def write_hid(hid_id):
 
 
 def write_indala(raw):
-    """Clone Indala to T5577.
+    """Clone Indala to T5577 / Q5.
 
-    QEMU-verified: sends 'lf indala clone {} -r {}'.
+    Iceman-native: sends `lf indala clone -r <hex>`.
+    CLI spec: cmdlfindala.c:786 CmdIndalaClone / CLIParserInit
+    "lf indala clone", argtable arg_str0("r", "raw", ...). Dispatch at
+    cmdlfindala.c:1103. Divergence matrix L1176-1187.
     """
-    cmd = 'lf indala clone {} -r {}'.format(raw, raw)
+    cmd = 'lf indala clone -r {}'.format(raw)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -181,11 +237,19 @@ def write_indala(raw):
 def write_fdx_par(animal_id):
     """Clone FDX-B animal tag.
 
-    QEMU-verified: sends 'lf fdx clone c <country> n <national_id>'.
+    Iceman-native: sends `lf fdxb clone --country <dec> --national <dec>`.
+    CLI spec: cmdlffdxb.c:712 CLIParserInit "lf fdxb clone", argtable
+    arg_u64_1("c", "country", ...) + arg_u64_1("n", "national", ...).
+    Dispatch at cmdlffdxb.c:909. Namespace changed iceman-vs-legacy:
+    iceman uses `fdxb` (B-suffix); legacy used `fdx`. Divergence matrix
+    L1126-1138.
+
+    Input `animal_id` is a `<country>-<national>` or `<country> <national>`
+    string.
     """
     parts = str(animal_id).replace('-', ' ').split()
     if len(parts) >= 2:
-        cmd = 'lf fdx clone c {} n {}'.format(parts[0], parts[1])
+        cmd = 'lf fdxb clone --country {} --national {}'.format(parts[0], parts[1])
     else:
         return None
     ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -224,10 +288,18 @@ def write_raw_clone(typ, raw):
 
 
 def write_raw_t55xx(raw):
-    """Write raw data to T5577 blocks."""
+    """Write raw data to T5577 blocks.
+
+    Iceman-native: emits one `lf t55xx write -b N -d <hex>` per 4-byte
+    (8 hex char) block. CLI spec: cmdlft55xx.c:1853 CmdT55xxWriteBlock /
+    CLIParserInit "lf t55xx write", argtable arg_int1("b", "blk", ...) +
+    arg_str0("d", "data", ...). Dispatch at cmdlft55xx.c:4794. Divergence
+    matrix L1278-1290 (COSMETIC on response: iceman emits `Writing
+    page %d  block: %02d  data: 0x%08X`, cmdlft55xx.c:1932).
+    """
     blocks = [raw[i:i + 8] for i in range(0, len(raw), 8)]
     for i, block_data in enumerate(blocks):
-        cmd = 'lf t55xx write b {} d {}'.format(i, block_data)
+        cmd = 'lf t55xx write -b {} -d {}'.format(i, block_data)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return False
@@ -237,6 +309,11 @@ def write_raw_t55xx(raw):
 def write_b0_need(typ, key=None):
     """Write Block0 config word for a given tag type.
 
+    Iceman-native: `lf t55xx write -b 0 -d <hex> [-p <hex>]`.
+    Block 0 holds the T55xx modulation/bit-rate config word. Same CLI
+    spec as `write_raw_t55xx` -- arg_str0("p", "pwd", ...) for the
+    optional password.
+
     Looks up B0_WRITE_MAP and writes to T5577 block 0.
     """
     if typ not in B0_WRITE_MAP:
@@ -244,9 +321,9 @@ def write_b0_need(typ, key=None):
 
     config_block = B0_WRITE_MAP[typ]
     if key:
-        cmd = 'lf t55xx write b 0 d {} p {}'.format(config_block, key)
+        cmd = 'lf t55xx write -b 0 -d {} -p {}'.format(config_block, key)
     else:
-        cmd = 'lf t55xx write b 0 d {}'.format(config_block)
+        cmd = 'lf t55xx write -b 0 -d {}'.format(config_block)
     executor.startPM3Task(cmd, TIMEOUT)
     return None
 
@@ -254,9 +331,13 @@ def write_b0_need(typ, key=None):
 def write_raw(typ, raw, key=None):
     """Write raw data to T5577, with optional Block0 config.
 
+    Iceman-native: one `lf t55xx write -b N -d <hex> [-p <hex>]` per
+    block (N = 1..K for data, 0 last for config). CLI spec per
+    `write_b0_need` / `write_raw_t55xx`.
+
     Ground truth (awid_write_trace_20260328.txt lines 19-26):
     Data blocks 1..N are written FIRST, then config block 0 LAST.
-    Block 0 sets modulation/bit-rate — writing it last avoids the
+    Block 0 sets modulation/bit-rate -- writing it last avoids the
     tag re-modulating mid-sequence while data blocks are incomplete.
     """
     if typ in RAW_CLONE_MAP:
@@ -267,9 +348,9 @@ def write_raw(typ, raw, key=None):
     for i, block_data in enumerate(blocks):
         block_num = i + 1
         if key:
-            cmd = 'lf t55xx write b {} d {} p {}'.format(block_num, block_data, key)
+            cmd = 'lf t55xx write -b {} -d {} -p {}'.format(block_num, block_data, key)
         else:
-            cmd = 'lf t55xx write b {} d {}'.format(block_num, block_data)
+            cmd = 'lf t55xx write -b {} -d {}'.format(block_num, block_data)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return -1
@@ -284,16 +365,30 @@ def write_raw(typ, raw, key=None):
 def write_dump_t55xx(file, key=None):
     """Restore T5577 dump from file, then verify by reading blocks back.
 
+    Iceman-native: `lf t55xx restore -f <path>`. CLI spec: cmdlft55xx.c:2653
+    CmdT55xxRestore / CLIParserInit "lf t55xx restore" @ :2655, argtable
+    arg_str0("f", "file", ...) + arg_str0("p", "pwd", ...). Dispatch at
+    cmdlft55xx.c:4790. Iceman restore emits per-block writes via nested
+    CmdT55xxWriteBlock calls, then `PrintAndLogEx(INFO, "Done!")` at
+    cmdlft55xx.c:2771.  (Note: iceman HEAD has an orphaned v1 of
+    CmdT55xxRestore inside a `/* ... */` comment block starting at
+    :2774 — cite L2653 for the live function.)  Trace prefix was
+    historically `lf t55xx restore f ...` (pre-canonicalisation); iceman
+    accepts BOTH `-f` and the bare-char form.  Divergence matrix L1287.
+
     Ground truth: PM3 command log (original_current_ui write_t55xx_block_fail)
     shows the original lfwrite.so sends:
         1. lf t55xx restore f <file>
         2. lf t55xx detect
         3. lf t55xx read b 0 .. b 7 (page 0)
         4. lf t55xx read b 0 1 .. b 3 1 (page 1)
-    and compares read-back blocks against dump file.
+    and compares read-back blocks against dump file. This reimplementation
+    delegates the detect+read-back step to `lft55xx` (P3.5 scope) and keeps
+    the restore+compare-dump-file logic here.
+
     Returns 1 on verified success, -1 on restore failure or verify mismatch.
     """
-    cmd = 'lf t55xx restore f {}'.format(file)
+    cmd = 'lf t55xx restore -f {}'.format(file)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -339,12 +434,24 @@ def write_dump_t55xx(file, key=None):
         # Can't read dump file — accept restore success
         return 1
 
-    # Compare: extract block hex from dump_text
+    # Compare: extract block hex from dump_text.
+    #
+    # Iceman-native row emission: cmdlft55xx.c:1831
+    #     PrintAndLogEx(NORMAL, "%02d | 0x%08X | %s", j, blockData, ...)
+    # Shape: `NN | 0xHHHHHHHH | <binary-ascii>`.  Iceman NEVER emits
+    # `blk <N>` or `block <N>` on data rows — `blk` only appears in the
+    # column header at cmdlft55xx.c:677 where the "hex data" column is
+    # literal text, not extractable hex.  Pre-fix pattern
+    # `(?:blk|block)\s*\d+\s*\|\s*([A-Fa-f0-9]{8})` was dead code
+    # against iceman output.  The bare `\b[A-Fa-f0-9]{8}\b` fallback
+    # was removed because it greedily captured the first 8-hex token
+    # anywhere in the cache (including unrelated config descriptors,
+    # DLMode tables, password strings).  The anchored iceman pattern
+    # below rejects false-matches by requiring the `NN | 0x<8hex>`
+    # framing.
     import re as _re
-    read_blocks = _re.findall(r'(?:blk|block)\s*\d+\s*\|\s*([A-Fa-f0-9]{8})', dump_text, _re.IGNORECASE)
-    if not read_blocks:
-        # Fallback: try simpler hex extraction from read output
-        read_blocks = _re.findall(r'\b([A-Fa-f0-9]{8})\b', dump_text)
+    read_blocks = _re.findall(r'^\s*\d+\s*\|\s*0x([A-Fa-f0-9]{8})\s*\|',
+                              dump_text, _re.MULTILINE)
 
     if not read_blocks:
         return -1
@@ -358,16 +465,22 @@ def write_dump_t55xx(file, key=None):
 
 
 def write_block_em4x05(blocks, start, end, key):
-    """Write blocks to EM4x05 tag.
+    """Write blocks to EM4x05/EM4x69 tag.
 
-    Sends 'lf em 4x05_write <block> <data> <key>' for each block.
+    Iceman-native: `lf em 4x05 write -a <dec> -d <hex> [-p <hex>]`.
+    CLI spec: cmdlfem4x05.c:1399 CmdEM4x05Write / CLIParserInit
+    "lf em 4x05 write", argtable arg_int0("a", "addr", ...) +
+    arg_str1("d", "data", ...) + arg_str0("p", "pwd", ...). Divergence
+    matrix L1040-1053 (FORMAT divergence on response output only;
+    covered by `_normalize_em4x05_info` -- middleware doesn't parse
+    write-response here).
     """
     for i in range(start, end + 1):
         if i < len(blocks):
             data = blocks[i]
             if not data or not data.strip():
                 continue
-            cmd = 'lf em 4x05_write {} {} {}'.format(i, data, key)
+            cmd = 'lf em 4x05 write -a {} -d {} -p {}'.format(i, data, key)
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1
@@ -376,6 +489,16 @@ def write_block_em4x05(blocks, start, end, key):
 
 def write_dump_em4x05(file, key=None):
     """Restore EM4x05 dump from file.
+
+    Iceman-native: per-block `lf em 4x05 write ...` for all 16 blocks,
+    then per-block `lf em 4x05 read -a N [-p <hex>]` for the verify
+    pass. Read CLI spec: cmdlfem4x05.c:1352 CmdEM4x05Read / CLIParserInit
+    "lf em 4x05 read", argtable arg_int1("a", "addr", ...) +
+    arg_str0("p", "pwd", ...). Read success emits:
+        `Address %02d | %08X - %s`   (cmdlfem4x05.c:1391)
+    where `%s` is "Lock" for addresses > 13, empty otherwise. The
+    iceman-native verify regex below targets the `| %08X -` shape
+    exactly (8 hex chars, no loose substring match).
 
     Reads blocks from dump file and writes via write_block_em4x05.
     Tries file as-is, then with .bin suffix.
@@ -409,14 +532,21 @@ def write_dump_em4x05(file, key=None):
     for block_num in write_order:
         if block_num < len(blocks):
             data = blocks[block_num]
-            cmd = 'lf em 4x05_write {} {} {}'.format(block_num, data, key or '')
+            cmd = 'lf em 4x05 write -a {} -d {} -p {}'.format(block_num, data, key or '')
             ret = executor.startPM3Task(cmd, TIMEOUT)
             if ret == -1:
                 return -1
 
     # Verify: read blocks back
+    # Iceman-native read success line shape (cmdlfem4x05.c:1391):
+    #     `Address %02d | %08X - %s`
+    # where `%s` is "Lock" for addr > 13, empty otherwise. Regex below
+    # anchors on the `| <8-hex> -` motif to avoid matching any other
+    # pipe-separated hex fragment that might appear in the cache.
     for block_num in range(min(len(blocks), 16)):
-        cmd = 'lf em 4x05_read {} {}'.format(block_num, key or '')
+        cmd = 'lf em 4x05 read -a {}'.format(block_num)
+        if key:
+            cmd += ' -p {}'.format(key)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret == -1:
             return -1
@@ -424,8 +554,13 @@ def write_dump_em4x05(file, key=None):
         content = executor.getPrintContent()
         if not content:
             return -1
-        # Extract block data from response
-        m = re.search(r'\|\s*([A-Fa-f0-9]+)\s*', content)
+        # Iceman-native: `Address NN | HHHHHHHH - <...>`
+        m = re.search(r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-', content)
+        if m is None:
+            # Fallback: bare `| HHHHHHHH -` motif (for cache bodies where
+            # the `Address NN` prefix was stripped by executor). Still
+            # iceman-canonical, but more permissive.
+            m = re.search(r'\|\s+([A-Fa-f0-9]{8})\s+-', content)
         if m:
             read_data = m.group(1).upper()
             if read_data != blocks[block_num]:
@@ -526,10 +661,17 @@ def _notify_listener(listener, message):
 def _inline_verify(typ):
     """Post-clone inline verify: lf sea + tag-specific read.
 
-    Ground truth: PM3 command log (original_current_ui write_lf_em410x_verify_fail)
-    shows the original lfwrite.so does lf sea + lf em 410x_read after cloning,
-    before returning success. This consumes sequential fixture responses in the
-    correct order. Result is not checked — it's a best-effort inline verify.
+    Iceman-native: `lf sea` -- iceman accepts both `lf sea` (short-prefix
+    alias resolved by the dispatcher) and `lf search` (CLIParserInit at
+    cmdlf.c:1890). Divergence matrix Appendix B L1567: "kept as
+    `lf sea` in middleware since both accept it." No SEND-side adapter
+    needed; `pm3_compat.py` has no `lf sea` reverse rule.
+
+    Ground truth: PM3 command log (original_current_ui
+    write_lf_em410x_verify_fail) shows the original lfwrite.so does
+    `lf sea` + `lf em 410x_read` after cloning, before returning success.
+    This consumes sequential fixture responses in the correct order.
+    Result is not checked -- it's a best-effort inline verify.
     """
     try:
         executor.startPM3Task('lf sea', 10000)
@@ -555,6 +697,14 @@ def write(listener, typ, infos, raw_par, key=None):
     """
     if not infos:
         return -9
+
+    # Fresh rework budget for this write — previous flows' rework state
+    # should not pre-brick this one.
+    if executor is not None:
+        try:
+            executor.resetReworkCount()
+        except AttributeError:
+            pass
 
     # Dump-based write (T55xx dump, EM4305 dump)
     if typ in DUMP_WRITE_MAP:

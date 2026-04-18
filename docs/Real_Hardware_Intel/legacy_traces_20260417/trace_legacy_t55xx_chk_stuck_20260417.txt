@@ -1,0 +1,333 @@
+=== FULL TRACE ===
+[   0.029] presspm3 hook OK
+[   0.033] POLL stack=['MainActivity'] 
+[   0.034] === ALL INSTALLED ===
+[   6.494] SERIAL_TX> b'pctbat\r\n'
+[   6.508] SERIAL_TX> b'charge\r\n'
+[  16.047] KEY> KEYOK_PRES!
+[  16.175] START(AutoCopyActivity, None) bundle=None
+[  16.233] PM3> hf 14a info (timeout=5000)
+[  16.238] CONNECT> connect2PM3()
+[  16.242] CONNECT< socket=True
+[  16.524] SERIAL_TX> b'pctbat\r\n'
+[  16.538] SERIAL_TX> b'charge\r\n'
+[  16.558] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  17.694] PM3< ret=1 content_len=266 \n UID: 3A F7 35 01\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nPrng detection..... hard\n\nNikola.D: 0\n
+[  17.730] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[  17.938] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[  17.949] CACHE: {"found": "True", "uid": "'3AF73501'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  18.063] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=3AF73501
+[  18.313] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[  18.315] CONNECT> connect2PM3()
+[  18.320] CONNECT< socket=True
+[  18.529] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[  18.535] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  25.562] PM3< ret=1 content_len=1228 Loaded 104 keys from /tmp/.keys/mf_tmp_keys.dic\nRunning strategy 1\n...[=] Chunk: 6.7s | found 29/32 keys (85)\nChunk: 0.3s | found 32/32 keys (19)\ntime in checkkeys (fast) 7.0s\n\n\nfound keys:\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | 484558414354   | 1 | a22ae129c013   | 1 |\n| 001 | 484558414354   | 1 | 49fae4e3849f   | 1 |\n| 002 | 484558414354   | 1 | 38fcf33072e0   | 1 |\n| 003 | 484558414354   | 1 | 8ad5517b4b18   | 1 |\n| 004 | 484558414354   | 1 | 509359f131b1   | 1 |\n| 005 | 484558414354   | 1 | 6c78928e1317   | 1 |\n| 006 | 484558414354   | 1 | aa0720018738   | 1 |\n| 007 | 484558414354   | 1 | a6cac2886412   | 1 |\n| 008 | 484558414354   | 1 | 62d0c424ed8e   | 1 |\n| 009 | 484558414354   | 1 | e64a986a5d94   | 1 |\n| 010 | 484558414354   | 1 | 8fa1d601d0a2   | 1 |\n| 011 | 484558414354   | 1 | 89347350bd36   | 1 |\n| 012 | 484558414354   | 1 | 66d2b7dc39ef   | 1 |\n| 013 | 484558414354   | 1 | 6bc1e1ae547d   | 1 |\n| 014 | 484558414354   | 1 | 22729a9bd40f   | 1 |\n| 015 | 484558414354   | 1 | 484558414354   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success)\n\n\nNikola.D: 0\n
+[  25.567] PM3> hf mf rdsc -s 0 -a -k 484558414354 (timeout=15000)
+[  25.809] PM3< ret=1 content_len=570 --sector no 0, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 3A F7 35 01 F9 88 04 00 C8 21 00 20 00 00 00 21\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 71 E7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 0  rdAB wrAB incAB dectrAB\n  block 1  rdAB wrB\n  block 2  rdAB wrB\n  block 3  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  25.815] PM3> hf mf rdsc -s 1 -a -k 484558414354 (timeout=15000)
+[  26.058] PM3< ret=1 content_len=555 --sector no 1, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 4  rdAB wrB\n  block 5  rdAB wrB\n  block 6  rdAB wrB\n  block 7  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  26.061] PM3> hf mf rdsc -s 2 -a -k 484558414354 (timeout=15000)
+[  26.304] PM3< ret=1 content_len=557 --sector no 2, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 8  rdAB wrB\n  block 9  rdAB wrB\n  block 10  rdAB wrB\n  block 11  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  26.308] PM3> hf mf rdsc -s 3 -a -k 484558414354 (timeout=15000)
+[  26.531] PM3< ret=1 content_len=559 --sector no 3, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 12  rdAB wrB\n  block 13  rdAB wrB\n  block 14  rdAB wrB\n  block 15  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  26.534] PM3> hf mf rdsc -s 4 -a -k 484558414354 (timeout=15000)
+[  26.555] SERIAL_TX> b'pctbat\r\n'
+[  26.569] SERIAL_TX> b'charge\r\n'
+[  26.758] PM3< ret=1 content_len=559 --sector no 4, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 70 F7 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 16  rdAB wrB\n  block 17  rdAB wrB\n  block 18  rdAB wrB\n  block 19  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  26.762] PM3> hf mf rdsc -s 5 -a -k 484558414354 (timeout=15000)
+[  26.985] PM3< ret=1 content_len=580 --sector no 5, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 20  rdAB wrB\n  block 21  rdAB wrB\n  block 22  rdAB wrB\n  block 23  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  26.988] PM3> hf mf rdsc -s 6 -a -k 484558414354 (timeout=15000)
+[  27.221] PM3< ret=1 content_len=580 --sector no 6, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 24  rdAB wrB\n  block 25  rdAB wrB\n  block 26  rdAB wrB\n  block 27  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  27.224] PM3> hf mf rdsc -s 7 -a -k 484558414354 (timeout=15000)
+[  27.468] PM3< ret=1 content_len=580 --sector no 7, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 28  rdAB wrB\n  block 29  rdAB wrB\n  block 30  rdAB wrB\n  block 31  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  27.471] PM3> hf mf rdsc -s 8 -a -k 484558414354 (timeout=15000)
+[  27.714] PM3< ret=1 content_len=580 --sector no 8, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 32  rdAB wrB\n  block 33  rdAB wrB\n  block 34  rdAB wrB\n  block 35  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  27.718] PM3> hf mf rdsc -s 9 -a -k 484558414354 (timeout=15000)
+[  27.961] PM3< ret=1 content_len=580 --sector no 9, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 36  rdAB wrB\n  block 37  rdAB wrB\n  block 38  rdAB wrB\n  block 39  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  27.964] PM3> hf mf rdsc -s 10 -a -k 484558414354 (timeout=15000)
+[  28.187] PM3< ret=1 content_len=581 --sector no 10, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 40  rdAB wrB\n  block 41  rdAB wrB\n  block 42  rdAB wrB\n  block 43  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  28.190] PM3> hf mf rdsc -s 11 -a -k 484558414354 (timeout=15000)
+[  28.413] PM3< ret=1 content_len=581 --sector no 11, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 44  rdAB wrB\n  block 45  rdAB wrB\n  block 46  rdAB wrB\n  block 47  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  28.417] PM3> hf mf rdsc -s 12 -a -k 484558414354 (timeout=15000)
+[  28.650] PM3< ret=1 content_len=581 --sector no 12, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 48  rdAB wrB\n  block 49  rdAB wrB\n  block 50  rdAB wrB\n  block 51  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  28.653] PM3> hf mf rdsc -s 13 -a -k 484558414354 (timeout=15000)
+[  28.896] PM3< ret=1 content_len=581 --sector no 13, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 52  rdAB wrB\n  block 53  rdAB wrB\n  block 54  rdAB wrB\n  block 55  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  28.900] PM3> hf mf rdsc -s 14 -a -k 484558414354 (timeout=15000)
+[  29.144] PM3< ret=1 content_len=581 --sector no 14, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: BB F4 93 B2 6E BA A2 F6 F6 EC 07 6F DE BD 7A C0\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\ndata: 00 00 00 00 00 00 78 77 88 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 56  rdAB wrB\n  block 57  rdAB wrB\n  block 58  rdAB wrB\n  block 59  wrAbyB rdCbyAB wrCbyB wrBbyB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  29.147] PM3> hf mf rdsc -s 15 -a -k 484558414354 (timeout=15000)
+[  29.390] PM3< ret=1 content_len=548 --sector no 15, key A - 48 45 58 41 43 54\n\nisOk:01\ndata: 48 45 58 41 43 54 20 2D 00 43 4F 47 45 4C 45 43\ndata: 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49\ndata: 6E 65 20 70 61 73 20 75 74 69 6C 69 73 65 72 2E\ndata: 00 00 00 00 00 00 07 87 8F 00 00 00 00 00 00 00\n\nSector trailer decoded:\n----------------------------------------------\nKey A      000000000000\nKey B      000000000000\nAccess rights\n  block 60  rdAB\n  block 61  rdAB\n  block 62  rdAB\n  block 63  rdCbyAB\nUserData   0x00\n----------------------------------------------\n\nNikola.D: 0\n
+[  31.682] KEY> KEYM2_PRES!
+[  31.694] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin"
+[  31.875] KEY> KEYM2_PRES!
+[  31.877] FINISH(top=WarningWriteActivity d=3)
+[  31.897] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin"
+[  32.092] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=1 uid=3AF73501
+[  32.259] PM3> hf 14a info (timeout=10000)
+[  32.260] CONNECT> connect2PM3()
+[  32.263] CONNECT< socket=True
+[  32.904] PM3< ret=1 content_len=318 \n UID: 00 56 78 BB\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities... Gen 1a\n1 static nonce 01200145\nStatic nonce....... yes\n\nNikola.D: 0\n
+[  32.906] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[  33.138] PM3< ret=1 content_len=85 --block number: 0\ndata: 00 56 78 BB 95 08 04 00 02 B2 1E 24 23 27 1E 1D\n\nNikola.D: 0\n
+[  33.144] PM3> hf mf cload -f /mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin (timeout=10000)
+[  35.055] PM3< ret=1 content_len=212 loaded 1024 bytes from binary file /mnt/upan/dump/mf1/M1-1K-4B_3AF73501_10.bin\nCopying to magic card\n................................................................\n\nCard loaded 64 blocks from file\n\nNikola.D: 0\n
+[  35.057] PM3> hf 14a raw -k -a -b 7 40 (timeout=10000)
+[  35.256] PM3< ret=1 content_len=33 received 1 bytes\n0A\n\nNikola.D: 0\n
+[  35.257] PM3> hf 14a raw -c -k -a 43 (timeout=10000)
+[  35.464] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[  35.465] PM3> hf 14a raw -c -k -a e000 (timeout=10000)
+[  35.672] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[  35.673] PM3> hf 14a raw -c -k -a 85000000000000000000000000000008 (timeout=10000)
+[  35.890] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[  35.890] PM3> hf 14a raw -c -a 5000 (timeout=10000)
+[  36.100] PM3< ret=1 content_len=30 received 0 bytes\n\nNikola.D: 0\n
+[  36.101] PM3> hf 14a info (timeout=10000)
+[  36.585] SERIAL_TX> b'pctbat\r\n'
+[  36.598] SERIAL_TX> b'charge\r\n'
+[  36.735] PM3< ret=1 content_len=318 \n UID: 3A F7 35 01\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities... Gen 1a\n1 static nonce 01200145\nStatic nonce....... yes\n\nNikola.D: 0\n
+[  36.736] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[  36.976] PM3< ret=1 content_len=85 --block number: 0\ndata: 3A F7 35 01 F9 88 04 00 C8 21 00 20 00 00 00 21\n\nNikola.D: 0\n
+[  46.615] SERIAL_TX> b'pctbat\r\n'
+[  46.628] SERIAL_TX> b'charge\r\n'
+[  56.645] SERIAL_TX> b'pctbat\r\n'
+[  56.659] SERIAL_TX> b'charge\r\n'
+[  66.679] SERIAL_TX> b'pctbat\r\n'
+[  66.692] SERIAL_TX> b'charge\r\n'
+[  76.710] SERIAL_TX> b'pctbat\r\n'
+[  76.722] SERIAL_TX> b'charge\r\n'
+[  86.752] SERIAL_TX> b'pctbat\r\n'
+[  86.768] SERIAL_TX> b'charge\r\n'
+[  96.785] SERIAL_TX> b'pctbat\r\n'
+[  96.797] SERIAL_TX> b'charge\r\n'
+[ 106.814] SERIAL_TX> b'pctbat\r\n'
+[ 106.827] SERIAL_TX> b'charge\r\n'
+[ 116.845] SERIAL_TX> b'pctbat\r\n'
+[ 116.858] SERIAL_TX> b'charge\r\n'
+[ 126.875] SERIAL_TX> b'pctbat\r\n'
+[ 126.888] SERIAL_TX> b'charge\r\n'
+[ 136.905] SERIAL_TX> b'pctbat\r\n'
+[ 136.917] SERIAL_TX> b'charge\r\n'
+[ 137.746] KEY> KEY_PWR_CAN_PRES!
+[ 138.049] KEY> KEY_PWR_CAN_PRES!
+[ 138.051] PRESSPM3> called
+[ 138.052] SERIAL_TX> b'presspm3\r\n'
+[ 138.067] PRESSPM3< done
+[ 138.067] PM3_STOP> stopPM3Task()
+[ 138.068] PM3_STOP< ret=None
+[ 138.068] FINISH(top=WriteActivity d=3)
+[ 138.335] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=3AF73501
+[ 141.166] KEY> KEY_PWR_CAN_PRES!
+[ 141.169] PRESSPM3> called
+[ 141.170] SERIAL_TX> b'presspm3\r\n'
+[ 141.182] PRESSPM3< done
+[ 141.183] PM3_STOP> stopPM3Task()
+[ 141.183] PM3_STOP< ret=None
+[ 141.184] FINISH(top=AutoCopyActivity d=2)
+[ 141.340] POLL stack=['MainActivity'] type=1 uid=3AF73501
+[ 142.889] KEY> KEYUP_PRES!
+[ 143.922] KEY> KEYUP_PRES!
+[ 144.225] KEY> KEYUP_PRES!
+[ 144.470] KEY> KEYUP_PRES!
+[ 144.739] KEY> KEYUP_PRES!
+[ 145.391] KEY> KEYOK_PRES!
+[ 145.395] START(WipeTagActivity, None) bundle=None
+[ 145.848] POLL stack=['MainActivity', 'WipeTagActivity'] type=1 uid=3AF73501
+[ 145.986] KEY> KEYOK_PRES!
+[ 146.052] PM3> hf 14a info (timeout=5000)
+[ 146.686] PM3< ret=1 content_len=318 \n UID: 3A F7 35 01\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K / Classic 1K CL2\n   MIFARE Plus 2K / Plus EV1 2K\n   MIFARE Plus CL2 2K / Plus CL2 EV1 2K\nproprietary non iso14443-4 card found, RATS not supported\nMagic capabilities... Gen 1a\n1 static nonce 01200145\nStatic nonce....... yes\n\nNikola.D: 0\n
+[ 146.687] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[ 146.922] PM3< ret=1 content_len=85 --block number: 0\ndata: 3A F7 35 01 F9 88 04 00 C8 21 00 20 00 00 00 21\n\nNikola.D: 0\n
+[ 146.926] PM3> hf mf cwipe (timeout=28888)
+[ 146.937] SERIAL_TX> b'pctbat\r\n'
+[ 146.953] SERIAL_TX> b'charge\r\n'
+[ 156.969] SERIAL_TX> b'pctbat\r\n'
+[ 156.983] SERIAL_TX> b'charge\r\n'
+[ 160.750] PM3< ret=1 content_len=1116 [-]wipe block 0[\]wipe block 1[|]wipe block 2[/]wipe block 3[-]wipe block 4[\]wipe block 5[|]wipe block 6[/]wipe block 7[-]wipe block 8[\]wipe block 9[|]wipe block 10[/]wipe block 11[-]wipe block 12[\]wipe block 13[|]wipe block 14[/]wipe block 15[-]wipe block 16[\]wipe block 17[|]wipe block 18[/]wipe block 19[-]wipe block 20[\]wipe block 21[|]wipe block 22[/]wipe block 23[-]wipe block 24[\]wipe block 25[|]wipe block 26[/]wipe block 27[-]wipe block 28[\]wipe block 29[|]wipe block 30[/]wipe block 31[-]wipe block 32[\]wipe block 33[|]wipe block 34[/]wipe block 35[-]wipe block 36[\]wipe block 37[|]wipe block 38[/]wipe block 39[-]wipe block 40[\]wipe block 41[|]wipe block 42[/]wipe block 43[-]wipe block 44[\]wipe block 45[|]wipe block 46[/]wipe block 47[-]wipe block 48[\]wipe block 49[|]wipe block 50[/]wipe block 51[-]wipe block 52[\]wipe block 53[|]wipe block 54[/]wipe block 55[-]wipe block 56[\]wipe block 57[|]wipe block 58[/]wipe block 59[-]wipe block 60[\]wipe block 61[|]wipe block 62[/]wipe block 63\nCard wiped successfully\n\nNikola.D: 0\n
+[ 166.999] SERIAL_TX> b'pctbat\r\n'
+[ 167.014] SERIAL_TX> b'charge\r\n'
+[ 177.037] SERIAL_TX> b'pctbat\r\n'
+[ 177.053] SERIAL_TX> b'charge\r\n'
+[ 187.083] SERIAL_TX> b'pctbat\r\n'
+[ 187.098] SERIAL_TX> b'charge\r\n'
+[ 189.649] KEY> KEYM2_PRES!
+[ 189.659] PM3> hf 14a info (timeout=5000)
+[ 190.545] PM3< ret=1 content_len=586 \n UID: 00 00 00 00 00 00 00\nATQA: 00 44\n SAK: 08 [2]\nMANUFACTURER:    no tag-info available\nSAK incorrectly claims that card doesn't support RATS\n ATS: 09 78 00 91 02 DA BC 19 10 F0 05\n       -  TL : length is 9 bytes\n       -  T0 : TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n       - TA1 : different divisors are supported, DR: [], DS: []\n       - TB1 : SFGI = 1 (SFGT = 8192/fc), FWI = 9 (FWT = 2097152/fc)\n       - TC1 : NAD is NOT supported, CID is supported\nMagic capabilities... Gen 2 / CUID\n1 static nonce 00000000\nStatic nonce....... yes\n\nNikola.D: 0\n
+[ 190.546] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[ 190.770] PM3< ret=1 content_len=72 --block number: 0\nwupC1 error\nCan't read block. error=-1\n\nNikola.D: -10\n
+[ 190.779] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 191.214] PM3< ret=1 content_len=1185 Loaded 104 keys from /tmp/.keys/mf_tmp_keys.dic\nRunning strategy 1\nChunk: 0.4s | found 32/32 keys (85)\ntime in checkkeys (fast) 0.4s\n\n\nfound keys:\n|-----|----------------|---|----------------|---|\n| Sec | key A          |res| key B          |res|\n|-----|----------------|---|----------------|---|\n| 000 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 001 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 002 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 003 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 004 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 005 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 006 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 007 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 008 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 009 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 010 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 011 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 012 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 013 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 014 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n| 015 | ffffffffffff   | 1 | ffffffffffff   | 1 |\n|-----|----------------|---|----------------|---|\n( 0:Failed / 1:Success)\n\n\nNikola.D: 0\n
+[ 191.234] PM3> hf mf wrbl --blk 60 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 191.461] PM3< ret=1 content_len=123 --block no 60, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 191.467] PM3> hf mf wrbl --blk 61 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 191.704] PM3< ret=1 content_len=123 --block no 61, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 191.709] PM3> hf mf wrbl --blk 62 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 191.927] PM3< ret=1 content_len=123 --block no 62, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 191.933] PM3> hf mf wrbl --blk 56 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 192.151] PM3< ret=1 content_len=123 --block no 56, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 192.157] PM3> hf mf wrbl --blk 57 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 192.385] PM3< ret=1 content_len=123 --block no 57, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 192.390] PM3> hf mf wrbl --blk 58 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 192.628] PM3< ret=1 content_len=123 --block no 58, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 192.636] PM3> hf mf wrbl --blk 52 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 192.854] PM3< ret=1 content_len=123 --block no 52, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 192.859] PM3> hf mf wrbl --blk 53 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 193.078] PM3< ret=1 content_len=123 --block no 53, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 193.084] PM3> hf mf wrbl --blk 54 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 193.303] PM3< ret=1 content_len=123 --block no 54, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 193.309] PM3> hf mf wrbl --blk 48 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 193.528] PM3< ret=1 content_len=123 --block no 48, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 193.534] PM3> hf mf wrbl --blk 49 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 193.762] PM3< ret=1 content_len=123 --block no 49, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 193.768] PM3> hf mf wrbl --blk 50 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 194.006] PM3< ret=1 content_len=123 --block no 50, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 194.012] PM3> hf mf wrbl --blk 44 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 194.230] PM3< ret=1 content_len=123 --block no 44, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 194.236] PM3> hf mf wrbl --blk 45 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 194.454] PM3< ret=1 content_len=123 --block no 45, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 194.460] PM3> hf mf wrbl --blk 46 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 194.678] PM3< ret=1 content_len=123 --block no 46, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 194.684] PM3> hf mf wrbl --blk 40 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 194.912] PM3< ret=1 content_len=123 --block no 40, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 194.918] PM3> hf mf wrbl --blk 41 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 195.156] PM3< ret=1 content_len=123 --block no 41, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 195.162] PM3> hf mf wrbl --blk 42 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 195.380] PM3< ret=1 content_len=123 --block no 42, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 195.386] PM3> hf mf wrbl --blk 36 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 195.604] PM3< ret=1 content_len=123 --block no 36, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 195.610] PM3> hf mf wrbl --blk 37 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 195.828] PM3< ret=1 content_len=123 --block no 37, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 195.834] PM3> hf mf wrbl --blk 38 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 196.062] PM3< ret=1 content_len=123 --block no 38, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 196.067] PM3> hf mf wrbl --blk 32 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 196.305] PM3< ret=1 content_len=123 --block no 32, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 196.312] PM3> hf mf wrbl --blk 33 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 196.530] PM3< ret=1 content_len=123 --block no 33, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 196.535] PM3> hf mf wrbl --blk 34 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 196.753] PM3< ret=1 content_len=123 --block no 34, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 196.760] PM3> hf mf wrbl --blk 28 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 196.978] PM3< ret=1 content_len=123 --block no 28, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 196.984] PM3> hf mf wrbl --blk 29 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 197.115] SERIAL_TX> b'pctbat\r\n'
+[ 197.128] SERIAL_TX> b'charge\r\n'
+[ 197.202] PM3< ret=1 content_len=123 --block no 29, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 197.208] PM3> hf mf wrbl --blk 30 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 197.436] PM3< ret=1 content_len=123 --block no 30, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 197.442] PM3> hf mf wrbl --blk 24 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 197.660] PM3< ret=1 content_len=123 --block no 24, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 197.666] PM3> hf mf wrbl --blk 25 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 197.884] PM3< ret=1 content_len=123 --block no 25, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 197.890] PM3> hf mf wrbl --blk 26 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 198.108] PM3< ret=1 content_len=123 --block no 26, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 198.114] PM3> hf mf wrbl --blk 20 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 198.332] PM3< ret=1 content_len=123 --block no 20, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 198.339] PM3> hf mf wrbl --blk 21 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 198.567] PM3< ret=1 content_len=123 --block no 21, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 198.573] PM3> hf mf wrbl --blk 22 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 198.811] PM3< ret=1 content_len=123 --block no 22, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 198.817] PM3> hf mf wrbl --blk 16 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 199.034] PM3< ret=1 content_len=123 --block no 16, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 199.041] PM3> hf mf wrbl --blk 17 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 199.259] PM3< ret=1 content_len=123 --block no 17, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 199.265] PM3> hf mf wrbl --blk 18 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 199.483] PM3< ret=1 content_len=123 --block no 18, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 199.489] PM3> hf mf wrbl --blk 12 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 199.717] PM3< ret=1 content_len=123 --block no 12, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 199.723] PM3> hf mf wrbl --blk 13 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 199.961] PM3< ret=1 content_len=123 --block no 13, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 199.967] PM3> hf mf wrbl --blk 14 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 200.186] PM3< ret=1 content_len=123 --block no 14, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 200.192] PM3> hf mf wrbl --blk 8 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 200.409] PM3< ret=1 content_len=122 --block no 8, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 200.415] PM3> hf mf wrbl --blk 9 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 200.634] PM3< ret=1 content_len=122 --block no 9, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 200.640] PM3> hf mf wrbl --blk 10 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 200.859] PM3< ret=1 content_len=123 --block no 10, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 200.865] PM3> hf mf wrbl --blk 4 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 201.093] PM3< ret=1 content_len=122 --block no 4, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 201.099] PM3> hf mf wrbl --blk 5 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 201.338] PM3< ret=1 content_len=122 --block no 5, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 201.343] PM3> hf mf wrbl --blk 6 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 201.561] PM3< ret=1 content_len=122 --block no 6, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 201.567] PM3> hf mf wrbl --blk 0 -a -k ffffffffffff -d 0000000000000000084400016F016D45 --force (timeout=5888)
+[ 201.785] PM3< ret=1 content_len=122 --block no 0, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 08 44 00 01 6F 01 6D 45\nWrite ( ok )\n\nNikola.D: 0\n
+[ 201.791] PM3> hf mf wrbl --blk 1 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 202.009] PM3< ret=1 content_len=122 --block no 1, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 202.015] PM3> hf mf wrbl --blk 2 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 202.243] PM3< ret=1 content_len=122 --block no 2, key A - FF FF FF FF FF FF\n--data: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( ok )\n\nNikola.D: 0\n
+[ 202.249] PM3> hf mf wrbl --blk 63 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 202.487] PM3< ret=1 content_len=123 --block no 63, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 202.493] PM3> hf mf wrbl --blk 59 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 202.711] PM3< ret=1 content_len=123 --block no 59, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 202.717] PM3> hf mf wrbl --blk 55 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 202.935] PM3< ret=1 content_len=123 --block no 55, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 202.940] PM3> hf mf wrbl --blk 51 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 203.158] PM3< ret=1 content_len=123 --block no 51, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 203.165] PM3> hf mf wrbl --blk 47 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 203.393] PM3< ret=1 content_len=123 --block no 47, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 203.398] PM3> hf mf wrbl --blk 43 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 203.636] PM3< ret=1 content_len=123 --block no 43, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 203.643] PM3> hf mf wrbl --blk 39 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 203.861] PM3< ret=1 content_len=123 --block no 39, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 203.866] PM3> hf mf wrbl --blk 35 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 204.084] PM3< ret=1 content_len=123 --block no 35, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 204.090] PM3> hf mf wrbl --blk 31 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 204.309] PM3< ret=1 content_len=123 --block no 31, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 204.315] PM3> hf mf wrbl --blk 27 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 204.543] PM3< ret=1 content_len=123 --block no 27, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 204.549] PM3> hf mf wrbl --blk 23 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 204.787] PM3< ret=1 content_len=123 --block no 23, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 204.793] PM3> hf mf wrbl --blk 19 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 205.011] PM3< ret=1 content_len=123 --block no 19, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 205.016] PM3> hf mf wrbl --blk 15 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 205.234] PM3< ret=1 content_len=123 --block no 15, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 205.241] PM3> hf mf wrbl --blk 11 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 205.469] PM3< ret=1 content_len=123 --block no 11, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 205.474] PM3> hf mf wrbl --blk 7 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 205.712] PM3< ret=1 content_len=122 --block no 7, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 205.719] PM3> hf mf wrbl --blk 3 -a -k ffffffffffff -d FFFFFFFFFFFFFF078069FFFFFFFFFFFF --force (timeout=5888)
+[ 205.937] PM3< ret=1 content_len=122 --block no 3, key A - FF FF FF FF FF FF\n--data: FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF\nWrite ( ok )\n\nNikola.D: 0\n
+[ 206.758] KEY> KEY_PWR_CAN_PRES!
+[ 207.149] SERIAL_TX> b'pctbat\r\n'
+[ 207.163] SERIAL_TX> b'charge\r\n'
+[ 207.219] KEY> KEY_PWR_CAN_PRES!
+[ 207.222] FINISH(top=WipeTagActivity d=2)
+[ 207.469] POLL stack=['MainActivity'] type=1 uid=3AF73501
+[ 212.701] KEY> KEYUP_PRES!
+[ 213.115] KEY> KEYUP_PRES!
+[ 213.898] KEY> KEYDOWN_PRES!
+[ 214.098] KEY> KEYDOWN_PRES!
+[ 214.834] KEY> KEYOK_PRES!
+[ 214.837] START(WipeTagActivity, None) bundle=None
+[ 214.982] POLL stack=['MainActivity', 'WipeTagActivity'] type=1 uid=3AF73501
+[ 215.538] KEY> KEYDOWN_PRES!
+[ 217.180] SERIAL_TX> b'pctbat\r\n'
+[ 217.193] SERIAL_TX> b'charge\r\n'
+[ 227.210] SERIAL_TX> b'pctbat\r\n'
+[ 227.223] SERIAL_TX> b'charge\r\n'
+[ 234.832] KEY> KEYM2_PRES!
+[ 234.846] PM3> lf t55xx wipe (timeout=5000)
+[ 235.713] PM3< ret=1 content_len=425 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 235.714] PM3> lf t55xx detect (timeout=10000)
+[ 236.791] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 236.792] PM3> lf t55xx wipe -p 20206666 (timeout=5000)
+[ 237.239] SERIAL_TX> b'pctbat\r\n'
+[ 237.253] SERIAL_TX> b'charge\r\n'
+[ 237.669] PM3< ret=1 content_len=441 \nBegin wiping T55x7 tag\n\nDefault configation block 000880E0\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\nNikola.D: 0\n
+[ 237.670] PM3> lf t55xx detect (timeout=10000)
+[ 238.670] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 238.671] PM3> lf t55xx detect -p 20206666 (timeout=10000)
+[ 240.727] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[ 240.740] PM3> lf t55xx chk -f /tmp/.keys/t5577_tmp_keys.dic (timeout=180000)
+[ 247.274] SERIAL_TX> b'pctbat\r\n'
+[ 247.288] SERIAL_TX> b'charge\r\n'
+[ 257.304] SERIAL_TX> b'pctbat\r\n'
+[ 257.317] SERIAL_TX> b'charge\r\n'
+[ 267.334] SERIAL_TX> b'pctbat\r\n'
+[ 267.348] SERIAL_TX> b'charge\r\n'
+[ 271.713] KEY> KEY_PWR_CAN_PRES!
+[ 271.716] PRESSPM3> called
+[ 271.717] SERIAL_TX> b'presspm3\r\n'
+[ 271.737] PRESSPM3< done
+[ 271.738] PM3_STOP> stopPM3Task()
+[ 277.365] SERIAL_TX> b'pctbat\r\n'
+[ 277.377] SERIAL_TX> b'charge\r\n'

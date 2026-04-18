@@ -277,39 +277,50 @@ def parseAllKeyFromDataFile(infos, file):
 # ---------------------------------------------------------------------------
 # Block / sector reading via PM3
 # ---------------------------------------------------------------------------
-_RE_BLOCK_DATA = re.compile(r'[A-Fa-f0-9]{32}')
-# PM3 "data:" line format: "data: 7A F2 EC B2 D6 88 04 00 ..." (sprint_hex)
+# Block data emission shape — matches BOTH known iceman variants and
+# the legacy-via-adapter shape:
+#
+#   1) `data: XX XX ... XX` (16 spaced hex pairs).
+#      - Older iceman that uses sprint_hex without the table wrapper.
+#      - Legacy FW after `pm3_compat._normalize_mf_block_grid` rewrites
+#        ` N | XX XX ...` → `data: XX XX ...` (pm3_compat.py:1281 entry
+#        for `hf mf rdsc`/`hf mf rdbl`).
+#
+#   2) ` N | XX XX ... XX | ascii` (block-num + pipe + 16 hex pairs +
+#      pipe + ascii). Iceman v4.21611 native shape from
+#      mf_print_block_one (/tmp/rrg-pm3/client/src/cmdhfmf.c:565-606)
+#      via sprint_hex_ascii.  Legacy FW also natively emits the no-
+#      ascii ` N | XX ...` variant, so this branch also catches the
+#      raw legacy shape if the adapter is bypassed (LEGACY_COMPAT=False
+#      kill-switch test).
+#
+# Both branches capture group 1 = 16-byte spaced hex.  re.MULTILINE so
+# `^` anchors to per-line block-num rows (skip the table header which
+# starts with `#`, not a digit).
 _RE_BLOCK_DATA_LINE = re.compile(
-    r'data:\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})')
-# PM3 spaced format: "  N | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX"
-_RE_BLOCK_SPACED = re.compile(
-    r'\s*\d+\s*\|\s*((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})'
+    r'(?:data:|^\s*\d+\s*\|)\s*'
+    r'((?:[A-Fa-f0-9]{2}\s+){15}[A-Fa-f0-9]{2})',
+    re.MULTILINE
 )
 
-def _parse_blocks_from_text(text):
-    """Extract 32-char hex block strings from PM3 output.
 
-    Handles three PM3 output formats:
-      1. Compact: 32 consecutive hex chars (e.g. "7AF2ECB2D6880400...")
-      2. data: line: "data: 7A F2 EC B2 ..." (sprint_hex, space-separated)
-      3. Table: "  N | 7A F2 EC B2 ..." (pipe-separated)
+def _parse_blocks_from_text(text):
+    """Extract 32-char hex block strings from iceman PM3 output.
+
+    Iceman-native shape on this device: ``data: XX XX XX XX ... XX``
+    (16 space-separated hex pairs per block) emitted from
+    ``mf_print_block_one`` via sprint_hex/sprint_hex_ascii (cmdhfmf.c:572/
+    L601/L603). Each matched line yields one 32-char hex block.
     """
-    blocks = _RE_BLOCK_DATA.findall(text)
-    if blocks:
-        return blocks
-    # data: prefix lines (both old and new PM3 firmware use sprint_hex)
+    blocks = []
     for m in _RE_BLOCK_DATA_LINE.finditer(text):
-        blocks.append(m.group(1).replace(' ', ''))
-    if blocks:
-        return blocks
-    # Fallback: parse table format (e.g. "  0 | 00 00 00 ... 00")
-    for m in _RE_BLOCK_SPACED.finditer(text):
         blocks.append(m.group(1).replace(' ', ''))
     return blocks
 
 def readBlock(block, typ, key):
-    """Read single block. PM3: hf mf rdbl {block} {typ} {key}."""
-    cmd = 'hf mf rdbl {} {} {}'.format(block, typ, key)
+    """Read single block. PM3: hf mf rdbl --blk {block} -a/-b -k {key}."""
+    cmd = 'hf mf rdbl --blk {} {} -k {}'.format(
+        block, '-a' if typ == 'A' else '-b', key)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return None
@@ -325,7 +336,8 @@ def readSector(sector, typ, key):
     """Read a full sector. PM3: hf mf rdsc {sector} {typ} {key}."""
     fb = mifare.sectorToBlock(sector) if mifare else sector * 4
     bc = mifare.getBlockCountInSector(sector) if mifare else 4
-    cmd = 'hf mf rdsc {} {} {}'.format(sector, typ, key)
+    cmd = 'hf mf rdsc -s {} {} -k {}'.format(
+        sector, '-a' if typ == 'A' else '-b', key)
     ret = executor.startPM3Task(cmd, 15000)
     if ret == -1:
         return None
@@ -349,15 +361,34 @@ def readBlocks(sector, keyA, keyB, infos):
     return result if isinstance(result, list) else None
 
 def readIfIsGen1a(infos):
-    """Check if card is Gen1a via hf mf cgetblk 0."""
-    ret = executor.startPM3Task('hf mf cgetblk 0', 5888)
+    """Check if card is Gen1a via hf mf cgetblk --blk 0.
+
+    Trust-then-probe detection against iceman PM3:
+      1. Trust the scan cache if it already confirmed Gen1a (scan ran
+         the same cgetblk probe and got a successful response).
+      2. Otherwise run the probe and check for the iceman-native
+         ``data:`` line (mf_print_block_one via sprint_hex) OR the
+         iceman error keywords ``wupC1 error`` / ``Can't read block``
+         (ARM Dbprintf + cmdhfmf.c:6171 PrintAndLogEx).
+
+    Matrix section `hf mf cgetblk` (divergence_matrix.md L595-605):
+    iceman success = `"data: 3A F7 35 01 ..."`, failure = `"wupC1 error\\n
+    Can't read block. error=-1"`.
+    """
+    # 1) Trust the scan cache when it's already confirmed Gen1a — the scan
+    #    layer ran the same cgetblk probe and got a successful response.
+    if isinstance(infos, dict) and infos.get('gen1a') in (True, 'True', 'true', 1, '1'):
+        return True
+
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 5888)
     if ret == -1:
         return None
     if executor.hasKeyword('wupC1 error') or executor.hasKeyword("Can't read block"):
         return None
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = _RE_BLOCK_DATA.search(text)
-    if m:
+    # 2) Active probe: positive response is iceman's ``data: XX XX ...``
+    #    line (cmdhfmf.c:603 sprint_hex_ascii via mf_print_block_one).
+    if _RE_BLOCK_DATA_LINE.search(text):
         return True
     return None
 

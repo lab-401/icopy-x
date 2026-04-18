@@ -1,0 +1,367 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] === ALL INSTALLED ===
+[   0.011] POLL stack=['MainActivity'] 
+[   0.067] KEY> KEYDOWN_PRES!
+[   0.464] KEY> KEYDOWN_PRES!
+[   1.348] KEY> KEYOK_PRES!
+[   1.518] START(ScanActivity, None) bundle=None
+[   1.574] PM3> hf 14a info (timeout=5000)
+[   1.577] CONNECT> connect2PM3()
+[   1.580] CONNECT< socket=True
+[   2.018] POLL stack=['MainActivity', 'ScanActivity'] 
+[   3.325] PM3< ret=1 content_len=620 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection..... hard\n IC signature public key name: NXP MIFARE Classic MFC1C14_x\nIC signature public key value: 044F6D3F294DEA5737F0F46FFEE88A35\n                             : 6EED95695DD7E0C27A591E6F6F65962B\n                             : AF\n    Elliptic curve parameters: secp128r1\n             TAG IC Signature: 2E15D2BE5BF1BD614C84E820EC3DC988\n                             : AF93091CC03242B511A96FD4958C8EB6\n       Signature verification: successful\n\n\n\n
+[   3.362] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[   3.475] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[   3.486] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[   3.525] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[   3.676] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[   5.707] KEY> KEY_PWR_CAN_PRES!
+[   5.713] FINISH(top=ScanActivity d=2)
+[   5.888] SERIAL_TX> b'pctbat\r\n'
+[   5.900] SERIAL_TX> b'charge\r\n'
+[   6.030] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[   6.045] KEY> KEY_PWR_CAN_PRES!
+[   6.857] KEY> KEYUP_PRES!
+[   7.065] KEY> KEYUP_PRES!
+[   7.474] KEY> KEYOK_PRES!
+[   7.477] START(AutoCopyActivity, None) bundle=None
+[   7.505] PM3> hf 14a info (timeout=5000)
+[   7.507] CONNECT> connect2PM3()
+[   7.513] CONNECT< socket=True
+[   7.535] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[   7.607] PM3< ret=1 content_len=1 \n
+[   7.610] PM3> lf sea (timeout=10000)
+[   8.975] PM3< ret=1 content_len=168 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[   9.014] PM3> hf sea (timeout=10000)
+[  14.559] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[  14.583] PM3> lf t55xx detect (timeout=10000)
+[  15.917] SERIAL_TX> b'pctbat\r\n'
+[  15.930] SERIAL_TX> b'charge\r\n'
+[  17.703] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  17.716] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  18.002] PM3< ret=1 content_len=1 \n
+[  18.005] PM3> hf felica reader (timeout=10000)
+[  19.141] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[  23.132] KEY> KEYM2_PRES!
+[  23.172] PM3> hf 14a info (timeout=5000)
+[  23.173] CONNECT> connect2PM3()
+[  23.177] CONNECT< socket=True
+[  23.271] PM3< ret=1 content_len=1 \n
+[  23.274] PM3> lf sea (timeout=10000)
+[  24.738] PM3< ret=1 content_len=168 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  24.742] PM3> hf sea (timeout=10000)
+[  25.947] SERIAL_TX> b'pctbat\r\n'
+[  25.960] SERIAL_TX> b'charge\r\n'
+[  30.283] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[  30.286] PM3> lf t55xx detect (timeout=10000)
+[  33.337] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  33.339] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  33.540] PM3< ret=1 content_len=1 \n
+[  33.543] PM3> hf felica reader (timeout=10000)
+[  34.676] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[  35.977] SERIAL_TX> b'pctbat\r\n'
+[  35.991] SERIAL_TX> b'charge\r\n'
+[  40.861] KEY> KEYM2_PRES!
+[  40.873] PM3> hf 14a info (timeout=5000)
+[  40.876] CONNECT> connect2PM3()
+[  40.878] CONNECT< socket=True
+[  40.974] PM3< ret=1 content_len=1 \n
+[  40.977] PM3> lf sea (timeout=10000)
+[  42.361] PM3< ret=1 content_len=302 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  42.375] CACHE: {"data": "'FC,CN: 236,49152'", "fc": "'236'", "cn": "'49152'", "len": "''", "raw": "'0f56999a9a5a555555555555'", "type": "35", "found": "True", "progress": "1", "return": "35"}
+[  42.614] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  42.660] PM3> lf paradox reader (timeout=10000)
+[  42.663] CONNECT> connect2PM3()
+[  42.667] CONNECT< socket=True
+[  42.933] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  46.027] SERIAL_TX> b'pctbat\r\n'
+[  46.041] SERIAL_TX> b'charge\r\n'
+[  47.766] KEY> KEYM2_PRES!
+[  47.777] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 236,49152', 'raw': '0f56999a9a5a555555555555'}) bundle={"return": 1, "data": "FC,CN: 236,49152", "raw": "0f56999a9a5a555555555555"}
+[  48.125] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=35 uid=
+[  48.374] KEY> KEYM2_PRES!
+[  48.376] FINISH(top=WarningWriteActivity d=3)
+[  48.397] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 236,49152', 'raw': '0f56999a9a5a555555555555'}) bundle={"return": 1, "data": "FC,CN: 236,49152", "raw": "0f56999a9a5a555555555555"}
+[  48.627] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=35 uid=
+[  48.749] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  48.751] CONNECT> connect2PM3()
+[  48.754] CONNECT< socket=True
+[  49.622] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  49.623] PM3> lf t55xx detect (timeout=10000)
+[  49.917] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[  49.935] PM3> lf paradox clone -r 0f56999a9a5a555555555555 (timeout=10000)
+[  51.511] PM3< ret=1 content_len=145 Preparing to clone Paradox to T55x7 with raw hex\nBlk | Data\n----+------------\n 00 | 00107060\n 01 | 0F56999A\n 02 | 9A5A5555\n 03 | 55555555\nDone!\n\n
+[  51.512] PM3> lf sea (timeout=10000)
+[  52.745] PM3< ret=1 content_len=291 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  52.746] PM3> lf paradox reader (timeout=10000)
+[  53.013] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  54.258] KEY> KEYM1_PRES!
+[  54.586] PM3> lf sea (timeout=10000)
+[  55.783] PM3< ret=1 content_len=291 \nNote: False Positives ARE possible\nChecking for known tags...\nCRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\nValid Paradox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  55.786] PM3> lf paradox reader (timeout=10000)
+[  56.053] PM3< ret=1 content_len=142 CRC Error! Calculated CRC is 159 but card CRC is 0.\nParadox - ID: 00c2cc000 FC: 236 Card: 49152, Checksum: 00, Raw: 0f56999a9a5a555555555555\n\n
+[  56.063] SERIAL_TX> b'pctbat\r\n'
+[  56.075] SERIAL_TX> b'charge\r\n'
+[  60.509] KEY> KEY_PWR_CAN_PRES!
+[  61.091] KEY> KEY_PWR_CAN_PRES!
+[  61.093] PRESSPM3> called
+[  61.094] SERIAL_TX> b'presspm3\r\n'
+[  61.110] PRESSPM3< done
+[  61.110] PM3_STOP> stopPM3Task()
+[  61.111] PM3_STOP< ret=None
+[  61.111] FINISH(top=WriteActivity d=3)
+[  61.150] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  61.711] KEY> KEY_PWR_CAN_PRES!
+[  61.714] PRESSPM3> called
+[  61.714] SERIAL_TX> b'presspm3\r\n'
+[  61.730] PRESSPM3< done
+[  61.730] PM3_STOP> stopPM3Task()
+[  61.731] PM3_STOP< ret=None
+[  61.731] FINISH(top=AutoCopyActivity d=2)
+[  62.152] POLL stack=['MainActivity'] type=35 uid=
+[  62.486] KEY> KEYOK_PRES!
+[  62.490] START(AutoCopyActivity, None) bundle=None
+[  62.547] PM3> hf 14a info (timeout=5000)
+[  62.551] CONNECT> connect2PM3()
+[  62.556] CONNECT< socket=True
+[  62.658] POLL stack=['MainActivity', 'AutoCopyActivity'] type=35 uid=
+[  62.662] PM3< ret=1 content_len=1 \n
+[  62.665] PM3> lf sea (timeout=10000)
+[  64.137] PM3< ret=1 content_len=258 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  64.140] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e804346'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[  64.164] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[  64.411] PM3> lf pyramid reader (timeout=10000)
+[  64.413] CONNECT> connect2PM3()
+[  64.417] CONNECT< socket=True
+[  64.755] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  66.145] SERIAL_TX> b'pctbat\r\n'
+[  66.161] SERIAL_TX> b'charge\r\n'
+[  67.295] KEY> KEYM1_PRES!
+[  67.320] PM3> lf pyramid reader (timeout=10000)
+[  67.322] CONNECT> connect2PM3()
+[  67.327] CONNECT< socket=True
+[  67.651] PM3< ret=1 content_len=1 \n
+[  69.440] KEY> KEY_PWR_CAN_PRES!
+[  69.456] PRESSPM3> called
+[  69.457] SERIAL_TX> b'presspm3\r\n'
+[  69.475] PRESSPM3< done
+[  69.480] PM3_STOP> stopPM3Task()
+[  69.484] PM3_STOP< ret=None
+[  69.488] FINISH(top=AutoCopyActivity d=2)
+[  69.681] POLL stack=['MainActivity'] type=16 uid=
+[  71.409] KEY> KEYOK_PRES!
+[  71.412] START(AutoCopyActivity, None) bundle=None
+[  71.470] PM3> hf 14a info (timeout=5000)
+[  71.473] CONNECT> connect2PM3()
+[  71.478] CONNECT< socket=True
+[  71.574] PM3< ret=1 content_len=1 \n
+[  71.577] PM3> lf sea (timeout=10000)
+[  71.685] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[  73.139] PM3< ret=1 content_len=258 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  73.141] CACHE: {"data": "'FC,CN: 240,61456'", "fc": "'240'", "cn": "'61456'", "len": "'26'", "raw": "'00010101010101010101015e0e804346'", "type": "16", "found": "True", "progress": "1", "return": "16"}
+[  73.412] PM3> lf pyramid reader (timeout=10000)
+[  73.414] CONNECT> connect2PM3()
+[  73.418] CONNECT< socket=True
+[  73.754] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  76.022] KEY> KEYM2_PRES!
+[  76.028] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: 240,61456', 'raw': '00010101010101010101015e0e804346'}) bundle={"return": 1, "data": "FC,CN: 240,61456", "raw": "00010101010101010101015e0e804346"}
+[  76.179] SERIAL_TX> b'pctbat\r\n'
+[  76.195] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=16 uid=
+[  76.196] SERIAL_TX> b'charge\r\n'
+[  76.649] KEY> KEYM2_PRES!
+[  76.652] FINISH(top=WarningWriteActivity d=3)
+[  76.673] START(WriteActivity, {'return': 1, 'data': 'FC,CN: 240,61456', 'raw': '00010101010101010101015e0e804346'}) bundle={"return": 1, "data": "FC,CN: 240,61456", "raw": "00010101010101010101015e0e804346"}
+[  76.699] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=16 uid=
+[  77.011] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  77.013] CONNECT> connect2PM3()
+[  77.016] CONNECT< socket=True
+[  77.874] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  77.875] PM3> lf t55xx detect (timeout=10000)
+[  78.168] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[  78.170] PM3> lf t55xx write -b 1 -d 00010101 (timeout=10000)
+[  78.267] PM3< ret=1 content_len=45 Writing page 0  block: 01  data: 0x00010101\n\n
+[  78.268] PM3> lf t55xx write -b 2 -d 01010101 (timeout=10000)
+[  78.374] PM3< ret=1 content_len=45 Writing page 0  block: 02  data: 0x01010101\n\n
+[  78.375] PM3> lf t55xx write -b 3 -d 0101015e (timeout=10000)
+[  78.483] PM3< ret=1 content_len=45 Writing page 0  block: 03  data: 0x0101015E\n\n
+[  78.484] PM3> lf t55xx write -b 4 -d 0e804346 (timeout=10000)
+[  78.592] PM3< ret=1 content_len=45 Writing page 0  block: 04  data: 0x0E804346\n\n
+[  78.593] PM3> lf t55xx write -b 0 -d 00107080 (timeout=10000)
+[  78.700] PM3< ret=1 content_len=45 Writing page 0  block: 00  data: 0x00107080\n\n
+[  78.700] PM3> lf sea (timeout=10000)
+[  79.896] PM3< ret=1 content_len=247 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  79.896] PM3> lf pyramid reader (timeout=10000)
+[  80.229] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  83.210] KEY> KEYM1_PRES!
+[  83.521] PM3> lf sea (timeout=10000)
+[  84.686] PM3< ret=1 content_len=247 \nNote: False Positives ARE possible\nChecking for known tags...\nPyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\nValid Pyramid ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  84.688] PM3> lf pyramid reader (timeout=10000)
+[  85.020] PM3< ret=1 content_len=98 Pyramid - len: 26, FC: 240 Card: 61456 - Wiegand: 1e1e021, Raw: 00010101010101010101015e0e804346\n\n
+[  86.212] SERIAL_TX> b'pctbat\r\n'
+[  86.226] SERIAL_TX> b'charge\r\n'
+[  87.308] KEY> KEYM2_PRES!
+[  87.621] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  87.622] CONNECT> connect2PM3()
+[  87.626] CONNECT< socket=True
+[  88.481] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  88.482] PM3> lf t55xx detect (timeout=10000)
+[  91.521] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  91.523] PM3> lf t55xx wipe (timeout=10000)
+[  92.369] PM3< ret=1 content_len=424 Target T55x7 tag\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  92.370] PM3> lf t55xx detect (timeout=10000)
+[  95.374] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[  95.375] PM3> lf t55xx detect -p 20206666 (timeout=10000)
+[  96.242] SERIAL_TX> b'pctbat\r\n'
+[  96.255] SERIAL_TX> b'charge\r\n'
+[ 101.324] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 101.332] PM3> lf t55xx chk -f /tmp/.keys/t5577_tmp_keys.dic (timeout=30000)
+[ 106.271] SERIAL_TX> b'pctbat\r\n'
+[ 106.285] SERIAL_TX> b'charge\r\n'
+[ 116.302] SERIAL_TX> b'pctbat\r\n'
+[ 116.315] SERIAL_TX> b'charge\r\n'
+[ 116.767] KEY> KEY_PWR_CAN_PRES!
+[ 116.769] PRESSPM3> called
+[ 116.770] SERIAL_TX> b'presspm3\r\n'
+[ 116.785] PRESSPM3< done
+[ 116.786] PM3_STOP> stopPM3Task()
+[ 126.332] SERIAL_TX> b'pctbat\r\n'
+[ 126.345] SERIAL_TX> b'charge\r\n'
+[ 131.335] PM3< ret=-1 content_len=31 timeout while waiting for reply
+[ 131.370] PM3_STOP< ret=None
+[ 131.371] FINISH(top=WriteActivity d=3)
+[ 131.807] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[ 132.342] KEY> KEY_PWR_CAN_PRES!
+[ 132.344] PRESSPM3> called
+[ 132.345] SERIAL_TX> b'presspm3\r\n'
+[ 132.360] PRESSPM3< done
+[ 132.360] PM3_STOP> stopPM3Task()
+[ 132.361] PM3_STOP< ret=None
+[ 132.362] FINISH(top=AutoCopyActivity d=2)
+[ 132.809] POLL stack=['MainActivity'] type=16 uid=
+[ 136.008] KEY> KEYOK_PRES!
+[ 136.011] START(AutoCopyActivity, None) bundle=None
+[ 136.056] PM3> hf 14a info (timeout=5000)
+[ 136.058] CONNECT> connect2PM3()
+[ 136.061] CONNECT< socket=True
+[ 136.174] PM3< ret=1 content_len=1 \n
+[ 136.177] PM3> lf sea (timeout=10000)
+[ 136.315] POLL stack=['MainActivity', 'AutoCopyActivity'] type=16 uid=
+[ 137.711] PM3< ret=1 content_len=457 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 137.715] CACHE: {"data": "'FC,CN: X,52428'", "fc": "'0x2AAA'", "cn": "'52428'", "len": "'32'", "raw": "'7FCC0002A955329860000000'", "type": "14", "found": "True", "progress": "1", "return": "14"}
+[ 137.818] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 138.003] PM3> lf securakey reader (timeout=10000)
+[ 138.005] CONNECT> connect2PM3()
+[ 138.010] CONNECT< socket=True
+[ 138.261] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 140.546] KEY> KEYM2_PRES!
+[ 140.561] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,52428', 'raw': '7FCC0002A955329860000000'}) bundle={"return": 1, "data": "FC,CN: X,52428", "raw": "7FCC0002A955329860000000"}
+[ 140.824] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=14 uid=
+[ 141.425] SERIAL_TX> b'pctbat\r\n'
+[ 141.440] SERIAL_TX> b'charge\r\n'
+[ 141.680] KEY> KEYM2_PRES!
+[ 141.682] FINISH(top=WarningWriteActivity d=3)
+[ 141.703] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,52428', 'raw': '7FCC0002A955329860000000'}) bundle={"return": 1, "data": "FC,CN: X,52428", "raw": "7FCC0002A955329860000000"}
+[ 141.827] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=14 uid=
+[ 142.041] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 142.042] CONNECT> connect2PM3()
+[ 142.045] CONNECT< socket=True
+[ 142.920] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 142.920] PM3> lf t55xx detect (timeout=10000)
+[ 143.208] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 143.209] PM3> lf securakey clone -r 7FCC0002A955329860000000 (timeout=10000)
+[ 144.725] PM3< ret=1 content_len=174 Preparing to clone Securakey to T55x7  with raw hex\nBlk | Data\n----+------------\n 00 | 000C8060\n 01 | 7FCC0002\n 02 | A9553298\n 03 | 60000000\nData written and verified\nDone!\n\n
+[ 144.726] PM3> lf sea (timeout=10000)
+[ 145.970] PM3< ret=1 content_len=446 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 145.971] PM3> lf securakey reader (timeout=10000)
+[ 146.217] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 147.152] KEY> KEYM1_PRES!
+[ 147.465] PM3> lf sea (timeout=10000)
+[ 148.635] PM3< ret=1 content_len=446 \nNote: False Positives ARE possible\nChecking for known tags...\nSecurakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\nValid Securakey ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 148.637] PM3> lf securakey reader (timeout=10000)
+[ 148.884] PM3< ret=1 content_len=295 Securakey - len: 32 FC: 0x2AAA Card: 52428, Raw: 7FCC0002A955329860000000\nWiegand: 55559998 parity ( ok )\n\nHow the FC translates to printed FC is unknown\n\nHow the checksum is calculated is unknown\nHelp the community identify this format further\nby sharing your tag on the pm3 forum or discord\n\n\n
+[ 151.457] SERIAL_TX> b'pctbat\r\n'
+[ 151.471] SERIAL_TX> b'charge\r\n'
+[ 152.687] KEY> KEY_PWR_CAN_PRES!
+[ 152.924] KEY> KEY_PWR_CAN_PRES!
+[ 152.926] PRESSPM3> called
+[ 152.927] SERIAL_TX> b'presspm3\r\n'
+[ 152.940] PRESSPM3< done
+[ 152.940] PM3_STOP> stopPM3Task()
+[ 152.941] PM3_STOP< ret=None
+[ 152.941] FINISH(top=WriteActivity d=3)
+[ 153.350] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 153.370] KEY> KEY_PWR_CAN_PRES!
+[ 153.372] PRESSPM3> called
+[ 153.372] SERIAL_TX> b'presspm3\r\n'
+[ 153.385] PRESSPM3< done
+[ 153.385] PM3_STOP> stopPM3Task()
+[ 153.386] PM3_STOP< ret=None
+[ 153.386] FINISH(top=AutoCopyActivity d=2)
+[ 153.852] POLL stack=['MainActivity'] type=14 uid=
+[ 154.756] KEY> KEYOK_PRES!
+[ 154.759] START(AutoCopyActivity, None) bundle=None
+[ 154.802] PM3> hf 14a info (timeout=5000)
+[ 154.815] CONNECT> connect2PM3()
+[ 154.820] CONNECT< socket=True
+[ 154.856] POLL stack=['MainActivity', 'AutoCopyActivity'] type=14 uid=
+[ 154.919] PM3< ret=1 content_len=1 \n
+[ 154.922] PM3> lf sea (timeout=10000)
+[ 156.423] PM3< ret=1 content_len=206 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 156.430] CACHE: {"data": "'99BBB000'", "raw": "'F2000099BBB000C8'", "type": "15", "found": "True", "progress": "1", "return": "15"}
+[ 156.702] PM3> lf viking reader (timeout=10000)
+[ 156.704] CONNECT> connect2PM3()
+[ 156.708] CONNECT< socket=True
+[ 156.861] POLL stack=['MainActivity', 'AutoCopyActivity'] type=15 uid=
+[ 156.975] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 159.368] KEY> KEYM2_PRES!
+[ 159.372] START(WarningWriteActivity, {'return': 1, 'data': '99BBB000', 'raw': 'F2000099BBB000C8'}) bundle={"return": 1, "data": "99BBB000", "raw": "F2000099BBB000C8"}
+[ 159.867] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=15 uid=
+[ 160.117] KEY> KEYM2_PRES!
+[ 160.119] FINISH(top=WarningWriteActivity d=3)
+[ 160.145] START(WriteActivity, {'return': 1, 'data': '99BBB000', 'raw': 'F2000099BBB000C8'}) bundle={"return": 1, "data": "99BBB000", "raw": "F2000099BBB000C8"}
+[ 160.369] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=15 uid=
+[ 160.462] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 160.463] CONNECT> connect2PM3()
+[ 160.467] CONNECT< socket=True
+[ 161.314] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 161.315] PM3> lf t55xx detect (timeout=10000)
+[ 161.487] SERIAL_TX> b'pctbat\r\n'
+[ 161.500] SERIAL_TX> b'charge\r\n'
+[ 161.603] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 161.605] PM3> lf t55xx write -b 1 -d F2000099 (timeout=10000)
+[ 161.707] PM3< ret=1 content_len=45 Writing page 0  block: 01  data: 0xF2000099\n\n
+[ 161.708] PM3> lf t55xx write -b 2 -d BBB000C8 (timeout=10000)
+[ 161.816] PM3< ret=1 content_len=45 Writing page 0  block: 02  data: 0xBBB000C8\n\n
+[ 161.817] PM3> lf t55xx write -b 0 -d 00088040 (timeout=10000)
+[ 161.924] PM3< ret=1 content_len=45 Writing page 0  block: 00  data: 0x00088040\n\n
+[ 161.924] PM3> lf sea (timeout=10000)
+[ 163.127] PM3< ret=1 content_len=195 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 163.128] PM3> lf viking reader (timeout=10000)
+[ 163.397] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 165.083] KEY> KEYM1_PRES!
+[ 165.427] PM3> lf sea (timeout=10000)
+[ 166.570] PM3< ret=1 content_len=195 \nNote: False Positives ARE possible\nChecking for known tags...\nViking - Card 99BBB000, Raw: F2000099BBB000C8\n\nValid Viking ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 166.572] PM3> lf viking reader (timeout=10000)
+[ 166.823] PM3< ret=1 content_len=47 Viking - Card 99BBB000, Raw: F2000099BBB000C8\n\n
+[ 170.480] KEY> KEY_PWR_CAN_PRES!
+[ 170.742] KEY> KEY_PWR_CAN_PRES!
+[ 170.743] PRESSPM3> called
+[ 170.744] SERIAL_TX> b'presspm3\r\n'
+[ 170.754] PRESSPM3< done
+[ 170.755] PM3_STOP> stopPM3Task()
+[ 170.755] PM3_STOP< ret=None
+[ 170.755] FINISH(top=WriteActivity d=3)
+[ 170.892] POLL stack=['MainActivity', 'AutoCopyActivity'] type=15 uid=
+[ 171.263] KEY> KEY_PWR_CAN_PRES!
+[ 171.266] PRESSPM3> called
+[ 171.266] SERIAL_TX> b'presspm3\r\n'
+[ 171.280] PRESSPM3< done
+[ 171.280] PM3_STOP> stopPM3Task()
+[ 171.280] PM3_STOP< ret=None
+[ 171.281] FINISH(top=AutoCopyActivity d=2)
+[ 171.393] POLL stack=['MainActivity'] type=15 uid=
+[ 171.517] SERIAL_TX> b'pctbat\r\n'
+[ 171.530] SERIAL_TX> b'charge\r\n'
+[ 181.551] SERIAL_TX> b'pctbat\r\n'
+[ 181.565] SERIAL_TX> b'charge\r\n'

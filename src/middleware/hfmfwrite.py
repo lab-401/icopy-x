@@ -133,28 +133,39 @@ def read_blocks_4file(infos, file):
 
 # ---------------------------------------------------------------------------
 # write_block / start_wrbl_cmd — per-block write
-# Strings: __pyx_k_hf_mf_wrbl, __pyx_k_isOk_01
-# Trace: hf mf wrbl 60 A ffffffffffff 00000000...
+# Iceman source: /tmp/rrg-pm3/client/src/cmdhfmf.c:1389
+#   PrintAndLogEx(SUCCESS, "Write ( " _GREEN_("ok") " )");
+#   PrintAndLogEx(FAILED,  "Write ( " _RED_("fail") " )");
+# Iceman has ZERO `isOk:` emissions in the write path (grep-verified matrix
+# v2 L817). Prior regex alternation `r'isOk:01|Write \( ok \)'` carried the
+# legacy sentinel forward for `_normalize_wrbl_response` adapter output.
+# Post-flip: target iceman-native `Write ( ok )` substring directly.
 # ---------------------------------------------------------------------------
+# Iceman-native success keyword for `hf mf wrbl`.
+# Matrix: divergence_matrix.md L815/L845 — iceman-form emission.
+# Source: /tmp/rrg-pm3/client/src/cmdhfmf.c:1389, :9677, :9760 (three
+# `Write ( ok )` emission sites — all three use identical literal).
+_KW_WRBL_SUCCESS = r'Write \( ok \)'
+
 def start_wrbl_cmd(block, typ, key, data):
     """Build the wrbl command string.
 
-    Strings: __pyx_k_start_wrbl_cmd
-    Format: 'hf mf wrbl {block} {A|B} {key} {data}'
+    Iceman form (cmdhfmf.c:1280 CmdHF14AMfWrBl CLI):
+        `hf mf wrbl --blk <N> -a|-b -k <KEY> -d <DATA> [--force]`
     """
-    return 'hf mf wrbl {} {} {} {}'.format(block, typ, key, data)
+    return 'hf mf wrbl --blk {} {} -k {} -d {} --force'.format(
+        block, '-a' if typ == 'A' else '-b', key, data)
 
 def write_block(block, typ, key, data):
     """Write a single block.
 
-    Strings: __pyx_k_write_block, __pyx_k_isOk_01
-    Returns 1 on success (isOk:01), -1 on failure.
+    Returns 1 on success (iceman `Write ( ok )`), -1 on failure.
     """
     cmd = start_wrbl_cmd(block, typ, key, data)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
-    if executor.hasKeyword('isOk:01'):
+    if executor.hasKeyword(_KW_WRBL_SUCCESS):
         return 1
     return -1
 
@@ -172,26 +183,21 @@ def call_progress(listener, progress, max_val):
         pass
 
 # ---------------------------------------------------------------------------
-# gen1afreeze — lock Gen1a magic card
-# Strings: __pyx_k_gen1afreeze
-# Spec §2.7: 5 raw commands
+# gen1afreeze — lock Gen1a magic card (5 iceman-native `hf 14a raw` calls)
+# Matrix: divergence_matrix.md L172-189 `hf 14a raw`.
+# Iceman CLI: /tmp/rrg-pm3/client/src/cmdhf14a.c:1547/1670 — keep-field
+#   flag is `-k` (iceman) vs legacy `-p` (pm3_compat.py:243 translator,
+#   :550 reverse translator).
+# Middleware sends iceman syntax verbatim; response is discarded
+# (fire-and-forget sequence, matrix L189).
 # ---------------------------------------------------------------------------
 def gen1afreeze():
-    """Execute Gen1a freeze sequence (5 raw commands).
-
-    Strings:
-        __pyx_k_hf_14a_raw_p_a_b_7_40
-        __pyx_k_hf_14a_raw_c_p_a_e000
-        __pyx_k_hf_14a_raw_c_p_a_e100
-        __pyx_k_hf_14a_raw_c_a_5000
-        __pyx_k_hf_14a_raw_p_a_43
-        __pyx_k_hf_14a_raw_c_p_a_850000000000000000000000000000 08
-    """
+    """Execute Gen1a freeze sequence (5 raw commands, iceman-native `-k`)."""
     commands = [
-        'hf 14a raw -p -a -b 7 40',
-        'hf 14a raw -c -p -a 43',
-        'hf 14a raw -c -p -a e000',
-        'hf 14a raw -c -p -a 85000000000000000000000000000008',
+        'hf 14a raw -k -a -b 7 40',
+        'hf 14a raw -c -k -a 43',
+        'hf 14a raw -c -k -a e000',
+        'hf 14a raw -c -k -a 85000000000000000000000000000008',
         'hf 14a raw -c -a 5000',
     ]
     for cmd in commands:
@@ -212,7 +218,7 @@ def write_with_gen1a(infos, file):
 
     Returns 1 on success, -1 on failure.
     """
-    cmd = 'hf mf cload b {}'.format(file)
+    cmd = 'hf mf cload -f {}'.format(file)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
@@ -234,11 +240,15 @@ def write_with_gen1a_only_uid(infos):
     uid = infos.get('uid', '')
     sak = infos.get('sak', '08')
     atqa = infos.get('atqa', '0004')
-    cmd = 'hf mf csetuid {} {} {} w'.format(uid, sak, atqa)
+    cmd = 'hf mf csetuid -u {} -s {} -a {} -w'.format(uid, sak, atqa)
     ret = executor.startPM3Task(cmd, 10000)
     if ret == -1:
         return -1
-    if executor.hasKeyword("Can't set magic"):
+    # csetuid failure emission (iceman): cmdhfmf.c:5831 emits
+    # `PrintAndLogEx(ERR, "Can't set UID. error %d", res)`. This is DISTINCT
+    # from cload's `Can't set magic card block: %d` (cmdhfmf.c:6061/6108/9028).
+    # Substring `"Can't set UID"` matches the csetuid-specific failure literal.
+    if executor.hasKeyword("Can't set UID"):
         return -1
     gen1afreeze()
     return 1
@@ -390,28 +400,49 @@ def write_common(listener, infos, bundle):
         return -1
 
     # Step 2: Gen1a detection
-    # Ground truth: Gen1a is confirmed ONLY when cgetblk 0 returns actual
-    # block data WITHOUT error indicators.
-    # Trace: standard card → "[#] wupC1 error\n[!!] Can't read block. error=-1"
-    #        gen1a card   → "[+] Block 0: 2CADC272..." (actual block data)
-    # Non-gen1a fixtures may contain: "isOk:00", "Can't set magic card block"
+    # Iceman Gen1a probe response shapes (all three are positive
+    # detections — block 0 was readable via the wupC1 backdoor):
+    #   `Block 0: HEX` — legacy after adapter _normalize_rdbl_response
+    #                    (pm3_compat.py:1241-1268).
+    #   `data: HEX`    — older iceman (matrix L605) and `data save` shape.
+    #   ` 0 | HEX | ascii` — iceman v4.21611 table format from
+    #                    mf_print_block_one (cmdhfmf.c:565-606).  Block num
+    #                    is `0` for sector 0, ` | ` separator, then 16 hex
+    #                    pairs, then ` | ` ascii.
+    #
+    # Negative shapes (definitive "not Gen1a"):
+    #   `wupC1 error` / `Can't read block. error=-1` / `Can't set magic`
+    #   from /tmp/rrg-pm3/armsrc/mifarecmd.c:103-116 + cmdhfmf.c:6171.
     import re as _re
-    ret = executor.startPM3Task('hf mf cgetblk 0', 10000)
+    ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
+    probe_conclusive = False
     if ret == 1:
         text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
         has_error = (executor.hasKeyword('wupC1 error') or
                      executor.hasKeyword("Can't read block") or
-                     executor.hasKeyword("Can't set magic") or
-                     executor.hasKeyword('isOk:00'))
-        # Positive detection: "Block 0:" or "data:" followed by hex data
-        # RRG PM3 v385d892 outputs "data: XX XX XX ..." for cgetblk
-        has_block_data = bool(_re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text))
+                     executor.hasKeyword("Can't set magic"))
+        # Positive detection: any of three known shapes carrying block 0
+        # hex bytes.  re.MULTILINE so `^` anchors to per-line table rows
+        # for the iceman v4.21611 ` 0 | HEX | ascii` form.
+        has_block_data = bool(_re.search(
+            r'(?:Block\s*0\s*:|data:|^\s*0\s*\|)\s*[A-Fa-f0-9 ]{16,}',
+            text, _re.MULTILINE
+        ))
         if has_block_data and not has_error:
             is_gen1a = True
+            probe_conclusive = True
+        elif has_error:
+            # wupC1 error = definitive "not Gen1a" answer from THIS card.
+            # Don't let a stale scan-cache flag (e.g. from an AutoCopy source
+            # card) override the target probe below.
+            probe_conclusive = True
 
-    # Use infos gen1a flag if set by scan phase
-    if infos.get('gen1a', False):
+    # Use infos gen1a flag only when the direct probe was inconclusive.
+    # Without this guard an AutoCopy source's gen1a=True leaks into a
+    # Gen2/CUID target and the flow tries cload — which requires the
+    # wupC1 backdoor and fails with "Can't set magic card block: 0".
+    if not probe_conclusive and infos.get('gen1a', False):
         is_gen1a = True
 
     # Step 3: Key verification on TARGET card (only for standard path)
@@ -436,7 +467,7 @@ def write_common(listener, infos, bundle):
 
     # Step 5: Post-write card check
     executor.startPM3Task('hf 14a info', 10000)
-    executor.startPM3Task('hf mf cgetblk 0', 10000)
+    executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
 
     return result
 
@@ -457,6 +488,12 @@ def write(listener, infos, bundle):
         int: 1=success, -1=failure
     """
     try:
+        # Fresh rework budget for this write — previous flows should not
+        # pre-brick this one.
+        try:
+            executor.resetReworkCount()
+        except AttributeError:
+            pass
         return write_common(listener, infos, bundle)
     except Exception:
         return -1
@@ -499,7 +536,7 @@ def verify(infos, bundle):
             card_uid = m.group(1).replace(' ', '').upper()
 
         # Gen1a probe (matches original trace exactly)
-        executor.startPM3Task('hf mf cgetblk 0', 10000)
+        executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
 
         # Compare UID with expected
         expected_uid = (infos.get('uid') or '').upper()

@@ -184,6 +184,18 @@ def startApp():
     except Exception:
         pass
 
+    # ── 5b. Audio init + startup chime ────────────────────────────
+    # pygame.mixer.init() must run after the Tk root is created (some
+    # SDL backends share an event loop assumption with the windowing
+    # toolkit; safer to defer).  audio.init() is graceful — silent
+    # no-op when no sound HW (QEMU, dev host with no audio device).
+    try:
+        from lib import audio
+        audio.init()
+        audio.playSystemStart()
+    except Exception:
+        pass
+
     # ── 6. Start screen mirror service if configured ────────────────
     try:
         import settings
@@ -235,20 +247,10 @@ def startApp():
                 _app_dir = _os.path.dirname(
                     _os.path.dirname(_os.path.abspath(__file__)))
 
-                # Fast path: if no firmware manifest, nothing to do
-                _manifest = _os.path.join(
-                    _app_dir, 'res', 'firmware', 'pm3', 'manifest.json')
-                image_ver = pm3_flash.get_image_version(_manifest)
-                if image_ver is None:
-                    print('[app] No firmware manifest — skip PM3 check',
-                          flush=True)
-                    root.after(0, _on_check_complete, False)
-                    return
-
-                # Quick probe: single hw version, no reworks.
-                # If PM3 subprocess crashed (e.g. client/firmware capabilities
-                # mismatch), this returns immediately instead of waiting 30s+
-                # through 3 retry cycles.
+                # Version probe runs unconditionally — pm3_compat.translate()
+                # gates on _current_version to pick the adapter direction, so
+                # we need it set whether or not a flash manifest is present
+                # (noflash IPK builds don't ship one).
                 ver_info = None
                 if executor is not None:
                     try:
@@ -262,7 +264,6 @@ def startApp():
                     except Exception as e:
                         print('[app] PM3 probe failed: %s' % e, flush=True)
 
-                # Set pm3_compat version from result
                 if pm3_compat is not None:
                     if ver_info is not None:
                         if ver_info.get('nikola', ''):
@@ -273,7 +274,6 @@ def startApp():
                                 pm3_compat.PM3_VERSION_ICEMAN
                         print('[app] PM3 version: %s' %
                               pm3_compat.get_version(), flush=True)
-                        # One-time iceman configuration (BCC ignore etc.)
                         try:
                             pm3_compat.configure_iceman()
                         except Exception:
@@ -281,7 +281,18 @@ def startApp():
                     else:
                         print('[app] PM3 not responding', flush=True)
 
-                # Determine if flash is needed
+                # Flash-decision fast path: without a manifest there is
+                # nothing to compare against, so we skip the flash check
+                # (the version probe above has already run).
+                _manifest = _os.path.join(
+                    _app_dir, 'res', 'firmware', 'pm3', 'manifest.json')
+                image_ver = pm3_flash.get_image_version(_manifest)
+                if image_ver is None:
+                    print('[app] No firmware manifest — skip flash check',
+                          flush=True)
+                    root.after(0, _on_check_complete, False)
+                    return
+
                 flash_needed = False
                 target = image_ver.get('pm3_firmware_version', '')
                 if target:

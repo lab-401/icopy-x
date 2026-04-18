@@ -279,6 +279,18 @@ def _serial_key_handle(keycode):
     #         logic analyser: giveyoulcd → I'm alive → shutdowning
     if keycode == "SHUTDOWN H3!":
         logger.info("Shutdown command received from GD32")
+        # Audio: play shutdown chime BEFORE the LCD/display teardown so
+        # the user hears it while the screen is still on.  Fire-and-
+        # forget — pygame.mixer.Sound.play() returns immediately and
+        # the audio runs on its own SDL thread until decay (~3s for
+        # this asset).  We don't sleep waiting for it; the GD32 ack +
+        # OS shutdown happen in parallel, the chime just plays out
+        # over the actual halt sequence.
+        try:
+            from lib import audio
+            audio.playSystemShutdown()
+        except Exception:
+            pass
         _ser_write("giveyoulcd")
         _ser_write("shutdowning")
         _ser_write("stopscreen")

@@ -29,6 +29,16 @@ Ground truth:
     Spec:       docs/middleware-integration/6-write_spec.md
     Strings:    docs/v1090_strings/lfverify_strings.txt
 
+Compat-flip status (P3.6 Write LF):
+    The ONLY PM3 command this module emits directly is `lf sea` (the
+    fallback path when the `scan` module is unavailable). Iceman
+    accepts `lf sea` as a short-prefix alias for `lf search`
+    (CLIParserInit at cmdlf.c:1890); divergence matrix Appendix B
+    L1567 confirms both forks accept the short form. All other
+    verification steps delegate to tag-specific readers in
+    `lfread`/`lft55xx`/`lfem4x05` (P3.5 scope) or to the `scan`
+    module -- those modules carry their own P3.x refactor scope.
+
 API:
     verify(typ, uid_par, raw_par) -> int
     verify_t55xx(file) -> int
@@ -163,11 +173,31 @@ def verify_em4x05(file):
         if not expected_blocks:
             return VERIFY_FAIL
 
-        # Compare: extract hex data from each block's PM3 output
+        # Compare: extract hex data from each block's PM3 output.
+        #
+        # Iceman-native `lf em 4x05 read` success emission
+        # (cmdlfem4x05.c:1391):
+        #     PrintAndLogEx(SUCCESS, "Address %02d | %08X - %s", ...)
+        # Shape: `Address NN | HHHHHHHH - <Lock|empty>`.  The anchored
+        # pattern below requires the `| <8hex> -` framing to avoid
+        # false-matching the iceman precursor INFO line at
+        # cmdlfem4x05.c:1385:
+        #     `Reading address NN using password HHHHHHHH`
+        # — the password is also 8 hex chars and, under the old bare
+        # `\b([A-Fa-f0-9]{8})\b` fallback, matched BEFORE the real
+        # block data, causing verify-false-FAIL on every password-
+        # protected block read.  Fallback bare-hex removed entirely
+        # for the same reason.
         for i in range(min(len(expected_blocks), len(blocks))):
             block_content = blocks[i] if blocks[i] else ''
-            # Extract hex data from PM3 lf em 4x05_read output
-            m = _re.search(r'\b([A-Fa-f0-9]{8})\b', block_content)
+            m = _re.search(r'Address\s+\d+\s+\|\s+([A-Fa-f0-9]{8})\s+-',
+                           block_content)
+            if m is None:
+                # Prefix-stripped cache bodies: fallback to bare
+                # `| <8hex> -` motif.  Still anchored on the pipe +
+                # trailing dash, so the pwd line (which has no pipe)
+                # cannot match.
+                m = _re.search(r'\|\s+([A-Fa-f0-9]{8})\s+-', block_content)
             if m:
                 data_hex = m.group(1).upper()
                 if data_hex != expected_blocks[i]:
@@ -211,6 +241,9 @@ def verify(typ, uid_par, raw_par):
         if not _scan.isTagFound(result):
             return VERIFY_FAIL
     else:
+        # Fallback path: `scan` module unavailable. Iceman-native:
+        # `lf sea` == `lf search` short-prefix alias (cmdlf.c:1890
+        # CLIParserInit). Divergence matrix Appendix B L1567.
         ret = executor.startPM3Task('lf sea', 10000)
         if ret == -1:
             return VERIFY_FAIL

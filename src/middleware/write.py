@@ -181,14 +181,34 @@ def write(listener, infos, bundle, run_on_subthread=True):
                         data = data_field
                     raw = raw or infos.get('raw', '')
 
-                # PAR_CLONE_MAP types need human-readable data (e.g.,
-                # FDX-B "0060-030207938416", EM410x "1234567890").
-                # B0_WRITE_MAP and RAW_CLONE_MAP types need raw hex
-                # bytes (e.g., AWID "01deb4ddede7e8b7edbdb7e1").
-                # Dispatch with raw for hex-based writers, data for
-                # parameter-based cloners.  lfwrite.write() routes
-                # to the correct handler internally.
-                if typ in getattr(lfwrite, 'PAR_CLONE_MAP', {}):
+                # PAR_CLONE_MAP types: cache `data` shape varies per tag,
+                # so dispatch must pick the field the writer can actually
+                # parse.  Audit (lfsearch.py:434+ cache setters):
+                #
+                #   8  EM410x: data='1111000000' (setUID2Raw, data==raw)
+                #               → either OK; PAR_CLONE_MAP path uses data
+                #   9  HID Prox: data='FC,CN: 128,54641' (getFCCN),
+                #                raw=hex Wiegand payload
+                #               → writer needs raw
+                #   10 Indala:  data == raw == hex (lfsearch.py:499)
+                #               → either OK; included defensively
+                #   28 FDX-B:   data='Country: 112' (descriptive line),
+                #               raw='112-025880314020' (parseable)
+                #               → writer splits on '-', only raw works
+                #   32 NEDAP:   data=hex (setUID), raw=hex (setRAW)
+                #               → either OK
+                #
+                # Special-case the writers that strictly need `raw`:
+                # HID, Indala, FDX-B.  Iceman cmdlfindala.c:790
+                # _RED_("Warning, encoding with FC/CN doesn't always
+                # work") confirms raw is universally correct for HID +
+                # Indala; cmdlffdxb.c:712 CLIParser argtable uses
+                # `--country <dec> --national <dec>` which write_fdx_par
+                # parses from the `<C>-<N>` form held in `raw`.
+                _RAW_CLONE_PAR_TYPES = {9, 10, 28}  # HID Prox, Indala, FDX-B
+                if typ in _RAW_CLONE_PAR_TYPES:
+                    raw_par = raw if raw else data
+                elif typ in getattr(lfwrite, 'PAR_CLONE_MAP', {}):
                     raw_par = data if data else raw
                 else:
                     raw_par = raw if raw else data

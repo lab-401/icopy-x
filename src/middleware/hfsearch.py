@@ -48,27 +48,81 @@ CMD = 'hf sea'
 TIMEOUT = 10000
 
 # ---------------------------------------------------------------------------
-# Detection keywords — EXACT from binary string extraction (§2.3)
+# Detection keywords — iceman-native shapes
+# Matrix section: `hf search` (divergence_matrix.md L928-954).
+# Source: /tmp/rrg-pm3/client/src/cmdhf.c:69+ (CmdHFSearch, table L621).
 # ---------------------------------------------------------------------------
-_KW_NO_KNOWN = 'No known/supported 13.56 MHz tags found'   # STR@0x00016610
-_KW_ICLASS = 'Valid iCLASS tag'                             # STR@0x00016674
-_KW_ISO15693 = 'Valid ISO15693'                             # STR@0x0001668c
-_KW_ST_MICRO = 'ST Microelectronics SA France'              # STR@0x000166a0
-_KW_LEGIC = 'Valid LEGIC Prime'                             # STR@0x000166d8
-_KW_FELICA = 'Valid ISO18092 / FeliCa'                      # STR@0x000166f0
-_KW_ISO14443B = 'Valid ISO14443-B'                          # STR@0x00016714
-_KW_MIFARE = 'MIFARE'                                      # STR@0x00016730
-_KW_TOPAZ = 'Valid Topaz'                                   # STR@0x00016748
+# Iceman cmdhf.c:242 `_RED_("No known/supported 13.56 MHz tags found")` —
+# IDENTICAL to legacy cmdhf.c:193. Matrix L943.
+_KW_NO_KNOWN = 'No known/supported 13.56 MHz tags found'
+
+# Iceman cmdhf.c:208 `"Valid " _GREEN_("iCLASS tag / PicoPass tag") " found"`.
+# Substring `Valid iCLASS tag` matches both iceman and legacy. Matrix L944.
+_KW_ICLASS = 'Valid iCLASS tag'
+
+# Iceman cmdhf.c:198 `"Valid " _GREEN_("ISO 15693 tag") " found"` — WITH
+# space between ISO and number. Legacy cmdhf.c:127 omits the space.
+# Phase 4 compat `_normalize_iso15693_manufacturer` / `_RE_ISO_SPACE`
+# (pm3_compat.py:1078) strips space on legacy→iceman; keyword targets
+# iceman-native form. Matrix L945.
+_KW_ISO15693 = 'Valid ISO 15693'
+
+# Iceman cmdhf.c emits `"ST Microelectronics SA France"` as ISO15693
+# manufacturer sub-key. IDENTICAL in both. Matrix L951.
+_KW_ST_MICRO = 'ST Microelectronics SA France'
+
+# Iceman cmdhf.c:155 `"Valid " _GREEN_("LEGIC Prime tag") " found"`.
+# Substring `Valid LEGIC Prime` matches both. Matrix (L942 grouping).
+_KW_LEGIC = 'Valid LEGIC Prime'
+
+# Iceman cmdhf.c:220 `"Valid " _GREEN_("ISO 18092 / FeliCa tag") " found"` —
+# WITH space. Legacy cmdhf.c omits space. Same `_RE_ISO_SPACE` adapter
+# handles reshaping on legacy→iceman path. Matrix L947.
+_KW_FELICA = 'Valid ISO 18092 / FeliCa'
+
+# Iceman cmdhf.c:186 `"Valid " _GREEN_("ISO 14443-B tag") " found"` — WITH
+# space. Legacy omits. Matrix L946.
+_KW_ISO14443B = 'Valid ISO 14443-B'
+
+# Substring `MIFARE` hits iceman infoHF14A block types. IDENTICAL after
+# prefix strip. Matrix L870.
+_KW_MIFARE = 'MIFARE'
+
+# Iceman cmdhf.c:106 `"Valid " _GREEN_("Topaz tag") " found"`. Substring
+# `Valid Topaz` matches both.
+_KW_TOPAZ = 'Valid Topaz'
 
 # ---------------------------------------------------------------------------
-# Regex patterns — EXACT from binary string extraction (§2.4)
+# Regex patterns — iceman-native shapes
 # ---------------------------------------------------------------------------
-_RE_UID = r'.*UID:\s(.*)'           # ISO15693 UID
-_RE_UID_ALT = r'.*UID.*:(.*)'       # ISO14443-B / Topaz UID
-_RE_MSN = r'.*MSN:\s(.*)'           # LEGIC MSN
-_RE_MCD = r'.*MCD:\s(.*)'           # LEGIC MCD
-_RE_ATQB = r'.*ATQB.*:(.*)'         # ISO14443-B ATQB
-_RE_ATQA = r'.*ATQA.*:(.*)'         # Topaz ATQA
+# Iceman ISO15693 UID: `"UID.... " _GREEN_("%s")` — cmdhf15.c:447 inside
+# `getUID()` called by `readHF15Uid()` (cmdhf15.c:465), which is the path
+# exercised by `hf sea` (cmdhf.c:197). The field separator is FOUR dots,
+# NOT a colon — iceman dropped the legacy `UID: ` form for ISO15693 entirely.
+# Grep of /tmp/rrg-pm3/client/src/cmdhf15.c for `UID:` within SUCCESS-level
+# emissions yields zero matches; only `UID....` is emitted.
+# Keep regex tolerant to 4+ dots in case downstream iceman versions vary.
+# Matrix L971 (hf search ISO15693 sub-row — to be re-verified in v4).
+_RE_UID = r'UID\.{3,}\s+([0-9A-Fa-f ]+)'
+
+# Iceman ISO14443-B UID: `" UID    : %s"` (cmdhf14b.c:1269, padded spaces
+# before colon). Tolerant to both padded and non-padded colon.
+_RE_UID_ALT = r'UID\s*:\s+([0-9A-Fa-f ]+)'
+
+# Iceman LEGIC: `"MCD: " _GREEN_("%02X") " MSN: " _GREEN_("%s")
+# " MCC: " _GREEN_("%02X")` (cmdhflegic.c:90). MSN is
+# multi-byte hex; capture non-greedy up to next `MCC` field.
+_RE_MSN = r'MSN:\s+([0-9A-Fa-f][0-9A-Fa-f\s]*?)(?=\s+MCC|\n|$)'
+
+# Iceman LEGIC MCD: single hex byte (cmdhflegic.c:90).
+_RE_MCD = r'MCD:\s+([0-9A-Fa-f]{2})'
+
+# Iceman ISO14443-B ATQB: `" ATQB   : %s"` (cmdhf14b.c:1270 — padded
+# spaces before colon). Keep tolerant whitespace.
+_RE_ATQB = r'ATQB\s*:\s+([0-9A-Fa-f ]+)'
+
+# Iceman Topaz ATQA: `"ATQA: " _GREEN_("%02X %02X")` (cmdhftopaz.c:1178).
+_RE_ATQA = r'ATQA\s*:\s+([0-9A-Fa-f ]+)'
 
 # ---------------------------------------------------------------------------
 # Hardcoded integer type constants (§2.5)

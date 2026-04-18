@@ -32,7 +32,7 @@ Ground truth:
 
 API:
     CMD_DETECT_NO_KEY  = 'lf t55xx detect'
-    CMD_DETECT_ON_KEY  = 'lf t55xx detect p FFFFFFFF'
+    CMD_DETECT_ON_KEY  = 'lf t55xx detect -p FFFFFFFF'
     CMD_DUMP_NO_KEY    = 'lf t55xx dump'
     KEYWORD_CASE1      = 'Could not detect modulation automatically'
     TIMEOUT = 10000
@@ -57,19 +57,64 @@ import re
 # Constants — from binary string extraction
 # ---------------------------------------------------------------------------
 CMD_DETECT_NO_KEY = 'lf t55xx detect'
-CMD_DETECT_ON_KEY = 'lf t55xx detect p FFFFFFFF'
+CMD_DETECT_ON_KEY = 'lf t55xx detect -p FFFFFFFF'
 CMD_DUMP_NO_KEY = 'lf t55xx dump'
 KEYWORD_CASE1 = 'Could not detect modulation automatically'
 TIMEOUT = 10000
 
-# Regex patterns — from lft55xx_strings.txt
-_RE_CHIP_TYPE = r'.*Chip Type.*:(.*)'
-_RE_MODULATE = r'.*Modulation.*:(.*)'
-_RE_BLOCK0 = r'Block0\s+:\s+0x([A-Fa-f0-9]+)'
-_RE_PWD = r'[Pp]assword\s*:*\s+([A-Fa-f0-9]+)'
+# Regex patterns — iceman-native (P3.5 refactor, 2026-04-17).
+#
+# Iceman source: /tmp/rrg-pm3/client/src/cmdlft55xx.c:1837-1848
+# (printConfiguration() — called by CmdT55xxDetect):
+#     PrintAndLogEx(INFO, " Chip type......... T55x7");         # 9 dots
+#     PrintAndLogEx(INFO, " Modulation........ ASK");           # 8 dots
+#     PrintAndLogEx(INFO, " Block0............ %08X %s", ...);  # 12 dots, NO 0x
+#     PrintAndLogEx(INFO, " Password set...... No/Yes");        # 6 dots
+#     PrintAndLogEx(INFO, " Password.......... %08X", pwd);     # 10 dots
+#
+# Legacy source: same field names but colon-separated with spaces:
+#     "     Chip Type      : T55x7"
+#     "     Modulation     : ASK"
+#     "     Block0         : 0x000880E0"          # WITH 0x prefix
+#     "     Password Set   : No"
+#     "     Password       : 00000000"
+#
+# Matrix section: divergence_matrix.md L1252-1274.
+# Divergence type: FORMAT (dotted-leader vs colon-separator).
+#
+# Middleware now targets iceman dotted shape.  `_normalize_t55xx_config`
+# (pm3_compat.py:1563) rewrites iceman→legacy and is now INVERSE of what
+# the middleware needs — MUST BE DISABLED in Phase 4.  See gap log P3.5
+# entry "lf t55xx detect dotted-field regressions".
+#
+# Regex design notes:
+#   - `Chip [Tt]ype` tolerates case because iceman uses lowercase `type`
+#     (cmdlft55xx.c:1837) vs legacy `Type` (capitalised).  Dropping case
+#     sensitivity removes need for a separate adapter.
+#   - `Block0\.+\s+([A-Fa-f0-9]+)` — NO `0x` prefix; iceman prints a raw
+#     hex dword after the dots.  Legacy adapter added `0x` before the
+#     refactor; the new regex is iceman-native and disregards `0x`.
+#   - `[Pp]assword\.{8,}\s+([A-Fa-f0-9]+)` — iceman `Password..........`
+#     with 10 dots; use `{8,}` to REJECT the shorter 6-dot
+#     `Password set......` line which would otherwise match this regex
+#     and capture `No`/`Yes` non-hex (which then fails the
+#     `[A-Fa-f0-9]+` class).  `{8,}` cleanly excludes the 6-dot form
+#     without regex-engine backtracking.  Callers only invoke this
+#     regex when the `Password` line is present (the `usepwd` branch),
+#     so collisions are benign.  Additional trailing hex characters
+#     terminate at whitespace per `\s+`.
+_RE_CHIP_TYPE = r'Chip [Tt]ype\.+\s+(\S+)'
+_RE_MODULATE = r'Modulation\.+\s+(\S+)'
+_RE_BLOCK0 = r'Block0\.+\s+([A-Fa-f0-9]+)'
+_RE_PWD = r'[Pp]assword\.{8,}\s+([A-Fa-f0-9]+)'
 
-# Detection keyword
-_KW_CHIP_TYPE = 'Chip Type'
+# Detection keyword — iceman cmdlft55xx.c:1837 lowercase `type`.
+# Substring match via `re.search` is case-sensitive in hasKeyword so
+# `'Chip type'` is the correct iceman-native match.  `_KW_CHIP_TYPE`
+# here is the human-readable fragment; the PM3 response has
+# `" Chip type......... T55x7"` so the substring `Chip type` appears
+# naturally.  Matrix L1267.
+_KW_CHIP_TYPE = 'Chip type'
 _KW_COULD_NOT_DETECT = 'Could not detect modulation automatically'
 
 # Default keys — EXACT from QEMU extraction (archive/lib_transliterated/lft55xx.py)
@@ -219,13 +264,17 @@ def call_listener(listener, max_value, progress, state='read'):
 def genKeyFile(keys):
     """Generate a temporary key file from a list of keys.
 
-    QEMU-verified: creates file in /tmp/.keys/ directory,
-    writes one key per line (skipping comments/empty).
-    Returns the file path.
+    Writes to /tmp/.keys/t5577_tmp_keys.dic — the .dic suffix is
+    required because iceman PM3's loadFileDICTIONARY_safe() always
+    appends .dic when searching (filenamemcopy in fileutils.c).
+    Factory PM3 accepted the bare filename, so this file name change
+    is iceman-specific.  Returns the full path (caller passes it to
+    `lf t55xx chk -f <path>`; iceman skips the .dic append because
+    the name already ends with it).
     """
     keys_dir = '/tmp/.keys'
     os.makedirs(keys_dir, exist_ok=True)
-    tmp_keys_file = os.path.join(keys_dir, 't5577_tmp_keys')
+    tmp_keys_file = os.path.join(keys_dir, 't5577_tmp_keys.dic')
     with open(tmp_keys_file, 'w') as f:
         for line in keys:
             line = line.strip()
@@ -417,9 +466,9 @@ def detectT55XX(key=None):
 
     # Build command with key argument, or KEY_TEMP, or no key
     if key:
-        cmd = 'lf t55xx detect p %s' % key
+        cmd = 'lf t55xx detect -p %s' % key
     elif KEY_TEMP:
-        cmd = 'lf t55xx detect p %s' % KEY_TEMP
+        cmd = 'lf t55xx detect -p %s' % KEY_TEMP
     else:
         cmd = CMD_DETECT_NO_KEY
 
@@ -478,15 +527,34 @@ def dumpT55XX(listener, key=None):
 
     cmd = CMD_DUMP_NO_KEY
     if dump_path:
-        cmd += ' f %s' % dump_path
+        cmd += ' -f %s' % dump_path
     if key:
-        cmd += ' p %s' % key
+        cmd += ' -p %s' % key
 
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -2
 
-    if executor.hasKeyword('saved 12 blocks'):
+    # Iceman-native success sentinel (P3.5 refactor):
+    #
+    # Iceman `pm3_save_dump()` in `/tmp/rrg-pm3/client/src/fileutils.c:293`:
+    #     PrintAndLogEx(SUCCESS, "Saved %zu bytes to binary file `%s`", ...)
+    # capital `S`, with accompanying json/em-compatible save lines at
+    # :320/:947.  Legacy emitted `saved 12 blocks ...` (blocks not bytes)
+    # which iceman removed entirely (grep of /tmp/rrg-pm3/client/src/ for
+    # `saved 12 blocks` yields zero matches).  CmdT55xxDump at
+    # cmdlft55xx.c:2647 calls pm3_save_dump with jsfT55x7 for successful
+    # dumps, unchanged between firmware revisions for the output text.
+    #
+    # `_normalize_save_messages` (pm3_compat.py, wired at :1862) currently
+    # lowercases iceman `Saved` → legacy `saved` on the `lf t55xx dump`
+    # critical path.  After the P3.5 flip, middleware expects iceman
+    # capital shape; the normalizer should be disabled/inverted in
+    # Phase 4.  See gap log P3.5 "lf t55xx dump save-message flip".
+    #
+    # Matrix section: divergence_matrix.md L1278-1291 (row `lf t55xx
+    # dump` — COSMETIC save line) + L1490-1496 (systemic divergence #6).
+    if executor.hasKeyword(r'Saved \d+ bytes to binary file'):
         # Store path for later access by write.py
         if dump_path:
             DUMP_FILE = dump_path
@@ -510,9 +578,28 @@ def chkT55xx(listener):
 
     found_keys = []
 
+    # Iceman-native regex for `Found valid password` emission.
+    #
+    # Iceman source: /tmp/rrg-pm3/client/src/cmdlft55xx.c:3658/:3660/:3816
+    #     PrintAndLogEx(SUCCESS, "Found valid password: [ %08X ]", curr);
+    # Format: the 4-byte hex password is wrapped in `[ XX ]` brackets
+    # with spaces.  Legacy printed `Found valid password: XXXXXXXX`
+    # without brackets; the prior regex `Found valid.*?:\s*([A-Fa-f0-9]+)`
+    # matched the legacy bare-hex form but fails on iceman because `[`
+    # is not in the `[A-Fa-f0-9]` character class (verified via
+    # `python3 -c re.search` — iceman match returns None).
+    #
+    # New iceman-native pattern accepts the bracketed form; the optional
+    # `\[?` allows legacy bare-hex to still match during the transition
+    # (Option B compat).  `_normalize_t55xx_chk_password` (pm3_compat.py;
+    # matrix L1286) rewrites iceman brackets → legacy bare-hex when the
+    # compat adapter runs — becomes inverse of middleware once flipped;
+    # must be disabled in Phase 4.  Gap log P3.5.
+    _RE_FOUND_VALID = r'Found valid password:\s*\[?\s*([A-Fa-f0-9]+)\s*\]?'
+
     def lineInternal(line):
         if 'Found valid' in str(line):
-            m = re.search(r'Found valid.*?:\s*([A-Fa-f0-9]+)', str(line))
+            m = re.search(_RE_FOUND_VALID, str(line))
             if m:
                 key = m.group(1)
                 if key not in found_keys:
@@ -523,7 +610,7 @@ def chkT55xx(listener):
     except Exception:
         return []
 
-    cmd = 'lf t55xx chk f %s' % key_file
+    cmd = 'lf t55xx chk -f %s' % key_file
     executor.add_task_call(lineInternal)
     ret = executor.startPM3Task(cmd, TIMEOUT * 3)
     executor.del_task_call(lineInternal)
@@ -531,7 +618,7 @@ def chkT55xx(listener):
     # Also check output cache for found keys (in case callback missed them)
     content = executor.getPrintContent()
     if content:
-        for m in re.finditer(r'Found valid.*?:\s*([A-Fa-f0-9]+)', content):
+        for m in re.finditer(_RE_FOUND_VALID, content):
             key = m.group(1)
             if key not in found_keys:
                 found_keys.append(key)
@@ -624,9 +711,9 @@ def dumpT55XX_Text(key=None):
     result = ''
     for b in range(8):
         if key:
-            cmd = 'lf t55xx read b {} p {}'.format(b, key)
+            cmd = 'lf t55xx read -b {} -p {}'.format(b, key)
         else:
-            cmd = 'lf t55xx read b {}'.format(b)
+            cmd = 'lf t55xx read -b {}'.format(b)
         ret = executor.startPM3Task(cmd, TIMEOUT)
         if ret != -1:
             content = executor.getPrintContent()
@@ -650,9 +737,11 @@ def readBlock(pwd_str, b_index, p_index=0):
             return ''
 
     if pwd_str:
-        cmd = 'lf t55xx read b {} p {} o {}'.format(b_index, pwd_str, p_index)
+        cmd = 'lf t55xx read -b {} -p {}'.format(b_index, pwd_str)
+        if p_index:
+            cmd += ' --page1'
     else:
-        cmd = 'lf t55xx read b {}'.format(b_index)
+        cmd = 'lf t55xx read -b {}'.format(b_index)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return ''
@@ -675,7 +764,7 @@ def getB0WithKey(key=None, from_detect=False):
 
     if not from_detect:
         if key:
-            cmd = 'lf t55xx detect p {}'.format(key)
+            cmd = 'lf t55xx detect -p {}'.format(key)
         else:
             cmd = CMD_DETECT_NO_KEY
         ret = executor.startPM3Task(cmd, TIMEOUT)
@@ -763,7 +852,7 @@ def lock(setkey=True, b0=None, check_detect=True):
         return -1
 
     b0_locked = switch_lock(b0, True)
-    cmd = 'lf t55xx write b 0 d {}'.format(b0_locked)
+    cmd = 'lf t55xx write -b 0 -d {}'.format(b0_locked)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -786,7 +875,7 @@ def set_key_block(key):
         except ImportError:
             return -1
 
-    cmd = 'lf t55xx write b 7 d {}'.format(key)
+    cmd = 'lf t55xx write -b 7 -d {}'.format(key)
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
         return -1
@@ -807,7 +896,7 @@ def wipe_t(key=None):
             return -1
 
     if key:
-        cmd = 'lf t55xx wipe p {}'.format(key)
+        cmd = 'lf t55xx wipe -p {}'.format(key)
     else:
         cmd = 'lf t55xx wipe'
     ret = executor.startPM3Task(cmd, TIMEOUT)

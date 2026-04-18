@@ -232,8 +232,18 @@ def scan_14a():
 
                 ul_ret = executor.startPM3Task('hf mfu info', 8888)
                 if ul_ret != -1:
-                    # Determine UL subtype from TYPE field
-                    # Priority order from hfmfuinfo_strings.txt
+                    # Determine UL subtype from iceman TYPE field.
+                    # All keywords below are iceman-native substrings of
+                    # ul_print_type() output in /tmp/rrg-pm3/client/src/
+                    # cmdhfmfu.c:1012-1046 — e.g.:
+                    #   "TYPE: MIFARE Ultralight C (MF0ULC)" (L1012)
+                    #   "TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101)" (L1016)
+                    #   "TYPE: NTAG 213 144bytes (NT2H1311G0DU)" (L1034)
+                    # Matrix section `hf mfu info` (divergence_matrix.md L853-
+                    # 877) confirms IDENTICAL emission on both firmwares for
+                    # these substrings. Priority order: NTAG before Ultralight
+                    # so NTAG-specific matches land before the generic
+                    # "Ultralight" fallback.
                     if executor.hasKeyword('NTAG 213'):
                         ul_type = tagtypes.NTAG213_144B
                     elif executor.hasKeyword('NTAG 215'):
@@ -247,7 +257,9 @@ def scan_14a():
                          executor.hasKeyword('MF0UL1101'):
                         ul_type = tagtypes.ULTRALIGHT_EV1
                     else:
-                        # Plain Ultralight or Unknown → default to ULTRALIGHT
+                        # Plain Ultralight or Unknown -> default to ULTRALIGHT
+                        # Iceman cmdhfmfu.c:1010 emits
+                        # `"TYPE: MIFARE Ultralight"` for plain UL.
                         ul_type = tagtypes.ULTRALIGHT
 
                     result = {
@@ -454,7 +466,7 @@ def lf_wav_filter():
 
     try:
         # Step 1: Save PM3 graph buffer to temp file
-        cmd = 'data save f ' + FILE_BASE
+        cmd = 'data save -f ' + FILE_BASE
         ret = executor.startPM3Task(cmd, 90)
         if ret == -1:
             return False
@@ -704,6 +716,13 @@ class Scanner:
         """
         self._raise_on_multi_scan()
         self._set_run_label(True)
+        # Fresh rework budget for this scan — previous flows should not
+        # pre-brick this one.
+        try:
+            import executor as _exec
+            _exec.resetReworkCount()
+        except (ImportError, AttributeError):
+            pass
         try:
             result = None
 
@@ -792,6 +811,11 @@ class Scanner:
         """
         self._raise_on_multi_scan()
         self._set_run_label(True)
+        try:
+            import executor as _exec
+            _exec.resetReworkCount()
+        except (ImportError, AttributeError):
+            pass
         try:
             import tagtypes
             result = None

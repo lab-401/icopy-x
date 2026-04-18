@@ -1,0 +1,179 @@
+=== FULL TRACE ===
+[   0.008] presspm3 hook OK
+[   0.010] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.621] SERIAL_TX> b'pctbat\r\n'
+[   6.635] SERIAL_TX> b'charge\r\n'
+[  16.651] SERIAL_TX> b'pctbat\r\n'
+[  16.665] SERIAL_TX> b'charge\r\n'
+[  17.195] KEY> KEYDOWN_PRES!
+[  17.471] KEY> KEYDOWN_PRES!
+[  26.681] SERIAL_TX> b'pctbat\r\n'
+[  26.695] SERIAL_TX> b'charge\r\n'
+[  26.843] KEY> KEYOK_PRES!
+[  27.737] START(ScanActivity, None) bundle=None
+[  27.784] PM3> hf 14a info (timeout=5000)
+[  27.787] CONNECT> connect2PM3()
+[  27.792] CONNECT< socket=True
+[  27.882] PM3< ret=1 content_len=1 \n
+[  27.909] PM3> lf sea (timeout=10000)
+[  28.150] POLL stack=['MainActivity', 'ScanActivity'] 
+[  29.477] PM3< ret=1 content_len=690 \nNote: False Positives ARE possible\nChecking for known tags...\n[PW39    ] Pyramid 39-bit wiegand format    FC: 51341  CN: 351646  parity ( fail )\nfound 1 matching 39-bit format\nParity tests failed\n\nTrying with a preamble bit...\n[P10001  ] HID P10001 Honeywell 40-bit      FC: 2321  CN: 43707\n[Casi40  ] Casi-Rusco 40-bit                  CN: 53835292062\n[Verkada40] Verkada 40-bit                   FC: 200  CN: 148200862  parity ( ok )\n[BC40    ] Bundy TimeClock 40-bit           FC: 2189  CN: 175823  OEM: 76  parity ( fail )\nfound 4 matching 40-bit formats\n\nraw: 000000000000009911aabb3c\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  29.500] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  29.654] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  29.708] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  34.412] KEY> KEYM2_PRES!
+[  34.416] START(SimulationActivity, {'raw': '000000000000009911aabb3c', 'data': 'FC,CN: 51341,351646', 'type': 9, 'found': True, 'progress': 1, 'return': 9}) bundle={"raw": "000000000000009911aabb3c", "data": "FC,CN: 51341,351646", "type": 9, "found": true, "progress": 1, "return": 9}
+[  34.517] PM3> lf hid sim -r 000000000000009911AABB3C (timeout=-1)
+[  34.524] PM3< ret=1 content_len=66 LF HID simulation supports only packed credentials up to 37 bits\n\n
+[  34.664] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=9 uid=
+[  36.712] SERIAL_TX> b'pctbat\r\n'
+[  36.725] SERIAL_TX> b'charge\r\n'
+[  46.743] SERIAL_TX> b'pctbat\r\n'
+[  46.760] SERIAL_TX> b'charge\r\n'
+[  50.877] KEY> KEY_PWR_CAN_PRES!
+[  56.289] KEY> KEY_PWR_CAN_PRES!
+[  56.291] FINISH(top=SimulationActivity d=3)
+[  56.717] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  56.783] SERIAL_TX> b'pctbat\r\n'
+[  56.800] SERIAL_TX> b'charge\r\n'
+[  58.739] KEY> KEY_PWR_CAN_PRES!
+[  58.741] FINISH(top=ScanActivity d=2)
+[  59.221] POLL stack=['MainActivity'] type=9 uid=
+[  66.816] SERIAL_TX> b'pctbat\r\n'
+[  66.830] SERIAL_TX> b'charge\r\n'
+[  67.454] KEY> KEYOK_PRES!
+[  67.457] START(ScanActivity, None) bundle=None
+[  67.488] PM3> hf 14a info (timeout=5000)
+[  67.491] CONNECT> connect2PM3()
+[  67.496] CONNECT< socket=True
+[  67.602] PM3< ret=1 content_len=1 \n
+[  67.605] PM3> lf sea (timeout=10000)
+[  67.735] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  68.946] PM3< ret=1 content_len=253 \nNote: False Positives ARE possible\nChecking for known tags...\nAWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nValid AWID ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  68.957] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[  69.129] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[  69.238] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[  71.882] KEY> KEYM2_PRES!
+[  71.885] START(SimulationActivity, {'data': 'FC,CN: 2001,13371337', 'fc': '2001', 'cn': '13371337', 'len': '50', 'raw': '0128b12eb1811d7117e22111', 'type': 11, 'found': True, 'progress': 1, 'return': 11}) bundle={"data": "FC,CN: 2001,13371337", "fc": "2001", "cn": "13371337", "len": "50", "raw": "0128b12eb1811d7117e22111", "type": 11, "found": true, "progress": 1, "return": 11}
+[  71.967] PM3> lf awid sim --fmt 50 --fc 2001 --cn 13371337 (timeout=-1)
+[  72.245] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=11 uid=
+[  76.847] SERIAL_TX> b'pctbat\r\n'
+[  76.860] SERIAL_TX> b'charge\r\n'
+[  86.877] SERIAL_TX> b'pctbat\r\n'
+[  86.890] SERIAL_TX> b'charge\r\n'
+[  95.443] KEY> KEYM1_PRES!
+[  95.520] PRESSPM3> called
+[  95.521] SERIAL_TX> b'presspm3\r\n'
+[  95.535] PRESSPM3< done
+[  95.536] PM3_STOP> stopPM3Task()
+[  95.537] PM3< ret=1 content_len=163 Simulating AWID 50 -- FC: 2001 CN: 13371337\n\nPress pm3 button or <Enter> to abort simulation\nFSK simulating with rf/50, fc high 10, fc low 8, STT 1, n 4802\nDone!\n\n
+[  95.538] PM3_STOP< ret=None
+[  96.706] KEY> KEY_PWR_CAN_PRES!
+[  96.708] FINISH(top=SimulationActivity d=3)
+[  96.787] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[  96.907] SERIAL_TX> b'pctbat\r\n'
+[  96.919] SERIAL_TX> b'charge\r\n'
+[  97.419] KEY> KEY_PWR_CAN_PRES!
+[  97.422] FINISH(top=ScanActivity d=2)
+[  97.789] POLL stack=['MainActivity'] type=11 uid=
+[  98.577] KEY> KEYOK_PRES!
+[  98.580] START(ScanActivity, None) bundle=None
+[  98.636] PM3> hf 14a info (timeout=5000)
+[  98.638] CONNECT> connect2PM3()
+[  98.643] CONNECT< socket=True
+[  98.748] PM3< ret=1 content_len=1 \n
+[  98.751] PM3> lf sea (timeout=10000)
+[  98.792] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 101.985] PM3< ret=1 content_len=136 \nNote: False Positives ARE possible\nChecking for known tags...\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n\n
+[ 102.023] PM3> hf sea (timeout=10000)
+[ 106.936] SERIAL_TX> b'pctbat\r\n'
+[ 106.950] SERIAL_TX> b'charge\r\n'
+[ 107.568] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 107.595] PM3> lf t55xx detect (timeout=10000)
+[ 110.621] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 110.633] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[ 110.828] PM3< ret=1 content_len=1 \n
+[ 110.831] PM3> hf felica reader (timeout=10000)
+[ 111.960] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[ 116.348] KEY> KEYM2_PRES!
+[ 116.360] PM3> hf 14a info (timeout=5000)
+[ 116.368] CONNECT> connect2PM3()
+[ 116.382] CONNECT< socket=True
+[ 116.475] PM3< ret=1 content_len=1 \n
+[ 116.477] PM3> lf sea (timeout=10000)
+[ 116.967] SERIAL_TX> b'pctbat\r\n'
+[ 116.980] SERIAL_TX> b'charge\r\n'
+[ 117.919] PM3< ret=1 content_len=556 \nNote: False Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 10 (0x000A)\nAnimal bit set?... True\nData block?....... True  ( 0x800000 )\nRUDI bit?......... False\nUser Info?........ 25\nReplacement No?... 7\nCRC-16............ 0xE612 ( ok )\nRaw............... 25 02 69 60 60 38 95 3F 48 67 00 00 01\n\n\nValid FDX-B ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 117.923] CACHE: {"raw": "'112-025880314020'", "data": "'Country: 112'", "country": "'112'", "nc": "'025880314020'", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 118.056] CACHE: {"raw": "'112-025880314020'", "data": "'Country: 112'", "country": "'112'", "nc": "'025880314020'", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[ 118.325] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 120.063] KEY> KEYM2_PRES!
+[ 120.065] START(SimulationActivity, {'raw': '112-025880314020', 'data': 'Country: 112', 'country': '112', 'nc': '025880314020', 'type': 28, 'found': True, 'progress': 1, 'return': 28}) bundle={"raw": "112-025880314020", "data": "Country: 112", "country": "112", "nc": "025880314020", "type": 28, "found": true, "progress": 1, "return": 28}
+[ 120.132] PM3> lf fdxb sim --country 112 --national 025880314020 --animal (timeout=-1)
+[ 120.330] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=28 uid=
+[ 126.996] SERIAL_TX> b'pctbat\r\n'
+[ 127.010] SERIAL_TX> b'charge\r\n'
+[ 128.368] KEY> KEYM1_PRES!
+[ 128.407] PRESSPM3> called
+[ 128.407] SERIAL_TX> b'presspm3\r\n'
+[ 128.422] PM3< ret=1 content_len=339 Country code........ 112\nNational code....... 25880314020\nSet animal bit...... Y\nSet data block bit.. N\nExtended data....... 0x0\nRFU................. 0\nSimulating FDX-B animal ID: 0112-25880314020\nASK simulating with rf/32, invert 1, encoding ASK/BI (2), separator 0, n 4096\nYou can cancel this operation by pressing the pm3 button\nDone!\n\n
+[ 128.425] PRESSPM3< done
+[ 128.429] PM3_STOP> stopPM3Task()
+[ 128.432] PM3_STOP< ret=None
+[ 129.134] KEY> KEY_PWR_CAN_PRES!
+[ 129.136] FINISH(top=SimulationActivity d=3)
+[ 129.346] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 133.997] KEY> KEY_PWR_CAN_PRES!
+[ 134.000] FINISH(top=ScanActivity d=2)
+[ 134.355] POLL stack=['MainActivity'] type=28 uid=
+[ 137.042] SERIAL_TX> b'pctbat\r\n'
+[ 137.055] SERIAL_TX> b'charge\r\n'
+[ 142.309] KEY> KEYOK_PRES!
+[ 142.313] START(ScanActivity, None) bundle=None
+[ 142.343] PM3> hf 14a info (timeout=5000)
+[ 142.345] CONNECT> connect2PM3()
+[ 142.351] CONNECT< socket=True
+[ 142.368] POLL stack=['MainActivity', 'ScanActivity'] type=28 uid=
+[ 142.453] PM3< ret=1 content_len=1 \n
+[ 142.456] PM3> lf sea (timeout=10000)
+[ 143.813] PM3< ret=1 content_len=253 \nNote: False Positives ARE possible\nChecking for known tags...\nAWID - len: 50 FC: 2001 Card: 13371337 - Wiegand: 20fa201980f92, Raw: 0128b12eb1811d7117e22111\n\nValid AWID ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 143.816] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 143.871] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 144.015] CACHE: {"data": "'FC,CN: 2001,13371337'", "fc": "'2001'", "cn": "'13371337'", "len": "'50'", "raw": "'0128b12eb1811d7117e22111'", "type": "11", "found": "True", "progress": "1", "return": "11"}
+[ 147.076] SERIAL_TX> b'pctbat\r\n'
+[ 147.090] SERIAL_TX> b'charge\r\n'
+[ 150.028] KEY> KEYM2_PRES!
+[ 150.031] START(SimulationActivity, {'data': 'FC,CN: 2001,13371337', 'fc': '2001', 'cn': '13371337', 'len': '50', 'raw': '0128b12eb1811d7117e22111', 'type': 11, 'found': True, 'progress': 1, 'return': 11}) bundle={"data": "FC,CN: 2001,13371337", "fc": "2001", "cn": "13371337", "len": "50", "raw": "0128b12eb1811d7117e22111", "type": 11, "found": true, "progress": 1, "return": 11}
+[ 150.129] PM3> lf awid sim --fmt 50 --fc 2001 --cn 13371337 (timeout=-1)
+[ 150.383] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=11 uid=
+[ 157.111] SERIAL_TX> b'pctbat\r\n'
+[ 157.129] SERIAL_TX> b'charge\r\n'
+[ 157.354] KEY> KEYM1_PRES!
+[ 157.401] PRESSPM3> called
+[ 157.402] SERIAL_TX> b'presspm3\r\n'
+[ 157.415] PRESSPM3< done
+[ 157.417] PM3_STOP> stopPM3Task()
+[ 157.417] PM3< ret=1 content_len=163 Simulating AWID 50 -- FC: 2001 CN: 13371337\n\nPress pm3 button or <Enter> to abort simulation\nFSK simulating with rf/50, fc high 10, fc low 8, STT 1, n 4802\nDone!\n\n
+[ 157.419] PM3_STOP< ret=None
+[ 157.983] KEY> KEY_PWR_CAN_PRES!
+[ 157.985] FINISH(top=SimulationActivity d=3)
+[ 158.398] POLL stack=['MainActivity', 'ScanActivity'] type=11 uid=
+[ 158.400] KEY> KEY_PWR_CAN_PRES!
+[ 158.402] FINISH(top=ScanActivity d=2)
+[ 158.834] KEY> KEY_PWR_CAN_PRES!
+[ 158.900] POLL stack=['MainActivity'] type=11 uid=
+[ 167.147] SERIAL_TX> b'pctbat\r\n'
+[ 167.160] SERIAL_TX> b'charge\r\n'
+[ 177.177] SERIAL_TX> b'pctbat\r\n'
+[ 177.190] SERIAL_TX> b'charge\r\n'
+[ 187.206] SERIAL_TX> b'pctbat\r\n'
+[ 187.220] SERIAL_TX> b'charge\r\n'
+[ 197.236] SERIAL_TX> b'pctbat\r\n'
+[ 197.250] SERIAL_TX> b'charge\r\n'
+[ 207.267] SERIAL_TX> b'pctbat\r\n'
+[ 207.280] SERIAL_TX> b'charge\r\n'
+[ 217.297] SERIAL_TX> b'pctbat\r\n'
+[ 217.310] SERIAL_TX> b'charge\r\n'
+[ 227.332] SERIAL_TX> b'pctbat\r\n'
+[ 227.345] SERIAL_TX> b'charge\r\n'

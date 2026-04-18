@@ -1,0 +1,286 @@
+=== FULL TRACE ===
+[   0.010] presspm3 hook OK
+[   0.013] === ALL INSTALLED ===
+[   0.013] POLL stack=['MainActivity'] 
+[   5.891] SERIAL_TX> b'pctbat\r\n'
+[   5.904] SERIAL_TX> b'charge\r\n'
+[  15.921] SERIAL_TX> b'pctbat\r\n'
+[  15.935] SERIAL_TX> b'charge\r\n'
+[  24.342] KEY> KEYOK_PRES!
+[  24.494] START(AutoCopyActivity, None) bundle=None
+[  24.558] PM3> hf 14a info (timeout=5000)
+[  24.561] CONNECT> connect2PM3()
+[  24.565] CONNECT< socket=True
+[  24.566] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  25.935] PM3< ret=1 content_len=921 Multiple tags detected. Collision after Bit 1\n\nMultiple tags detected. Collision after Bit 1\n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 03 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 11\nMultiple tags detected. Collision after Bit 4\nBCC0 incorrect, got 0x00, expected 0x40\nUsing BCC0 =0x00\nMultiple tags detected. Collision after Bit 1\nBCC1 incorrect, got 0x00, expected 0x03\nUsing BCC1 =0x00\nMultiple tags detected. Collision after Bit 1\nMultiple tags detected. Collision after Bit 1\n\n\n\n
+[  25.948] CACHE: {"progress": "0", "return": "-3", "found": "True", "type": "-1"}
+[  25.952] SERIAL_TX> b'pctbat\r\n'
+[  25.965] SERIAL_TX> b'charge\r\n'
+[  26.070] POLL stack=['MainActivity', 'AutoCopyActivity'] type=-1 uid=
+[  29.161] KEY> KEYM1_PRES!
+[  29.186] PM3> hf 14a info (timeout=5000)
+[  29.188] CONNECT> connect2PM3()
+[  29.192] CONNECT< socket=True
+[  29.416] PM3< ret=1 content_len=1195 \n UID: 08 E2 CD 45   ( RID - random ID )\nATQA: 03 04\n SAK: 20 [1]\nPossible types:\n   failed to fingerprint\nATS: 0C 78 80 70 02 80 73 84 21 40 90 00 [ 48 E4 ]\n     0C...............  TL    length is 12 bytes\n     ...78............  T0    TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n     ......80.........  TA1   different divisors are NOT supported, DR: [], DS: []\n     .........70......  TB1   SFGI = 0 (SFGT = (not needed) 0/fc), FWI = 7 (FWT = 524288/fc)\n     ............02...  TC1   NAD is NOT supported, CID is supported\n\n80738421409000  (compact TLV data object)\n    73 842140   Card capabilities\n    84 - Selection methods\n    1.......    DF selection by full DF name\n    .0......    DF selection by partial DF name\n    ..0.....    DF selection by path\n    ...0....    DF selection by file identifier\n    ....0...    Implicit DF selection\n    .....1..    Short EF identifier supported\n    ......0.    Record number supported\n    .......0    Record identifier supported\n    21 - Data coding byte\n    40 - Command chaining, length fields and logical channels\n\n    Queensland drivers licence (eID)\n    https://www.qld.gov.au/transport/licensing/driver-licensing\n\n\n\n
+[  29.437] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[  29.545] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  29.556] CACHE: {"found": "True", "uid": "'08E2CD45'", "len": "4", "sak": "'20'", "atqa": "'0304'", "bbcErr": "False", "type": "40", "progress": "0", "return": "40"}
+[  29.577] POLL stack=['MainActivity', 'AutoCopyActivity'] type=40 uid=08E2CD45
+[  35.982] SERIAL_TX> b'pctbat\r\n'
+[  36.000] SERIAL_TX> b'charge\r\n'
+[  46.036] SERIAL_TX> b'pctbat\r\n'
+[  46.050] SERIAL_TX> b'charge\r\n'
+[  52.189] KEY> KEYM1_PRES!
+[  54.278] KEY> KEY_PWR_CAN_PRES!
+[  54.291] PRESSPM3> called
+[  54.292] SERIAL_TX> b'presspm3\r\n'
+[  54.304] PRESSPM3< done
+[  54.305] PM3_STOP> stopPM3Task()
+[  54.305] PM3_STOP< ret=None
+[  54.306] FINISH(top=AutoCopyActivity d=2)
+[  54.623] POLL stack=['MainActivity'] type=40 uid=08E2CD45
+[  56.073] SERIAL_TX> b'pctbat\r\n'
+[  56.089] SERIAL_TX> b'charge\r\n'
+[  56.700] KEY> KEYM1_PRES!
+[  66.111] SERIAL_TX> b'pctbat\r\n'
+[  66.125] SERIAL_TX> b'charge\r\n'
+[  67.051] KEY> KEYDOWN_PRES!
+[  67.347] KEY> KEYDOWN_PRES!
+[  73.625] KEY> KEYOK_PRES!
+[  73.629] START(ScanActivity, None) bundle=None
+[  73.654] POLL stack=['MainActivity', 'ScanActivity'] type=40 uid=08E2CD45
+[  73.670] PM3> hf 14a info (timeout=5000)
+[  73.673] CONNECT> connect2PM3()
+[  73.676] CONNECT< socket=True
+[  75.084] PM3< ret=1 content_len=187 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection..... weak\n\n\n\n
+[  75.086] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[  75.214] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  75.216] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  75.421] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  75.663] POLL stack=['MainActivity', 'ScanActivity'] type=1 uid=7AF2ECB2
+[  76.141] SERIAL_TX> b'pctbat\r\n'
+[  76.156] SERIAL_TX> b'charge\r\n'
+[  77.031] KEY> KEY_PWR_CAN_PRES!
+[  77.049] FINISH(top=ScanActivity d=2)
+[  77.167] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[  78.108] KEY> KEYUP_PRES!
+[  78.694] KEY> KEYUP_PRES!
+[  79.207] KEY> KEYOK_PRES!
+[  79.210] START(AutoCopyActivity, None) bundle=None
+[  79.231] PM3> hf 14a info (timeout=5000)
+[  79.234] CONNECT> connect2PM3()
+[  79.236] CONNECT< socket=True
+[  79.672] POLL stack=['MainActivity', 'AutoCopyActivity'] type=1 uid=7AF2ECB2
+[  80.656] PM3< ret=1 content_len=187 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\nPrng detection..... weak\n\n\n\n
+[  80.657] PM3> hf mf cgetblk --blk 0 (timeout=5000)
+[  80.786] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  80.788] CACHE: {"found": "True", "uid": "'7AF2ECB2'", "len": "4", "sak": "'08'", "atqa": "'0004'", "bbcErr": "False", "static": "False", "gen1a": "False", "type": "1", "progress": "0", "return": "1"}
+[  81.129] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[  81.132] CONNECT> connect2PM3()
+[  81.137] CONNECT< socket=True
+[  81.240] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[  81.246] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[  86.163] SERIAL_TX> b'pctbat\r\n'
+[  86.180] SERIAL_TX> b'charge\r\n'
+[  96.197] SERIAL_TX> b'pctbat\r\n'
+[  96.210] SERIAL_TX> b'charge\r\n'
+[ 106.227] SERIAL_TX> b'pctbat\r\n'
+[ 106.240] SERIAL_TX> b'charge\r\n'
+[ 108.630] PM3< ret=1 content_len=1179 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nRunning strategy 2\n\nTime in checkkeys (fast) 27.4s\n\n\n-----+-----+--------------+---+--------------+----\n Sec | Blk | key A        |res| key B        |res\n-----+-----+--------------+---+--------------+----\n 000 | 003 | 484558414354 | 1 | A22AE129C013 | 1\n 001 | 007 | 484558414354 | 1 | 49FAE4E3849F | 1\n 002 | 011 | ------------ | 0 | ------------ | 0\n 003 | 015 | 484558414354 | 1 | 8AD5517B4B18 | 1\n 004 | 019 | 484558414354 | 1 | 509359F131B1 | 1\n 005 | 023 | 484558414354 | 1 | 6C78928E1317 | 1\n 006 | 027 | 484558414354 | 1 | AA0720018738 | 1\n 007 | 031 | 484558414354 | 1 | A6CAC2886412 | 1\n 008 | 035 | 484558414354 | 1 | 62D0C424ED8E | 1\n 009 | 039 | 484558414354 | 1 | E64A986A5D94 | 1\n 010 | 043 | 484558414354 | 1 | 8FA1D601D0A2 | 1\n 011 | 047 | 484558414354 | 1 | 89347350BD36 | 1\n 012 | 051 | 484558414354 | 1 | 66D2B7DC39EF | 1\n 013 | 055 | 484558414354 | 1 | 6BC1E1AE547D | 1\n 014 | 059 | 484558414354 | 1 | 22729A9BD40F | 1\n 015 | 063 | 484558414354 | 1 | 484558414354 | 1\n-----+-----+--------------+---+--------------+----\n( 0:Failed / 1:Success )\n\n\n\n
+[ 108.643] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 116.257] SERIAL_TX> b'pctbat\r\n'
+[ 116.270] SERIAL_TX> b'charge\r\n'
+[ 126.287] SERIAL_TX> b'pctbat\r\n'
+[ 126.300] SERIAL_TX> b'charge\r\n'
+[ 136.029] PM3< ret=1 content_len=1179 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nRunning strategy 2\n\nTime in checkkeys (fast) 27.4s\n\n\n-----+-----+--------------+---+--------------+----\n Sec | Blk | key A        |res| key B        |res\n-----+-----+--------------+---+--------------+----\n 000 | 003 | 484558414354 | 1 | A22AE129C013 | 1\n 001 | 007 | 484558414354 | 1 | 49FAE4E3849F | 1\n 002 | 011 | ------------ | 0 | ------------ | 0\n 003 | 015 | 484558414354 | 1 | 8AD5517B4B18 | 1\n 004 | 019 | 484558414354 | 1 | 509359F131B1 | 1\n 005 | 023 | 484558414354 | 1 | 6C78928E1317 | 1\n 006 | 027 | 484558414354 | 1 | AA0720018738 | 1\n 007 | 031 | 484558414354 | 1 | A6CAC2886412 | 1\n 008 | 035 | 484558414354 | 1 | 62D0C424ED8E | 1\n 009 | 039 | 484558414354 | 1 | E64A986A5D94 | 1\n 010 | 043 | 484558414354 | 1 | 8FA1D601D0A2 | 1\n 011 | 047 | 484558414354 | 1 | 89347350BD36 | 1\n 012 | 051 | 484558414354 | 1 | 66D2B7DC39EF | 1\n 013 | 055 | 484558414354 | 1 | 6BC1E1AE547D | 1\n 014 | 059 | 484558414354 | 1 | 22729A9BD40F | 1\n 015 | 063 | 484558414354 | 1 | 484558414354 | 1\n-----+-----+--------------+---+--------------+----\n( 0:Failed / 1:Success )\n\n\n\n
+[ 136.039] PM3> hf mf darkside (timeout=120000)
+[ 136.316] SERIAL_TX> b'pctbat\r\n'
+[ 136.330] SERIAL_TX> b'charge\r\n'
+[ 139.783] PM3< ret=1 content_len=292 Expected execution time is about 25 seconds on average\nPress pm3 button to abort\n\nRunning darkside ..\nCard is not vulnerable to Darkside attack (its random number generator seems to be based on the wellknown\ngenerating polynomial with 16 effective bits only, but shows unexpected behaviour.\n\n
+[ 139.799] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 146.351] SERIAL_TX> b'pctbat\r\n'
+[ 146.365] SERIAL_TX> b'charge\r\n'
+[ 156.381] SERIAL_TX> b'pctbat\r\n'
+[ 156.395] SERIAL_TX> b'charge\r\n'
+[ 166.411] SERIAL_TX> b'pctbat\r\n'
+[ 166.425] SERIAL_TX> b'charge\r\n'
+[ 167.201] PM3< ret=1 content_len=1179 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\n\nRunning strategy 2\n\nTime in checkkeys (fast) 27.4s\n\n\n-----+-----+--------------+---+--------------+----\n Sec | Blk | key A        |res| key B        |res\n-----+-----+--------------+---+--------------+----\n 000 | 003 | 484558414354 | 1 | A22AE129C013 | 1\n 001 | 007 | 484558414354 | 1 | 49FAE4E3849F | 1\n 002 | 011 | ------------ | 0 | ------------ | 0\n 003 | 015 | 484558414354 | 1 | 8AD5517B4B18 | 1\n 004 | 019 | 484558414354 | 1 | 509359F131B1 | 1\n 005 | 023 | 484558414354 | 1 | 6C78928E1317 | 1\n 006 | 027 | 484558414354 | 1 | AA0720018738 | 1\n 007 | 031 | 484558414354 | 1 | A6CAC2886412 | 1\n 008 | 035 | 484558414354 | 1 | 62D0C424ED8E | 1\n 009 | 039 | 484558414354 | 1 | E64A986A5D94 | 1\n 010 | 043 | 484558414354 | 1 | 8FA1D601D0A2 | 1\n 011 | 047 | 484558414354 | 1 | 89347350BD36 | 1\n 012 | 051 | 484558414354 | 1 | 66D2B7DC39EF | 1\n 013 | 055 | 484558414354 | 1 | 6BC1E1AE547D | 1\n 014 | 059 | 484558414354 | 1 | 22729A9BD40F | 1\n 015 | 063 | 484558414354 | 1 | 484558414354 | 1\n-----+-----+--------------+---+--------------+----\n( 0:Failed / 1:Success )\n\n\n\n
+[ 167.211] PM3> hf mf nested --1k --blk 0 -a -k 484558414354 --tblk 8 --ta (timeout=30000)
+[ 171.904] PM3< ret=1 content_len=88 Found 1 key candidate\nTarget block    8 key type A -- found valid key [ 494558414354 ]\n\n
+[ 171.908] PM3> hf mf nested --1k --blk 0 -a -k 484558414354 --tblk 8 --tb (timeout=30000)
+[ 175.739] PM3< ret=1 content_len=88 Found 1 key candidate\nTarget block    8 key type B -- found valid key [ 39FCF33072E0 ]\n\n
+[ 175.742] PM3> hf mf rdsc -s 0 -a -k 484558414354 (timeout=15000)
+[ 175.869] PM3< ret=1 content_len=350 \n  # | sector 00 / 0x00                                | ascii\n  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22 | zֈ..6. ..."\n  1 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n  2 | 00 00 00 00 00 00 00 00 00 00 00 00 09 00 00 00 | ................\n  3 | 48 45 58 41 43 54 71 E7 88 00 00 00 00 00 00 00 | HEXACTq.......\n\n\n
+[ 175.873] PM3> hf mf rdsc -s 1 -a -k 484558414354 (timeout=15000)
+[ 175.998] PM3< ret=1 content_len=355 \n  # | sector 01 / 0x01                                | ascii\n  4 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n  5 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n  6 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n  7 | 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00 | HEXACTp.......\n\n\n
+[ 176.001] PM3> hf mf rdsc -s 2 -a -k 494558414354 (timeout=15000)
+[ 176.128] PM3< ret=1 content_len=355 \n  # | sector 02 / 0x02                                | ascii\n  8 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n  9 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 10 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 11 | 49 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00 | IEXACTp.......\n\n\n
+[ 176.131] PM3> hf mf rdsc -s 3 -a -k 484558414354 (timeout=15000)
+[ 176.257] PM3< ret=1 content_len=355 \n  # | sector 03 / 0x03                                | ascii\n 12 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 13 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 14 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 15 | 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00 | HEXACTp.......\n\n\n
+[ 176.260] PM3> hf mf rdsc -s 4 -a -k 484558414354 (timeout=15000)
+[ 176.387] PM3< ret=1 content_len=355 \n  # | sector 04 / 0x04                                | ascii\n 16 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 17 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 18 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 19 | 48 45 58 41 43 54 70 F7 88 00 00 00 00 00 00 00 | HEXACTp.......\n\n\n
+[ 176.390] PM3> hf mf rdsc -s 5 -a -k 484558414354 (timeout=15000)
+[ 176.441] SERIAL_TX> b'pctbat\r\n'
+[ 176.454] SERIAL_TX> b'charge\r\n'
+[ 176.516] PM3< ret=1 content_len=356 \n  # | sector 05 / 0x05                                | ascii\n 20 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 21 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 22 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 23 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 176.518] PM3> hf mf rdsc -s 6 -a -k 484558414354 (timeout=15000)
+[ 176.646] PM3< ret=1 content_len=356 \n  # | sector 06 / 0x06                                | ascii\n 24 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 25 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 26 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 27 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 176.648] PM3> hf mf rdsc -s 7 -a -k 484558414354 (timeout=15000)
+[ 176.775] PM3< ret=1 content_len=356 \n  # | sector 07 / 0x07                                | ascii\n 28 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 29 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 30 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 31 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 176.778] PM3> hf mf rdsc -s 8 -a -k 484558414354 (timeout=15000)
+[ 176.904] PM3< ret=1 content_len=356 \n  # | sector 08 / 0x08                                | ascii\n 32 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 33 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 34 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 35 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 176.907] PM3> hf mf rdsc -s 9 -a -k 484558414354 (timeout=15000)
+[ 177.034] PM3< ret=1 content_len=356 \n  # | sector 09 / 0x09                                | ascii\n 36 | 03 E5 54 44 C9 FF F0 BF C3 DF BF 7F 02 E5 DF 86 | ..TD............\n 37 | 7C F9 F3 E7 17 BF 70 76 ED DB B7 6F CE B8 5F FE | |.....pv...o.._.\n 38 | FB F5 EB D7 77 7F FE FD C7 D7 AF 5F AE 78 F1 E3 | ....w......_.x..\n 39 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.036] PM3> hf mf rdsc -s 10 -a -k 484558414354 (timeout=15000)
+[ 177.163] PM3< ret=1 content_len=356 \n  # | sector 10 / 0x0A                                | ascii\n 40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 41 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 42 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 43 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.166] PM3> hf mf rdsc -s 11 -a -k 484558414354 (timeout=15000)
+[ 177.293] PM3< ret=1 content_len=356 \n  # | sector 11 / 0x0B                                | ascii\n 44 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 45 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 46 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 47 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.296] PM3> hf mf rdsc -s 12 -a -k 484558414354 (timeout=15000)
+[ 177.422] PM3< ret=1 content_len=356 \n  # | sector 12 / 0x0C                                | ascii\n 48 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 49 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 50 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 51 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.425] PM3> hf mf rdsc -s 13 -a -k 484558414354 (timeout=15000)
+[ 177.553] PM3< ret=1 content_len=356 \n  # | sector 13 / 0x0D                                | ascii\n 52 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 53 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 54 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 55 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.556] PM3> hf mf rdsc -s 14 -a -k 484558414354 (timeout=15000)
+[ 177.682] PM3< ret=1 content_len=356 \n  # | sector 14 / 0x0E                                | ascii\n 56 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 57 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 58 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................\n 59 | 48 45 58 41 43 54 78 77 88 00 00 00 00 00 00 00 | HEXACTxw.......\n\n\n
+[ 177.686] PM3> hf mf rdsc -s 15 -a -k 484558414354 (timeout=15000)
+[ 177.812] PM3< ret=1 content_len=352 \n  # | sector 15 / 0x0F                                | ascii\n 60 | 68 45 78 61 63 74 20 2D 20 43 4F 47 45 4C 45 43 | hExact - COGELEC\n 61 | 64 65 70 6F 74 20 6C 65 67 61 6C 20 49 4E 50 49 | depot legal INPI\n 62 | 20 65 3C 05 49 4E 54 52 41 54 4F 4E 45 20 20 20 |  e<.INTRATONE\n 63 | 48 45 58 41 43 54 07 87 8F 00 00 00 00 00 00 00 | HEXACT........\n\n\n
+[ 186.471] SERIAL_TX> b'pctbat\r\n'
+[ 186.485] SERIAL_TX> b'charge\r\n'
+[ 196.502] SERIAL_TX> b'pctbat\r\n'
+[ 196.514] SERIAL_TX> b'charge\r\n'
+[ 206.537] SERIAL_TX> b'pctbat\r\n'
+[ 206.550] SERIAL_TX> b'charge\r\n'
+[ 210.911] KEY> KEYM2_PRES!
+[ 210.914] START(WarningWriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin"
+[ 211.404] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=1 uid=7AF2ECB2
+[ 212.108] KEY> KEYM2_PRES!
+[ 212.110] FINISH(top=WarningWriteActivity d=3)
+[ 212.131] START(WriteActivity, '/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin') bundle="/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin"
+[ 212.406] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=1 uid=7AF2ECB2
+[ 212.482] PM3> hf 14a info (timeout=10000)
+[ 212.483] CONNECT> connect2PM3()
+[ 212.487] CONNECT< socket=True
+[ 213.807] PM3< ret=1 content_len=245 \n UID: 01 02 03 04   ( ONUID, re-used )\nATQA: 00 04\n SAK: 08 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities... Gen 1a\nStatic nonce....... 01200145\nStatic nonce....... yes\n\n\n\n
+[ 213.809] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[ 213.942] PM3< ret=1 content_len=136 \n  # | sector 00 / 0x00                                | ascii\n  0 | 01 02 03 04 04 08 04 00 00 00 00 00 00 00 BE AF | ..............\n\n\n
+[ 213.952] PM3> hf mf cload -f /mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin (timeout=10000)
+[ 215.732] PM3< ret=1 content_len=228 Loaded 1024 bytes from binary file `/mnt/upan/dump/mf1/M1-1K-4B_7AF2ECB2_19.bin`\nCopying to magic gen1a MIFARE Classic 1K\n.................................................................\n\nCard loaded 64 blocks from file\nDone!\n\n
+[ 215.735] PM3> hf 14a raw -k -a -b 7 40 (timeout=10000)
+[ 215.803] PM3< ret=1 content_len=4 0A\n\n
+[ 215.804] PM3> hf 14a raw -c -k -a 43 (timeout=10000)
+[ 215.886] PM3< ret=1 content_len=1 \n
+[ 215.887] PM3> hf 14a raw -c -k -a e000 (timeout=10000)
+[ 215.969] PM3< ret=1 content_len=1 \n
+[ 215.970] PM3> hf 14a raw -c -k -a 85000000000000000000000000000008 (timeout=10000)
+[ 216.053] PM3< ret=1 content_len=1 \n
+[ 216.054] PM3> hf 14a raw -c -a 5000 (timeout=10000)
+[ 216.136] PM3< ret=1 content_len=1 \n
+[ 216.137] PM3> hf 14a info (timeout=10000)
+[ 216.566] SERIAL_TX> b'pctbat\r\n'
+[ 216.580] SERIAL_TX> b'charge\r\n'
+[ 217.463] PM3< ret=1 content_len=245 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities... Gen 1a\nStatic nonce....... 01200145\nStatic nonce....... yes\n\n\n\n
+[ 217.464] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[ 217.598] PM3< ret=1 content_len=133 \n  # | sector 00 / 0x00                                | ascii\n  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22 | zֈ..6. ..."\n\n\n
+[ 222.608] KEY> KEYM1_PRES!
+[ 222.948] PM3> hf 14a info (timeout=10000)
+[ 224.275] PM3< ret=1 content_len=245 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities... Gen 1a\nStatic nonce....... 01200145\nStatic nonce....... yes\n\n\n\n
+[ 224.276] PM3> hf 14a info (timeout=10000)
+[ 225.621] PM3< ret=1 content_len=245 \n UID: 7A F2 EC B2   ( ONUID, re-used )\nATQA: 00 04\n SAK: 88 [2]\nPossible types:\n   MIFARE Classic 1K\nProprietary non iso14443-4 card found\nRATS not supported\n\nMagic capabilities... Gen 1a\nStatic nonce....... 01200145\nStatic nonce....... yes\n\n\n\n
+[ 225.625] PM3> hf mf cgetblk --blk 0 (timeout=10000)
+[ 225.756] PM3< ret=1 content_len=133 \n  # | sector 00 / 0x00                                | ascii\n  0 | 7A F2 EC B2 D6 88 04 00 C8 36 00 20 00 00 00 22 | zֈ..6. ..."\n\n\n
+[ 226.597] SERIAL_TX> b'pctbat\r\n'
+[ 226.610] SERIAL_TX> b'charge\r\n'
+[ 236.655] SERIAL_TX> b'pctbat\r\n'
+[ 236.670] SERIAL_TX> b'charge\r\n'
+[ 246.703] SERIAL_TX> b'pctbat\r\n'
+[ 246.720] SERIAL_TX> b'charge\r\n'
+[ 256.762] SERIAL_TX> b'pctbat\r\n'
+[ 256.775] SERIAL_TX> b'charge\r\n'
+[ 266.803] SERIAL_TX> b'pctbat\r\n'
+[ 266.820] SERIAL_TX> b'charge\r\n'
+[ 276.837] SERIAL_TX> b'pctbat\r\n'
+[ 276.861] SERIAL_TX> b'charge\r\n'
+[ 286.882] SERIAL_TX> b'pctbat\r\n'
+[ 286.896] SERIAL_TX> b'charge\r\n'
+[ 296.916] SERIAL_TX> b'pctbat\r\n'
+[ 296.929] SERIAL_TX> b'charge\r\n'
+[ 306.965] SERIAL_TX> b'pctbat\r\n'
+[ 306.980] SERIAL_TX> b'charge\r\n'
+[ 317.044] SERIAL_TX> b'pctbat\r\n'
+[ 317.061] SERIAL_TX> b'charge\r\n'
+[ 327.083] SERIAL_TX> b'pctbat\r\n'
+[ 327.100] SERIAL_TX> b'charge\r\n'
+[ 334.761] KEY> KEY_PWR_CAN_PRES!
+[ 335.173] KEY> KEY_PWR_CAN_PRES!
+[ 335.175] PRESSPM3> called
+[ 335.176] SERIAL_TX> b'presspm3\r\n'
+[ 335.189] PRESSPM3< done
+[ 335.189] PM3_STOP> stopPM3Task()
+[ 335.190] PM3_STOP< ret=None
+[ 335.191] FINISH(top=WriteActivity d=3)
+[ 335.561] KEY> KEY_PWR_CAN_PRES!
+[ 335.563] PRESSPM3> called
+[ 335.564] SERIAL_TX> b'presspm3\r\n'
+[ 335.579] PRESSPM3< done
+[ 335.579] PM3_STOP> stopPM3Task()
+[ 335.580] PM3_STOP< ret=None
+[ 335.581] FINISH(top=AutoCopyActivity d=2)
+[ 335.671] POLL stack=['MainActivity'] type=1 uid=7AF2ECB2
+[ 336.478] KEY> KEYUP_PRES!
+[ 337.116] SERIAL_TX> b'pctbat\r\n'
+[ 337.129] SERIAL_TX> b'charge\r\n'
+[ 337.176] KEY> KEYUP_PRES!
+[ 337.522] KEY> KEYUP_PRES!
+[ 337.846] KEY> KEYUP_PRES!
+[ 338.110] KEY> KEYUP_PRES!
+[ 338.448] KEY> KEYOK_PRES!
+[ 338.451] START(WipeTagActivity, None) bundle=None
+[ 338.677] POLL stack=['MainActivity', 'WipeTagActivity'] type=1 uid=7AF2ECB2
+[ 339.776] KEY> KEYOK_PRES!
+[ 339.845] PM3> hf 14a info (timeout=5000)
+[ 341.001] PM3< ret=1 content_len=597 \n UID: 00 00 00 00 00 00 00   ( double )\nATQA: 00 44\n SAK: 08 [4]\n      no tag-info available\nPossible types:\nATS: 09 78 00 91 02 DA BC 19 10 [ F0 05 ]\n     09...............  TL    length is 9 bytes\n     ...78............  T0    TA1 is present, TB1 is present, TC1 is present, FSCI is 8 (FSC = 256)\n     ......00.........  TA1   different divisors are supported, DR: [], DS: []\n     .........91......  TB1   SFGI = 1 (SFGT = 8192/fc), FWI = 9 (FWT = 2097152/fc)\n     ............02...  TC1   NAD is NOT supported, CID is supported\n\nDABC1910 - ....\n\n    n/a\n\nMagic capabilities... Gen 2 / CUID\n\n\n\n
+[ 341.002] PM3> hf mf cgetblk --blk 0 (timeout=5888)
+[ 341.131] PM3< ret=1 content_len=40 wupC1 error\nCan't read block. error=-1\n\n
+[ 341.142] PM3> hf mf fchk --1k -f /tmp/.keys/mf_tmp_keys.dic (timeout=600000)
+[ 347.151] SERIAL_TX> b'pctbat\r\n'
+[ 347.165] SERIAL_TX> b'charge\r\n'
+[ 348.925] PM3< ret=1 content_len=2597 loaded 61 hardcoded keys\nLoaded 104 keys from dictionary file `/tmp/.keys/mf_tmp_keys.dic`\nRunning strategy 1\nchkKey: Failed at fast selecting the card!\n\nRunning strategy 2\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\nchkKey: Failed at fast selecting the card!\n\nTime in checkkeys (fast) 7.8s\n\n\n-----+-----+--------------+---+--------------+----\n Sec | Blk | key A        |res| key B        |res\n-----+-----+--------------+---+--------------+----\n 000 | 003 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1\n 001 | 007 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1\n 002 | 011 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1\n 003 | 015 | FFFFFFFFFFFF | 1 | FFFFFFFFFFFF | 1\n 004 | 019 | FFFFFFFF
+[ 348.953] PM3> hf mf wrbl --blk 60 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 349.041] PM3< ret=1 content_len=117 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( fail )\n\n
+[ 349.044] PM3> hf mf wrbl --blk 60 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 349.130] PM3< ret=1 content_len=117 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( fail )\n\n
+[ 349.131] PM3> hf mf wrbl --blk 60 -a -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 349.218] PM3< ret=1 content_len=128 Writing block no 60, key type:A - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nAuth error\nWrite ( fail )\n\n
+[ 349.219] PM3> hf mf wrbl --blk 60 -b -k ffffffffffff -d 00000000000000000000000000000000 --force (timeout=5888)
+[ 349.298] PM3< ret=1 content_len=117 Writing block no 60, key type:B - FFFFFFFFFFFF\ndata: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nWrite ( fail )\n\n
+[ 357.184] SERIAL_TX> b'pctbat\r\n'
+[ 357.200] SERIAL_TX> b'charge\r\n'
+[ 367.216] SERIAL_TX> b'pctbat\r\n'
+[ 367.235] SERIAL_TX> b'charge\r\n'
+[ 377.252] SERIAL_TX> b'pctbat\r\n'
+[ 377.266] SERIAL_TX> b'charge\r\n'
+[ 387.281] SERIAL_TX> b'pctbat\r\n'
+[ 387.294] SERIAL_TX> b'charge\r\n'
+[ 397.316] SERIAL_TX> b'pctbat\r\n'
+[ 397.329] SERIAL_TX> b'charge\r\n'
+[ 407.346] SERIAL_TX> b'pctbat\r\n'
+[ 407.372] SERIAL_TX> b'charge\r\n'
+[ 417.394] SERIAL_TX> b'pctbat\r\n'
+[ 417.410] SERIAL_TX> b'charge\r\n'
+[ 427.437] SERIAL_TX> b'pctbat\r\n'
+[ 427.450] SERIAL_TX> b'charge\r\n'
+[ 437.462] SERIAL_TX> b'pctbat\r\n'
+[ 437.475] SERIAL_TX> b'charge\r\n'
+[ 447.491] SERIAL_TX> b'pctbat\r\n'
+[ 447.505] SERIAL_TX> b'charge\r\n'
+[ 457.521] SERIAL_TX> b'pctbat\r\n'
+[ 457.540] SERIAL_TX> b'charge\r\n'
+[ 467.571] SERIAL_TX> b'pctbat\r\n'
+[ 467.585] SERIAL_TX> b'charge\r\n'
+[ 477.604] SERIAL_TX> b'pctbat\r\n'
+[ 477.620] SERIAL_TX> b'charge\r\n'
+[ 487.639] SERIAL_TX> b'pctbat\r\n'
+[ 487.654] SERIAL_TX> b'charge\r\n'
+[ 497.672] SERIAL_TX> b'pctbat\r\n'
+[ 497.690] SERIAL_TX> b'charge\r\n'
+[ 507.707] SERIAL_TX> b'pctbat\r\n'
+[ 507.720] SERIAL_TX> b'charge\r\n'

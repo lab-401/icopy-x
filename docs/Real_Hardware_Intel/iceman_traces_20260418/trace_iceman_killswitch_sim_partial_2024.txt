@@ -1,0 +1,50 @@
+=== FULL TRACE ===
+[   0.009] presspm3 hook OK
+[   0.011] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   6.082] SERIAL_TX> b'pctbat\r\n'
+[   6.096] SERIAL_TX> b'charge\r\n'
+[  16.119] SERIAL_TX> b'pctbat\r\n'
+[  16.131] SERIAL_TX> b'charge\r\n'
+[  26.153] SERIAL_TX> b'pctbat\r\n'
+[  26.166] SERIAL_TX> b'charge\r\n'
+[  36.188] SERIAL_TX> b'pctbat\r\n'
+[  36.201] SERIAL_TX> b'charge\r\n'
+[  39.377] KEY> KEYDOWN_PRES!
+[  39.606] KEY> KEYDOWN_PRES!
+[  40.768] KEY> KEYOK_PRES!
+[  41.691] START(ScanActivity, None) bundle=None
+[  41.770] PM3> hf 14a info (timeout=5000)
+[  41.774] CONNECT> connect2PM3()
+[  41.779] CONNECT< socket=True
+[  41.887] PM3< ret=1 content_len=1 \n
+[  41.922] PM3> lf sea (timeout=10000)
+[  42.088] POLL stack=['MainActivity', 'ScanActivity'] 
+[  43.213] PM3< ret=1 content_len=690 \nNote: False Positives ARE possible\nChecking for known tags...\n[PW39    ] Pyramid 39-bit wiegand format    FC: 51341  CN: 351646  parity ( fail )\nfound 1 matching 39-bit format\nParity tests failed\n\nTrying with a preamble bit...\n[P10001  ] HID P10001 Honeywell 40-bit      FC: 2321  CN: 43707\n[Casi40  ] Casi-Rusco 40-bit                  CN: 53835292062\n[Verkada40] Verkada 40-bit                   FC: 200  CN: 148200862  parity ( ok )\n[BC40    ] Bundy TimeClock 40-bit           FC: 2189  CN: 175823  OEM: 76  parity ( fail )\nfound 4 matching 40-bit formats\n\nraw: 000000000000009911aabb3c\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  43.232] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  43.390] CACHE: {"raw": "'000000000000009911aabb3c'", "data": "'FC,CN: 51341,351646'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[  43.591] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  44.708] KEY> KEYM2_PRES!
+[  44.719] START(SimulationActivity, {'raw': '000000000000009911aabb3c', 'data': 'FC,CN: 51341,351646', 'type': 9, 'found': True, 'progress': 1, 'return': 9}) bundle={"raw": "000000000000009911aabb3c", "data": "FC,CN: 51341,351646", "type": 9, "found": true, "progress": 1, "return": 9}
+[  44.812] PM3> lf hid sim -r 000000000000 (timeout=-1)
+[  44.817] PM3< ret=1 content_len=28 Failed to encode HID input\n\n
+[  45.095] POLL stack=['MainActivity', 'ScanActivity', 'SimulationActivity'] type=9 uid=
+[  46.218] SERIAL_TX> b'pctbat\r\n'
+[  46.232] SERIAL_TX> b'charge\r\n'
+[  56.248] SERIAL_TX> b'pctbat\r\n'
+[  56.262] SERIAL_TX> b'charge\r\n'
+[  66.289] SERIAL_TX> b'pctbat\r\n'
+[  66.301] SERIAL_TX> b'charge\r\n'
+[  76.318] SERIAL_TX> b'pctbat\r\n'
+[  76.331] SERIAL_TX> b'charge\r\n'
+[  86.354] SERIAL_TX> b'pctbat\r\n'
+[  86.371] SERIAL_TX> b'charge\r\n'
+[  94.657] KEY> KEY_PWR_CAN_PRES!
+[  95.083] KEY> KEY_PWR_CAN_PRES!
+[  95.089] FINISH(top=SimulationActivity d=3)
+[  95.195] POLL stack=['MainActivity', 'ScanActivity'] type=9 uid=
+[  95.649] KEY> KEY_PWR_CAN_PRES!
+[  95.652] FINISH(top=ScanActivity d=2)
+[  95.697] POLL stack=['MainActivity'] type=9 uid=
+[  96.390] SERIAL_TX> b'pctbat\r\n'
+[  96.407] SERIAL_TX> b'charge\r\n'

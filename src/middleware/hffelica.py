@@ -24,22 +24,45 @@
 
 Reimplemented from hffelica.so (iCopy-X v1.0.90, Cython 0.29.21, ARM 32-bit).
 
+Post compat-flip (Phase 3) — iceman-native sentinels.
+
 Ground truth:
     Strings:    docs/v1090_strings/hffelica_strings.txt
+    Source:     /tmp/rrg-pm3/client/src/cmdhffelica.c
+
+Iceman emissions (hf felica reader):
+    Success: cmdhffelica.c:1183 `PrintAndLogEx(SUCCESS, "IDm: " _GREEN_("%s"),
+             sprint_hex_inrow(card.IDm, sizeof(card.IDm)))`
+        → single line `"IDm: XX XX XX XX XX XX XX XX"`
+        The legacy header `"FeliCa tag info"` is NOT emitted under iceman
+        (legacy fork cmdhffelica.c:1835 `readFelicaUid` emitted it; iceman
+        replaced that with `read_felica_uid` @ L1144 which only emits `IDm:`).
+    Timeout: cmdhffelica.c:1431 `PrintAndLogEx(WARNING, "card timeout")`.
 
 API:
     parser() -> dict
 """
 
 # Module-level constants (from audit: V1090_MODULE_AUDIT.txt)
-CMD = 'hf felica reader'    # STR@hffelica_strings.txt
-TIMEOUT = 10000              # __pyx_int_10000
+CMD = 'hf felica reader'
+TIMEOUT = 10000
 
-# Detection keywords (from binary string table)
-_KW_FOUND = 'FeliCa tag info'
+# ── Iceman-native sentinels ───────────────────────────────────────────
+# Success: iceman emits `"IDm: %s"` (cmdhffelica.c:1183).
+#   Include the trailing colon in the keyword so we don't false-positive on
+#   other IDm mentions (e.g., argument help strings emitted in error paths).
+#   Match is case-sensitive (hasKeyword → re.search); iceman capitalises
+#   `IDm` consistently.
+_KW_FOUND = r'IDm:\s'
+# Timeout: iceman emits `"card timeout"` at cmdhffelica.c:1431. The full
+#   trace often includes a status code `(-N)` but `card timeout` is a
+#   stable substring under both iceman and legacy.
 _KW_TIMEOUT = 'card timeout'
 
-# Regex for IDm extraction (from binary: '.*IDm(.*)')
+# IDm extraction: iceman `IDm: XX XX XX XX XX XX XX XX` (8 hex bytes,
+# space-separated) emitted by sprint_hex_inrow. Capture the tail after
+# `IDm`; strip whitespace & spaces to yield `:01FE010203040506` matching
+# the pre-existing scan-cache shape documented in template.py:684.
 _RE_IDM = r'.*IDm(.*)'
 
 def parser():
@@ -57,21 +80,20 @@ def parser():
         except ImportError:
             return {'found': False}
 
-    # Timeout or no tag
+    # Timeout or no tag (iceman cmdhffelica.c:1431).
     if executor.hasKeyword(_KW_TIMEOUT):
         return {'found': False}
 
-    # FeliCa detected
+    # FeliCa detected via iceman `IDm: ...` emission (cmdhffelica.c:1183).
     if executor.hasKeyword(_KW_FOUND):
         idm_raw = executor.getContentFromRegex(_RE_IDM)
         idm = ''
         if idm_raw:
-            # The regex captures everything after 'IDm', including ': 01 FE ...'
-            # Strip whitespace but keep ':' prefix, remove internal spaces
-            # Ground truth: scan_cache idm = ':01FE010203040506'
-            # PM3 output: 'IDm: 01 FE 01 02 03 04 05 06'
-            # Captured by regex: ': 01 FE 01 02 03 04 05 06'
-            # After strip().replace(' ',''): ':01FE010203040506'
+            # The regex captures everything after 'IDm', including
+            # ': 01 FE 01 02 03 04 05 06'. Strip whitespace, remove
+            # internal spaces → ':01FE010203040506'. Leading colon is
+            # preserved on purpose — it acts as a sentinel for downstream
+            # scan-cache consumers (template.py:684).
             idm = idm_raw.strip().replace(' ', '')
         return {'found': True, 'idm': idm}
 

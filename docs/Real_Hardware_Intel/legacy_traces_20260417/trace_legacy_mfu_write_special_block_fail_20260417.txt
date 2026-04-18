@@ -1,0 +1,63 @@
+=== FULL TRACE ===
+[   0.008] presspm3 hook OK
+[   0.010] POLL stack=['MainActivity'] 
+[   0.011] === ALL INSTALLED ===
+[   5.846] SERIAL_TX> b'pctbat\r\n'
+[   5.861] SERIAL_TX> b'charge\r\n'
+[  15.878] SERIAL_TX> b'pctbat\r\n'
+[  15.891] SERIAL_TX> b'charge\r\n'
+[  25.908] SERIAL_TX> b'pctbat\r\n'
+[  25.922] SERIAL_TX> b'charge\r\n'
+[  35.938] SERIAL_TX> b'pctbat\r\n'
+[  35.951] SERIAL_TX> b'charge\r\n'
+[  45.968] SERIAL_TX> b'pctbat\r\n'
+[  45.981] SERIAL_TX> b'charge\r\n'
+[  55.998] SERIAL_TX> b'pctbat\r\n'
+[  56.011] SERIAL_TX> b'charge\r\n'
+[  66.028] SERIAL_TX> b'pctbat\r\n'
+[  66.041] SERIAL_TX> b'charge\r\n'
+[  70.232] KEY> KEYOK_PRES!
+[  70.360] START(AutoCopyActivity, None) bundle=None
+[  70.447] PM3> hf 14a info (timeout=5000)
+[  70.449] CONNECT> connect2PM3()
+[  70.455] CONNECT< socket=True
+[  70.604] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  71.500] PM3< ret=1 content_len=564 \n UID: 04 4D 3A B7 52 02 80\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nSAK incorrectly claims that card doesn't support RATS\n ATS: 85 00 00 A0 00 00 0A 00 00 00 00 00 00 00 00 00 35 89\n       -  TL : length is 133 bytes\nATS may be corrupted. Length of ATS (18 bytes incl. 2 Bytes CRC) doesn't match TL\n       -  T0 : TA1 is NOT present, TB1 is NOT present, TC1 is NOT present, FSCI is 0 (FSC = 16)\nMagic capabilities... Gen 3 / APDU\n\nNikola.D: 0\n
+[  71.532] PM3> hf mfu info (timeout=8888)
+[  72.987] PM3< ret=1 content_len=252 \n      TYPE: MIFARE Ultralight (MF0ICU1)\n       UID: 04 4D 3A B7 52 02 80\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: FB (ok)\n      BCC1: 67 (ok)\n  Internal: 48 (default)\n      Lock: 00 00  - 00\nOneTimePad: 00 00 00 00  - 0000\n\n\nNikola.D: 0\n
+[  72.997] CACHE: {"found": "True", "type": "2", "isMFU": "True", "uid": "'044D3AB7520280'"}
+[  73.110] POLL stack=['MainActivity', 'AutoCopyActivity'] type=2 uid=044D3AB7520280
+[  73.337] PM3> hf mfu dump -f /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1 (timeout=30000)
+[  73.340] CONNECT> connect2PM3()
+[  73.344] CONNECT< socket=True
+[  74.866] PM3< ret=1 content_len=1188 TYPE: MIFARE Ultralight (MF0ICU1)\nReading tag memory...\nMFU dump file information\n      Version | 00 00 00 00 00 00 00 00\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | 00\n    Counter 1 | 00 00 00\n    Tearing 1 | 00\n    Counter 2 | 00 00 00\n    Tearing 2 | 00\nMax data page | 14 (60 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 4D 3A FB |   | .M:\n  1/0x01 | B7 52 02 80 |   | R.\n  2/0x02 | 67 48 00 00 |   | gH..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\nsaved 120 bytes to binary file /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin\nsaved to json file /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.json\n\nNikola.D: 0\n
+[  76.058] SERIAL_TX> b'pctbat\r\n'
+[  76.071] SERIAL_TX> b'charge\r\n'
+[  77.695] KEY> KEYM2_PRES!
+[  77.698] START(WarningWriteActivity, '/mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin') bundle="/mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin"
+[  78.119] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=2 uid=044D3AB7520280
+[  79.295] KEY> KEYM2_PRES!
+[  79.298] FINISH(top=WarningWriteActivity d=3)
+[  79.358] START(WriteActivity, '/mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin') bundle="/mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin"
+[  79.623] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=2 uid=044D3AB7520280
+[  79.741] PM3> hf mfu restore -s -e -f /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin (timeout=10888)
+[  85.312] PM3< ret=1 content_len=3908 loaded 120 bytes from binary file /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin\nRestoring /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin to card\nMFU dump file information\n      Version | 00 00 00 00 00 00 00 00\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | 00\n    Counter 1 | 00 00 00\n    Tearing 1 | 00\n    Counter 2 | 00 00 00\n    Tearing 2 | 00\nMax data page | 14 (60 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 4D 3A FB |   | .M:\n  1/0x01 | B7 52 02 80 |   | R.\n  2/0x02 | 67 48 00 00 |   | gH..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\nspecial PACK    block written 0xF1 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 241\nspecial SIG     block written 0xF2 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 242\nspecial SIG     block written 0xF3 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 243\nspecial SIG     block written 0xF4 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 244\nspecial SIG     block written 0xF5 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 245\nspecial SIG     block written 0xF6 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 246\nspecial SIG     block written 0xF7 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 247\nspecial 
+[  86.088] SERIAL_TX> b'pctbat\r\n'
+[  86.102] SERIAL_TX> b'charge\r\n'
+[  88.805] KEY> KEYM2_PRES!
+[  89.116] PM3> hf mfu restore -s -e -f /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin (timeout=10888)
+[  94.902] PM3< ret=1 content_len=2870 loaded 120 bytes from binary file /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin\nRestoring /mnt/upan/dump/mfu/M0-UL_044D3AB7520280_1.bin to card\nMFU dump file information\n      Version | 00 00 00 00 00 00 00 00\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | 00\n    Counter 1 | 00 00 00\n    Tearing 1 | 00\n    Counter 2 | 00 00 00\n    Tearing 2 | 00\nMax data page | 14 (60 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 4D 3A FB |   | .M:\n  1/0x01 | B7 52 02 80 |   | R.\n  2/0x02 | 67 48 00 00 |   | gH..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\nspecial PACK    block written 0xF1 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 241\nspecial SIG     block written 0xF2 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 242\nspecial SIG     block written 0xF3 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 243\nspecial SIG     block written 0xF4 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 244\nspecial SIG     block written 0xF5 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 245\nspecial SIG     block written 0xF6 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 246\nspecial SIG     block written 0xF7 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 247\nspecial 
+[  96.139] SERIAL_TX> b'pctbat\r\n'
+[  96.152] SERIAL_TX> b'charge\r\n'
+[ 106.194] SERIAL_TX> b'pctbat\r\n'
+[ 106.206] SERIAL_TX> b'charge\r\n'
+[ 116.227] SERIAL_TX> b'pctbat\r\n'
+[ 116.241] SERIAL_TX> b'charge\r\n'
+[ 126.265] SERIAL_TX> b'pctbat\r\n'
+[ 126.290] SERIAL_TX> b'charge\r\n'
+[ 136.308] SERIAL_TX> b'pctbat\r\n'
+[ 136.321] SERIAL_TX> b'charge\r\n'
+[ 146.348] SERIAL_TX> b'pctbat\r\n'
+[ 146.361] SERIAL_TX> b'charge\r\n'
+[ 156.382] SERIAL_TX> b'pctbat\r\n'
+[ 156.396] SERIAL_TX> b'charge\r\n'

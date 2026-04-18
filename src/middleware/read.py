@@ -89,12 +89,17 @@ def _read_mfc(infos, listener):
     typ = infos.get('type', 1)
     size = hfmfread.sizeGuess(typ)
 
+    # Clear stale keys from previous reads — KEYS_MAP is module-level and
+    # persists across ReadActivity instances.  Without this, hasAllKeys()
+    # returns True from a prior run and key recovery is skipped.
+    hfmfkeys.KEYS_MAP.clear()
+
     # Gen1a detection
     gen1a = hfmfread.readIfIsGen1a(infos)
     if gen1a:
         infos['gen1a'] = True
-        # Gen1a: save via csave
-        csave_size = '1' if size <= 1024 else '4'
+        # Gen1a: save via csave (iceman: --1k/--4k flag + -f <file>)
+        csave_flag = '--1k' if size <= 1024 else '--4k'
         name = hfmfread.create_name_by_type(infos)
         import appfiles as _af
         dump_dir = _af.PATH_DUMP_M1 if _af else '/mnt/upan/dump/mf1/'
@@ -107,7 +112,7 @@ def _read_mfc(infos, listener):
             n += 1
             if n > 999:
                 break
-        cmd = 'hf mf csave {} o {}'.format(csave_size, path)
+        cmd = 'hf mf csave {} -f {}'.format(csave_flag, path)
         executor.startPM3Task(cmd, 30000)
         bin_path = path + '.bin'
         hfmfread.cacheFile(bin_path)
@@ -274,6 +279,13 @@ class Reader:
 
         self._reading = True
         self._stop_label = False
+
+        # Fresh rework budget for this read — previous flows should not
+        # pre-brick this one.
+        try:
+            executor.resetReworkCount()
+        except (AttributeError, NameError):
+            pass
 
         def _run():
             try:

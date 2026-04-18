@@ -1,0 +1,1152 @@
+{
+  "metadata": {
+    "generator": "tests/phase5_sweep/test_full_trace_sweep.py",
+    "iceman_gt": "/home/qx/icopy-x-reimpl/tools/ground_truth/iceman_output.json",
+    "legacy_gt": "/home/qx/icopy-x-reimpl/tools/ground_truth/legacy_output.json",
+    "note": "STALE_FIXTURE samples are iceman-file bodies captured pre-Phase-4 compat flip -- carry legacy-colon shape that iceman-native middleware regex will not match. Documented and tolerated."
+  },
+  "totals": {
+    "iceman": {
+      "total": 258,
+      "pass": 239,
+      "fail": 0,
+      "stale": 19,
+      "noop": 103,
+      "unclassified": 0
+    },
+    "legacy": {
+      "total": 3809,
+      "pass": 3809,
+      "fail": 0,
+      "stale": 0,
+      "noop": 344,
+      "unclassified": 0
+    }
+  },
+  "gate": "PASS",
+  "by_command": {
+    "hf 14a info": {
+      "iceman": {
+        "total": 10,
+        "pass": 4,
+        "fail": 0,
+        "stale": 6,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 266,
+        "pass": 266,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf cgetblk": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 140,
+        "pass": 140,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf fchk": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 57,
+        "pass": 57,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf darkside": {
+      "iceman": {
+        "total": 6,
+        "pass": 6,
+        "fail": 0,
+        "stale": 0,
+        "noop": 6,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf nested": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 10,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf rdsc": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 208,
+        "pass": 208,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf wrbl": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 2348,
+        "pass": 2348,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hw version": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 10,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a config": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf sea": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 137,
+        "pass": 137,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf sea": {
+      "iceman": {
+        "total": 10,
+        "pass": 7,
+        "fail": 0,
+        "stale": 3,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 58,
+        "pass": 58,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx detect": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 118,
+        "pass": 118,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf em 4x05 info": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf felica reader": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 37,
+        "pass": 37,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass rdbl": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 20,
+        "pass": 20,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass info": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 10,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass dump": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass wrbl": {
+      "iceman": {
+        "total": 10,
+        "pass": 0,
+        "fail": 0,
+        "stale": 10,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 dump": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 restore": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 csetuid": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mfu info": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 19,
+        "pass": 19,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mfu dump": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 10,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mfu restore": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 dump f": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 restore f": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf cwipe": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mfu dump f": {
+      "iceman": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf tune": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf tune": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a reader": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "mem spiffs load f": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "mem spiffs wipe": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "script run hf_14a_raw": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf em 4x05_info": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 7,
+        "pass": 7,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf search": {
+      "iceman": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 15 info": {
+      "iceman": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf cload": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a raw": {
+      "iceman": {
+        "total": 10,
+        "pass": 10,
+        "fail": 0,
+        "stale": 0,
+        "noop": 10,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 29,
+        "pass": 29,
+        "fail": 0,
+        "stale": 0,
+        "noop": 29,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a sim t": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a list": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf awid read": {
+      "iceman": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 12,
+        "pass": 12,
+        "fail": 0,
+        "stale": 0,
+        "noop": 12,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx wipe p": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 39,
+        "pass": 39,
+        "fail": 0,
+        "stale": 0,
+        "noop": 39,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx write": {
+      "iceman": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 31,
+        "pass": 31,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14a sniff": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf list mf": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass dump k": {
+      "iceman": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mfu restore s e f": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      },
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass chk": {
+      "iceman": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "data save f": {
+      "legacy": {
+        "total": 18,
+        "pass": 18,
+        "fail": 0,
+        "stale": 0,
+        "noop": 18,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf 14b sniff": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf felica litedump": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf iclass sniff": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf list 14b": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf list iclass": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hf mf rdbl": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "hw ver": {
+      "legacy": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf config": {
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf em 410x_read": {
+      "legacy": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf em 410x_write": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf fdx clone c": {
+      "legacy": {
+        "total": 6,
+        "pass": 6,
+        "fail": 0,
+        "stale": 0,
+        "noop": 6,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf fdx read": {
+      "legacy": {
+        "total": 19,
+        "pass": 19,
+        "fail": 0,
+        "stale": 0,
+        "noop": 19,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf gallagher clone": {
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf gallagher read": {
+      "legacy": {
+        "total": 14,
+        "pass": 14,
+        "fail": 0,
+        "stale": 0,
+        "noop": 14,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf hid clone": {
+      "legacy": {
+        "total": 1,
+        "pass": 1,
+        "fail": 0,
+        "stale": 0,
+        "noop": 1,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf hid read": {
+      "legacy": {
+        "total": 3,
+        "pass": 3,
+        "fail": 0,
+        "stale": 0,
+        "noop": 3,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf jablotron read": {
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf noralsy read": {
+      "legacy": {
+        "total": 4,
+        "pass": 4,
+        "fail": 0,
+        "stale": 0,
+        "noop": 4,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx chk f": {
+      "legacy": {
+        "total": 12,
+        "pass": 12,
+        "fail": 0,
+        "stale": 0,
+        "noop": 12,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx detect p": {
+      "legacy": {
+        "total": 18,
+        "pass": 18,
+        "fail": 0,
+        "stale": 0,
+        "noop": 0,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx dump f": {
+      "legacy": {
+        "total": 2,
+        "pass": 2,
+        "fail": 0,
+        "stale": 0,
+        "noop": 2,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx read": {
+      "legacy": {
+        "total": 78,
+        "pass": 78,
+        "fail": 0,
+        "stale": 0,
+        "noop": 78,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx restore f": {
+      "legacy": {
+        "total": 12,
+        "pass": 12,
+        "fail": 0,
+        "stale": 0,
+        "noop": 12,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx sniff": {
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    },
+    "lf t55xx wipe": {
+      "legacy": {
+        "total": 5,
+        "pass": 5,
+        "fail": 0,
+        "stale": 0,
+        "noop": 5,
+        "unclassified": 0,
+        "failures": []
+      }
+    }
+  },
+  "critical_failures": []
+}

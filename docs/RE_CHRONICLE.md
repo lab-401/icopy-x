@@ -4915,3 +4915,203 @@ Supporting fix: `_destroy_subprocess` and reader thread exit both set `_output_e
 **Status:** Installer fix implemented and verified. Symlinks verified (PM3 finds and executes scripts). Iceman lualibs compatibility confirmed (backwards compatible with factory PM3). Docker/CI integration pending — documented as Task 9 in handover.
 
 **Commit:** b07a518 (branch: working/compatibility-layer)
+
+## 9. The Compat-Flip Architectural Refactor (2026-04-16 to 2026-04-17)
+
+### Scope & Goal
+
+The original compatibility layer (sections 7-8 above) took a pragmatic shortcut: middleware stayed **legacy-shape** (emitting legacy PM3 commands and matching legacy response formats), and `pm3_compat.py` was a bidirectional adapter that rewrote both directions when running on iceman firmware. This made the legacy code path the "native" path and iceman the "translated" path.
+
+That decision created three sustained problems:
+
+1. **Middleware regex was anchored to a 2022 snapshot.** Any new parser written in middleware had to match legacy colon/space formats, so the parser shape dated itself immediately. When we later needed to support iceman-specific output (like `MANUFACTURER:` label dropping), we couldn't — the regex only looked for legacy shape.
+2. **Drift between legacy and iceman kept costing the same fixes twice.** Every bug along the lines of "output shape mismatch" had to be fixed once in middleware regex, then again in `pm3_compat.py` when iceman changed. The coupling was inverted: middleware was supposed to be the stable layer, but the adapter was.
+3. **Dead-code deletion wasn't possible.** Even on an iceman-only build, `pm3_compat.py` was load-bearing — if you deleted it, middleware broke because middleware expected legacy-shape responses.
+
+The **compat-flip** refactor (sessions 1-4 on `feat/compat-flip`) inverted all three.
+
+**Goal**: middleware becomes **iceman-native** (emits iceman CLI commands, matches iceman response regex). `pm3_compat.py` becomes a **single legacy→iceman adapter** that only activates when `_current_version == PM3_VERSION_ORIGINAL`. Setting `LEGACY_COMPAT=False` fully inerts the module. Deleting `pm3_compat.py` leaves iceman-only builds fully functional.
+
+### Technical Outcome
+
+| Phase | Subject | Result | Evidence |
+|---|---|---|---|
+| 1 | Ground truth (divergence matrix, command/response audit) | 72 commands × 60 shape variants catalogued | `tools/ground_truth/divergence_matrix.md` (1613 lines), `legacy_output.json` (3810 samples), `iceman_output.json` (2033 samples) |
+| 2 | Revert legacy-tolerant middleware regex | 4 modules reverted to iceman-native | commit `3ec7db5` |
+| 3 | Refactor middleware to iceman-native (8 logical flows) | 25 files refactored | commits `e30c878..6b692c7` |
+| 4 | Invert `pm3_compat.py` | 1931 → ~1130 lines, **-37%**, direction flipped | commits `f314b39..15fba2e` |
+| 5 | Consolidated regression sweep | 4048/4067 samples pass, 19 stale documented | `tools/ground_truth/phase5_sweep_report.md` |
+| 6 | Live-hardware verification on legacy FW | 17 adapter regressions found + fixed | this section |
+
+### The 17 Session-4 Regressions (the Phase 6 pass)
+
+Session 4 landed on a hardware-available window and walked the complete card matrix against the actual iCopy-X device running the legacy firmware (iCopy-X Community fork PM3 `385d892f 2022-08-16`). Every fix is a live-trace-backed round-trip commit.
+
+Summarised (see `docs/Real_Hardware_Intel/legacy_traces_20260417/INDEX.md` and `/home/qx/docs/2026-04-17-compat-flip-phase6-handover-final.md` §2 for full details):
+
+1. **Manifest-gate version-probe bug** — noflash IPKs had no firmware manifest, the version-probe was gated behind the manifest, so `_current_version` stayed `None` and `translate()` was a no-op. Fixed by moving the probe before the manifest gate. Commit `2737b11`.
+2. **MF rdsc/rdbl grid shape** — legacy emits ` 0 | XX XX ...` grid, iceman emits `data: XX XX ...`. Added `_normalize_mf_block_grid`. Commit `59233ec`.
+3. **Stale EM410x keyword rewrite** — `_RE_LEGACY_VALID_EM410X` was mangling a keyword match. Deleted. Commit `89c38fe`.
+4. **MF found-key lines** (darkside + nested) — darkside emits `Found valid key: XXXXXXXXXXXX`, nested emits `Found key: XX XX ...` (spaced bytes), middleware wanted `[ XXXXXXXXXXXX ]`. Added `_normalize_mf_found_key`. Commit `cc30a5e`.
+5. **MF1K nested hang** — translator emitted `hf mf nested 1 0 A KEY 8 A`, legacy parser read `1` as all-sectors prefix and hung. Fixed by prefixing `o` (one-sector). Commit `3c793fe`.
+6. **MFU restore "Finish restore" vs "Done!"** — legacy emits `Finish restore`, iceman emits `Done!`. Added `_normalize_mfu_restore` + 3 flag-shape variants. Commit `3c793fe`.
+7. **MFU `-s` flag corrupts non-Gen2 cards** — `-s` tried Gen2-magic block-0 write on Gen3/plain MFU, corrupted BCC. Fix: drop `-s` universally. Commit `de4b977`.
+8. **MFU EV1 special-block (PACK/SIG/VERSION) fails on Gen3** — data blocks succeeded, metadata blocks returned `Cmd Send Error`, whole restore failed. Fix: tolerant fail check ignores block ≥ 241 errors. Commit `de4b977`.
+9. **t55xx --page1 `o` token** — translator appended `o` (override-safety); legacy treated it as force-reader and corrupted protocols. Dropped. Commit `43f940c`.
+10. **iCLASS wrbl `-b` vs `--blk`** — the iCopy-X Community fork uses CLIParser (`-b -d -k --elite`), not upstream single-char syntax. Commit `cac2c36`.
+11. **iCLASS calcnewkey + chk** — calcnewkey is single-char (`o/n/e`); chk is `f FILE [e]`. Different per-subcommand. Commit `cac2c36`.
+12. **iCLASS wrbl response regex** — legacy emits `Wrote block %3d/0x%02X successful`, middleware wanted iceman `wrote block %u`. Regex accepts both. Commit `cac2c36`.
+13. **MF1K Gen1a csetuid SAK/ATQA swap** — legacy takes `uid atqa sak`, translator was emitting `uid sak atqa`. Commit `e7e5d85`.
+14. **HID Prox missing `raw:` prefix** — legacy `HID Prox - <hex>` has no `raw:` prefix; middleware REGEX_HID requires it. Fix: `_normalize_hid_prox` synthesises `raw: <hex>`. Commit `5090507`.
+15. **FDX-B Animal ID / Raw** — space-padded legacy forms didn't match dotted iceman regex. Fix: `_post_normalize` universal rewrite (benefits every LF reader). Commit `5090507`.
+16. **ISO15693 csetuid empty UID** — `hf sea` emits ` UID: E0 04 ...`, middleware wants `UID....`. Fix: `_normalize_hf_sea`. Commit `5090507`.
+17. **PAC/STANLEY clone firmware hang** — `lf pac clone` hangs in `clone_t55xx_tag()` on iCopy-X Community PM3. Workaround: bypass via direct `lf t55xx write` with config `0x00080080`. Flagged as ground-truth deviation. Commit `c27ddab`.
+
+**Final state at session-4 close**: `feat/compat-flip` @ `9c2b72e`, 104 commits ahead of main, pushed. IPK rebuild in flight. Device cleaned (tracer removed, app restarted).
+
+### What Could Have Been Done Better
+
+These are the self-criticism notes — read them before starting the next refactor of similar scope.
+
+1. **Do Phase 6 (live verification) during Phase 3, not after Phase 5.** We ran 4067 real-trace samples through the Phase 5 consolidated sweep and they passed — then ran 17 card-matrix flows on the physical device in Phase 6 and found 17 regressions. The sweep used **pre-recorded** trace samples captured through the old adapter; they couldn't catch bugs where the adapter now emits wrong *commands* to the device. Live-device command-side testing only happens on hardware. **Lesson**: every middleware change that touches the command path needs a live-hardware round-trip before the sweep counts as validation.
+
+2. **Consult the iCopy-X Community fork source before upstream iceman.** Session 4 burned ~40 minutes on the iCLASS wrbl CLIParser question because we kept going back to `/tmp/rrg-pm3/` (upstream iceman). The device runs `/tmp/factory_pm3/` (iCopy-X Community fork @ `385d892f 2022-08-16`), which has iCopy-X-specific patches. The shortcut is `strings /opt/pm3_bins/proxmark3 | grep <cmd>` on the actual device — that's the authoritative tie-breaker.
+
+3. **Don't trust audit-agent root-cause claims.** Two successive Opus-4.7 audit passes during session 4 claimed the regressions were caused by version misdetection. Both were wrong. The static-source audit cannot distinguish "translator fires with wrong output" from "translator doesn't fire". Only a live trace can. **Audit output is a starting hypothesis, not ground truth.**
+
+4. **Register response normalizers for every sub-command, not just the top-level.** Early Phase-4 commits only registered `_RESPONSE_NORMALIZERS` entries for top-level commands like `hf mf rdsc`. Sub-commands issued by middleware helpers (`hf mf nested`, `hf mf darkside`) silently fell through. A naming convention change in `_RESPONSE_NORMALIZERS` keys (more specific matching) would have caught these at registration time.
+
+5. **Tests and fixtures are immutable — harder than it looks.** Session 4 had two moments where editing a fixture would have "unblocked" progress immediately. Both times the user held the line; both times the real bug was upstream in middleware regex. A fixture that disagrees with live output is **evidence of a code bug**, not a stale fixture. The principle was easy to articulate, easy to violate under time pressure; future agents should internalise it.
+
+6. **`LEGACY_COMPAT=False` gating is load-bearing architecture.** Every normalizer/reverser added in session 4 is inside an `if LEGACY_COMPAT:` gate. Tests validate this. **Any logic that bypasses the gate is a regression** — it re-couples legacy concern into "native" code paths. The kill-switch is what lets us delete `pm3_compat.py` cleanly when legacy support ends.
+
+### Deferred Items (Not Blockers for Phase-7 PR)
+
+- **Sim-stop race condition in `rftask.py:330`** — EOR-marker wait causes fresh "sim starting" text to land *after* user presses Stop. Architectural issue with the rftask buffering model. Not introduced by compat-flip; fix separately.
+- **PAC/STANLEY firmware hang** — Workaround in place (`lfwrite.py:132-160`). Real fix should land upstream in iCopy-X Community PM3.
+
+### References
+
+- Handovers: `/home/qx/docs/2026-04-16-compat-flip-handover.md` → `2026-04-17-compat-flip-phase6-handover-final.md` (5 chronological documents)
+- Ground truth: `tools/ground_truth/divergence_matrix.md`, `legacy_output.json`, `iceman_output.json`, `source_strings.md`, `phase5_sweep_report.md`, `phase6_command_audit.md`, `phase6_response_audit.md`, `phase6_lf_audit.md`
+- Live traces: `docs/Real_Hardware_Intel/legacy_traces_20260417/` (16 files + INDEX.md)
+- Tests: `tests/phase3_trace_parity/` (8 flows), `tests/phase4_inversion/` (deletion + legacy-path), `tests/phase5_sweep/` (consolidated), `tests/ui/test_pm3_compat.py`, `tests/test_pm3_compat_parity.py`
+- Commit range: `3ec7db5..9c2b72e` on `feat/compat-flip`
+
+---
+
+## 10. Iceman Gate 2 — Live Verification on the Inverted Base (2026-04-18, Session 5)
+
+### The Whole Point of the Refactor
+
+Sections 7-9 above describe a long arc with a single architectural intent: **swap the system base from legacy PM3 to iceman PM3, and turn legacy into a clean detachable layer.** That intent is worth restating in plain terms because the rest of this section only makes sense in light of it:
+
+- **The legacy PM3 firmware is frozen.** The iCopy-X Community fork that the device shipped with is `RRG/Iceman/master/385d892 2022-08-16` — a snapshot from 2022 with iCopy-X-specific patches. It receives no upstream fixes, no new tag-type support, no security updates. Anything that depends on legacy as the "true" command/response shape is permanently dating itself.
+- **Iceman is the future and the present.** The active, maintained PM3 codebase is RRG/Iceman master (currently `v4.21611`). Every new tag type, every CVE fix, every protocol improvement lands here. The right base for new code is iceman.
+- **Lab401 users sit on both.** Some devices have been flashed to iceman; many haven't. We can't drop legacy support overnight.
+
+Sections 7-8 took the path-of-least-resistance: keep legacy as the "native" middleware shape, write `pm3_compat.py` as a bidirectional translator that rewrote both ways. That made the legacy 2022 snapshot the load-bearing reference for every middleware regex in the codebase. The compat layer was thicker than the middleware it served.
+
+The compat-flip (Section 9) inverted that. After Session 4 the middleware is **iceman-native**: it issues iceman CLI commands and matches iceman response regex. `pm3_compat.py` is a **one-way legacy→iceman translator** that activates only when `_current_version == PM3_VERSION_ORIGINAL`. The kill-switch flag `LEGACY_COMPAT=False` makes the module fully inert; deleting the file leaves iceman-only builds working. **Legacy support is now a single-point concern.**
+
+Session 5 was the live-hardware proof of that promise on the iceman side — Gate 2 of the verification cycle (Gate 1 being legacy-FW pass-through, completed Session 4).
+
+### What Session 5 Verified
+
+The session walked the device matrix on **iceman v4.21611 firmware** (flashed via the CI-built flash IPK from commit `9c2b72e`) and exercised every dispatch path with real cards. Each tested flow used **iceman-native** PM3 commands and matched iceman-native PM3 responses with the adapter passing through inert.
+
+| Area | Coverage on iceman | Result |
+|---|---|---|
+| HF14A scan + cache | MF1K, MF4K, MFU, NTAG 213, EV1 USCUID-UL | ✅ pass-through |
+| MF1K read (fchk + darkside + nested + rdsc) | full key recovery + 16-sector dump | ✅ after 2 parser fixes |
+| MF1K → Gen1a clone (cload + freeze) | UID transfer 7AF2ECB2 → magic target | ✅ after Gen1a-detect fix |
+| MF1K erase (Gen1a cwipe + Gen2/CUID wrbl) | both magic protocols | ✅ |
+| MFU EV1 USCUID-UL clone | UID + data transfer | ✅ after `-s` flag fix |
+| Plain MFU restore | data transfer | 🟡 iceman-FW bug (`Failed convert on load`) — out of adapter scope |
+| iCLASS Elite scan + dump + write | Elite key recovery + wrbl all blocks | ✅ pass-through |
+| iCLASS Legacy scan + dump + write | standard auth + wrbl all blocks | ✅ pass-through |
+| ISO15693 scan + restore + csetuid | UID transfer | ✅ pass-through |
+| LF clones (11 protocols) | EM410x, HID, AWID, IO Prox, Securakey, Viking, Pyramid, FDX-B, Gallagher, PAC, Paradox | ✅ after dispatch + parser fixes |
+| HF14A sniff + replay (`hf 14a sniff` → `hf mf list`) | 35589 bytes captured + decoded | ✅ pass-through |
+| Simulation (HF14A + LF) | MF1K, MF4K, MFU, FDX-B, AWID, HID, scan→sim prepop | ✅ after sim-prepop fix |
+| Kill-switch (`LEGACY_COMPAT=False`) | MF1K read + HID scan still work | ✅ adapter properly inert |
+
+### The 8 Session-5 Fixes
+
+Six bugs surfaced during Gate 2 that the Phase 5 sweep couldn't catch — they all involved either:
+- (a) iceman-side output shape changes between v4.21128 (Phase-5 fixture base) and v4.21611 (the version the user actually runs), or
+- (b) middleware dispatch logic that was correct for legacy + older iceman but tripped on iceman v4.21611's new emissions.
+
+Each fix is its own commit on `feat/compat-flip`:
+
+1. **HID Prox `raw:` synth registered too narrowly** (`f7c557d`) — `_normalize_hid_prox` was attached only to `lf hid reader` / `lf hid read`, but scan uses `lf sea`. Moved the synth into `_post_normalize` (universal rewrite, gated on `'HID Prox' in text`) so every command path benefits. Same architectural pattern that already covers FDX-B Animal/Raw and the other universal LF rewrites.
+
+2. **`write.py` PAR_CLONE_MAP HID + Indala raw dispatch** (`2d43503`) — middleware preferred `cache.data` over `cache.raw` for parameter-based clones, on the assumption that `data` was the human-readable hex (true for EM410x). For HID `cache.data` is `'FC,CN: 128,54641'` (a descriptive summary); the actual hex payload lives in `cache.raw`. Iceman's own `cmdlfindala.c:790` warns *"Warning, encoding with FC/CN doesn't always work"* — raw is the universally-correct path. Special-case types 9 (HID) and 10 (Indala) into `_RAW_CLONE_PAR_TYPES` so they prefer `raw`.
+
+3. **MFU magic-UL `-s` flag re-enabled when actually needed** (`c25b824`) — Session 4's commit `de4b977` dropped `-s` universally because it corrupted BCC1 on Gen3 / APDU EV1 / plain MFU. That fix was right for those targets but left magic UL clone (USCUID-UL, NTAG21x magic, etc.) broken: the data blocks wrote but block 0 (UID) silently failed. Solution: re-probe `hf mfu info` immediately before restore, look for iceman's parens-wrapped magic-type annotation (`( USCUID-UL )`, `( NTAG21x )`, `( NTAG CUID )`, `( Gen 2 / CUID )`, `( Gen 1a )`, `( Gen 1b )`), and add `-s` only when present. Verified live: USCUID-UL EV1 source `04677F61100000` cloning to magic target — without `-s` target stayed at stuck factory UID; with `-s` target reads source UID.
+
+4. **`hfmfkeys.py` fchk 6-col table parser** (`d988a4d`) — iceman moved `printKeyTable` (cmdhfmf.c:4985 + 5037) from the older 4-col bordered `| Sec | KeyA | resA | KeyB | resB |` to a 6-col `+`-divided ` Sec | Blk | KeyA | resA | KeyB | resB` (no outer pipes; sector-trailer block-num inserted between `Sec` and `KeyA`). On iceman v4.21611 the new shape is the only one emitted. Old regex parsed zero rows → KEYS_MAP stayed empty → nested had no seed → read flow stalled at WarningM1Activity. New regex accepts both shapes via an optional `(?:\d+\s*\|\s*)?` group + optional outer pipe.
+
+5. **`hfmfread.py` rdsc/rdbl/cgetblk table-format parser** (`304a247`) — iceman v4.21611 `mf_print_block_one` emits ` N | XX XX ... | ascii` (cmdhfmf.c:565-606), not the older `data: XX XX ...` single-line shape. Middleware extracted zero blocks per sector → dump file empty → read flow exited with no source data. Unified regex accepts both shapes; single capture group preserved for downstream `_parse_blocks_from_text`.
+
+6. **`hfmfwrite.py` Gen1a-detect probe accepts table format** (`afda411`) — `write_common`'s Gen1a probe at Step 2 used the same legacy regex as `hfmfread`. On iceman v4.21611 cgetblk on a Gen1a target returns ` 0 | 01 02 03 04 ... |` table-format. Probe regex didn't match → `is_gen1a` stayed False → middleware dispatched `write_with_standard` (per-block wrbl) instead of `write_with_gen1a` (cload + gen1afreeze). Block 0 doesn't write via plain wrbl on Gen1a → UID never transferred → clone produced data-correct card with target's stuck factory UID. Same regex fix as `hfmfread`.
+
+7. **`write.py` FDX-B raw dispatch** (`a14a0e5`) — same class of bug as the HID/Indala fix. FDX-B `cache.data` is `'Country: 112'` (descriptive) and `cache.raw` is `'112-025880314020'` (the parseable `<C>-<N>` form `write_fdx_par` splits on `-`). PAR_CLONE_MAP default branch picked `data` first → emitted `lf fdxb clone --country Country: --national 112` → PM3 errored. Audit of all PAR_CLONE_MAP / RAW_CLONE_MAP / B0_WRITE_MAP entries documented in commit body confirmed FDX-B was the only remaining offender. Added type 28 to `_RAW_CLONE_PAR_TYPES`.
+
+8. **`activity_main.py` scan→sim prepop uses cache `raw` for HID** (`c7282bd`) — symmetric bug to fix #2 but in a different file/dispatch path. `SimulationActivity._showSimUi` populated form fields via `_LABEL_TO_CACHE_KEY` lookup; `'ID:'` mapped to `('data', 'raw')` (data first). For HID this picked `'FC,CN: 51341,351646'` and the form (12 chars wide) truncated to `'FC,CN: 51341'`. Three sub-fixes: (a) SIM_MAP HID entry's data_key changed from `'data'` to `'raw'`; (b) form-population loop adds per-tag override using `SIM_MAP[4]` ahead of label-based lookup (multi-field tags use synthetic keys that gracefully miss → fall through to label lookup unchanged); (c) `SIM_FIELDS['lf_5b']` width bumped 12 → 24 chars to fit iceman's 24-char raw emission (`raw: %08x%08x%08x`). Verified: HID scan→sim now emits `lf hid sim -r 000000000000009911AABB3C` (full raw), AWID and FDX-B scan→sim multi-field prepop unchanged.
+
+### Iceman-Side Bugs Flagged But Not Fixed
+
+Three issues observed during Gate 2 are PM3-side problems, not adapter regressions. Documented for upstream filing or future cycles:
+
+- **Plain MFU `Failed convert on load to new Ultralight/NTAG format`** — iceman v4.21611's `convert_mfu_dump_format()` (cmdhfmfu.c:4017) rejects the 56-byte-prefix dump file produced by the same iceman build's `hf mfu dump`. Affects plain UL only; EV1 path unaffected. No middleware workaround — needs upstream PM3 fix.
+- **USCUID magic MFU restore non-deterministic** — sometimes aborts on `BCC1 incorrect`, sometimes loads fine, sometimes hangs. Hardware-coupling sensitive. Workaround in our `-s` fix (#3 above) makes it work *when* iceman accepts the load, but the BCC1 strictness is iceman-side.
+- **BCC0-incorrect line corrupts middleware UID parser** — `hf 14a info` regex sometimes captures the literal string `'BCC0 incorrect'` as the UID when iceman emits the BCC warning under marginal coupling. Cache shows `uid='BCC0 incorrect'`. Edge case (only fires when coupling is bad enough to trigger BCC mismatch); fix is a regex tightening in `hf14ainfo.py` for the next cycle.
+
+Plus one user-experience bug noted but not fixed: **partial-sector-read flow shows "Read Successful! File saved" toast** even when sectors fail (zeroed in dump). Should be a partial-save toast with different wording. UI semantics, not adapter.
+
+### Kill-Switch Test (Live)
+
+Per handover §4 Step 4. Edited `pm3_compat.py` on device to `LEGACY_COMPAT = False`, restarted app, ran MF1K read + HID scan. Both worked identically — adapter is properly inert on iceman because the version-detection short-circuits before the gate even matters. The flag is the architectural switch that lets us delete `pm3_compat.py` cleanly when legacy support eventually ends; this run was the live-hardware confirmation of the synthetic test in `tests/phase4_inversion/test_deletion.py`.
+
+(The file-deletion test — `mv pm3_compat.py /tmp/`, restart, repeat — was NOT run live this session. The flag-flip subsumes its evidence value on iceman, since `LEGACY_COMPAT=False` already proves the adapter is inert.)
+
+### Final State at Session-5 Close
+
+- `feat/compat-flip` @ `19bf210`, **11 commits ahead** of Session 4's `4fd7ddc`, pushed to origin
+- CI build green ([run 24613470881](https://github.com/lab-401/icopy-x/actions/runs/24613470881))
+- Both flash + noflash IPKs build cleanly with all 8 Session-5 fixes baked in
+- Device returned to clean state: tracer removed, `LEGACY_COMPAT` restored to `True`
+- 19 trace snapshots committed at `docs/Real_Hardware_Intel/iceman_traces_20260418/` covering every flow tested
+- Branch ready for the Phase 7 PR
+
+### What Could Have Been Done Better
+
+1. **Discover the iceman-version drift earlier.** The Phase-5 sweep was anchored to v4.21128 fixtures; the device runs v4.21611. Three of the six Session-5 bugs (#4, #5, #6) trace to iceman moving its `printKeyTable` and `mf_print_block_one` formats between those versions. Refreshing the fixtures against the actual installed iceman version would have caught these in synthetic testing rather than live device testing.
+
+2. **The PAR_CLONE_MAP audit pattern repeats — generalise it earlier.** Bugs #2 (HID/Indala), #7 (FDX-B), and #8 (sim HID prepop) all share the same shape: cache `data` is descriptive, cache `raw` is parseable, dispatch picks `data`, breaks. Three independent commits applied the same fix to three separate dispatch paths. A single architectural primitive — "for these tag types, always prefer `raw`" — applied at one well-named layer would have prevented the third one from happening. Defer the abstraction next time, but recognise the pattern and apply the *same* mental model to every dispatch site within a session.
+
+3. **Save traces before every restart, not after.** Lost the inter-attempt trace window between two USCUID-UL restore retries because the app was restarted before the previous trace was archived. Tracer truncates the log on app start. Discipline required: save IMMEDIATELY on cancel / hang / restart trigger, not at flow boundaries.
+
+4. **Hot-patches accumulated faster than commits.** Session 5 stacked 7 hot-patches on the device before the first commit landed. When a fix surfaced a deeper bug, rolling back was awkward — the device-side state wasn't easily mappable to a single git commit. Better cadence: commit each fix immediately after the live verification round it passes, even if downstream fixes follow. Smaller, more frequent commits = cleaner revert points.
+
+5. **The sim-prepop fix shipped in three iterations.** First fix touched only `_defdata`, missed the form-population loop. Second fix added the per-tag override at the loop level, but the form field was 12 chars wide and truncated. Third fix bumped the width. All three live tests + restarts. Should have read `_showSimUi` end-to-end before the first fix and produced one comprehensive change. Rushing the first iteration cost two extra restart cycles.
+
+### Architectural Statement (Now True)
+
+After Session 5 the inversion described in Section 9 is live, hot, and proven on real hardware:
+
+- Middleware (`src/middleware/*.py` excluding `pm3_compat.py` and `executor.py`) issues iceman CLI syntax and matches iceman response shapes natively. **Zero legacy awareness in any middleware file.**
+- `pm3_compat.py` is the single adapter. Translates iceman commands → legacy syntax on the command path; rewrites legacy responses → iceman shape on the response path. Both directions activate only when `_current_version == PM3_VERSION_ORIGINAL`.
+- `LEGACY_COMPAT=False` makes `_RESPONSE_NORMALIZERS` and `_COMMAND_TRANSLATION_RULES` empty dicts. Both `translate()` and `translate_response()` become pure pass-throughs. Verified live on iceman with no regressions.
+- `executor.py` wraps `import pm3_compat` in `try/except ImportError`. Deleting the file leaves iceman-only builds fully functional. Verified by `tests/phase4_inversion/test_deletion.py` (10/10 pass) and synthetically equivalent to the live `LEGACY_COMPAT=False` test.
+
+When iCopy-X Community PM3 is eventually retired (or all devices flashed to iceman), `pm3_compat.py` deletes cleanly. Every other middleware file stays put. **Legacy support is a one-file dependency.** That was the goal Section 9 set; Section 5 of the calendar (Session 5 of the project) proved it on the wire.
+
+### References
+
+- Handover: `/home/qx/docs/2026-04-17-compat-flip-phase6-handover-final.md` (Session 4 close-out, the picking-up point for this session)
+- Live traces: `docs/Real_Hardware_Intel/iceman_traces_20260418/` (19 files, every flow exercised)
+- CI build: GH Actions run `24613470881` on `feat/compat-flip` @ `19bf210` — both flash + noflash IPKs ✓
+- Commit range this session: `f7c557d..19bf210` on `feat/compat-flip` (11 commits)
+- Test artefacts unchanged (Session 5 didn't touch `tests/`); next-cycle work should refresh `iceman_output.json` fixtures against v4.21611 to catch the version-drift class of bugs at sweep time.

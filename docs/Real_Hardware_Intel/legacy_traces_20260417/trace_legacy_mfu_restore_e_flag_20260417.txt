@@ -1,0 +1,103 @@
+=== FULL TRACE ===
+[   0.010] presspm3 hook OK
+[   0.012] POLL stack=['MainActivity'] 
+[   0.013] === ALL INSTALLED ===
+[   6.037] SERIAL_TX> b'pctbat\r\n'
+[   6.050] SERIAL_TX> b'charge\r\n'
+[  16.066] SERIAL_TX> b'pctbat\r\n'
+[  16.080] SERIAL_TX> b'charge\r\n'
+[  24.144] KEY> KEYOK_PRES!
+[  24.271] START(AutoCopyActivity, None) bundle=None
+[  24.349] PM3> hf 14a info (timeout=5000)
+[  24.352] CONNECT> connect2PM3()
+[  24.357] CONNECT< socket=True
+[  24.547] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  24.962] PM3< ret=1 content_len=564 \n UID: 04 15 91 2A 46 FC 18\nATQA: 00 44\n SAK: 00 [2]\nMANUFACTURER:    NXP Semiconductors Germany\nPossible types:\n   NTAG 20x / 21x / 21x TT / I2C plus\n   MIFARE Ultralight / C / EV1 / Nano\nSAK incorrectly claims that card doesn't support RATS\n ATS: 85 00 00 A0 00 00 0A C3 00 04 03 01 01 00 0B 03 41 DF\n       -  TL : length is 133 bytes\nATS may be corrupted. Length of ATS (18 bytes incl. 2 Bytes CRC) doesn't match TL\n       -  T0 : TA1 is NOT present, TB1 is NOT present, TC1 is NOT present, FSCI is 0 (FSC = 16)\nMagic capabilities... Gen 2 / CUID\n\nNikola.D: 0\n
+[  24.994] PM3> hf mfu info (timeout=8888)
+[  26.097] SERIAL_TX> b'pctbat\r\n'
+[  26.110] SERIAL_TX> b'charge\r\n'
+[  26.899] PM3< ret=1 content_len=1505 \n      TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101)\n       UID: 04 15 91 2A 46 FC 18\n    UID[0]: 04, NXP Semiconductors Germany\n      BCC0: 08 (ok)\n      BCC1: 88 (ok)\n  Internal: 48 (default)\n      Lock: 00 00  - 00\nOneTimePad: 00 00 00 00  - 0000\n\n--- Tag Counters\n       [0]: 00 00 00\n            - BD tearing (ok)\n       [1]: 00 00 00\n            - BD tearing (ok)\n       [2]: 00 00 00\n            - BD tearing (ok)\n\nSignature verification failed\n\n--- Tag Version\n       Raw bytes: 00 04 03 01 01 00 0B 03\n       Vendor ID: 04, NXP Semiconductors Germany\n    Product type: 03, Ultralight\n Product subtype: 01, 17 pF\n   Major version: 01\n   Minor version: 00\n            Size: 0B, (64 <-> 32 bytes)\n   Protocol type: 03, ISO 14443-3 Compliant\n\n--- Tag Configuration\n  cfg0 [16/0x10]: 00 00 00 FF\n                    - strong modulation mode disabled\n                    - pages don't need authentication\n  cfg1 [17/0x11]: 00 05 00 00\n                    - Unlimited password attempts\n                    - NFC counter disabled\n                    - NFC counter not protected\n                    - user configuration writeable\n                    - write access is protected with password\n                    - 05, Virtual Card Type Identifier is default\n  PWD  [18/0x12]: 00 00 00 00 - (cannot be read)\n  PACK [19/0x13]: 00 00       - (cannot be read)\n  RFU  [19/0x13]:       00 00 - (cannot be read)\n\n--- Known EV1/NTAG passwords\nFound a default password: FF FF FF FF  || Pack: 00 00\n\n\nNikola.D: 0\n
+[  26.909] CACHE: {"found": "True", "type": "4", "isMFU": "True", "uid": "'0415912A46FC18'"}
+[  27.052] POLL stack=['MainActivity', 'AutoCopyActivity'] type=4 uid=0415912A46FC18
+[  27.213] PM3> hf mfu dump -f /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2 (timeout=30000)
+[  27.215] CONNECT> connect2PM3()
+[  27.220] CONNECT< socket=True
+[  30.119] PM3< ret=1 content_len=1382 TYPE: MIFARE Ultralight EV1 48bytes (MF0UL1101)\nReading tag memory...\nAuthentication Failed UL-EV1/NTAG\nMFU dump file information\n      Version | 00 04 03 01 01 00 0B 03\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | BD\n    Counter 1 | 00 00 00\n    Tearing 1 | BD\n    Counter 2 | 00 00 00\n    Tearing 2 | BD\nMax data page | 18 (76 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 15 91 08 |   | ...\n  1/0x01 | 2A 46 FC 18 |   | *F.\n  2/0x02 | 88 48 00 00 |   | H..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\n 16/0x10 | 00 00 00 FF | 0 | ...[=]  17/0x11 | 00 05 00 00 | 0 | ....\n 18/0x12 | 00 00 00 00 | 0 | ....\n 19/0x13 | 00 00 00 00 | 0 | ....\nsaved 136 bytes to binary file /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin\nsaved to json file /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.json\n\nNikola.D: 0\n
+[  32.356] KEY> KEYM2_PRES!
+[  32.377] START(WarningWriteActivity, '/mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin') bundle="/mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin"
+[  32.561] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=4 uid=0415912A46FC18
+[  34.172] KEY> KEYM2_PRES!
+[  34.175] FINISH(top=WarningWriteActivity d=3)
+[  34.200] START(WriteActivity, '/mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin') bundle="/mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin"
+[  34.563] PM3> hf mfu restore -e -f /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin (timeout=16888)
+[  34.566] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=4 uid=0415912A46FC18
+[  36.126] SERIAL_TX> b'pctbat\r\n'
+[  36.140] SERIAL_TX> b'charge\r\n'
+[  39.257] PM3< ret=1 content_len=2586 loaded 136 bytes from binary file /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin\nRestoring /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin to card\nMFU dump file information\n      Version | 00 04 03 01 01 00 0B 03\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | BD\n    Counter 1 | 00 00 00\n    Tearing 1 | BD\n    Counter 2 | 00 00 00\n    Tearing 2 | BD\nMax data page | 18 (76 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 15 91 08 |   | ...\n  1/0x01 | 2A 46 FC 18 |   | *F.\n  2/0x02 | 88 48 00 00 |   | H..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\n 16/0x10 | 00 00 00 FF | 0 | ...[=]  17/0x11 | 00 05 00 00 | 0 | ....\n 18/0x12 | 00 00 00 00 | 0 | ....\n 19/0x13 | 00 00 00 00 | 0 | ....\nspecial PACK    block written 0xF1 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 241\nspecial SIG     block written 0xF2 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 242\nspecial SIG     block written 0xF3 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 243\nspecial SIG     block written 0xF4 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 244\nspecial SIG     block written 0xF5 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 245\nspecial SIG     block written 0xF6 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed
+[  44.607] KEY> KEYM2_PRES!
+[  44.919] PM3> hf mfu restore -e -f /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin (timeout=16888)
+[  46.156] SERIAL_TX> b'pctbat\r\n'
+[  46.170] SERIAL_TX> b'charge\r\n'
+[  49.565] PM3< ret=1 content_len=2783 loaded 136 bytes from binary file /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin\nRestoring /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin to card\nMFU dump file information\n      Version | 00 04 03 01 01 00 0B 03\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | BD\n    Counter 1 | 00 00 00\n    Tearing 1 | BD\n    Counter 2 | 00 00 00\n    Tearing 2 | BD\nMax data page | 18 (76 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 15 91 08 |   | ...\n  1/0x01 | 2A 46 FC 18 |   | *F.\n  2/0x02 | 88 48 00 00 |   | H..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\n 16/0x10 | 00 00 00 FF | 0 | ...[=]  17/0x11 | 00 05 00 00 | 0 | ....\n 18/0x12 | 00 00 00 00 | 0 | ....\n 19/0x13 | 00 00 00 00 | 0 | ....\nspecial PACK    block written 0xF1 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 241\nspecial SIG     block written 0xF2 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 242\nspecial SIG     block written 0xF3 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 243\nspecial SIG     block written 0xF4 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 244\nspecial SIG     block written 0xF5 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed to write block 245\nspecial SIG     block written 0xF6 - 00 00 00 00\n\nCmd Send Error: 00 1\nWrite block error\nfailed
+[  53.436] KEY> KEYM2_PRES!
+[  53.747] PM3> hf mfu restore -e -f /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin (timeout=16888)
+[  56.187] SERIAL_TX> b'pctbat\r\n'
+[  56.200] SERIAL_TX> b'charge\r\n'
+[  58.631] PM3< ret=1 content_len=1871 loaded 136 bytes from binary file /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin\nRestoring /mnt/upan/dump/mfu/M0-UL-EV1_0415912A46FC18_2.bin to card\nMFU dump file information\n      Version | 00 04 03 01 01 00 0B 03\n        TBD 0 | 00 00\n        TBD 1 | 00\n    Signature | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n    Counter 0 | 00 00 00\n    Tearing 0 | BD\n    Counter 1 | 00 00 00\n    Tearing 1 | BD\n    Counter 2 | 00 00 00\n    Tearing 2 | BD\nMax data page | 18 (76 bytes)\n  Header size | 56\nblock#   | data        |lck| ascii\n  0/0x00 | 04 15 91 08 |   | ...\n  1/0x01 | 2A 46 FC 18 |   | *F.\n  2/0x02 | 88 48 00 00 |   | H..\n  3/0x03 | 00 00 00 00 | 0 | ....\n  4/0x04 | 00 00 00 00 | 0 | ....\n  5/0x05 | 00 00 00 00 | 0 | ....\n  6/0x06 | 00 00 00 00 | 0 | ....\n  7/0x07 | 00 00 00 00 | 0 | ....\n  8/0x08 | 00 00 00 00 | 0 | ....\n  9/0x09 | 00 00 00 00 | 0 | ....\n 10/0x0A | 00 00 00 00 | 0 | ....\n 11/0x0B | 00 00 00 00 | 0 | ....\n 12/0x0C | 00 00 00 00 | 0 | ....\n 13/0x0D | 00 00 00 00 | 0 | ....\n 14/0x0E | 00 00 00 00 | 0 | ....\n 15/0x0F | 00 00 00 00 | 0 | ....\n 16/0x10 | 00 00 00 FF | 0 | ...[=]  17/0x11 | 00 05 00 00 | 0 | ....\n 18/0x12 | 00 00 00 00 | 0 | ....\n 19/0x13 | 00 00 00 00 | 0 | ....\nspecial PACK    block written 0xF1 - 00 00 00 00\n\nspecial SIG     block written 0xF2 - 00 00 00 00\n\nspecial SIG     block written 0xF3 - 00 00 00 00\n\nspecial SIG     block written 0xF4 - 00 00 00 00\n\nspecial SIG     block written 0xF5 - 00 00 00 00\n\nspecial SIG     block written 0xF6 - 00 00 00 00\n\nspecial SIG     block written 0xF7 - 00 00 00 00\n\nspecial SIG     block written 0xF8 - 00 00 00 00\n\nspecial SIG     block written 0xF9 - 00 00 00 00\n\nspecial VERSION block written 0xFA - 00 04 03 01\n\nspecial VERSION block written 0xFB - 01 00 0B 03\n\nRestoring data blocks.\n...........\n\nDone!\n\nNikola.D: 0\n
+[  66.216] SERIAL_TX> b'pctbat\r\n'
+[  66.230] SERIAL_TX> b'charge\r\n'
+[  72.643] KEY> KEY_PWR_CAN_PRES!
+[  73.007] KEY> KEY_PWR_CAN_PRES!
+[  73.009] PRESSPM3> called
+[  73.010] SERIAL_TX> b'presspm3\r\n'
+[  73.029] PRESSPM3< done
+[  73.030] PM3_STOP> stopPM3Task()
+[  73.030] PM3_STOP< ret=None
+[  73.031] FINISH(top=WriteActivity d=3)
+[  73.140] POLL stack=['MainActivity', 'AutoCopyActivity'] type=4 uid=0415912A46FC18
+[  73.453] KEY> KEY_PWR_CAN_PRES!
+[  73.456] PRESSPM3> called
+[  73.456] SERIAL_TX> b'presspm3\r\n'
+[  73.469] PRESSPM3< done
+[  73.470] PM3_STOP> stopPM3Task()
+[  73.470] PM3_STOP< ret=None
+[  73.471] FINISH(top=AutoCopyActivity d=2)
+[  73.641] POLL stack=['MainActivity'] type=4 uid=0415912A46FC18
+[  74.490] KEY> KEYOK_PRES!
+[  74.493] START(AutoCopyActivity, None) bundle=None
+[  74.519] PM3> hf 14a info (timeout=5000)
+[  74.522] CONNECT> connect2PM3()
+[  74.527] CONNECT< socket=True
+[  74.644] POLL stack=['MainActivity', 'AutoCopyActivity'] type=4 uid=0415912A46FC18
+[  74.734] PM3< ret=1 content_len=62 BCC1 incorrect, got 0x92, expected 0x82\nAborting\n\nNikola.D: 0\n
+[  74.738] PM3> lf sea (timeout=10000)
+[  76.247] SERIAL_TX> b'pctbat\r\n'
+[  76.260] SERIAL_TX> b'charge\r\n'
+[  77.261] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[/]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  77.273] PM3> hf sea (timeout=10000)
+[  79.154] PM3< ret=1 content_len=815 [-]                                          [\] Searching for ThinFilm tag...[|]                                          [/] Searching for LTO-CM tag...[-]                                          [\] Searching for ISO 14443-A tag...[#] BCC1 incorrect, got 0x92, expected 0x82\nAborting\n[|]                                          [/] Searching for ISO 15693 tag...[-]                                          [\] Searching for iCLASS / PicoPass tag...[|]                                          [/] Searching for LEGIC tag...[-]                                          [\] Searching for Topaz tag...[|]                                          [/] Searching for ISO 14443-B tag...[-]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[  79.177] PM3> lf t55xx detect (timeout=10000)
+[  80.257] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  80.271] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  80.490] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[  80.493] PM3> hf felica reader (timeout=10000)
+[  82.478] PM3< ret=1 content_len=27 card timeout\n\nNikola.D: -4\n
+[  84.988] KEY> KEYM2_PRES!
+[  85.038] PM3> hf 14a info (timeout=5000)
+[  85.041] CONNECT> connect2PM3()
+[  85.044] CONNECT< socket=True
+[  85.251] PM3< ret=1 content_len=62 BCC1 incorrect, got 0x92, expected 0x82\nAborting\n\nNikola.D: 0\n
+[  85.253] PM3> lf sea (timeout=10000)
+[  86.282] SERIAL_TX> b'pctbat\r\n'
+[  86.295] SERIAL_TX> b'charge\r\n'
+[  87.758] PM3< ret=1 content_len=253 \nNOTE: some demods output possible binary\nif it finds something that looks like a tag\nFalse Positives ARE possible\nChecking for known tags...\n[\]Searching for MOTOROLA tag...\nNo data found!\nSignal looks like noise. Maybe not an LF tag?\n\n\nNikola.D: -10\n
+[  87.760] PM3> hf sea (timeout=10000)
+[  89.626] PM3< ret=1 content_len=815 [|]                                          [/] Searching for ThinFilm tag...[-]                                          [\] Searching for LTO-CM tag...[|]                                          [/] Searching for ISO 14443-A tag...[#] BCC1 incorrect, got 0x92, expected 0x82\nAborting\n[-]                                          [\] Searching for ISO 15693 tag...[|]                                          [/] Searching for iCLASS / PicoPass tag...[-]                                          [\] Searching for LEGIC tag...[|]                                          [/] Searching for Topaz tag...[-]                                          [\] Searching for ISO 14443-B tag...[|]                                          [!] No known/supported 13.56 MHz tags found\n\nNikola.D: -10\n
+[  89.628] PM3> lf t55xx detect (timeout=10000)
+[  90.685] PM3< ret=1 content_len=103 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\nNikola.D: 0\n
+[  90.687] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[  90.897] PM3< ret=1 content_len=15 \nNikola.D: -10\n
+[  90.900] PM3> hf felica reader (timeout=10000)
+[  92.885] PM3< ret=1 content_len=27 card timeout\n\nNikola.D: -4\n
+[  96.319] SERIAL_TX> b'pctbat\r\n'
+[  96.326] SERIAL_TX> b'charge\r\n'

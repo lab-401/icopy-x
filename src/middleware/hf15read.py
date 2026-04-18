@@ -24,9 +24,21 @@
 
 Reimplemented from hf15read.so (iCopy-X v1.0.90).
 
+Post compat-flip (Phase 3) — iceman-native command form.
+
 Ground truth:
     Strings:  docs/v1090_strings/hf15read_strings.txt
     Audit:    docs/V1090_MODULE_AUDIT.txt
+    Source:   /tmp/rrg-pm3/client/src/cmdhf15.c:1803 `CmdHF15Dump`
+
+Middleware flow:
+    - Issue `hf 15 dump -f <path>` (iceman CLIParser: `-f/--file`).
+    - Iceman `pm3_save_dump` writes the binary file at `<path>.bin`.
+    - Check file existence (no log-keyword dependency).
+
+Iceman save emission:
+    `"Saved <n> bytes to binary file '<path>'"` (iceman, from pm3fs/fileutils).
+    Legacy: same shape, lowercase `s`. Not parsed by this middleware.
 """
 
 import os
@@ -76,7 +88,7 @@ def read(infos):
         if n > 999:
             break
 
-    cmd = 'hf 15 dump f {}'.format(path)
+    cmd = 'hf 15 dump -f {}'.format(path)
     ret = executor.startPM3Task(cmd, TIMEOUT)
 
     if ret == -1:

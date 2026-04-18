@@ -1,0 +1,267 @@
+=== FULL TRACE ===
+[   0.010] presspm3 hook OK
+[   0.012] === ALL INSTALLED ===
+[   0.013] POLL stack=['MainActivity'] 
+[   5.920] SERIAL_TX> b'pctbat\r\n'
+[   5.933] SERIAL_TX> b'charge\r\n'
+[  15.950] SERIAL_TX> b'pctbat\r\n'
+[  15.963] SERIAL_TX> b'charge\r\n'
+[  25.226] KEY> KEYOK_PRES!
+[  25.355] START(AutoCopyActivity, None) bundle=None
+[  25.430] PM3> hf 14a info (timeout=5000)
+[  25.432] CONNECT> connect2PM3()
+[  25.436] CONNECT< socket=True
+[  25.539] PM3< ret=1 content_len=1 \n
+[  25.570] POLL stack=['MainActivity', 'AutoCopyActivity'] 
+[  25.582] PM3> lf sea (timeout=10000)
+[  25.981] SERIAL_TX> b'pctbat\r\n'
+[  25.993] SERIAL_TX> b'charge\r\n'
+[  27.043] PM3< ret=1 content_len=556 \nNote: False Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 10 (0x000A)\nAnimal bit set?... True\nData block?....... True  ( 0x800000 )\nRUDI bit?......... False\nUser Info?........ 25\nReplacement No?... 7\nCRC-16............ 0xE612 ( ok )\nRaw............... 25 02 69 60 60 38 95 3F 48 67 00 00 01\n\n\nValid FDX-B ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[  27.069] CACHE: {"raw": "'112-025880314020'", "data": "'Country: 112'", "country": "'112'", "nc": "'025880314020'", "type": "28", "found": "True", "progress": "1", "return": "28"}
+[  27.074] POLL stack=['MainActivity', 'AutoCopyActivity'] type=28 uid=
+[  27.375] PM3> lf fdxb reader (timeout=10000)
+[  27.377] CONNECT> connect2PM3()
+[  27.382] CONNECT< socket=True
+[  27.692] PM3< ret=1 content_len=399 \nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 10 (0x000A)\nAnimal bit set?... True\nData block?....... True  ( 0x800000 )\nRUDI bit?......... False\nUser Info?........ 25\nReplacement No?... 7\nCRC-16............ 0xE612 ( ok )\nRaw............... 25 02 69 60 60 38 95 3F 48 67 00 00 01\n\n\n
+[  31.679] KEY> KEYM2_PRES!
+[  31.719] START(WarningWriteActivity, {'return': 1, 'data': '112-025880314020', 'raw': ''}) bundle={"return": 1, "data": "112-025880314020", "raw": ""}
+[  32.084] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=28 uid=
+[  32.490] KEY> KEYM2_PRES!
+[  32.492] FINISH(top=WarningWriteActivity d=3)
+[  32.518] START(WriteActivity, {'return': 1, 'data': '112-025880314020', 'raw': ''}) bundle={"return": 1, "data": "112-025880314020", "raw": ""}
+[  32.595] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=28 uid=
+[  32.917] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[  32.919] CONNECT> connect2PM3()
+[  32.922] CONNECT< socket=True
+[  33.771] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[  33.771] PM3> lf t55xx detect (timeout=10000)
+[  34.059] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[  34.075] PM3> lf fdxb clone --country 112 --national 025880314020 (timeout=10000)
+[  36.011] SERIAL_TX> b'pctbat\r\n'
+[  36.024] SERIAL_TX> b'charge\r\n'
+[  36.056] PM3< ret=1 content_len=356 Country code........ 112\nNational code....... 25880314020\nSet animal bit...... N\nSet data block bit.. N\nExtended data....... 0x0\nRFU................. 0\nPreparing to clone FDX-B to T55x7 with animal ID: 0112-25880314020\nBlk | Data\n----+------------\n 00 | 00098080\n 01 | 0024B02B\n 02 | 4D82C138\n 03 | 80402D1C\n 04 | 58040201\nData written and verified\nDone!\n\n
+[  36.057] PM3> lf sea (timeout=10000)
+[  37.287] PM3< ret=1 content_len=556 \nNote: False Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 0 (0x0000)\nAnimal bit set?... False\nData block?....... False  ( 0x0 )\nRUDI bit?......... False\nUser Info?........ 0 ( RFU )\nReplacement No?... 0 ( RFU )\nCRC-16............ 0xA316 ( ok )\nRaw............... 25 02 69 60 60 38 00 00 68 C5 00 00 00\n\n\nValid FDX-B ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  37.288] PM3> lf fdxb reader (timeout=10000)
+[  37.595] PM3< ret=1 content_len=410 \nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 0 (0x0000)\nAnimal bit set?... False\nData block?....... False  ( 0x0 )\nRUDI bit?......... False\nUser Info?........ 0 ( RFU )\nReplacement No?... 0 ( RFU )\nCRC-16............ 0xA316 ( ok )\nRaw............... 25 02 69 60 60 38 00 00 68 C5 00 00 00\n\n\n
+[  39.171] KEY> KEYM1_PRES!
+[  39.507] PM3> lf sea (timeout=10000)
+[  40.720] PM3< ret=1 content_len=556 \nNote: False Positives ARE possible\nChecking for known tags...\nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 0 (0x0000)\nAnimal bit set?... False\nData block?....... False  ( 0x0 )\nRUDI bit?......... False\nUser Info?........ 0 ( RFU )\nReplacement No?... 0 ( RFU )\nCRC-16............ 0xA316 ( ok )\nRaw............... 25 02 69 60 60 38 00 00 68 C5 00 00 00\n\n\nValid FDX-B ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[  40.722] PM3> lf fdxb reader (timeout=10000)
+[  41.028] PM3< ret=1 content_len=410 \nFDX-B / ISO 11784/5 Animal\nAnimal ID......... 112-025880314020\nNational Code..... 025880314020 ( 0x6069640A4 )\nCountry Code...... 112 - Belarus\nReserved/RFU...... 0 (0x0000)\nAnimal bit set?... False\nData block?....... False  ( 0x0 )\nRUDI bit?......... False\nUser Info?........ 0 ( RFU )\nReplacement No?... 0 ( RFU )\nCRC-16............ 0xA316 ( ok )\nRaw............... 25 02 69 60 60 38 00 00 68 C5 00 00 00\n\n\n
+[  42.224] KEY> KEY_PWR_CAN_PRES!
+[  42.566] KEY> KEY_PWR_CAN_PRES!
+[  42.568] PRESSPM3> called
+[  42.569] SERIAL_TX> b'presspm3\r\n'
+[  42.588] PRESSPM3< done
+[  42.588] PM3_STOP> stopPM3Task()
+[  42.589] PM3_STOP< ret=None
+[  42.590] FINISH(top=WriteActivity d=3)
+[  42.613] POLL stack=['MainActivity', 'AutoCopyActivity'] type=28 uid=
+[  43.034] KEY> KEY_PWR_CAN_PRES!
+[  43.036] PRESSPM3> called
+[  43.037] SERIAL_TX> b'presspm3\r\n'
+[  43.058] PRESSPM3< done
+[  43.058] PM3_STOP> stopPM3Task()
+[  43.059] PM3_STOP< ret=None
+[  43.060] FINISH(top=AutoCopyActivity d=2)
+[  43.116] POLL stack=['MainActivity'] type=28 uid=
+[  46.040] SERIAL_TX> b'pctbat\r\n'
+[  46.054] SERIAL_TX> b'charge\r\n'
+[  56.070] SERIAL_TX> b'pctbat\r\n'
+[  56.083] SERIAL_TX> b'charge\r\n'
+[  66.101] SERIAL_TX> b'pctbat\r\n'
+[  66.113] SERIAL_TX> b'charge\r\n'
+[  76.130] SERIAL_TX> b'pctbat\r\n'
+[  76.144] SERIAL_TX> b'charge\r\n'
+[  86.160] SERIAL_TX> b'pctbat\r\n'
+[  86.173] SERIAL_TX> b'charge\r\n'
+[  96.191] SERIAL_TX> b'pctbat\r\n'
+[  96.204] SERIAL_TX> b'charge\r\n'
+[ 106.225] SERIAL_TX> b'pctbat\r\n'
+[ 106.238] SERIAL_TX> b'charge\r\n'
+[ 116.255] SERIAL_TX> b'pctbat\r\n'
+[ 116.268] SERIAL_TX> b'charge\r\n'
+[ 124.632] KEY> KEYOK_PRES!
+[ 124.636] START(AutoCopyActivity, None) bundle=None
+[ 124.668] PM3> hf 14a info (timeout=5000)
+[ 124.671] CONNECT> connect2PM3()
+[ 124.680] CONNECT< socket=True
+[ 124.748] POLL stack=['MainActivity', 'AutoCopyActivity'] type=28 uid=
+[ 124.790] PM3< ret=1 content_len=1 \n
+[ 124.793] PM3> lf sea (timeout=10000)
+[ 126.285] PM3< ret=1 content_len=310 \nNote: False Positives ARE possible\nChecking for known tags...\nGALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\nValid GALLAGHER ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 126.296] SERIAL_TX> b'pctbat\r\n'
+[ 126.312] CACHE: {"data": "'FC,CN: X,16777011'", "fc": "''", "cn": "'16777011'", "len": "''", "raw": "'7FEA90B977ADD2EF5A8CA64E'", "type": "29", "found": "True", "progress": "1", "return": "29"}
+[ 126.313] SERIAL_TX> b'charge\r\n'
+[ 126.625] PM3> lf gallagher reader (timeout=10000)
+[ 126.627] CONNECT> connect2PM3()
+[ 126.631] CONNECT< socket=True
+[ 126.753] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 126.875] PM3< ret=1 content_len=148 GALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\n
+[ 129.912] KEY> KEYM2_PRES!
+[ 129.916] START(WarningWriteActivity, {'return': 1, 'data': 'FC,CN: X,16777011', 'raw': '7FEA90B977ADD2EF5A8CA64E'}) bundle={"return": 1, "data": "FC,CN: X,16777011", "raw": "7FEA90B977ADD2EF5A8CA64E"}
+[ 130.263] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=29 uid=
+[ 130.715] KEY> KEYM2_PRES!
+[ 130.717] FINISH(top=WarningWriteActivity d=3)
+[ 130.741] START(WriteActivity, {'return': 1, 'data': 'FC,CN: X,16777011', 'raw': '7FEA90B977ADD2EF5A8CA64E'}) bundle={"return": 1, "data": "FC,CN: X,16777011", "raw": "7FEA90B977ADD2EF5A8CA64E"}
+[ 130.765] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=29 uid=
+[ 131.077] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 131.079] CONNECT> connect2PM3()
+[ 131.081] CONNECT< socket=True
+[ 131.935] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 131.936] PM3> lf t55xx detect (timeout=10000)
+[ 132.219] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 132.220] PM3> lf gallagher clone -r 7FEA90B977ADD2EF5A8CA64E (timeout=10000)
+[ 133.810] PM3< ret=1 content_len=174 Preparing to clone Gallagher to T55x7 from raw hex.\nBlk | Data\n----+------------\n 00 | 00088060\n 01 | 7FEA90B9\n 02 | 77ADD2EF\n 03 | 5A8CA64E\nData written and verified\nDone!\n\n
+[ 133.811] PM3> lf sea (timeout=10000)
+[ 134.993] PM3< ret=1 content_len=299 \nNote: False Positives ARE possible\nChecking for known tags...\nGALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\nValid GALLAGHER ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 134.994] PM3> lf gallagher reader (timeout=10000)
+[ 135.243] PM3< ret=1 content_len=148 GALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\n
+[ 136.331] SERIAL_TX> b'pctbat\r\n'
+[ 136.348] SERIAL_TX> b'charge\r\n'
+[ 137.474] KEY> KEYM1_PRES!
+[ 137.788] PM3> lf sea (timeout=10000)
+[ 138.973] PM3< ret=1 content_len=299 \nNote: False Positives ARE possible\nChecking for known tags...\nGALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\nValid GALLAGHER ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 138.975] PM3> lf gallagher reader (timeout=10000)
+[ 139.223] PM3< ret=1 content_len=148 GALLAGHER - Region: 8 Facility: 46293 Card No.: 16777011 Issue Level: 9\n   Displayed: I46293\n   Raw: 7FEA90B977ADD2EF5A8CA64E\n   CRC: 4E - 4E (ok)\n\n
+[ 141.729] KEY> KEY_PWR_CAN_PRES!
+[ 141.957] KEY> KEY_PWR_CAN_PRES!
+[ 141.959] PRESSPM3> called
+[ 141.960] SERIAL_TX> b'presspm3\r\n'
+[ 141.978] PRESSPM3< done
+[ 141.978] PM3_STOP> stopPM3Task()
+[ 141.979] PM3_STOP< ret=None
+[ 141.979] FINISH(top=WriteActivity d=3)
+[ 142.292] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 142.435] KEY> KEY_PWR_CAN_PRES!
+[ 142.437] PRESSPM3> called
+[ 142.438] SERIAL_TX> b'presspm3\r\n'
+[ 142.453] PRESSPM3< done
+[ 142.453] PM3_STOP> stopPM3Task()
+[ 142.454] PM3_STOP< ret=None
+[ 142.454] FINISH(top=AutoCopyActivity d=2)
+[ 142.794] POLL stack=['MainActivity'] type=29 uid=
+[ 146.370] SERIAL_TX> b'pctbat\r\n'
+[ 146.384] SERIAL_TX> b'charge\r\n'
+[ 146.884] KEY> KEYOK_PRES!
+[ 146.887] START(AutoCopyActivity, None) bundle=None
+[ 146.921] PM3> hf 14a info (timeout=5000)
+[ 146.924] CONNECT> connect2PM3()
+[ 146.930] CONNECT< socket=True
+[ 147.039] PM3< ret=1 content_len=1 \n
+[ 147.042] PM3> lf sea (timeout=10000)
+[ 147.301] POLL stack=['MainActivity', 'AutoCopyActivity'] type=29 uid=
+[ 148.502] PM3< ret=1 content_len=168 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 148.513] PM3> hf sea (timeout=10000)
+[ 154.044] PM3< ret=1 content_len=41 No known/supported 13.56 MHz tags found\n\n
+[ 154.057] PM3> lf t55xx detect (timeout=10000)
+[ 156.400] SERIAL_TX> b'pctbat\r\n'
+[ 156.413] SERIAL_TX> b'charge\r\n'
+[ 157.078] PM3< ret=1 content_len=91 Could not detect modulation automatically. Try setting it manually with 'lf t55xx config'\n\n
+[ 157.081] PM3> lf em 4x05 info -p FFFFFFFF (timeout=5000)
+[ 157.343] PM3< ret=1 content_len=1 \n
+[ 157.345] PM3> hf felica reader (timeout=10000)
+[ 158.481] PM3< ret=1 content_len=32 FeliCa card select failed (-4)\n\n
+[ 162.397] KEY> KEYM1_PRES!
+[ 162.409] PM3> hf 14a info (timeout=5000)
+[ 162.411] CONNECT> connect2PM3()
+[ 162.415] CONNECT< socket=True
+[ 162.514] PM3< ret=1 content_len=1 \n
+[ 162.517] PM3> lf sea (timeout=10000)
+[ 163.836] PM3< ret=1 content_len=261 \nNote: False Positives ARE possible\nChecking for known tags...\nTrying with a preamble bit...\nDemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nCouldn't identify a chipset\n\n
+[ 163.839] CACHE: {"raw": "'000000000000099911119999'", "data": "'000000000000099911119999'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 164.097] PM3> lf hid reader (timeout=10000)
+[ 164.099] CONNECT> connect2PM3()
+[ 164.103] CONNECT< socket=True
+[ 164.328] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 164.438] PM3< ret=1 content_len=100 Trying with a preamble bit...\nDemodBuffer:\n1D9696965656565696969696\n\nraw: 000000000000099911119999\n\n
+[ 166.430] SERIAL_TX> b'pctbat\r\n'
+[ 166.443] SERIAL_TX> b'charge\r\n'
+[ 172.055] KEY> KEYM2_PRES!
+[ 172.089] START(WarningWriteActivity, {'return': 1, 'data': '000000000000099911119999', 'raw': '000000000000099911119999'}) bundle={"return": 1, "data": "000000000000099911119999", "raw": "000000000000099911119999"}
+[ 172.367] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=9 uid=
+[ 172.808] KEY> KEYM2_PRES!
+[ 172.810] FINISH(top=WarningWriteActivity d=3)
+[ 172.831] START(WriteActivity, {'return': 1, 'data': '000000000000099911119999', 'raw': '000000000000099911119999'}) bundle={"return": 1, "data": "000000000000099911119999", "raw": "000000000000099911119999"}
+[ 172.869] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=9 uid=
+[ 173.170] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 173.171] CONNECT> connect2PM3()
+[ 173.174] CONNECT< socket=True
+[ 174.040] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 174.042] PM3> lf t55xx detect (timeout=10000)
+[ 174.345] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 174.346] PM3> lf hid clone -r 000000000000099911119999 (timeout=10000)
+[ 174.351] PM3< ret=1 content_len=61 LF HID clone supports only packed credentials up to 37 bits\n\n
+[ 174.351] PM3> lf sea (timeout=10000)
+[ 175.610] PM3< ret=1 content_len=157 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 175.611] PM3> lf hid reader (timeout=10000)
+[ 175.958] PM3< ret=1 content_len=1 \n
+[ 176.482] SERIAL_TX> b'pctbat\r\n'
+[ 176.499] SERIAL_TX> b'charge\r\n'
+[ 184.116] KEY> KEYM1_PRES!
+[ 184.432] PM3> lf sea (timeout=10000)
+[ 185.659] PM3< ret=1 content_len=157 \nNote: False Positives ARE possible\nChecking for known tags...\nNo known 125/134 kHz tags found!\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 186.526] SERIAL_TX> b'pctbat\r\n'
+[ 186.538] SERIAL_TX> b'charge\r\n'
+[ 196.557] SERIAL_TX> b'pctbat\r\n'
+[ 196.578] SERIAL_TX> b'charge\r\n'
+[ 198.502] KEY> KEY_PWR_CAN_PRES!
+[ 198.964] KEY> KEY_PWR_CAN_PRES!
+[ 198.966] PRESSPM3> called
+[ 198.967] SERIAL_TX> b'presspm3\r\n'
+[ 198.978] PRESSPM3< done
+[ 198.978] PM3_STOP> stopPM3Task()
+[ 198.979] PM3_STOP< ret=None
+[ 198.979] FINISH(top=WriteActivity d=3)
+[ 199.419] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 199.535] KEY> KEY_PWR_CAN_PRES!
+[ 199.537] PRESSPM3> called
+[ 199.538] SERIAL_TX> b'presspm3\r\n'
+[ 199.558] PRESSPM3< done
+[ 199.558] PM3_STOP> stopPM3Task()
+[ 199.559] PM3_STOP< ret=None
+[ 199.559] FINISH(top=AutoCopyActivity d=2)
+[ 199.921] POLL stack=['MainActivity'] type=9 uid=
+[ 200.542] KEY> KEYOK_PRES!
+[ 200.545] START(AutoCopyActivity, None) bundle=None
+[ 200.571] PM3> hf 14a info (timeout=5000)
+[ 200.574] CONNECT> connect2PM3()
+[ 200.579] CONNECT< socket=True
+[ 200.675] PM3< ret=1 content_len=1 \n
+[ 200.678] PM3> lf sea (timeout=10000)
+[ 200.923] POLL stack=['MainActivity', 'AutoCopyActivity'] type=9 uid=
+[ 201.855] PM3< ret=1 content_len=623 \nNote: False Positives ARE possible\nChecking for known tags...\n[H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 201.856] CACHE: {"raw": "'00000000000000200501aae3'", "data": "'FC,CN: 128,54641'", "type": "9", "found": "True", "progress": "1", "return": "9"}
+[ 202.114] PM3> lf hid reader (timeout=10000)
+[ 202.116] CONNECT> connect2PM3()
+[ 202.119] CONNECT< socket=True
+[ 202.462] PM3< ret=1 content_len=473 [H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\n
+[ 204.796] KEY> KEYM2_PRES!
+[ 204.799] START(WarningWriteActivity, {'return': 1, 'data': '00000000000000200501aae3', 'raw': '00000000000000200501aae3'}) bundle={"return": 1, "data": "00000000000000200501aae3", "raw": "00000000000000200501aae3"}
+[ 204.931] POLL stack=['MainActivity', 'AutoCopyActivity', 'WarningWriteActivity'] type=9 uid=
+[ 205.802] KEY> KEYM2_PRES!
+[ 205.804] FINISH(top=WarningWriteActivity d=3)
+[ 205.862] START(WriteActivity, {'return': 1, 'data': '00000000000000200501aae3', 'raw': '00000000000000200501aae3'}) bundle={"return": 1, "data": "00000000000000200501aae3", "raw": "00000000000000200501aae3"}
+[ 205.934] POLL stack=['MainActivity', 'AutoCopyActivity', 'WriteActivity'] type=9 uid=
+[ 206.183] PM3> lf t55xx wipe -p 20206666 (timeout=10000)
+[ 206.185] CONNECT> connect2PM3()
+[ 206.189] CONNECT< socket=True
+[ 206.597] SERIAL_TX> b'pctbat\r\n'
+[ 206.613] SERIAL_TX> b'charge\r\n'
+[ 207.057] PM3< ret=1 content_len=464 Target T55x7 tag\nUsing password 20206666\nDefault configuration block 000880E0\n\nBegin wiping...\nWriting page 0  block: 00  data: 0x000880E0 pwd: 0x20206666\nWriting page 0  block: 01  data: 0x00000000\nWriting page 0  block: 02  data: 0x00000000\nWriting page 0  block: 03  data: 0x00000000\nWriting page 0  block: 04  data: 0x00000000\nWriting page 0  block: 05  data: 0x00000000\nWriting page 0  block: 06  data: 0x00000000\nWriting page 0  block: 07  data: 0x00000000\n\n
+[ 207.058] PM3> lf t55xx detect (timeout=10000)
+[ 207.361] PM3< ret=1 content_len=263  Chip type......... T55x7\n Modulation........ ASK\n Bit rate.......... 2 - RF/32\n Inverted.......... No\n Offset............ 33\n Seq. terminator... Yes\n Block0............ 000880E0 (auto detect)\n Downlink mode..... default/fixed bit length\n Password set...... No\n\n\n
+[ 207.363] PM3> lf hid clone -r 00000000000000200501aae3 (timeout=10000)
+[ 207.738] PM3< ret=1 content_len=69 Preparing to clone HID tag using raw 00000000000000200501AAE3\nDone!\n\n
+[ 207.739] PM3> lf sea (timeout=10000)
+[ 208.975] PM3< ret=1 content_len=623 \nNote: False Positives ARE possible\nChecking for known tags...\n[H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 208.976] PM3> lf hid reader (timeout=10000)
+[ 209.325] PM3< ret=1 content_len=473 [H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\n
+[ 210.614] KEY> KEYM1_PRES!
+[ 210.927] PM3> lf sea (timeout=10000)
+[ 211.193] KEY> KEYM1_PRES!
+[ 212.116] PM3< ret=1 content_len=623 \nNote: False Positives ARE possible\nChecking for known tags...\n[H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\nValid HID Prox ID found!\n\nSearching for auth LF and special cases...\nChipset... T55xx\n\n
+[ 212.119] PM3> lf hid reader (timeout=10000)
+[ 212.461] PM3< ret=1 content_len=473 [H10301  ] HID H10301 26-bit                FC: 128  CN: 54641  parity ( ok )\n[ind26   ] Indala 26-bit                    FC: 2061  CN: 1393  parity ( ok )\nfound 2 matching 26-bit formats\n\nTrying with a preamble bit...\n[ind27   ] Indala 27-bit                    FC: 5126  CN: 10979\n[indasc27] Indala ASC 27-bit                FC: 336  CN: 9718\n[Tecom27 ] Tecom 27-bit                     FC: 1545  CN: 42724\nfound 3 matching 27-bit formats\n\nraw: 00000000000000200501aae3\n\n
+[ 213.660] KEY> KEY_PWR_CAN_PRES!

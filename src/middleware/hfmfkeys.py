@@ -223,8 +223,31 @@ def list_split(items, n):
 # fchks — fast dictionary key check
 # PM3: hf mf fchk {size_param} {keyfile}  (timeout=600000)
 # ---------------------------------------------------------------------------
+# Iceman key-table row.  Two formats are emitted depending on PM3
+# build vintage; this regex matches both:
+#
+#   Legacy / older iceman (5 fields, outer `|` borders):
+#     `| 000 | 484558414354 | 1 | a22ae129c013 | 1 |`
+#     Matrix section `hf mf fchk` (divergence_matrix.md L711-736).
+#
+#   Iceman v4.21611+ (6 fields incl. new Blk column, no outer `|`):
+#     `-----+-----+--------------+---+--------------+----`
+#     ` 000 | 003 | 484558414354 | 1 | a22ae129c013 | 1`
+#     Source: cmdhfmf.c:4985 (separator) + cmdhfmf.c:5037 row format
+#     `" %03d | %03d | %s | %s | %s | %s %s"` where col 2 is the
+#     sector-trailer block number from mfSectorTrailerOfSector().
+#     Verified live on iceman v4.21611 — without Blk-column tolerance
+#     the parser captured 0 keys → middleware gave up the read flow.
+#
+# Captures stay 5: (sec, keyA, resA, keyB, resB).  The optional
+# `(?:\d+\s*\|\s*)?` group absorbs the inserted Blk column when
+# present.  Outer `|` is also optional (legacy borders vs iceman bare
+# rows).  ANSI colour codes are stripped upstream by
+# executor._clean_pm3_output (executor.py:67) so no `\x1b\[…m` here.
 _RE_KEY_TABLE = re.compile(
-    r'\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|'
+    r'\|?\s*(\d+)\s*\|\s*(?:\d+\s*\|\s*)?'
+    r'([A-Fa-f0-9-]{12})\s*\|\s*(\d+)\s*\|\s*'
+    r'([A-Fa-f0-9-]{12})\s*\|\s*(\d+)'
 )
 _RE_HEX_KEY = re.compile(r'^[A-Fa-f0-9]{12}$')
 
@@ -252,16 +275,8 @@ def fchks(infos, size, with_call=True):
     uid = infos.get('uid', '') if isinstance(infos, dict) else ''
     key_file = genKeyFile(uid, list(DEFAULT_KEYS))
 
-    if size == 4096:
-        sp = '4'
-    elif size == 2048:
-        sp = '2'
-    elif size == 320:
-        sp = '0'
-    else:
-        sp = '1'
-
-    cmd = 'hf mf fchk {} {}'.format(sp, key_file)
+    size_flag = {4096: '--4k', 2048: '--2k', 320: '--mini'}.get(size, '--1k')
+    cmd = 'hf mf fchk {} -f {}'.format(size_flag, key_file)
     ret = executor.startPM3Task(cmd, 600000)
     if ret == -1:
         return -1
@@ -273,12 +288,22 @@ def fchks(infos, size, with_call=True):
 # These send PM3 commands and parse responses.
 # ---------------------------------------------------------------------------
 def darkside():
-    """Darkside attack. PM3: hf mf darkside."""
+    """Darkside attack. PM3: hf mf darkside.
+
+    Iceman-native key emission: ``Found valid key [ %012X ]`` from
+    /tmp/rrg-pm3/client/src/cmdhfmf.c:1275 (capital "Found", bracketed,
+    uppercase hex via PRIX64). Matrix section `hf mf darkside`
+    (divergence_matrix.md L687-707).
+    """
     ret = executor.startPM3Task('hf mf darkside', 120000)
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*:\s*([A-Fa-f0-9]{12})', text)
+    # Iceman bracketed form (cmdhfmf.c:1275). re.IGNORECASE to tolerate the
+    # nested-attack lowercase "found" variant (mifarehost.c:686) when this
+    # helper is reused from tests; not needed for darkside proper.
+    m = re.search(r'Found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]',
+                  text, re.IGNORECASE)
     if m:
         key = m.group(1).upper()
         putKey2Map(0, A, key)
@@ -294,7 +319,14 @@ def onNestedCall(lines):
     pass
 
 def nestedOneKey(known, target, retryMax=5):
-    """Nested attack for a single key."""
+    """Nested attack for a single key.
+
+    Iceman-native emission: ``Target block %4u key type %c -- found valid
+    key [ %012X ]`` from /tmp/rrg-pm3/client/src/mifare/mifarehost.c:686
+    (lowercase "found", bracketed hex). Matrix `hf mf nested`
+    (divergence_matrix.md L740-759); iceman_output.json samples 3-8
+    confirm exact shape on the device.
+    """
     known_sector = getSectorFromTK(known)
     known_type = getTypeFromTK(known)
     known_key = getKey4Map(known_sector, known_type)
@@ -302,14 +334,17 @@ def nestedOneKey(known, target, retryMax=5):
         return -1
     target_sector = getSectorFromTK(target)
     target_type = getTypeFromTK(target)
-    cmd = 'hf mf nested 1 {} {} {} {} {}'.format(
-        known_sector * 4, known_type, known_key,
-        target_sector * 4, target_type)
+    cmd = 'hf mf nested --1k --blk {} {} -k {} --tblk {} {}'.format(
+        known_sector * 4, '-a' if known_type == 'A' else '-b', known_key,
+        target_sector * 4, '--ta' if target_type == 'A' else '--tb')
     ret = executor.startPM3Task(cmd, 30000)
     if ret == -1:
         return -1
     text = executor.CONTENT_OUT_IN__TXT_CACHE or ''
-    m = re.search(r'Found valid key\s*:\s*([A-Fa-f0-9]{12})', text)
+    # Iceman bracketed form (mifarehost.c:686 — lowercase "found"). darkside
+    # tail (cmdhfmf.c:1275 — capital "Found") also matches via IGNORECASE.
+    m = re.search(r'found valid key\s*\[\s*([A-Fa-f0-9]{12})\s*\]',
+                  text, re.IGNORECASE)
     if m:
         putKey2Map(target_sector, target_type, m.group(1).upper())
         return 1
