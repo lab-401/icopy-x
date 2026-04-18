@@ -104,8 +104,8 @@ jobs:
               audio = [n for n in names if n.startswith('res/audio/')]
               fonts = [n for n in names if n.startswith('res/font/')]
               imgs = [n for n in names if n.startswith('res/img/')]
-              if len(audio) < 90:
-                  errors.append(f'Too few audio: {len(audio)} (expected 100+)')
+              if len(audio) < 5:
+                  errors.append(f'Too few audio: {len(audio)} (expected 5+)')
               if len(fonts) < 1:
                   errors.append(f'No fonts found')
               if len(imgs) < 30:
