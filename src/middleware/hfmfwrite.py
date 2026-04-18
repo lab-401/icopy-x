@@ -400,13 +400,19 @@ def write_common(listener, infos, bundle):
         return -1
 
     # Step 2: Gen1a detection
-    # Iceman-native Gen1a probe shapes (verified against
-    # /tmp/rrg-pm3/armsrc/mifarecmd.c:103-116 and cmdhfmf.c:6171):
-    #   standard card -> `wupC1 error` + `Can't read block. error=-1`
-    #   gen1a card    -> `data: XX XX ... <16 bytes>` (matrix L605 iceman
-    #                    format). Legacy `[+] Block 0: HEX` shape handled
-    #                    via adapter `_normalize_rdbl_response`
-    #                    (pm3_compat.py:1241-1268) before reaching here.
+    # Iceman Gen1a probe response shapes (all three are positive
+    # detections — block 0 was readable via the wupC1 backdoor):
+    #   `Block 0: HEX` — legacy after adapter _normalize_rdbl_response
+    #                    (pm3_compat.py:1241-1268).
+    #   `data: HEX`    — older iceman (matrix L605) and `data save` shape.
+    #   ` 0 | HEX | ascii` — iceman v4.21611 table format from
+    #                    mf_print_block_one (cmdhfmf.c:565-606).  Block num
+    #                    is `0` for sector 0, ` | ` separator, then 16 hex
+    #                    pairs, then ` | ` ascii.
+    #
+    # Negative shapes (definitive "not Gen1a"):
+    #   `wupC1 error` / `Can't read block. error=-1` / `Can't set magic`
+    #   from /tmp/rrg-pm3/armsrc/mifarecmd.c:103-116 + cmdhfmf.c:6171.
     import re as _re
     ret = executor.startPM3Task('hf mf cgetblk --blk 0', 10000)
     is_gen1a = False
@@ -416,9 +422,13 @@ def write_common(listener, infos, bundle):
         has_error = (executor.hasKeyword('wupC1 error') or
                      executor.hasKeyword("Can't read block") or
                      executor.hasKeyword("Can't set magic"))
-        # Positive detection: iceman `data: XX XX ...` shape (matrix L605).
-        # `Block 0:` alt handled by adapter _normalize_rdbl_response.
-        has_block_data = bool(_re.search(r'(?:Block\s*0\s*:|data:)\s*[A-Fa-f0-9 ]{16,}', text))
+        # Positive detection: any of three known shapes carrying block 0
+        # hex bytes.  re.MULTILINE so `^` anchors to per-line table rows
+        # for the iceman v4.21611 ` 0 | HEX | ascii` form.
+        has_block_data = bool(_re.search(
+            r'(?:Block\s*0\s*:|data:|^\s*0\s*\|)\s*[A-Fa-f0-9 ]{16,}',
+            text, _re.MULTILINE
+        ))
         if has_block_data and not has_error:
             is_gen1a = True
             probe_conclusive = True
