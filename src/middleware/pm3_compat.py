@@ -886,6 +886,17 @@ def _post_normalize(text):
         text = _RE_LEGACY_ANIMAL_ID_COLON.sub(r'\1Animal ID........... ', text)
         text = _RE_LEGACY_ANIMAL_ID_SPACES.sub(r'\1Animal ID........... ', text)
 
+    # Legacy `HID Prox - <hex> (<dec>)` carries the raw Wiegand payload but
+    # emits no `raw:` line.  Middleware `lfsearch.REGEX_HID = r'raw:\s+(...)'`
+    # requires it.  `lf sea` doesn't dispatch through the per-command HID
+    # normalizer (only `lf hid reader`/`lf hid read` are registered), so
+    # synthesize universally here.  Idempotent: short-circuits when `raw:`
+    # already present.
+    if 'HID Prox' in text and 'raw:' not in text.lower():
+        m = _RE_HID_PROX_LINE.search(text)
+        if m:
+            text = text + '\nraw: ' + m.group(1) + '\n'
+
     return text
 
 
