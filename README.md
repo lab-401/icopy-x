@@ -121,7 +121,6 @@ This process was then repeated across all phases: prototyping, "no flash", and f
 
 The Github CI/CD pipelines and tooling evolved along the way to allow anyone to be able to compile without needing to build an environment locally.
 
-
 ## Who? 
 
 https://github.com/quantum-x from https://www.lab401.com
@@ -142,12 +141,19 @@ Add a factory pm3 firmware image (found in an original .IPK archive:  `res/firmw
 1) Place your iCopy-X in PC-Mode
 2) Use the latest proxmark3 client to flash your device: proxmark3 /dev/ttyACM0 --flash --force --image fullimage.elf
 
+## Does this solve the "Boot Timeout" problem?
+Not directly. "Boot Timeout" means that the GD32 (Microcontroller, that controls that hardware) hasn't received the signal to handoff the screen to the linux device / UI. There are multiple things that can cause this - but the fasted solution is: reflash the microSD card.
+
+Please see the following page for more information, and factory images to reflash your microSD!
+https://lab401.com/blogs/academy/icopy-xs-fixing-the-boot-timeout-problem
+
+Once your device is reflashed and booting, you can apply the Open Source IPKs.
+
 ## Known issues
 
 - Only tested on the iCopy-XS - other versions __probably__ will work with the no-flash version.
-- Sound is untested; it was marked as non-critical
 - iClass SE/SEOS via External Module: not integrated, marked as non-critical
-- Auto-Hardnested UI tool: Out of scope, marked as non-critical
+- External Auto-Hardnested UI tool: Out of scope, marked as non-critical
 - On iceman firmware, issues with specific chipsets. These weren't detected by the module - it's a PM3 issue (or a problem with our testing fixtures)
   - GproxII
   - NexWatch
