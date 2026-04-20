@@ -179,7 +179,6 @@ Some suggestions would be:
 
  - Integrate 4+ years of iceman repo functions, tag types and progress into the UI
  - Integrate new magic cards
- - The current version compatibility layer is "backwards" - the factory proxmark commands are in the modules, and the new proxmark commands are in a compatibility layer. This made sense during building, but it probably makes more sense that this is flipped.
 
 # Licence
 
