@@ -118,7 +118,7 @@ def upan_and_serial():
             os.system('sudo modprobe -r %s 2>/dev/null' % mod)
         umount_upan_partition()
         partition = get_upan_partition()
-        os.system('sudo modprobe g_acm_ms file=%s removable=1 stall=0' % partition)
+        os.system('sudo modprobe g_acm_ms file=%s removable=1 stall=0 iManufacturer="proxmark.org"' % partition)
     except Exception:
         pass
 
