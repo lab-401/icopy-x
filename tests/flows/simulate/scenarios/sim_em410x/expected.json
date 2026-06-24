@@ -1,9 +1,0 @@
-{
-  "title": "Simulation",
-  "content_contains": [
-    "Em410x ID"
-  ],
-  "sim_buttons": {
-    "M2": "Start"
-  }
-}

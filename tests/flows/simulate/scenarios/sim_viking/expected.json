@@ -1,9 +1,0 @@
-{
-  "title": "Simulation",
-  "content_contains": [
-    "Viking ID"
-  ],
-  "sim_buttons": {
-    "M2": "Start"
-  }
-}

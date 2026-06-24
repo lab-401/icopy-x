@@ -1,9 +1,0 @@
-{
-  "title": "Simulation",
-  "content_contains": [
-    "Jablotron ID"
-  ],
-  "sim_buttons": {
-    "M2": "Start"
-  }
-}
