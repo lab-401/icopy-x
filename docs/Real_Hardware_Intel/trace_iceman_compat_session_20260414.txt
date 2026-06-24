@@ -1,4 +1,0 @@
-=== FULL TRACE ===
-[   0.010] DEBUG ver='iceman'
-[   0.013] POLL stack=['MainActivity'] 
-[   0.013] === ALL INSTALLED ===
