@@ -1,4 +1,4 @@
-** Just to be clear… my modifications to the software are based on the Lab401 source — they are the authors of this device, the ones who made it possible for us to update it, change the graphics, and so on.
+* Just to be clear… my modifications to the software are based on the Lab401 source — they are the authors of this device, the ones who made it possible for us to update it, change the graphics, and so on.
 Recently, on various forums, I’ve been hit with criticism claiming that I present myself as the author of this software. One messed‑up idiot decided to latch onto me. A complete nutcase. He contributed absolutely nothing to make iCopy‑X a better tool.
 
 But… whatever, I’m over it now.
@@ -12,4 +12,4 @@ I also added — maybe unnecessarily — but in the main menu, in the Scan Tag o
 
 And to that idiot who criticized me without contributing any meaningful code changes — good luck.
 And once again — I have never, anywhere, claimed to be the author of something I’m not.
-If that screwed‑up head has a problem, he can take me to court, because honestly I’m starting to wonder if it’s even worth contributing for free for such clowns. **
+If that screwed‑up head has a problem, he can take me to court, because honestly I’m starting to wonder if it’s even worth contributing for free for such clowns. *
