@@ -9,6 +9,7 @@ In the ZIP package I’ll also include a 1:1 microSD image made with Macrium Ref
 mmcblk03 → root/home/pi/ipk_app_main.
 
 I also added — maybe unnecessarily — but in the main menu, in the Scan Tag option, Hitag2/Paxton detection is now included, and auto‑copy works in the menu as well as the S/R/W button. Only blocks 4, 5, 6, 7 are written — so there is no risk of bricking a blank tag, because block 3 (where the password is) is not written.
+In my opinion the function isn’t really needed, because you can just use my plugin for cloning Paxton/Hitag2. But since there is an S/R/W button, it might as well work.
 
 And to that idiot who criticized me without contributing any meaningful code changes — good luck.
 And once again — I have never, anywhere, claimed to be the author of something I’m not.
