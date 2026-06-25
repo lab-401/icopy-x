@@ -12,4 +12,6 @@ I also added — maybe unnecessarily — but in the main menu, in the Scan Tag o
 
 And to that idiot who criticized me without contributing any meaningful code changes — good luck.
 And once again — I have never, anywhere, claimed to be the author of something I’m not.
-If that screwed‑up head has a problem, he can take me to court, because honestly I’m starting to wonder if it’s even worth contributing for free for such clowns.
+If that screwed‑up head has a problem, he can take me to court, because honestly I’m starting to wonder if it’s even worth contributing for free for such clowns. 
+
+Tomorrow I will make a packaged ZIP archive available — including a full microSD card image — for anyone who modifies the code and accidentally breaks something.
