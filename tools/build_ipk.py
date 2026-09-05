@@ -395,7 +395,7 @@ def _generate_build_version(version_override=None):
     Priority:
         1. Explicit --version flag (e.g. "v0.6.1" from CI release)
         2. ICOPYX_VERSION env var (for CI/CD pipelines)
-        3. Auto-generated: YYMMDD-H.M-Int (local dev build)
+        3. Auto-generated: short version string (local dev build)
 
     Returns:
         str: version string
@@ -405,8 +405,7 @@ def _generate_build_version(version_override=None):
     env_ver = os.environ.get('ICOPYX_VERSION', '')
     if env_ver:
         return env_ver
-    now = datetime.now(timezone.utc)
-    return now.strftime("%y%m%d-%H.%M-Int")
+    return "v1.0-ICS"
 
 
 def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
@@ -439,6 +438,12 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     if os.path.exists(app_py):
         _add([(app_py, "app.py")])
 
+    # 0b. ipk_starter.py boot starter (src/ipk_starter.py -> ipk_starter.py)
+    # Handles firmware swap from ipk_app_new to ipk_app_main on boot
+    ipk_starter = os.path.join(REPO_ROOT, "src", "ipk_starter.py")
+    if os.path.exists(ipk_starter):
+        _add([(ipk_starter, "ipk_starter.py")])
+
     # 1. Python UI modules (src/lib/*.py -> lib/*.py)
     _add(collect_py_modules(SRC_LIB))
 
@@ -461,8 +466,9 @@ def build_ipk(output_path, serial_number="UNIVERSAL", dry_run=False,
     resources = collect_resources(RES_DIR)
     if not include_flash:
         # Strip firmware files from non-flash variant
+        # Normalize path separators for cross-platform matching
         resources = [(s, p) for s, p in resources
-                     if not p.startswith("res/firmware/")]
+                     if not os.path.normpath(p).startswith(os.path.join("res", "firmware"))]
         print(f"  (--no-flash: excluded res/firmware/ from IPK)")
     _add(resources)
 

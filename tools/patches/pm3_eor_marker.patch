@@ -1,8 +1,8 @@
 diff --git a/client/src/proxmark3.c b/client/src/proxmark3.c
-index 854a5c7..0b7fee0 100644
+index f9dcc69..56bb4a5 100644
 --- a/client/src/proxmark3.c
 +++ b/client/src/proxmark3.c
-@@ -560,6 +560,16 @@ check_script:
+@@ -573,6 +573,16 @@ check_script:
                  g_pendingPrompt = false;
                  mainret = CommandReceived(cmd);
  

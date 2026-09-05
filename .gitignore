@@ -28,6 +28,23 @@ qemu_run.sh
 /tmp/
 tests/flows/_results/
 
+# SD card / device dumps (not project files)
+Nanopicontentsfromsdc/
+build_log*.txt
+docker_build*.log
+docker_build*.sh
+fullimage.elf
+ipk_build.log
+proxmark3.exe
+
+# Editor / tooling scratch (not project files)
+.claude/
+.kilo/
+memory-bank/
+
+# Extracted IPK / local build output (not project files)
+ipk_extract/
+build/docker_fw_out/
 # Debug logs
 icopy_debug.log
 

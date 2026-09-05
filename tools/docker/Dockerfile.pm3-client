@@ -1,8 +1,9 @@
 # Dockerfile for cross-compiling PM3 client for iCopy-X
 #
-# Uses Ubuntu 16.04 (xenial) base with GCC 7 from ubuntu-toolchain-r PPA.
-# This avoids the bionic multiarch apt issues while getting a compiler
-# new enough for the latest PM3 releases (which need C11/GCC7+ features).
+# Uses Ubuntu 16.04 (xenial) base with the default GCC 5.4 cross-compiler.
+# GCC 7 from ubuntu-toolchain-r PPA is no longer available for xenial, so we
+# use the default xenial cross-compiler and apply sed fixups for newer PM3
+# releases (matching the CI workflow in .github/workflows/build-ipk.yml).
 #
 # Usage (from repo root):
 #   docker build -f tools/docker/Dockerfile.pm3-client -t pm3-client-builder .
@@ -19,15 +20,12 @@ RUN echo 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ xenial main restric
     echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted universe' >> /etc/apt/sources.list && \
     echo 'deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted universe' >> /etc/apt/sources.list
 
-# Install base cross-toolchain (GCC 5.4) + add PPA for GCC 7
+# Install default xenial cross-toolchain (GCC 5.4)
 RUN dpkg --add-architecture armhf && \
     apt-get update -qq && \
-    apt-get install -y -qq software-properties-common && \
-    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    apt-get update -qq && \
     apt-get install -y -qq \
-        gcc-7-arm-linux-gnueabihf \
-        g++-7-arm-linux-gnueabihf \
+        gcc-arm-linux-gnueabihf \
+        g++-arm-linux-gnueabihf \
         make \
         pkg-config \
         git \
@@ -35,8 +33,6 @@ RUN dpkg --add-architecture armhf && \
         libbz2-dev:armhf \
         zlib1g-dev:armhf \
         liblz4-dev:armhf && \
-    update-alternatives --install /usr/bin/arm-linux-gnueabihf-gcc arm-linux-gnueabihf-gcc /usr/bin/arm-linux-gnueabihf-gcc-7 100 && \
-    update-alternatives --install /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ /usr/bin/arm-linux-gnueabihf-g++-7 100 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -70,7 +66,13 @@ CMD bash -c '\
             echo "  Skipped (already applied or N/A): $(basename $p)"; \
         fi; \
     done && \
-    echo "Building PM3 client (GCC $(arm-linux-gnueabihf-gcc -dumpversion))..." && \
+    echo "GCC $(arm-linux-gnueabihf-gcc -dumpversion) compat fixups..." && \
+    sed -i "s/-fstack-clash-protection//g" Makefile.defs client/Makefile 2>/dev/null || true && \
+    sed -i "s/static const uint8_t protocol_marker\[\]/const uint8_t protocol_marker[]/" client/src/cmdhfaliro.c 2>/dev/null || true && \
+    if [ -f client/src/cmdhfvas.c ]; then \
+      sed -i "s/^static const uint16_t \(VAS_STATUS_[A-Z_]*\) = \(0x[0-9A-Fa-f]*\);/#define \1 \2/" client/src/cmdhfvas.c; \
+    fi && \
+    echo "Building PM3 client..." && \
     make -j$(nproc) client \
         PLATFORM=${PM3_PLATFORM} \
         CC=arm-linux-gnueabihf-gcc \

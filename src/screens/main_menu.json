@@ -78,6 +78,11 @@
                     "action": "push:lua_script"
                 },
                 {
+                    "label": "ICS Decoder",
+                    "icon": null,
+                    "action": "push:iclass_se"
+                },
+                {
                     "label": "Settings",
                     "icon": "3",
                     "action": "push:settings_menu"

@@ -8161,26 +8161,725 @@ class SniffForSpecificTag(BaseActivity):
 
 
 class IClassSEActivity(BaseActivity):
-    """iClass SE key server integration."""
+    """ICS Decoder bridge - read iClass SE card via USB decoder and write to tag.
+
+    SE-to-Legacy Downgrade Attack:
+        Reads Block 7 / PACS data from HID SEOS/SE cards via USB serial decoder,
+        then writes to legacy iClass/Picopass (HF) or T5577 (LF) blanks via PM3 coil.
+
+    Dual-Frequency Support:
+        HF (13.56 MHz): iClass Legacy / Picopass blanks via iclasswrite
+        LF (125 kHz): T5577 blanks via lf hid clone (HID Prox 26-bit)
+
+    State machine:
+        READING:      polling USB decoder for source SE tag
+        WAIT_BLANK:   source decoded, detecting target blank on coil
+        WRITING:      writing to target tag via PM3 (busy)
+        RESULT:       showing write result, can retry or scan new card
+    """
+
     ACT_NAME = 'iclass_se'
+    STATE_DETECTING = 'detecting'
+    STATE_READING = 'reading'
+    STATE_WAIT_BLANK = 'wait_blank'
+    STATE_WRITING = 'writing'
+    STATE_RESULT = 'result'
+    STATE_DESTROYED = 'destroyed'
+
+    TARGET_HF_ICLASS = 'hf_iclass'
+    TARGET_LF_T5577 = 'lf_t5577'
+
+    _Y_TITLE = 40
+    _Y_STATUS = 70
+    _Y_CARD_START = 100
+    _Y_LINE_HEIGHT = 20
+    _Y_RESULT = 170
+    _Y_PROMPT = 195
+
     def __init__(self, bundle=None):
+        self._ser = None
+        self._state = self.STATE_READING
+        self._poll_timer = None
+        self._target_poll_timer = None
         self._toast = None
+        self._source_data = None
+        self._target_type = None
+        self._last_write_ok = False
+        self._write_blocked_reason = None
+        self._verify_success = None
+        self._verify_msg = ''
+        self._verify_msg2 = ''
         super().__init__(bundle)
+
     def onCreate(self, bundle):
         self.setTitle(resources.get_str('se_decoder'))
         self.setLeftButton(resources.get_str('back'))
-        self.setRightButton(resources.get_str('start'))
+        self.setRightButton('')
         canvas = self.getCanvas()
         if canvas is None:
             return
+
         self._toast = Toast(canvas)
-        from lib.widget import BigTextListView
-        BigTextListView(canvas).drawStr(resources.get_str('iclass_se_read_tips'))
+
+        self._state = self.STATE_DETECTING
+        self._source_data = None
+        self._target_type = None
+        self._ser = None
+        self._render_detecting_state()
+
+        # Run decoder detection in background thread to avoid UI blocking
+        import threading
+        self._detect_thread = threading.Thread(target=self._detect_decoder_bg, daemon=True)
+        self._detect_thread.start()
+
+    def _render_detecting_state(self):
+        """Render 'Searching for decoder...' state."""
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+        self.setLeftButton(resources.get_str('back'))
+        self.setRightButton('')
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text='Searching decoder...',
+            fill='#333333',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_status',
+        )
+
+    def _detect_decoder_bg(self):
+        """Background thread for decoder detection."""
+        try:
+            import ics_decoder
+            ser = ics_decoder.detect_decoder()
+            # Pass result back to main thread
+            from lib import actstack
+            if actstack._root is not None:
+                actstack._root.after(0, self._on_decoder_found, ser)
+            else:
+                self._on_decoder_found(ser)
+        except Exception as e:
+            # Log error and pass None to main thread
+            try:
+                import ics_decoder
+                ics_decoder._log('DETECT_THREAD_ERROR: {}'.format(e))
+            except Exception:
+                pass
+            self._on_decoder_found(None)
+
+    def _on_decoder_found(self, ser):
+        """Called on main thread after decoder detection completes."""
+        try:
+            if ser is None:
+                # No decoder found - show error state
+                self._state = self.STATE_DETECTING
+                self._ser = None
+                self._render_no_decoder_state()
+                return
+
+            # Decoder found - store serial handle and start reading
+            self._ser = ser
+            self._state = self.STATE_READING
+            self._clear_canvas()
+            self._render_reading_state()
+            self._start_poll()
+        except Exception:
+            pass
+
+    def _render_no_decoder_state(self):
+        """Render 'No decoder found' state."""
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+        self.setLeftButton(resources.get_str('back'))
+        self.setRightButton('')
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text='No decoder found!',
+            fill='#8B0000',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_status',
+        )
+        canvas.create_text(
+            120, self._Y_CARD_START,
+            text='Check USB connection',
+            fill='#333333',
+            font=resources.get_font(13),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+
+    def _start_poll(self):
+        self._stop_poll()
+        if self._state != self.STATE_READING:
+            return
+        try:
+            from lib import actstack
+            if actstack._root is not None:
+                self._poll_timer = actstack._root.after(500, self._poll_decoder)
+        except Exception:
+            pass
+
+    def _stop_poll(self):
+        if self._poll_timer is not None:
+            try:
+                from lib import actstack
+                if actstack._root is not None:
+                    actstack._root.after_cancel(self._poll_timer)
+            except Exception:
+                pass
+            self._poll_timer = None
+
+    def _start_target_poll(self):
+        self._stop_target_poll()
+        if self._state != self.STATE_WAIT_BLANK:
+            return
+        try:
+            from lib import actstack
+            if actstack._root is not None:
+                self._target_poll_timer = actstack._root.after(1000, self._poll_target)
+        except Exception:
+            pass
+
+    def _stop_target_poll(self):
+        if self._target_poll_timer is not None:
+            try:
+                from lib import actstack
+                if actstack._root is not None:
+                    actstack._root.after_cancel(self._target_poll_timer)
+            except Exception:
+                pass
+            self._target_poll_timer = None
+
+    def _poll_decoder(self):
+        self._poll_timer = None
+        # Guard: stop if destroyed, not reading, or no serial port
+        if self._state == self.STATE_DESTROYED:
+            return
+        if self._state != self.STATE_READING or self._ser is None:
+            return
+
+        try:
+            import ics_decoder
+            block = ics_decoder.read_card(self._ser)
+        except Exception:
+            block = None
+
+        if block is not None:
+            blk7 = block.get('blk7', '')
+            if blk7:
+                self._source_data = block
+                self._state = self.STATE_WAIT_BLANK
+                self._render_wait_blank_state()
+                self._start_target_poll()
+                return
+        self._start_poll()
+
+    def _poll_target(self):
+        self._target_poll_timer = None
+        # Guard: stop if destroyed or not waiting for blank
+        if self._state == self.STATE_DESTROYED:
+            return
+        if self._state != self.STATE_WAIT_BLANK:
+            return
+
+        try:
+            import ics_decoder
+            self._target_type = ics_decoder.detect_target()
+        except Exception:
+            self._target_type = None
+
+        if self._target_type:
+            self._render_wait_blank_state()
+        else:
+            self._start_target_poll()
+
+    def _do_write(self):
+        source = self._source_data
+        if not source:
+            self._last_write_ok = False
+            self._verify_success = None
+            self._verify_msg = ''
+            self._verify_msg2 = ''
+            self._on_write_done()
+            return
+
+        # Stop all polling timers to prevent serial port lock collisions
+        self._stop_poll()
+        self._stop_target_poll()
+
+        try:
+            import ics_decoder
+            # Re-detect target before writing to ensure card is still present
+            self._target_type = ics_decoder.detect_target()
+            if not self._target_type:
+                self._last_write_ok = False
+                self._verify_success = None
+                self._verify_msg = ''
+                self._verify_msg2 = ''
+                self._on_write_done()
+                return
+
+            fc = source.get('fc', 0)
+            cid = source.get('id', 0)
+            is_26bit = ics_decoder.is_valid_26bit(fc, cid)
+
+            if self._target_type == self.TARGET_LF_T5577:
+                if not is_26bit:
+                    self._last_write_ok = False
+                    self._write_blocked_reason = 'non_26bit_lf'
+                    self._verify_success = None
+                    self._verify_msg = ''
+                    self._verify_msg2 = ''
+                    self._on_write_done()
+                    return
+                self._write_blocked_reason = None
+                ok = ics_decoder.write_to_t5577(fc, cid)
+            else:
+                self._write_blocked_reason = None
+                blk7 = source.get('blk7', '')
+                ok = ics_decoder.write_to_card(blk7) if blk7 else False
+        except Exception:
+            ok = False
+
+        self._last_write_ok = ok
+        self._verify_success = None
+        self._verify_msg = ''
+        self._verify_msg2 = ''
+
+        try:
+            from lib import actstack
+            if actstack._root is not None:
+                actstack._root.after(0, self._on_write_done)
+            else:
+                self._on_write_done()
+        except Exception:
+            self._on_write_done()
+
+    def _on_write_done(self):
+        self._state = self.STATE_RESULT
+        self.setidle()
+        self._render_result_state()
+
+    def _clear_canvas(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        # Delete all text items by tag
+        for tag in ('_ics_status', '_ics_card_info', '_ics_prompt', '_ics_result', '_ics_target', '_ics_verify', '_ics_verify2', '_ics_bg_clear'):
+            canvas.delete(tag)
+        # Clear content area with background color to prevent text overwriting
+        canvas.create_rectangle(
+            0, 40, 240, 200,
+            fill='#F8FCF8', outline='#F8FCF8',
+            tags='_ics_bg_clear',
+        )
+
+    def _get_target_display_name(self):
+        if self._target_type == self.TARGET_HF_ICLASS:
+            return 'iClass Blank'
+        elif self._target_type == self.TARGET_LF_T5577:
+            return 'T5577 (HID Prox)'
+        return None
+
+    def _render_reading_state(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+
+        self.setLeftButton(resources.get_str('back'))
+        self.setRightButton('')
+
+        if self._ser is not None and getattr(self._ser, 'is_open', False):
+            status_msg = 'ICS Decoder connected'
+            status_color = '#006400'
+        else:
+            status_msg = 'No decoder found'
+            status_color = '#8B0000'
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text=status_msg,
+            fill=status_color,
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_status',
+        )
+
+        canvas.create_text(
+            120, self._Y_CARD_START,
+            text='Place source tag',
+            fill='#333333',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+        canvas.create_text(
+            120, self._Y_CARD_START + self._Y_LINE_HEIGHT,
+            text='on reader...',
+            fill='#333333',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+
+    def _render_wait_blank_state(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+
+        block = self._source_data
+        fc = block.get('fc', '?')
+        cid = block.get('id', '?')
+        blk7 = block.get('blk7', '?')
+
+        try:
+            import ics_decoder
+            is_26bit = ics_decoder.is_valid_26bit(fc, cid) if block else True
+        except Exception:
+            is_26bit = True
+
+        self.setLeftButton(resources.get_str('back'))
+        self.setRightButton('Write')
+
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text='Source decoded!',
+            fill='#006400',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_card_info',
+        )
+        y = self._Y_CARD_START
+        for line in ['FC: %s' % fc, 'ID: %s' % cid, 'Blk7: %s' % blk7]:
+            # Truncate to prevent writing off display (240px wide)
+            display_line = line[:25]
+            canvas.create_text(
+                120, y,
+                text=display_line,
+                fill='#000000',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_card_info',
+            )
+            y += self._Y_LINE_HEIGHT
+
+        target_name = self._get_target_display_name()
+        if not is_26bit and self._target_type == self.TARGET_LF_T5577:
+            canvas.create_text(
+                120, self._Y_PROMPT,
+                text='HF iClass Required',
+                fill='#8B0000',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_target',
+            )
+        elif target_name:
+            canvas.create_text(
+                120, self._Y_PROMPT,
+                text='Target: %s' % target_name,
+                fill='#006400',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_target',
+            )
+        else:
+            if is_26bit:
+                prompt_text = 'Place blank on coil...'
+            else:
+                prompt_text = 'Place HF iClass blank...'
+            canvas.create_text(
+                120, self._Y_PROMPT,
+                text=prompt_text,
+                fill='#333333',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_prompt',
+            )
+
+        canvas.create_text(
+            120, self._Y_PROMPT + self._Y_LINE_HEIGHT,
+            text='press Write to copy',
+            fill='#333333',
+            font=resources.get_font(13),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+
+    def _render_writing_state(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+
+        self.setLeftButton('')
+        self.setRightButton('')
+
+        target_name = self._get_target_display_name()
+        if target_name:
+            write_msg = 'Writing %s...' % target_name
+        else:
+            write_msg = 'Writing...'
+
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text=write_msg,
+            fill='#333333',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_result',
+        )
+        canvas.create_text(
+            120, self._Y_CARD_START,
+            text='Do not move tag!',
+            fill='#8B0000',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+
+    def _render_result_state(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+
+        self.setLeftButton('Verify')
+        self.setRightButton('Retry')
+
+        ok = self._last_write_ok
+        blocked = self._write_blocked_reason
+        verify = self._verify_success
+        verify_msg = self._verify_msg
+        verify_msg2 = self._verify_msg2
+
+        if blocked == 'non_26bit_lf':
+            result_msg = 'Non-26b SIO!'
+            result_color = '#8B0000'
+        elif self._target_type is None:
+            result_msg = 'No card detected!'
+            result_color = '#8B0000'
+        elif not ok:
+            result_msg = 'Write Failed!'
+            result_color = '#8B0000'
+        elif verify is True:
+            result_msg = 'Verified OK!'
+            result_color = '#006400'
+        elif verify is False:
+            result_msg = 'Verify Mismatch!'
+            result_color = '#8B0000'
+        else:
+            result_msg = 'Write OK'
+            result_color = '#006400'
+
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text=result_msg,
+            fill=result_color,
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_result',
+        )
+
+        if blocked == 'non_26bit_lf':
+            canvas.create_text(
+                120, self._Y_CARD_START,
+                text='HF iClass Blank Required',
+                fill='#8B0000',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_prompt',
+            )
+        else:
+            block = self._source_data
+            if block:
+                fc = block.get('fc', '?')
+                cid = block.get('id', '?')
+                blk7 = block.get('blk7', '?')
+                y = self._Y_CARD_START
+                for line in ['FC: %s' % fc, 'ID: %s' % cid, 'Blk7: %s' % blk7]:
+                    # Truncate to prevent writing off display (240px wide)
+                    display_line = line[:25]
+                    canvas.create_text(
+                        120, y,
+                        text=display_line,
+                        fill='#000000',
+                        font=resources.get_font(13),
+                        anchor='center',
+                        tags='_ics_card_info',
+                    )
+                    y += self._Y_LINE_HEIGHT
+
+        if verify_msg:
+            canvas.create_text(
+                120, self._Y_PROMPT,
+                text=verify_msg,
+                fill=result_color,
+                font=resources.get_font(12),
+                anchor='center',
+                tags='_ics_verify',
+            )
+            if verify_msg2:
+                canvas.create_text(
+                    120, self._Y_PROMPT + self._Y_LINE_HEIGHT,
+                    text=verify_msg2,
+                    fill=result_color,
+                    font=resources.get_font(12),
+                    anchor='center',
+                    tags='_ics_verify2',
+                )
+        else:
+            target_name = self._get_target_display_name()
+            if target_name:
+                canvas.create_text(
+                    120, self._Y_PROMPT,
+                    text='Target: %s' % target_name,
+                    fill='#006400',
+                    font=resources.get_font(13),
+                    anchor='center',
+                    tags='_ics_target',
+                )
+
+            canvas.create_text(
+                120, self._Y_PROMPT + self._Y_LINE_HEIGHT,
+                text='Retry / Verify',
+                fill='#333333',
+                font=resources.get_font(13),
+                anchor='center',
+                tags='_ics_prompt',
+            )
+
     def onKeyEvent(self, key):
-        if key in (KEY_M1, KEY_PWR):
-            if key == KEY_PWR and self._handlePWR():
+        # Power button always works - finish activity immediately
+        if key == KEY_PWR:
+            if self._handlePWR():
                 return
             self.finish()
+            return
+
+        # Back button (M1) - behavior depends on state
+        if key == KEY_M1:
+            if self._state == self.STATE_RESULT:
+                # In result state, M1 triggers verify
+                self._do_verify()
+            else:
+                # In all other states, M1 goes back
+                self.finish()
+            return
+
+        # Write/Retry button (M2/OK)
+        if key in (KEY_OK, KEY_M2):
+            if self._state == self.STATE_WAIT_BLANK:
+                if self._source_data:
+                    self._stop_target_poll()
+                    self._state = self.STATE_WRITING
+                    self.setbusy()
+                    self._render_writing_state()
+                    self.startBGTask(self._do_write)
+            elif self._state == self.STATE_RESULT:
+                if self._source_data:
+                    self._state = self.STATE_WRITING
+                    self.setbusy()
+                    self._render_writing_state()
+                    self.startBGTask(self._do_write)
+
+    def _do_verify(self):
+        """Perform fresh verification read of target card."""
+        if not self._source_data:
+            return
+        self._state = self.STATE_WRITING
+        self.setbusy()
+        self._render_verifying_state()
+        self.startBGTask(self._do_verify_bg)
+
+    def _render_verifying_state(self):
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        self._clear_canvas()
+        self.setLeftButton('')
+        self.setRightButton('')
+        canvas.create_text(
+            120, self._Y_STATUS,
+            text='Verifying...',
+            fill='#333333',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_result',
+        )
+        canvas.create_text(
+            120, self._Y_CARD_START,
+            text='Reading card...',
+            fill='#8B0000',
+            font=resources.get_font(14),
+            anchor='center',
+            tags='_ics_prompt',
+        )
+
+    def _do_verify_bg(self):
+        """Background verification task."""
+        try:
+            import ics_decoder
+            self._target_type = ics_decoder.detect_target()
+            if self._target_type:
+                success, msg = ics_decoder.verify_target_card(
+                    self._target_type, self._source_data)
+                self._verify_success = success
+                # Format message for 240px display (max ~20 chars per line)
+                if '!=' in msg:
+                    parts = msg.split('!=')
+                    self._verify_msg = parts[0].strip()[:18]
+                    self._verify_msg2 = parts[1].strip()[:18]
+                elif ' vs ' in msg:
+                    parts = msg.split(' vs ')
+                    self._verify_msg = parts[0].strip()[:18]
+                    self._verify_msg2 = parts[1].strip()[:18]
+                else:
+                    self._verify_msg = msg[:20]
+                    self._verify_msg2 = ''
+            else:
+                self._verify_success = False
+                self._verify_msg = 'No card on coil'
+                self._verify_msg2 = ''
+        except Exception:
+            self._verify_success = False
+            self._verify_msg = 'Verify error'
+            self._verify_msg2 = ''
+
+        # Schedule UI update on main thread (Tkinter is not thread-safe)
+        try:
+            from lib import actstack
+            if actstack._root is not None:
+                actstack._root.after(0, self._on_verify_done)
+            else:
+                self._on_verify_done()
+        except Exception:
+            self._on_verify_done()
+
+    def _on_verify_done(self):
+        """Called on main thread after background verify completes."""
+        self._state = self.STATE_RESULT
+        self.setidle()
+        self._render_result_state()
+
+    def onDestroy(self):
+        # Mark as destroyed FIRST to stop all polling/background work
+        self._state = self.STATE_DESTROYED
+        self._stop_poll()
+        self._stop_target_poll()
+        # Close serial port safely without blocking
+        if self._ser is not None:
+            try:
+                self._ser.close()
+            except Exception:
+                pass
+            self._ser = None
+        super().onDestroy()
 
 
 class WearableDeviceActivity(BaseActivity):
