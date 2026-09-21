@@ -20,6 +20,7 @@ from _constants import (
     BTN_BAR_Y0, TAG_BTN_LEFT, TAG_BTN_RIGHT,
 )
 from plugin_activity import PluginActivity
+from lib.actbase import BaseActivity
 
 
 # =====================================================================
@@ -288,3 +289,55 @@ class TestButtonBar:
         assert act._m2_active is False
         act.callKeyEvent(KEY_M2)
         assert act._current_state_id == 'main'
+
+
+# =====================================================================
+# Custom activity delegation (ui.json-less BaseActivity plugins)
+# =====================================================================
+
+class _DummyCustomActivity(BaseActivity):
+    """A plugin entry class that is itself a BaseActivity (no ui.json)."""
+
+    def onCreate(self, bundle):
+        self.setTitle('Custom')
+        canvas = self.getCanvas()
+        if canvas is not None:
+            canvas.create_text(120, 100, text='Custom Rendered')
+
+    def onKeyEvent(self, key):
+        if key == KEY_PWR:
+            self.finish()
+
+
+def _custom_bundle(entry_class):
+    return {
+        'plugin_dir': '/tmp/custom_plugin',
+        'manifest': {'name': 'Custom', 'version': '1.0.0'},
+        'ui_definition': None,
+        'entry_class': entry_class,
+        'plugin_key': 'custom_plugin',
+    }
+
+
+class TestCustomActivityDelegation:
+    def test_child_survives_and_renders(self):
+        """PluginActivity must not pop the child it just started.
+
+        Regression: it pushed the child and then called finish(), which pops
+        the top of the stack -- the child -- leaving a blank wrapper screen
+        (no title, no buttons).
+        """
+        actstack.start_activity(PluginActivity, _custom_bundle(_DummyCustomActivity))
+        top = actstack.get_current_activity()
+        assert type(top).__name__ == '_DummyCustomActivity'
+        assert actstack.get_stack_size() == 1
+        canvas = top.getCanvas()
+        texts = [canvas.itemcget(i, 'text') for i in canvas.find_all()
+                 if canvas.type(i) == 'text']
+        assert any('Custom Rendered' in t for t in texts)
+
+    def test_child_finish_returns_to_root(self):
+        actstack.start_activity(PluginActivity, _custom_bundle(_DummyCustomActivity))
+        top = actstack.get_current_activity()
+        top.callKeyEvent(KEY_PWR)
+        assert actstack.get_stack_size() == 0

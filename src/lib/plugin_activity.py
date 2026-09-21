@@ -148,7 +148,8 @@ class PluginActivity(BaseActivity):
             self._renderer.set_translator(self.tr)
 
         # If entry_class is a BaseActivity subclass with no ui.json,
-        # delegate entirely: launch it as a child activity.
+        # delegate entirely: launch it as a child activity and drop the
+        # PluginActivity wrapper so the child stays on top of the stack.
         if self._entry_class is not None and self._ui_def is None:
             if _is_activity_subclass(self._entry_class):
                 # Launch the plugin's own activity class directly.
@@ -156,8 +157,26 @@ class PluginActivity(BaseActivity):
                 child_bundle = dict(bundle)
                 child_bundle['_host'] = self
                 actstack.start_activity(self._entry_class, child_bundle)
-                # We finish ourselves since the child takes over.
-                self.finish()
+                # start_activity() already paused/hid us and pushed the
+                # child above us.  Remove this wrapper from the stack
+                # *without* popping the child: finish() would pop the top
+                # entry, which is the child we just started, destroying it
+                # and leaving an empty screen behind.
+                stack = actstack.get_activity_pck()
+                try:
+                    stack.remove(self)
+                except ValueError:
+                    pass
+                self.onDestroy()
+                self.life.destroyed = True
+                if self._canvas is not None:
+                    try:
+                        self._canvas.destroy()
+                    except Exception:
+                        pass
+                # Detach the canvas so the onResume() Activity.start() calls
+                # on us after onCreate() returns is a harmless no-op.
+                self._canvas = None
                 return
 
         # Create plugin instance (for run:<method> dispatch) if we have
