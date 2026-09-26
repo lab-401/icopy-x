@@ -29,6 +29,7 @@ Ground truth:
     Audit:    docs/V1090_MODULE_AUDIT.txt
 """
 
+import json
 import os
 import re
 
@@ -333,6 +334,167 @@ def rename_dump_set(path, new_stem, whole_set=True):
         return RENAME_FAILED, path
 
     return RENAME_OK, os.path.join(directory, new_stem + os.path.splitext(path)[1])
+
+
+# ---------------------------------------------------------------------------
+# Dump content readers (shared by Tag Info and plugins)
+#
+# Read identifying values from inside a dump set rather than its filename,
+# so renamed dumps still work. *path* may be any file of the set (.bin,
+# .json, .eml, .txt); siblings are found by the name before the extension.
+# Every reader returns None when the value can't be read, and hex values
+# are uppercase with no spaces. They only read file contents: callers that
+# prefer a device-format filename decide that order themselves.
+# ---------------------------------------------------------------------------
+
+# .bin length -> MIFARE Classic size label (hfmfread.create_name_by_type)
+DUMP_MF1_SIZES = {320: 'Mini', 1024: '1K', 2048: 'Plus-2K', 4096: '4K'}
+
+# iceman mfu_dump_t header length (include/mifare.h MFU_DUMP_PREFIX_LENGTH)
+MFU_DUMP_HEADER_LEN = 56
+
+
+def _is_hex(value, length=None):
+    """True if *value* is a non-empty hex string (of *length* chars)."""
+    if not value or (length is not None and len(value) != length):
+        return False
+    return all(c in '0123456789ABCDEFabcdef' for c in value)
+
+
+def _dump_sibling(path, ext, mode='rb'):
+    """Contents of the file in *path*'s dump set with extension *ext*, or None."""
+    if not path:
+        return None
+    try:
+        with open(os.path.splitext(path)[0] + ext, mode) as f:
+            return f.read()
+    except Exception:
+        return None
+
+
+def dump_json_card(path):
+    """The 'Card' dict from the dump set's iceman .json sidecar, or {}."""
+    text = _dump_sibling(path, '.json', 'r')
+    if not text:
+        return {}
+    try:
+        card = json.loads(text).get('Card', {})
+        return card if isinstance(card, dict) else {}
+    except Exception:
+        return {}
+
+
+def dump_mf1_size(path):
+    """MIFARE Classic size from the .bin length: 'Mini', '1K', 'Plus-2K', '4K'.
+
+    Returns None when there is no .bin or its length isn't a known size.
+    """
+    data = _dump_sibling(path, '.bin')
+    if data is None:
+        return None
+    return DUMP_MF1_SIZES.get(len(data))
+
+
+def dump_mf1_block0(path):
+    """(uid, uid_len, sak, atqa) from .bin block 0, or None.
+
+    Mirrors iceman pm3_save_mf_dump() (client/src/fileutils.c):
+      4-byte UID: BCC matches and ATQA single-size bits clear
+                  -> UID b0-3, SAK b5, ATQA b6-7
+      7-byte UID: ATQA double-size bits set
+                  -> UID b0-6, SAK b7, ATQA b8-9
+    Block ATQA is little-endian; the result uses display order ('0004').
+    """
+    data = _dump_sibling(path, '.bin')
+    if not data or len(data) < 16:
+        return None
+    d = bytearray(data[:16])
+    if (d[0] ^ d[1] ^ d[2] ^ d[3]) == d[4] and (d[6] & 0xC0) == 0:
+        return (bytes(d[0:4]).hex().upper(), 4,
+                '%02X' % d[5], '%02X%02X' % (d[7], d[6]))
+    if (d[8] & 0xC0) == 0x40:
+        return (bytes(d[0:7]).hex().upper(), 7,
+                '%02X' % d[7], '%02X%02X' % (d[9], d[8]))
+    return None
+
+
+def dump_mf1_card(path):
+    """(uid, uid_len, sak, atqa) for a MIFARE Classic dump, or None.
+
+    The .json Card values first (as saved from the anticollision response),
+    then block 0 (dump_mf1_block0). From the .json, sak/atqa are None if
+    not stored; ATQA is swapped from the JSON's little-endian order.
+    """
+    card = dump_json_card(path)
+    uid = card.get('UID', '')
+    if _is_hex(uid) and len(uid) in (8, 14, 20):
+        sak = card.get('SAK', '')
+        atqa = card.get('ATQA', '')
+        return (uid.upper(), len(uid) // 2,
+                sak.upper() if _is_hex(sak, 2) else None,
+                (atqa[2:4] + atqa[0:2]).upper() if _is_hex(atqa, 4) else None)
+    return dump_mf1_block0(path)
+
+
+def dump_mfu_uid(path):
+    """7-byte Ultralight/NTAG UID (14 hex chars), or None.
+
+    Order: .json Card.UID (iceman jsfMfuMemory), then the .bin page data
+    after the 56-byte header (UID = page0[0:3] + page1[0:4]). The .bin is
+    only trusted when its length matches the header's page count (header
+    byte 11 = last page index).
+    """
+    uid = dump_json_card(path).get('UID', '')
+    if _is_hex(uid, 14):
+        return uid.upper()
+    data = _dump_sibling(path, '.bin')
+    hdr = MFU_DUMP_HEADER_LEN
+    if not data or len(data) < hdr + 8:
+        return None
+    if len(data) != hdr + 4 * (data[11] + 1):
+        return None
+    return (data[hdr:hdr + 3] + data[hdr + 4:hdr + 8]).hex().upper()
+
+
+def dump_t55xx_b0(path):
+    """T55xx block 0 (8 hex chars) from the 48-byte .bin, or None.
+
+    iceman CmdT55xxDump saves each block big-endian, so block 0 is the
+    first 4 bytes in display order. An all-zero block 0 is treated as
+    invalid (iceman restore refuses to write it too).
+    """
+    data = _dump_sibling(path, '.bin')
+    if not data or len(data) != 48:
+        return None
+    b0 = data[0:4]
+    if b0 == b'\x00\x00\x00\x00':
+        return None
+    return b0.hex().upper()
+
+
+def dump_hf14a_uid(path):
+    """UID from the 'UID: <uid>' line hf14aread saves in its .txt, or None."""
+    text = _dump_sibling(path, '.txt', 'r')
+    if not text:
+        return None
+    for line in text.split('\n'):
+        if line.startswith('UID:'):
+            uid = line[len('UID:'):].strip()
+            return uid.upper() if _is_hex(uid) else None
+    return None
+
+
+def dump_uid(path):
+    """UID of a dump, chosen by its dump folder (mf1, mfu, hf14a), or None."""
+    folder = os.path.basename(os.path.dirname(path or ''))
+    if folder == DIR_NAME_M1:
+        card = dump_mf1_card(path)
+        return card[0] if card else None
+    if folder == DIR_NAME_MFU:
+        return dump_mfu_uid(path)
+    if folder == DIR_NAME_HF14A:
+        return dump_hf14a_uid(path)
+    return None
 
 
 def log_to_file(msg):
