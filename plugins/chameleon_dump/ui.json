@@ -1,0 +1,345 @@
+{
+    "plugin": true,
+    "name": "Chameleon Dump",
+    "version": "1.0.0",
+    "initial_state": "menu",
+    "states": {
+        "menu": {
+            "screen": {
+                "title": "Chameleon Dump",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 4,
+                    "items": [
+                        {"label": "Write to Chameleon", "action": "set_state:home"},
+                        {"label": "Read to Dump", "action": "set_state:read_home"}
+                    ]
+                },
+                "buttons": {"left": "Exit", "right": "OK"},
+                "keys": {
+                    "OK": "select",
+                    "M2": "select",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "M1": "finish"
+                }
+            }
+        },
+        "home": {
+            "on_enter": "run:start",
+            "screen": {
+                "title": "Chameleon Dump",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Connect a", "size": "normal"},
+                        {"text": "Chameleon", "size": "normal"},
+                        {"text": "(Ultra / Tiny)", "size": "normal"},
+                        {"text": "to the iCopy-X", "size": "normal"},
+                        {"text": "USB port.", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Scanning...", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Rescan"},
+                "keys": {
+                    "OK": "run:start",
+                    "M2": "run:start",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "select_dump",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "select_dump": {
+            "screen": {
+                "title": "Select Dump",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 4,
+                    "items": []
+                },
+                "buttons": {"left": "Back", "right": "OK"},
+                "keys": {
+                    "OK": "select",
+                    "M2": "select",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "select_slot",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "select_slot": {
+            "screen": {
+                "title": "Slot",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 4,
+                    "items": [
+                        {"label": "Slot 1", "action": "run:choose_slot"},
+                        {"label": "Slot 2", "action": "run:choose_slot"},
+                        {"label": "Slot 3", "action": "run:choose_slot"},
+                        {"label": "Slot 4", "action": "run:choose_slot"},
+                        {"label": "Slot 5", "action": "run:choose_slot"},
+                        {"label": "Slot 6", "action": "run:choose_slot"},
+                        {"label": "Slot 7", "action": "run:choose_slot"},
+                        {"label": "Slot 8", "action": "run:choose_slot"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "OK"},
+                "keys": {
+                    "OK": "select",
+                    "M2": "select",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "M1": "set_state:select_dump"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "confirm",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "confirm": {
+            "screen": {
+                "title": "Confirm",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Write to {slot_text}", "size": "medium"},
+                        {"text": "{dump_name}", "size": "normal"},
+                        {"text": "{card_type}", "size": "normal"},
+                        {"text": "UID {dump_uid}", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Write"},
+                "keys": {
+                    "OK": "set_state:writing",
+                    "M2": "set_state:writing",
+                    "M1": "set_state:select_slot"
+                }
+            }
+        },
+        "writing": {
+            "on_enter": "run:do_write",
+            "screen": {
+                "title": "Writing",
+                "content": {
+                    "type": "progress",
+                    "message": "{progress_message}",
+                    "value": "{progress_value}",
+                    "max": 100
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "result_ok",
+                "on_result.status==fail": "result_fail",
+                "on_error": "result_fail"
+            }
+        },
+        "result_ok": {
+            "screen": {
+                "title": "Success",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{result_title}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "{result_detail}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Done", "right": "Again"},
+                "keys": {
+                    "OK": "finish",
+                    "M1": "finish",
+                    "M2": "set_state:select_dump"
+                }
+            }
+        },
+        "result_fail": {
+            "screen": {
+                "title": "Failed",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{result_title}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "{result_detail}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Dumps", "right": "Retry"},
+                "keys": {
+                    "OK": "set_state:confirm",
+                    "M1": "set_state:select_dump",
+                    "M2": "set_state:confirm"
+                }
+            }
+        },
+        "read_home": {
+            "on_enter": "run:start_read",
+            "screen": {
+                "title": "Read to Dump",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Connect a", "size": "normal"},
+                        {"text": "Chameleon", "size": "normal"},
+                        {"text": "(Ultra / Tiny)", "size": "normal"},
+                        {"text": "to the iCopy-X", "size": "normal"},
+                        {"text": "USB port.", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Scanning slots...", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Rescan"},
+                "keys": {
+                    "OK": "run:start_read",
+                    "M2": "run:start_read",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "read_slot",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "read_slot": {
+            "screen": {
+                "title": "Read Slot",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 4,
+                    "items": []
+                },
+                "buttons": {"left": "Back", "right": "OK"},
+                "keys": {
+                    "OK": "select",
+                    "M2": "select",
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "read_confirm",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "read_confirm": {
+            "screen": {
+                "title": "Confirm",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Read {read_slot_text}", "size": "medium"},
+                        {"text": "{read_type}", "size": "normal"},
+                        {"text": "", "size": "normal"},
+                        {"text": "Save as a dump", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Read"},
+                "keys": {
+                    "OK": "set_state:reading",
+                    "M2": "set_state:reading",
+                    "M1": "set_state:read_slot"
+                }
+            }
+        },
+        "reading": {
+            "on_enter": "run:do_read",
+            "screen": {
+                "title": "Reading",
+                "content": {
+                    "type": "progress",
+                    "message": "{progress_message}",
+                    "value": "{progress_value}",
+                    "max": 100
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "read_ok",
+                "on_result.status==fail": "read_fail",
+                "on_error": "read_fail"
+            }
+        },
+        "read_ok": {
+            "screen": {
+                "title": "Saved",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{result_title}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "{result_detail}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Done", "right": "More"},
+                "keys": {
+                    "OK": "finish",
+                    "M1": "finish",
+                    "M2": "set_state:read_home"
+                }
+            }
+        },
+        "read_fail": {
+            "screen": {
+                "title": "Failed",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{result_title}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "{result_detail}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Slots", "right": "Retry"},
+                "keys": {
+                    "OK": "set_state:reading",
+                    "M1": "set_state:read_home",
+                    "M2": "set_state:reading"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "Chameleon Dump",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"}
+                    ],
+                    "scrollable": true
+                },
+                "buttons": {"left": "Exit", "right": "Menu"},
+                "keys": {
+                    "OK": "set_state:menu",
+                    "M2": "set_state:menu",
+                    "M1": "finish"
+                }
+            }
+        }
+    }
+}

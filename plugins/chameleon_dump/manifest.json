@@ -1,0 +1,9 @@
+{
+    "name": "Chameleon Dump",
+    "version": "1.0.0",
+    "author": "Vost02",
+    "description": "Write an iCopy-X dump into a Chameleon Ultra or Tiny slot, or read a slot back out as a dump (auto-detects the device)",
+    "entry_class": "ChameleonDumpPlugin",
+    "permissions": [],
+    "order": 45
+}
