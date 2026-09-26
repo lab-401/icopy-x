@@ -9109,9 +9109,9 @@ class ReadFromHistoryActivity(BaseActivity):
     #
     # Dumps can be renamed. While a filename is still in the device's own
     # format it is used exactly as before, so un-renamed dumps behave
-    # identically. Once renamed, the values below are read from the dump
-    # files themselves; if a file can't provide a value, the previous
-    # filename-based default is kept.
+    # identically. Once renamed, values are read from the dump files
+    # themselves via the shared appfiles.dump_* readers; if a file can't
+    # provide a value, the previous filename-based default is kept.
     # ------------------------------------------------------------------
 
     # Device-created filename formats (appfiles / hfmfuread / hf14aread).
@@ -9120,13 +9120,8 @@ class ReadFromHistoryActivity(BaseActivity):
     _T55XX_NAME_RE = r'^T55xx_[0-9A-Fa-f]{8}_[0-9A-Fa-f]{8}_[0-9A-Fa-f]{8}_\d+\.'
     _HF14A_NAME_RE = r'^HF14A_[0-9A-Fa-f]+_\d+\.'
 
-    # .bin length -> M1 size label. 2048 (Plus 2K) is intentionally absent:
-    # a device-named Plus 2K dump is handled as 1K, and a renamed one keeps
-    # that same behaviour.
-    _MF1_SIZE_BY_BYTES = {320: 'Mini', 1024: '1K', 4096: '4K'}
-
-    # iceman mfu_dump_t header length (include/mifare.h MFU_DUMP_PREFIX_LENGTH)
-    _MFU_HEADER_LEN = 56
+    # M1 sizes Tag Info takes from the .bin length (renamed dumps).
+    _MF1_FILE_SIZES = ('Mini', '1K', 'Plus-2K', '4K')
 
     def _isDeviceDumpName(self, pattern):
         """True if the dump filename still matches the device-created format."""
@@ -9134,115 +9129,6 @@ class ReadFromHistoryActivity(BaseActivity):
         if not self._file_path:
             return False
         return re.match(pattern, os.path.basename(self._file_path)) is not None
-
-    def _readDumpSibling(self, ext, mode='rb'):
-        """Read the file in this dump set with extension *ext*, or None."""
-        if not self._file_path:
-            return None
-        path = os.path.splitext(self._file_path)[0] + ext
-        try:
-            with open(path, mode) as f:
-                return f.read()
-        except Exception:
-            return None
-
-    def _readDumpJsonCard(self):
-        """Return the 'Card' dict from this dump set's .json sidecar, or {}."""
-        text = self._readDumpSibling('.json', 'r')
-        if not text:
-            return {}
-        try:
-            import json as _json
-            card = _json.loads(text).get('Card', {})
-            return card if isinstance(card, dict) else {}
-        except Exception:
-            return {}
-
-    @staticmethod
-    def _isHex(value, length=None):
-        """True if *value* is a non-empty hex string (of *length* chars)."""
-        if not value or (length is not None and len(value) != length):
-            return False
-        return all(c in '0123456789ABCDEFabcdef' for c in value)
-
-    def _mf1SizeFromFile(self):
-        """M1 size label from the .bin length, or None if not a known size."""
-        data = self._readDumpSibling('.bin')
-        if data is None:
-            return None
-        return self._MF1_SIZE_BY_BYTES.get(len(data))
-
-    def _mf1CardFromBlock0(self):
-        """UID/SAK/ATQA from .bin block 0, or None.
-
-        Mirrors iceman pm3_save_mf_dump() (client/src/fileutils.c):
-          4-byte UID: BCC matches and ATQA single-size bits clear
-                      -> UID b0-3, SAK b5, ATQA b6-7
-          7-byte UID: ATQA double-size bits set
-                      -> UID b0-6, SAK b7, ATQA b8-9
-        Block ATQA is little-endian; the scan cache uses display order.
-        Returns (uid, uid_len, sak, atqa) or None.
-        """
-        data = self._readDumpSibling('.bin')
-        if not data or len(data) < 16:
-            return None
-        d = bytearray(data[:16])
-        if (d[0] ^ d[1] ^ d[2] ^ d[3]) == d[4] and (d[6] & 0xC0) == 0:
-            return (bytes(d[0:4]).hex().upper(), 4,
-                    '%02X' % d[5], '%02X%02X' % (d[7], d[6]))
-        if (d[8] & 0xC0) == 0x40:
-            return (bytes(d[0:7]).hex().upper(), 7,
-                    '%02X' % d[7], '%02X%02X' % (d[9], d[8]))
-        return None
-
-    def _mfuUidFromFile(self):
-        """7-byte UID from the dump set, or None.
-
-        Order: .json Card.UID (iceman jsfMfuMemory), then the .bin page
-        data after the 56-byte header (UID = page0[0:3] + page1[0:4]).
-        The .bin is only trusted when its length matches the header's
-        page count (header byte 11 = last page index).
-        """
-        uid = self._readDumpJsonCard().get('UID', '')
-        if self._isHex(uid, 14):
-            return uid.upper()
-        data = self._readDumpSibling('.bin')
-        hdr = self._MFU_HEADER_LEN
-        if not data or len(data) < hdr + 8:
-            return None
-        if len(data) != hdr + 4 * (data[11] + 1):
-            return None
-        return (data[hdr:hdr + 3] + data[hdr + 4:hdr + 8]).hex().upper()
-
-    def _t55xxB0FromFile(self):
-        """Block 0 from the 48-byte T55xx .bin, or None.
-
-        iceman CmdT55xxDump saves each block big-endian, so block 0 is the
-        first 4 bytes in display order. An all-zero block 0 is treated as
-        invalid (iceman restore refuses to write it too).
-        """
-        data = self._readDumpSibling('.bin')
-        if not data or len(data) != 48:
-            return None
-        b0 = data[0:4]
-        if b0 == b'\x00\x00\x00\x00':
-            return None
-        return b0.hex().upper()
-
-    def _hf14aUidFromFile(self):
-        """UID from the 'UID: <uid>' line hf14aread saves, or None."""
-        if not self._file_path:
-            return None
-        try:
-            with open(self._file_path, 'r') as f:
-                lines = f.read().split('\n')
-        except Exception:
-            return None
-        for line in lines:
-            if line.startswith('UID:'):
-                uid = line[len('UID:'):].strip()
-                return uid.upper() if self._isHex(uid) else None
-        return None
 
     def _buildScanCache(self):
         """Build scan cache dict matching scan.so output format.
@@ -9306,8 +9192,11 @@ class ReadFromHistoryActivity(BaseActivity):
             sak_from_b0 = None
             atqa_from_b0 = None
             if not info:
-                size = self._mf1SizeFromFile() or size
-                b0_card = self._mf1CardFromBlock0()
+                import appfiles
+                file_size = appfiles.dump_mf1_size(self._file_path)
+                if file_size in self._MF1_FILE_SIZES:
+                    size = file_size
+                b0_card = appfiles.dump_mf1_block0(self._file_path)
                 if b0_card:
                     uid_from_b0, b0_len, sak_from_b0, atqa_from_b0 = b0_card
                     cache['len'] = b0_len
@@ -9333,21 +9222,31 @@ class ReadFromHistoryActivity(BaseActivity):
                 cache['atqa'] = atqa
                 cache['nameStr'] = 'M1 Mini 0.3K'
                 cache['type'] = 25
+            elif size == 'Plus-2K':
+                # Plus 2K (2048 bytes, 32 sectors): type 26 so the write
+                # path sizes it as 2K (hfmfread.sizeGuess(26) == 2048)
+                # instead of falling through to the 1K branch below.
+                cache['sak'] = sak
+                cache['atqa'] = atqa
+                cache['nameStr'] = 'M1 Plus 2K (%s)' % uidlen
+                cache['type'] = 26
             else:
                 cache['sak'] = sak
                 cache['atqa'] = atqa
                 cache['nameStr'] = 'M1 S50 1K (%s)' % uidlen
         elif dtk == 'mfu':
-            # Renamed dump: UID from the dump files (see _mfuUidFromFile)
+            # Renamed dump: UID from the dump files (appfiles.dump_mfu_uid)
             uid = None
             if not self._isDeviceDumpName(self._MFU_NAME_RE):
-                uid = self._mfuUidFromFile()
+                import appfiles
+                uid = appfiles.dump_mfu_uid(self._file_path)
             cache['uid'] = uid or info.get('uid', '00000000000000')
         elif dtk == 't55xx':
-            # Renamed dump: block 0 from the .bin (see _t55xxB0FromFile)
+            # Renamed dump: block 0 from the .bin (appfiles.dump_t55xx_b0)
             b0 = None
             if not self._isDeviceDumpName(self._T55XX_NAME_RE):
-                b0 = self._t55xxB0FromFile()
+                import appfiles
+                b0 = appfiles.dump_t55xx_b0(self._file_path)
             cache['b0'] = b0 or info.get('b0', '00000000')
             cache['modulate'] = '--------'
             cache['chip'] = 'T55xx/Unknown'
@@ -9442,7 +9341,8 @@ class ReadFromHistoryActivity(BaseActivity):
             # Renamed dump: UID from the .txt hf14aread saved
             uid = None
             if not self._isDeviceDumpName(self._HF14A_NAME_RE):
-                uid = self._hf14aUidFromFile()
+                import appfiles
+                uid = appfiles.dump_hf14a_uid(self._file_path)
             cache['uid'] = uid or info.get('uid', '')
         elif dtk == 'iclass':
             cache['uid'] = info.get('data', info.get('uid', ''))
