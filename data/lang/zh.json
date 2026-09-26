@@ -43,7 +43,8 @@
         "lua_script": "LUA脚本",
         "error": "错误",
         "searching": "搜索中...",
-        "checking": "检查中..."
+        "checking": "检查中...",
+        "rename": "重命名"
     },
     "button": {
         "button": "按键",
@@ -98,7 +99,8 @@
         "recover": "恢复",
         "backup": "备份",
         "single": "单个",
-        "range": "范围"
+        "range": "范围",
+        "kb_del": "删除"
     },
     "toastmsg": {
         "update_finish": "升级完成。",
@@ -147,7 +149,11 @@
         "write_wearable_err4": "UID写入失败。请确保卡片放置在天线上。",
         "delete_confirm": "删除？",
         "no_scripts_found": "未找到脚本",
-        "opera_unsupported": "无效命令"
+        "opera_unsupported": "无效命令",
+        "rename_done": "重命名成功",
+        "rename_failed": "重命名失败",
+        "rename_exists": "名称已存在",
+        "rename_unsupported": "此转储不支持重命名"
     },
     "tipsmsg": {
         "enter_known_keys_55xx": "输入T5577或\nEM4305的已知密钥",

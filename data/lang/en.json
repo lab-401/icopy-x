@@ -1,6 +1,7 @@
 {
   "_name": "English",
   "_font": "mononoki",
+  "_keyboard": ["ABCDEFGH", "IJKLMNOP", "QRSTUVWX", "YZ012345", "6789-_"],
   "title": {
     "language": "Language",
     "plugins": "Plugins",
@@ -43,7 +44,8 @@
     "lua_script": "LUA Script",
     "error": "Error",
     "searching": "Searching...",
-    "checking": "Checking..."
+    "checking": "Checking...",
+    "rename": "Rename"
   },
   "button": {
     "button": "Button",
@@ -98,7 +100,8 @@
     "recover": "Recover",
     "backup": "Backup",
     "single": "Single",
-    "range": "Range"
+    "range": "Range",
+    "kb_del": "DEL"
   },
   "toastmsg": {
     "update_finish": "Update finished.",
@@ -147,7 +150,11 @@
     "write_wearable_err4": "UID write failed. Make sure the tag is placed on the antenna.",
     "delete_confirm": "Delete?",
     "no_scripts_found": "No scripts found",
-    "opera_unsupported": "Invalid command"
+    "opera_unsupported": "Invalid command",
+    "rename_done": "Renamed",
+    "rename_failed": "Rename failed",
+    "rename_exists": "Name already in use",
+    "rename_unsupported": "Rename not available for this dump"
   },
   "tipsmsg": {
     "enter_known_keys_55xx": "Enter a known key for \nT5577 or EM4305",

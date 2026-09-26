@@ -7251,6 +7251,17 @@ class CardWalletActivity(BaseActivity):
             return result
         return [self._formatFilename(f) for f in self._file_list]
 
+    # Filename prefixes written by the device's own readers (current and
+    # original firmware). Only these names get the shortened list label.
+    #   HF:  M1-  M0-UL[-C|-EV1]_  NTAG21x_  Unknow_  Iclass[-<type>]_
+    #        ICODE_  Legic_  FeliCa_  HF14A_
+    #   LF:  <Type>-ID_  T55xx_  T55XX_  EM4305_  EM4x05_
+    _DEVICE_NAME_RE = (
+        r'^(M1-|T55xx_|T55XX_|[A-Za-z0-9-]+-ID_|'
+        r'(M0-UL|M0-UL-C|M0-UL-EV1|NTAG213|NTAG215|NTAG216|Unknow|'
+        r'Iclass(-[A-Za-z0-9]+)?|ICODE|Legic|FeliCa|HF14A|EM4305|EM4x05)_)'
+    )
+
     @staticmethod
     def _formatFilename(fname):
         """Transform raw dump filename to display format.
@@ -7261,10 +7272,17 @@ class CardWalletActivity(BaseActivity):
           T55xx:  T55xx_00148040_..._1.bin   → 00148040(1)
           MFU:    M0-UL_04DDEEFF001122_1.bin → 04DDEEFF001122(1)
           EM410x: EM410x-ID_0F0368568B_1.txt → 0F0368568B(1)
+
+        Names that aren't in a device-created format (e.g. a dump the user
+        renamed) are shown in full, exactly as named.
         """
         import re
         # Strip extension
         base = os.path.splitext(fname)[0]
+
+        # Renamed / non-device names: show as-is
+        if not re.match(CardWalletActivity._DEVICE_NAME_RE, base):
+            return base
 
         # MF1: M1-{size}-{uidLen}B_{UID}_{index}
         m = re.match(r'M1-(\S+)-(\S+)_([A-Fa-f\d]+)_(\d+)', base)
@@ -9086,6 +9104,32 @@ class ReadFromHistoryActivity(BaseActivity):
                 info['display'] = '%s(%s)' % (raw_data, m.group(2))
         return info
 
+    # ------------------------------------------------------------------
+    # Dump-content readers (rename support)
+    #
+    # Dumps can be renamed. While a filename is still in the device's own
+    # format it is used exactly as before, so un-renamed dumps behave
+    # identically. Once renamed, values are read from the dump files
+    # themselves via the shared appfiles.dump_* readers; if a file can't
+    # provide a value, the previous filename-based default is kept.
+    # ------------------------------------------------------------------
+
+    # Device-created filename formats (appfiles / hfmfuread / hf14aread).
+    # T55xx uses a lowercase 'xx', which the rename keyboard can't produce.
+    _MFU_NAME_RE = r'^(M0-UL|M0-UL-C|M0-UL-EV1|NTAG213|NTAG215|NTAG216|Unknow)_[0-9A-Fa-f]+_\d+\.'
+    _T55XX_NAME_RE = r'^T55xx_[0-9A-Fa-f]{8}_[0-9A-Fa-f]{8}_[0-9A-Fa-f]{8}_\d+\.'
+    _HF14A_NAME_RE = r'^HF14A_[0-9A-Fa-f]+_\d+\.'
+
+    # M1 sizes Tag Info takes from the .bin length (renamed dumps).
+    _MF1_FILE_SIZES = ('Mini', '1K', 'Plus-2K', '4K')
+
+    def _isDeviceDumpName(self, pattern):
+        """True if the dump filename still matches the device-created format."""
+        import re
+        if not self._file_path:
+            return False
+        return re.match(pattern, os.path.basename(self._file_path)) is not None
+
     def _buildScanCache(self):
         """Build scan cache dict matching scan.so output format.
 
@@ -9140,29 +9184,70 @@ class ReadFromHistoryActivity(BaseActivity):
                 except Exception:
                     pass
 
-            # Prefer JSON values; fall back to filename-parsed values
-            cache['uid'] = uid_from_json or uid
+            # Renamed dump: the filename no longer gives size/UID, so read
+            # them from the dump itself — size from the .bin length, and
+            # UID/SAK/ATQA from block 0 when there is no usable .json.
+            # Device-format filenames skip this and behave as before.
+            uid_from_b0 = None
+            sak_from_b0 = None
+            atqa_from_b0 = None
+            if not info:
+                import appfiles
+                file_size = appfiles.dump_mf1_size(self._file_path)
+                if file_size in self._MF1_FILE_SIZES:
+                    size = file_size
+                b0_card = appfiles.dump_mf1_block0(self._file_path)
+                if b0_card:
+                    uid_from_b0, b0_len, sak_from_b0, atqa_from_b0 = b0_card
+                    cache['len'] = b0_len
+                    uidlen = '%dB' % b0_len
+                if len_from_json is not None:
+                    uidlen = '%dB' % len_from_json
+
+            # Prefer JSON values; fall back to filename-parsed values, then
+            # (renamed dumps only) block 0 values
+            cache['uid'] = uid_from_json or uid or uid_from_b0 or ''
             if len_from_json is not None:
                 cache['len'] = len_from_json
+            sak = sak_from_json or sak_from_b0 or '08'
+            atqa = atqa_from_json or atqa_from_b0 or '0004'
 
             if size == '4K':
-                cache['sak'] = sak_from_json or '08'
-                cache['atqa'] = atqa_from_json or '0004'
+                cache['sak'] = sak
+                cache['atqa'] = atqa
                 cache['nameStr'] = 'M1 S70 4K (%s)' % uidlen
                 cache['type'] = 0
             elif size == 'Mini':
-                cache['sak'] = sak_from_json or '08'
-                cache['atqa'] = atqa_from_json or '0004'
+                cache['sak'] = sak
+                cache['atqa'] = atqa
                 cache['nameStr'] = 'M1 Mini 0.3K'
                 cache['type'] = 25
+            elif size == 'Plus-2K':
+                # Plus 2K (2048 bytes, 32 sectors): type 26 so the write
+                # path sizes it as 2K (hfmfread.sizeGuess(26) == 2048)
+                # instead of falling through to the 1K branch below.
+                cache['sak'] = sak
+                cache['atqa'] = atqa
+                cache['nameStr'] = 'M1 Plus 2K (%s)' % uidlen
+                cache['type'] = 26
             else:
-                cache['sak'] = sak_from_json or '08'
-                cache['atqa'] = atqa_from_json or '0004'
+                cache['sak'] = sak
+                cache['atqa'] = atqa
                 cache['nameStr'] = 'M1 S50 1K (%s)' % uidlen
         elif dtk == 'mfu':
-            cache['uid'] = info.get('uid', '00000000000000')
+            # Renamed dump: UID from the dump files (appfiles.dump_mfu_uid)
+            uid = None
+            if not self._isDeviceDumpName(self._MFU_NAME_RE):
+                import appfiles
+                uid = appfiles.dump_mfu_uid(self._file_path)
+            cache['uid'] = uid or info.get('uid', '00000000000000')
         elif dtk == 't55xx':
-            cache['b0'] = info.get('b0', '00000000')
+            # Renamed dump: block 0 from the .bin (appfiles.dump_t55xx_b0)
+            b0 = None
+            if not self._isDeviceDumpName(self._T55XX_NAME_RE):
+                import appfiles
+                b0 = appfiles.dump_t55xx_b0(self._file_path)
+            cache['b0'] = b0 or info.get('b0', '00000000')
             cache['modulate'] = '--------'
             cache['chip'] = 'T55xx/Unknown'
         elif dtk in ('em410x', 'hid', 'indala', 'awid', 'fdx', 'viking',
@@ -9250,8 +9335,15 @@ class ReadFromHistoryActivity(BaseActivity):
                     cache['cn'] = _p[1]
         elif dtk == 'felica':
             cache['uid'] = info.get('uid', '')
-        elif dtk in ('icode', 'hf14a'):
+        elif dtk == 'icode':
             cache['uid'] = info.get('uid', '')
+        elif dtk == 'hf14a':
+            # Renamed dump: UID from the .txt hf14aread saved
+            uid = None
+            if not self._isDeviceDumpName(self._HF14A_NAME_RE):
+                import appfiles
+                uid = appfiles.dump_hf14a_uid(self._file_path)
+            cache['uid'] = uid or info.get('uid', '')
         elif dtk == 'iclass':
             cache['uid'] = info.get('data', info.get('uid', ''))
         elif dtk == 'legic':
@@ -9336,7 +9428,66 @@ class ReadFromHistoryActivity(BaseActivity):
         actstack.start_activity(SimulationActivity, dict(self._scan_cache))
 
     # ------------------------------------------------------------------
-    # onActivity — handle results from WarningWriteActivity
+    # RENAME (DOWN key — not shown on the button bar)
+    # ------------------------------------------------------------------
+    # Types whose Tag Info still depends on the filename: renaming them
+    # would lose their details, so Rename is not offered.
+    _RENAME_BLOCKED_TYPES = {'icode', 'legic', 'felica'}
+
+    def _canRename(self):
+        """True if this dump can be renamed without losing its details.
+
+        LF ID dumps saved before format v2 hold only the raw line; their
+        Tag Info comes from the filename, so they are refused.
+        """
+        if not self._file_path or self._dump_type_key in self._RENAME_BLOCKED_TYPES:
+            return False
+        if self._file_path.lower().endswith('.txt') and self._dump_type_key != 'hf14a':
+            try:
+                with open(self._file_path, 'r') as f:
+                    lines = [ln for ln in f.read().split('\n') if ln.strip()]
+            except Exception:
+                return False
+            if len(lines) < 2:
+                return False
+        return True
+
+    def _openRename(self):
+        if not self._canRename():
+            if self._toast:
+                self._toast.show(resources.get_str('rename_unsupported'))
+            return
+        # Every file sharing the dump's name (.bin/.json/.eml/...) is
+        # renamed together, whatever the type.
+        actstack.start_activity(RenameDumpActivity, {
+            'file_path': self._file_path,
+            'whole_set': True,
+        })
+
+    def _reloadInfo(self):
+        """Re-read the (renamed) dump and redraw Tag Info — mirrors onCreate."""
+        canvas = self.getCanvas()
+        if canvas is None or not self._file_path:
+            return
+        self._tag_info = self._parseFilename(os.path.basename(self._file_path))
+        self._scan_cache = self._buildScanCache()
+        try:
+            import scan as _scan_mod
+            _scan_mod.setScanCache(self._scan_cache)
+        except Exception:
+            pass
+        _sim_type_ids = {entry[1] for entry in SIM_MAP}
+        sim_active = self._scan_cache.get('type', -1) in _sim_type_ids
+        self.setLeftButton(resources.get_str('simulate'), active=sim_active)
+        try:
+            import template
+            template.dedraw(canvas)
+        except Exception:
+            pass
+        self._renderInfo()
+
+    # ------------------------------------------------------------------
+    # onActivity — handle results from WarningWriteActivity / RenameDumpActivity
     # ------------------------------------------------------------------
     def onActivity(self, result):
         if result is None or not isinstance(result, dict):
@@ -9349,16 +9500,104 @@ class ReadFromHistoryActivity(BaseActivity):
             except Exception as e:
                 print('[READ_HISTORY] WriteActivity launch error: %s' % e,
                       flush=True)
+        elif action == 'rename':
+            new_path = result.get('file_path')
+            if new_path:
+                self._file_path = new_path
+                self._reloadInfo()
+                if self._toast:
+                    self._toast.show(resources.get_str('rename_done'))
 
     def onKeyEvent(self, key):
         if key == KEY_M1:
             self._sim_for_info()
         elif key in (KEY_M2, KEY_OK):
             self._dispatch_write()
+        elif key == KEY_DOWN:
+            self._openRename()
         elif key == KEY_PWR:
             if self._handlePWR():
                 return
             self.finish()
+
+
+class RenameDumpActivity(BaseActivity):
+    """On-screen keyboard to rename a dump (Tag Info > DOWN).
+
+    The current name is shown greyed as a placeholder until the first
+    character is typed. M1 = Cancel, M2 = Save, PWR = back. Saving with
+    nothing typed leaves the name unchanged.
+
+    Bundle: {'file_path': dump path WITH extension, 'whole_set': bool}
+    Result (on successful rename): {'action': 'rename', 'file_path': new path}
+    """
+    ACT_NAME = 'rename_dump'
+    MAX_NAME_LEN = 40
+
+    def __init__(self, bundle=None):
+        self._file_path = None
+        self._whole_set = False
+        self._keyboard = None
+        self._toast = None
+        super().__init__(bundle)
+
+    def onCreate(self, bundle):
+        self.setTitle(resources.get_str('rename'))
+        self.setLeftButton(resources.get_str('cancel'))
+        self.setRightButton(resources.get_str('save'))
+        canvas = self.getCanvas()
+        if canvas is None:
+            return
+        if isinstance(bundle, dict):
+            self._file_path = bundle.get('file_path')
+            self._whole_set = bool(bundle.get('whole_set', False))
+        stem = ''
+        if self._file_path:
+            stem = os.path.splitext(os.path.basename(self._file_path))[0]
+        from lib.widget import KeyboardInput
+        self._keyboard = KeyboardInput(canvas, placeholder=stem,
+                                       max_len=self.MAX_NAME_LEN)
+        self._keyboard.show()
+        self._toast = Toast(canvas)
+
+    def onKeyEvent(self, key):
+        if key == KEY_PWR:
+            if self._handlePWR():
+                return
+            self.finish()
+        elif key == KEY_M1:
+            self.finish()
+        elif key == KEY_M2:
+            self._save()
+        elif self._keyboard is None:
+            return
+        elif key == KEY_UP:
+            self._keyboard.moveUp()
+        elif key == KEY_DOWN:
+            self._keyboard.moveDown()
+        elif key == KEY_LEFT:
+            self._keyboard.moveLeft()
+        elif key == KEY_RIGHT:
+            self._keyboard.moveRight()
+        elif key == KEY_OK:
+            self._keyboard.press()
+
+    def _save(self):
+        name = self._keyboard.getText() if self._keyboard else ''
+        if not name or not self._file_path:
+            # Nothing typed: keep the current name
+            self.finish()
+            return
+        import appfiles
+        ret, new_path = appfiles.rename_dump_set(self._file_path, name,
+                                                 self._whole_set)
+        if ret == appfiles.RENAME_OK:
+            self._result = {'action': 'rename', 'file_path': new_path}
+            self.finish()
+        elif ret == appfiles.RENAME_EXISTS:
+            self._toast.show(resources.get_str('rename_exists'))
+        else:
+            self._toast.show(resources.get_str('rename_failed'))
 
 
 class AutoExceptCatchActivity(BaseActivity):

@@ -43,7 +43,8 @@
     "lua_script": "Script LUA",
     "error": "Erreur",
     "searching": "Recherche en cours...",
-    "checking": "Vérification en cours..."
+    "checking": "Vérification en cours...",
+    "rename": "Renommer"
   },
   "button": {
     "button": "Bouton",
@@ -98,7 +99,8 @@
     "recover": "Récupérer",
     "backup": "Sauvegarder",
     "single": "Unique",
-    "range": "Plage"
+    "range": "Plage",
+    "kb_del": "SUPPR"
   },
   "toastmsg": {
     "update_finish": "Mise à jour terminée.",
@@ -147,7 +149,11 @@
     "write_wearable_err4": "Échec de l'écriture de l'UID. Assurez-vous que le tag est bien placé sur l'antenne.",
     "delete_confirm": "Supprimer ?",
     "no_scripts_found": "Aucun script trouvé",
-    "opera_unsupported": "Commande invalide"
+    "opera_unsupported": "Commande invalide",
+    "rename_done": "Renommé",
+    "rename_failed": "Échec du renommage",
+    "rename_exists": "Nom déjà utilisé",
+    "rename_unsupported": "Renommage impossible pour ce dump"
   },
   "tipsmsg": {
     "enter_known_keys_55xx": "Saisissez une clé connue pour \nle T5577 ou l'EM4305",

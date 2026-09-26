@@ -125,6 +125,7 @@ class StringEN:
         'backup': 'Backup',
         'single': 'Single',
         'range': 'Range',
+        'kb_del': 'DEL',
     }
 
     title = {
@@ -170,6 +171,7 @@ class StringEN:
         'error': 'Error',
         'searching': 'Searching...',
         'checking': 'Checking...',
+        'rename': 'Rename',
     }
 
     toastmsg = {
@@ -220,6 +222,10 @@ class StringEN:
         'delete_confirm': 'Delete?',
         'no_scripts_found': 'No scripts found',
         'opera_unsupported': 'Invalid command',
+        'rename_done': 'Renamed',
+        'rename_failed': 'Rename failed',
+        'rename_exists': 'Name already in use',
+        'rename_unsupported': 'Rename not available for this dump',
     }
 
     tipsmsg = {
@@ -693,6 +699,36 @@ def get_font_force_zh(size=13, *args):
     Returns: '文泉驿等宽正黑 {size}'
     """
     return '%s %d' % (_FONT_ZH, size)
+
+
+# Built-in on-screen keyboard layout (rows of characters). Language packs
+# can supply their own rows with a top-level "_keyboard" list in
+# data/lang/<code>.json; DEL is added by the keyboard widget itself.
+_KEYBOARD_EN = ('ABCDEFGH', 'IJKLMNOP', 'QRSTUVWX', 'YZ012345', '6789-_')
+
+
+def _keyboard_rows(entry):
+    """Validated "_keyboard" rows from a language dict, or None."""
+    if entry is None:
+        return None
+    rows = entry.get('_keyboard')
+    if not isinstance(rows, list):
+        return None
+    rows = [r for r in rows if isinstance(r, str) and r]
+    return tuple(rows) if rows else None
+
+
+def get_keyboard_layout():
+    """Rows of characters for the on-screen keyboard.
+
+    Order: active language "_keyboard" -> en.json "_keyboard" -> built-in.
+    """
+    rows = _keyboard_rows(_LANG_REGISTRY.get(_current_language))
+    if rows is None:
+        rows = _keyboard_rows(_LANG_REGISTRY.get('en'))
+    if rows is None:
+        rows = _KEYBOARD_EN
+    return rows
 
 
 def get_font_type(key, default=0):

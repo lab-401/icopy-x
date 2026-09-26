@@ -29,8 +29,8 @@ specification in docs/UI_SPEC.md.
 
 This file will eventually contain ALL widget classes; for now it provides
 the ListView (most-used widget), BigTextListView, Toast, BatteryBar,
-PageIndicator, ConsoleView, InputMethods, and the createTag utility
-that all widgets share.
+PageIndicator, ConsoleView, InputMethods, KeyboardInput, and the
+createTag utility that all widgets share.
 """
 
 import math
@@ -2338,6 +2338,276 @@ class InputMethods:
                 anchor='center',
                 tags=self._tag_char,
             )
+
+
+# =====================================================================
+# KeyboardInput — on-screen character keyboard (e.g. renaming dumps)
+# =====================================================================
+
+class KeyboardInput:
+    """On-screen keyboard with a text preview box above a key grid.
+
+    The character rows come from the active language pack's "_keyboard"
+    list (resources.get_keyboard_layout()), falling back to the built-in
+    English rows, so new languages can supply their own layout without code
+    changes. A DEL key is always appended by the widget.
+
+    The preview shows *placeholder* in grey until the first character is
+    typed; deleting every typed character shows the placeholder again.
+
+    Keys: moveLeft/moveRight/moveUp/moveDown move the highlight (wrapping),
+    press() types the highlighted character or deletes on DEL.
+    """
+
+    DEL = '\x7f'                 # key id for the delete key
+    PLACEHOLDER_COLOR = '#999999'
+    KEY_OUTLINE = '#999999'
+    MAX_CELL_W = 28
+    MAX_CELL_H = 26
+    MIN_CELL_H = 20
+    PREVIEW_H = 24
+    GAP = 6
+
+    def __init__(self, canvas, x=0, y=CONTENT_Y0, h=CONTENT_H,
+                 rows=None, placeholder='', max_len=40):
+        """
+        Args:
+            canvas: tkinter Canvas (or MockCanvas for tests).
+            x: Left edge x-coordinate.
+            y: Top edge y-coordinate.
+            h: Height of the keyboard area (preview + grid).
+            rows: Sequence of strings, one per key row. None = language pack.
+            placeholder: Grey text shown while nothing has been typed.
+            max_len: Maximum number of characters that can be typed.
+        """
+        self._canvas = canvas
+        self._x = x
+        self._y = y
+        self._h = h
+        self._placeholder = placeholder or ''
+        self._max_len = max_len
+        self._text = ''
+
+        if rows is None:
+            getter = getattr(resources, 'get_keyboard_layout', None)
+            rows = getter() if getter else None
+        if not rows:
+            rows = ('ABCDEFGH', 'IJKLMNOP', 'QRSTUVWX', 'YZ012345', '6789-_')
+        self._rows = self._buildRows(rows)
+
+        # Grid geometry: widest row sets the column count; DEL spans the
+        # remaining columns of its row.
+        self._cols = max(sum(span for _k, span in r) for r in self._rows)
+        self._cell_w = min(self.MAX_CELL_W, (SCREEN_W - 12) // self._cols)
+        grid_top = self.PREVIEW_H + 2 * self.GAP
+        avail_h = self._h - grid_top - 2
+        self._cell_h = min(self.MAX_CELL_H, avail_h // len(self._rows))
+        if self._cell_h < self.MIN_CELL_H:
+            self._cell_h = self.MIN_CELL_H
+        # Rows that fit on screen; the grid scrolls when there are more
+        self._visible_rows = max(1, min(len(self._rows), avail_h // self._cell_h))
+        self._first_row = 0
+        self._grid_x0 = self._x + (SCREEN_W - self._cell_w * self._cols) // 2
+        self._grid_y0 = self._y + grid_top
+
+        self._focus_row = 0
+        self._focus_idx = 0
+
+        self._showing = False
+        self._tag_preview = createTag(self, 'kb_preview')
+        self._tag_key = createTag(self, 'kb_key')
+        self._tag_label = createTag(self, 'kb_label')
+
+    # -----------------------------------------------------------------
+    # Layout helpers
+    # -----------------------------------------------------------------
+
+    def _buildRows(self, rows):
+        """Rows as lists of (key, span); DEL appended after the last row."""
+        built = [[(ch, 1) for ch in row] for row in rows if row]
+        cols = max(len(r) for r in built)
+        last = built[-1]
+        if len(last) < cols:
+            last.append((self.DEL, cols - len(last)))
+        else:
+            built.append([(self.DEL, min(2, cols))])
+        return built
+
+    def _startCol(self, row, idx):
+        """Grid column where key *idx* of *row* starts."""
+        return sum(span for _k, span in self._rows[row][:idx])
+
+    def _idxAtCol(self, row, col):
+        """Index of the key covering grid column *col* in *row*."""
+        pos = 0
+        for i, (_k, span) in enumerate(self._rows[row]):
+            if col < pos + span:
+                return i
+            pos += span
+        return len(self._rows[row]) - 1
+
+    # -----------------------------------------------------------------
+    # Text
+    # -----------------------------------------------------------------
+
+    def getText(self) -> str:
+        """Characters typed so far ('' while the placeholder is shown)."""
+        return self._text
+
+    def setText(self, text: str):
+        """Replace the typed text (truncated to max_len)."""
+        self._text = (text or '')[:self._max_len]
+        if self._showing:
+            self._redraw()
+
+    def isPlaceholderShown(self) -> bool:
+        """True while nothing has been typed."""
+        return self._text == ''
+
+    def getFocusKey(self) -> str:
+        """The highlighted key (a character, or KeyboardInput.DEL)."""
+        return self._rows[self._focus_row][self._focus_idx][0]
+
+    # -----------------------------------------------------------------
+    # Navigation
+    # -----------------------------------------------------------------
+
+    def moveLeft(self):
+        row = self._rows[self._focus_row]
+        self._focus_idx = (self._focus_idx - 1) % len(row)
+        self._afterMove()
+
+    def moveRight(self):
+        row = self._rows[self._focus_row]
+        self._focus_idx = (self._focus_idx + 1) % len(row)
+        self._afterMove()
+
+    def moveUp(self):
+        self._moveRow(-1)
+
+    def moveDown(self):
+        self._moveRow(1)
+
+    def _moveRow(self, step):
+        col = self._startCol(self._focus_row, self._focus_idx)
+        self._focus_row = (self._focus_row + step) % len(self._rows)
+        self._focus_idx = self._idxAtCol(self._focus_row, col)
+        self._afterMove()
+
+    def _afterMove(self):
+        # Keep the focused row inside the visible window
+        if self._focus_row < self._first_row:
+            self._first_row = self._focus_row
+        elif self._focus_row >= self._first_row + self._visible_rows:
+            self._first_row = self._focus_row - self._visible_rows + 1
+        if self._showing:
+            self._redraw()
+
+    # -----------------------------------------------------------------
+    # Typing
+    # -----------------------------------------------------------------
+
+    def press(self):
+        """Type the highlighted character, or delete one on DEL."""
+        key = self.getFocusKey()
+        if key == self.DEL:
+            self._text = self._text[:-1]
+        elif len(self._text) < self._max_len:
+            self._text += key
+        if self._showing:
+            self._redraw()
+
+    # -----------------------------------------------------------------
+    # Visibility
+    # -----------------------------------------------------------------
+
+    def show(self):
+        """Render the preview and keys on the canvas."""
+        self._showing = True
+        self._redraw()
+
+    def hide(self):
+        """Remove all keyboard items from the canvas."""
+        self._showing = False
+        self._clear()
+
+    def _clear(self):
+        self._canvas.delete(self._tag_preview)
+        self._canvas.delete(self._tag_key)
+        self._canvas.delete(self._tag_label)
+
+    # -----------------------------------------------------------------
+    # Internal rendering
+    # -----------------------------------------------------------------
+
+    def _previewText(self, text, max_chars):
+        """Tail of *text* that fits, with a leading '..' when cut."""
+        if len(text) <= max_chars:
+            return text
+        return '..' + text[-(max_chars - 2):]
+
+    def _redraw(self):
+        """Clear and redraw the preview box and visible key rows."""
+        self._clear()
+        if not self._showing:
+            return
+
+        font_spec = resources.get_font(12)
+
+        # Preview box
+        px0 = self._x + 8
+        px1 = self._x + SCREEN_W - 8
+        py0 = self._y + self.GAP
+        py1 = py0 + self.PREVIEW_H
+        self._canvas.create_rectangle(
+            px0, py0, px1, py1,
+            fill=INPUT_BG_COLOR,
+            outline=self.KEY_OUTLINE,
+            width=1,
+            tags=self._tag_preview,
+        )
+        max_chars = max(4, (px1 - px0 - 8) // 8)
+        if self._text:
+            shown = self._previewText(self._text + '_', max_chars)
+            color = INPUT_DATA_COLOR
+        else:
+            shown = self._previewText(self._placeholder, max_chars)
+            color = self.PLACEHOLDER_COLOR
+        self._canvas.create_text(
+            px0 + 4, (py0 + py1) // 2,
+            text=shown,
+            fill=color,
+            font=font_spec,
+            anchor='w',
+            tags=self._tag_preview,
+        )
+
+        # Key grid (visible rows only)
+        del_label = resources.get_str('kb_del')
+        last = min(len(self._rows), self._first_row + self._visible_rows)
+        for r in range(self._first_row, last):
+            by = self._grid_y0 + (r - self._first_row) * self._cell_h
+            col = 0
+            for i, (key, span) in enumerate(self._rows[r]):
+                bx = self._grid_x0 + col * self._cell_w
+                bx2 = bx + span * self._cell_w
+                is_focused = (r == self._focus_row and i == self._focus_idx)
+                self._canvas.create_rectangle(
+                    bx, by, bx2, by + self._cell_h,
+                    fill=INPUT_HIGHLIGHT_COLOR if is_focused else INPUT_BG_COLOR,
+                    outline=self.KEY_OUTLINE,
+                    width=1,
+                    tags=self._tag_key,
+                )
+                self._canvas.create_text(
+                    (bx + bx2) // 2, by + self._cell_h // 2,
+                    text=del_label if key == self.DEL else key,
+                    fill=INPUT_DATA_COLOR,
+                    font=font_spec,
+                    anchor='center',
+                    tags=self._tag_label,
+                )
+                col += span
 
 
 # =====================================================================

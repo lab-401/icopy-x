@@ -914,7 +914,7 @@ TYPE_TEMPLATE = {
     23: ('125KHZ',   None,                  'T5577',        __drawT55xx),
     24: ('125KHZ',   None,                  'EM4305',       __drawEM4x05),
     25: ('13.56MHZ', 'M1 Mini 0.3K',       'MIFARE',       __drawM1),
-    26: ('13.56MHZ', 'M1 Mini 0.3K',       'MIFARE',       __drawM1),
+    26: ('13.56MHZ', 'M1 Plus 2K',         'MIFARE',       __drawM1),
     27: ('13.56MHZ', 'Topaz',              'TOPAZ',        __drawTopaz),
     28: ('125KHZ',   'Animal ID',           'FDX-B',        __drawID),
     29: ('125KHZ',   'GALLAGHER ID',        'Gallagher',    __drawID),
