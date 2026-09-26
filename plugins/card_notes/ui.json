@@ -1,0 +1,54 @@
+{
+    "plugin": true,
+    "name": "Card Notes",
+    "version": "1.0.0",
+    "initial_state": "list",
+    "states": {
+        "list": {
+            "on_enter": "run:load",
+            "screen": {
+                "title": "Card Notes",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "page_size": 4,
+                    "items": []
+                },
+                "buttons": {"left": "Clear", "right": "Edit"},
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "OK": "run:edit",
+                    "M2": "run:edit",
+                    "M1": "run:clear"
+                }
+            },
+            "transitions": {
+                "on_result.status==edit": "edit",
+                "on_result.status==cleared": "list",
+                "on_error": "list"
+            }
+        },
+        "edit": {
+            "screen": {
+                "title": "Note",
+                "content": {
+                    "type": "input_text",
+                    "label": "Note (16 chars)",
+                    "length": 16,
+                    "value": "{edit_note}"
+                },
+                "buttons": {"left": "Del", "right": "ABC"},
+                "keys": {
+                    "OK": "run:save",
+                    "M2": "input:charset",
+                    "M1": "input:delete"
+                }
+            },
+            "transitions": {
+                "on_result.status==saved": "list",
+                "on_error": "edit"
+            }
+        }
+    }
+}

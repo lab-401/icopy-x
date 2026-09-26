@@ -113,7 +113,7 @@ class PluginActivity(BaseActivity):
         self._permissions = []
         self._entry_class = None
         self._bg_lock = threading.Lock()
-        self._input_widget = None  # InputMethods widget for input_hex content type
+        self._input_widget = None  # InputMethods widget for input_hex/input_text content type
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -259,13 +259,13 @@ class PluginActivity(BaseActivity):
 
         action = keys_map.get(key)
         if action is not None:
-            self._execute_action(action)
+            self._execute_action(action, key=key)
 
     # ------------------------------------------------------------------
     # Action dispatch
     # ------------------------------------------------------------------
 
-    def _execute_action(self, action_str):
+    def _execute_action(self, action_str, key=None):
         """Parse and execute an action string.
 
         Supported actions:
@@ -276,7 +276,14 @@ class PluginActivity(BaseActivity):
             pop             — pop the internal screen stack
             set_state:<id>  — transition to a new state
             run:<method>    — call method on plugin instance in bg thread
+            input:delete    — clear the focused input cell
+            input:charset   — cycle the input character set (text)
+            input:clear     — clear the whole input value
             noop            — do nothing
+
+        ``key`` is the physical key that triggered the action (when it
+        came from a key press); input actions use it to relabel the soft
+        button bound to that key.
         """
         if not action_str or not isinstance(action_str, str):
             return
@@ -284,6 +291,18 @@ class PluginActivity(BaseActivity):
         action_str = action_str.strip()
 
         if action_str == 'noop':
+            return
+
+        if action_str == 'input:delete':
+            self.input_delete()
+            return
+
+        if action_str == 'input:charset':
+            self.input_charset(key)
+            return
+
+        if action_str == 'input:clear':
+            self.input_clear()
             return
 
         if action_str == 'finish':
@@ -429,13 +448,19 @@ class PluginActivity(BaseActivity):
                 resolved_title = '%s %s' % (resolved_title, self._renderer.resolve(page))
             self.setTitle(resolved_title)
 
-        # Render content — input_hex uses InputMethods widget, all others
-        # go through JsonRenderer (existing behaviour untouched)
+        # Render content — input_hex/input_text use the InputMethods widget,
+        # all others go through JsonRenderer (existing behaviour untouched).
         content = screen.get('content', {})
-        if content.get('type') == 'input_hex':
+        content_type = content.get('type')
+        if content_type in ('input_hex', 'input_text'):
+            is_text = content_type == 'input_text'
+            fmt = 'text' if is_text else 'hex'
+            length = content.get('length', 16 if is_text else 8)
+            if is_text:
+                placeholder = content.get('placeholder', ' ' * length)
+            else:
+                placeholder = content.get('placeholder', '0' * length)
             label = content.get('label', '')
-            length = content.get('length', 8)
-            placeholder = content.get('placeholder', '0' * length)
             if label:
                 canvas.create_text(
                     SCREEN_W // 2, CONTENT_Y0 + 20,
@@ -445,8 +470,13 @@ class PluginActivity(BaseActivity):
                 )
             from lib.widget import InputMethods
             self._input_widget = InputMethods(
-                canvas, format='hex', length=length, placeholder=placeholder,
+                canvas, format=fmt, length=length, placeholder=placeholder,
             )
+            value = content.get('value')
+            if value:
+                resolved = self._renderer.resolve(value)
+                if resolved:
+                    self._input_widget.setValue(resolved)
             self._input_widget.show()
         else:
             # Content only.  The button bar is owned by the framework
@@ -473,6 +503,18 @@ class PluginActivity(BaseActivity):
             self.setRightButton(self._renderer.resolve(text), active=active)
         else:
             self.dismissButton(right=True)
+
+        # An input field bound to input:charset shows the *current* set
+        # name on that soft key, so the on-screen hint is right from the
+        # start (and after every change).
+        if self._input_widget is not None:
+            name = self._input_widget.getCharsetName()
+            keys_map = screen.get('keys', {})
+            if name:
+                if keys_map.get('M2') == 'input:charset':
+                    self.setRightButton(name)
+                elif keys_map.get('M1') == 'input:charset':
+                    self.setLeftButton(name)
 
         # If both buttons are null, remove the button bar background too.
         # dismissButton(left=True) and dismissButton(right=True) only remove
@@ -855,14 +897,46 @@ class PluginActivity(BaseActivity):
         return self._state.get(key, default)
 
     def get_input(self):
-        """Get the current value from the active input_hex widget.
+        """Get the current value from the active input_hex/input_text widget.
 
         Returns:
-            str: Current hex value, or '' if no input widget is active.
+            str: Current value, or '' if no input widget is active.
         """
         if self._input_widget is not None:
             return self._input_widget.getValue()
         return ''
+
+    def input_delete(self):
+        """Clear the focused input cell in place (``input:delete`` action).
+
+        Unlike ``run:<method>`` this acts on the widget directly and does
+        not re-render the screen, so the typed value and cursor are kept.
+        """
+        if self._input_widget is not None:
+            self._input_widget.delete()
+
+    def input_charset(self, key=None):
+        """Cycle the text input character set: ABC / abc / 123 / sym.
+
+        No-op for hex fields.  ``input:charset`` action (e.g. bound to M2);
+        when the action came from a soft key the matching button label is
+        updated to the new set name so the on-screen hint follows.
+        """
+        widget = self._input_widget
+        if widget is None:
+            return
+        if not widget.nextCharset():
+            return
+        name = widget.getCharsetName()
+        if key == KEY_M1:
+            self.setLeftButton(name)
+        elif key == KEY_M2:
+            self.setRightButton(name)
+
+    def input_clear(self):
+        """Clear the active input widget (``input:clear`` action)."""
+        if self._input_widget is not None:
+            self._input_widget.setValue('')
 
     def show_toast(self, text, timeout=3000, icon=None):
         """Show a toast message.

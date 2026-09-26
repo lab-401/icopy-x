@@ -1,0 +1,9 @@
+{
+    "name": "Card Notes",
+    "version": "1.0.0",
+    "author": "Vost02",
+    "description": "Attach a note to a card (by UID) in a sidecar file without touching the dump files; the Ultra/Tiny writers show the note too",
+    "entry_class": "CardNotesPlugin",
+    "permissions": [],
+    "order": 44
+}

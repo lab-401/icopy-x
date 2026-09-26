@@ -2116,6 +2116,15 @@ class InputMethods:
 
     # Hex character set for roll selection
     _HEX_CHARS = '0123456789ABCDEF'
+    _DEC_CHARS = '0123456789'
+    # Text mode cycles through these sets (M2 / input:charset)
+    _TEXT_CHARSETS = (
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        'abcdefghijklmnopqrstuvwxyz',
+        '0123456789',
+        ' .,-_/:@#!?+*()&=<>%',
+    )
+    _CHARSET_NAMES = ('ABC', 'abc', '123', '!@#')
 
     def __init__(self, canvas, x=0, y=CONTENT_Y0, h=CONTENT_H,
                  format='hex', length=12, placeholder='FFFFFFFFFFFF'):
@@ -2142,6 +2151,15 @@ class InputMethods:
             placeholder[:length].ljust(length, '0' if format == 'hex' else ' ')
         )
         self._focus = 0
+
+        # Character sets the roll keys cycle through
+        if format == 'hex':
+            self._charsets = (self._HEX_CHARS,)
+        elif format == 'dec':
+            self._charsets = (self._DEC_CHARS,)
+        else:
+            self._charsets = self._TEXT_CHARSETS
+        self._charset = 0
 
         # Appearance
         self._bg_color = INPUT_BG_COLOR
@@ -2211,56 +2229,64 @@ class InputMethods:
     # Character roll
     # -----------------------------------------------------------------
 
-    _DEC_CHARS = '0123456789'
+    def _current_charset(self) -> str:
+        return self._charsets[self._charset]
+
+    def setCharset(self, index: int):
+        """Select the active character set by index (clamped)."""
+        self._charset = max(0, min(index, len(self._charsets) - 1))
+        self._coerce_focus_char()
+        if self._showing:
+            self._redraw()
+
+    def nextCharset(self) -> bool:
+        """Cycle to the next character set.
+
+        Returns True when the set changed (text mode), False for hex/dec.
+        """
+        if len(self._charsets) <= 1:
+            return False
+        self._charset = (self._charset + 1) % len(self._charsets)
+        self._coerce_focus_char()
+        if self._showing:
+            self._redraw()
+        return True
+
+    def getCharsetName(self) -> str:
+        """Short name of the active set ('ABC', 'abc', '123', 'sym')."""
+        if self._format == 'hex':
+            return 'HEX'
+        if self._charset < len(self._CHARSET_NAMES):
+            return self._CHARSET_NAMES[self._charset]
+        return ''
+
+    def _coerce_focus_char(self):
+        """When the set changes, show a member of it at the cursor."""
+        chars = self._current_charset()
+        if self._chars[self._focus] not in chars:
+            self._chars[self._focus] = chars[0]
+
+    def delete(self):
+        """Clear the focused character in place (no cursor move)."""
+        self._chars[self._focus] = '0' if self._format == 'hex' else ' '
+        if self._showing:
+            self._redraw()
 
     def rollUp(self):
-        """Increment the focused character.
-
-        For hex: 0->1->...->9->A->...->F->0 (wraps).
-        For dec: 0->1->...->9->0 (wraps within digits).
-        For text: increment ASCII value (wraps within printable range).
-        """
-        ch = self._chars[self._focus]
-        if self._format == 'hex':
-            idx = self._HEX_CHARS.find(ch.upper())
-            if idx < 0:
-                idx = 0
-            self._chars[self._focus] = self._HEX_CHARS[(idx + 1) % 16]
-        elif self._format == 'dec':
-            idx = self._DEC_CHARS.find(ch)
-            if idx < 0:
-                idx = 0
-            self._chars[self._focus] = self._DEC_CHARS[(idx + 1) % 10]
-        else:
-            # Printable ASCII range 0x20-0x7E
-            code = ord(ch)
-            code = code + 1 if code < 0x7E else 0x20
-            self._chars[self._focus] = chr(code)
+        """Step the focused character up within the active set (wraps)."""
+        chars = self._current_charset()
+        idx = chars.find(self._chars[self._focus])
+        idx = 0 if idx < 0 else (idx + 1) % len(chars)
+        self._chars[self._focus] = chars[idx]
         if self._showing:
             self._redraw()
 
     def rollDown(self):
-        """Decrement the focused character.
-
-        For hex: 0->F->E->...->1->0 (wraps).
-        For dec: 0->9->8->...->1->0 (wraps within digits).
-        For text: decrement ASCII value (wraps within printable range).
-        """
-        ch = self._chars[self._focus]
-        if self._format == 'hex':
-            idx = self._HEX_CHARS.find(ch.upper())
-            if idx < 0:
-                idx = 0
-            self._chars[self._focus] = self._HEX_CHARS[(idx - 1) % 16]
-        elif self._format == 'dec':
-            idx = self._DEC_CHARS.find(ch)
-            if idx < 0:
-                idx = 0
-            self._chars[self._focus] = self._DEC_CHARS[(idx - 1) % 10]
-        else:
-            code = ord(ch)
-            code = code - 1 if code > 0x20 else 0x7E
-            self._chars[self._focus] = chr(code)
+        """Step the focused character down within the active set (wraps)."""
+        chars = self._current_charset()
+        idx = chars.find(self._chars[self._focus])
+        idx = 0 if idx < 0 else (idx - 1) % len(chars)
+        self._chars[self._focus] = chars[idx]
         if self._showing:
             self._redraw()
 
