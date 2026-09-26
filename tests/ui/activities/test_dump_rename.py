@@ -346,3 +346,35 @@ class TestListLabels:
     def test_renamed_names_shown_in_full(self, name):
         from activity_main import CardWalletActivity
         assert CardWalletActivity._formatFilename(name + '.bin') == name
+
+
+# ======================================================================
+# Plus 2K dumps (issue #31)
+# ======================================================================
+
+class TestPlus2K:
+    def test_device_named_plus2k_is_type_26(self, root):
+        p = _write(os.path.join(root, 'mf1'), 'M1-Plus-2K-4B_DEADBEEF_1.bin',
+                   _mf1_bin_1k()[:16] + b'\x00' * 2032)
+        _act, cache = _cache_for(p)
+        assert cache['type'] == 26
+        assert cache['uid'] == 'DEADBEEF'
+        assert cache['nameStr'] == 'M1 Plus 2K (4B)'
+
+    def test_renamed_2048_byte_dump_is_type_26(self, root):
+        p = _write(os.path.join(root, 'mf1'), 'GARAGE.bin',
+                   _mf1_bin_1k()[:16] + b'\x00' * 2032)
+        _act, cache = _cache_for(p)
+        assert cache['type'] == 26
+        assert cache['uid'] == 'DEADBEEF'
+
+    def test_write_size_is_2k(self, root):
+        import hfmfread
+        p = _write(os.path.join(root, 'mf1'), 'M1-Plus-2K-4B_DEADBEEF_1.bin',
+                   _mf1_bin_1k()[:16] + b'\x00' * 2032)
+        _act, cache = _cache_for(p)
+        assert hfmfread.sizeGuess(cache['type']) == 2048
+
+    def test_template_label(self):
+        import template
+        assert template.TYPE_TEMPLATE[26][1] == 'M1 Plus 2K'
