@@ -79,7 +79,7 @@
                 },
                 {
                     "label": "ICS Decoder",
-                    "icon": null,
+                    "icon": "47",
                     "action": "push:iclass_se"
                 },
                 {
@@ -90,7 +90,7 @@
             ]
         },
         "buttons": {
-            "left": null,
+            "left": "Move",
             "right": null
         },
         "keys": {
