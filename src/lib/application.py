@@ -201,7 +201,7 @@ def startApp():
     # toolkit; safer to defer).  audio.init() is graceful — silent
     # no-op when no sound HW (QEMU, dev host with no audio device).
     try:
-        from lib import audio
+        import audio
         audio.init()
         audio.playSystemStart()
     except Exception:

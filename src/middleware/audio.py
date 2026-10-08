@@ -98,8 +98,16 @@ def init():
     Original: pygame.mixer.init() + load sound files.
     Gracefully no-ops if pygame or sound hardware is unavailable (QEMU).
     """
-    global _initialized, _mixer_available
+    global _initialized, _mixer_available, _volume_pct, _key_audio_enabled
     _initialized = True
+    try:
+        import settings
+        level = settings.getVolume()
+        if level in (0, 1, 2, 3):
+            _volume_pct = settings.fromLevelGetVolume(level)
+            _key_audio_enabled = level != 0
+    except Exception:
+        pass
     try:
         import pygame
         pygame.mixer.init()
@@ -128,6 +136,13 @@ def setVolume(v):
     """
     global _volume_pct
     _volume_pct = max(0, min(100, int(v)))
+    if _volume_pct == 0 and _mixer_available:
+        try:
+            import pygame
+            pygame.mixer.stop()
+            pygame.mixer.music.stop()
+        except Exception:
+            pass
     pct = '%d%%' % _volume_pct
     for control in _AMIXER_CONTROLS:
         try:
@@ -192,6 +207,8 @@ def playOfVolumeImpl(n, v):
     SDL_mixer.  When pygame is unavailable (QEMU) the call
     gracefully no-ops.
     """
+    if _volume_pct == 0:
+        return
     wav = os.path.join(_AUDIO_BASE, n) if not os.path.isabs(n) else n
     if not os.path.exists(wav):
         logger.debug("audio.playOfVolumeImpl(%s) — file not found: %s", n, wav)
@@ -316,7 +333,7 @@ def playVerifying(chk=False): logger.debug("audio.playVerifying()")
 def startScrollerMusic(ogg_path):
     """Start looping background music for the About scroller easter
     egg.  No-op if pygame mixer is unavailable or the file is missing."""
-    if not _mixer_available:
+    if _volume_pct == 0 or not _mixer_available:
         logger.debug("startScrollerMusic — no mixer")
         return
     if not os.path.isfile(ogg_path):
