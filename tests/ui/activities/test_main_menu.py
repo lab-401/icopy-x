@@ -1,7 +1,7 @@
 """Tests for MainActivity — root menu of the iCopy-X.
 
 Covers:
-  - Menu creation (title, buttons, 14 items, icons, initial selection)
+  - Menu creation (title, buttons, 16 items, icons, initial selection)
   - Navigation (UP/DOWN scroll, OK/M2 launch, pagination)
   - Activity launch dispatch (registry lookup, missing module handling)
   - Battery bar (shown on resume)
@@ -81,21 +81,20 @@ class TestMainMenuCreation:
                 text = canvas.itemcget(iid, "text")
                 assert text == "", f"Right button should be empty, got '{text}'"
 
-    def test_left_button_empty(self, main_activity):
-        """Left button (M1) should be empty string on main menu."""
+    def test_left_button_move(self, main_activity):
+        """Left button (M1) offers menu movement."""
         canvas = main_activity.getCanvas()
-        # The left button text should be "" (empty)
-        # Check that tags_btn_left items have empty or no text
+        # The left button text should offer Move
         left_btn_ids = canvas.find_withtag("tags_btn_left")
         if left_btn_ids:
             for iid in left_btn_ids:
                 text = canvas.itemcget(iid, "text")
-                assert text == "", f"Left button should be empty, got '{text}'"
+                assert text == "Move"
 
-    def test_14_menu_items(self, main_activity):
-        """ListView should have exactly 14 items."""
+    def test_16_menu_items(self, main_activity):
+        """ListView includes iCS Decoder and Settings."""
         assert main_activity.lv_main_page is not None
-        assert len(main_activity.lv_main_page._items) == 14
+        assert len(main_activity.lv_main_page._items) == 16
 
     def test_item_labels_correct_order(self, main_activity):
         """Menu items should appear in the verified v1.0.90 order."""
@@ -103,16 +102,16 @@ class TestMainMenuCreation:
             "Auto Copy", "Dump Files", "Scan Tag", "Read Tag",
             "Sniff TRF", "Simulation", "PC-Mode", "Diagnosis",
             "Backlight", "Volume", "About", "Erase Tag",
-            "Time Settings", "LUA Script",
+            "Time Settings", "LUA Script", "ICS Decoder", "Settings",
         ]
         assert main_activity.lv_main_page._items == expected
 
     def test_all_items_have_icons(self, main_activity):
-        """All 14 items should have icons."""
+        """All menu items should have icons."""
         expected_icons = [
             "1", "2", "3", "4", "5", "6", "7",
             "diagnosis", "8", "9",
-            "list", "erase", "time", "script",
+            "list", "erase", "time", "script", "47", "3",
         ]
         icons = main_activity.lv_main_page._icons
         for i, expected in enumerate(expected_icons):
@@ -142,12 +141,12 @@ class TestMainMenuNavigation:
         """UP key should move selection back by 1 (wraps to end from 0)."""
         assert main_activity.lv_main_page.selection() == 0
         main_activity.onKeyEvent('UP')
-        # Wraps to last item (index 13)
-        assert main_activity.lv_main_page.selection() == 13
+        # Wraps to last item (index 15)
+        assert main_activity.lv_main_page.selection() == 15
 
     def test_down_wraps_at_end(self, main_activity):
         """DOWN from last item should wrap to first item."""
-        main_activity.lv_main_page.setSelection(13)
+        main_activity.lv_main_page.setSelection(15)
         main_activity.onKeyEvent('DOWN')
         assert main_activity.lv_main_page.selection() == 0
 
@@ -155,7 +154,7 @@ class TestMainMenuNavigation:
         """UP from first item should wrap to last item."""
         assert main_activity.lv_main_page.selection() == 0
         main_activity.onKeyEvent('UP')
-        assert main_activity.lv_main_page.selection() == 13
+        assert main_activity.lv_main_page.selection() == 15
 
     def test_ok_launches_activity(self, main_activity):
         """OK key should attempt to launch the selected activity."""
@@ -197,13 +196,14 @@ class TestMainMenuNavigation:
             actmain_mod._ACTIVITY_REGISTRY.update(original_registry)
             sys.modules.pop('tests.ui.activities.test_main_menu', None)
 
-    def test_m1_no_action(self, main_activity):
-        """M1 on main menu should do nothing (no crash, no state change)."""
+    def test_m1_enters_move_mode(self, main_activity):
+        """M1 picks up the selected item without launching it."""
         sel_before = main_activity.lv_main_page.selection()
         stack_before = actstack.get_stack_size()
         main_activity.onKeyEvent('M1')
         assert main_activity.lv_main_page.selection() == sel_before
         assert actstack.get_stack_size() == stack_before
+        assert main_activity._move_snapshot is not None
 
     def test_pwr_no_crash(self, main_activity):
         """PWR key should not crash (stub for shutdown flow)."""
@@ -330,13 +330,13 @@ class TestMainMenuActivityLaunch:
         finally:
             self._teardown_stub('diagnosis', mod_path, orig)
 
-    def test_launch_all_14_action_keys(self, main_activity):
+    def test_launch_all_action_keys(self, main_activity):
         """Every menu item maps to a valid action key in the registry."""
         expected_keys = [
             "autocopy", "dump_files", "scan", "read_list",
             "sniff", "simulation", "pcmode", "diagnosis",
             "backlight", "volume", "about", "erase",
-            "time_settings", "lua_script",
+            "time_settings", "lua_script", "iclass_se", "settings_menu",
         ]
         for i, expected_key in enumerate(expected_keys):
             _label, _icon, action_key = main_activity._menu_items[i]
@@ -394,14 +394,14 @@ class TestMainMenuJSON:
     def test_json_title(self, menu_json):
         assert menu_json["screen"]["title"] == "Main Page"
 
-    def test_json_14_items(self, menu_json):
-        assert len(menu_json["screen"]["content"]["items"]) == 14
+    def test_json_16_items(self, menu_json):
+        assert len(menu_json["screen"]["content"]["items"]) == 16
 
     def test_json_right_button_null(self, menu_json):
         assert menu_json["screen"]["buttons"]["right"] is None
 
-    def test_json_left_button_null(self, menu_json):
-        assert menu_json["screen"]["buttons"]["left"] is None
+    def test_json_left_button_move(self, menu_json):
+        assert menu_json["screen"]["buttons"]["left"] == "Move"
 
     def test_json_first_item_autocopy(self, menu_json):
         first = menu_json["screen"]["content"]["items"][0]
@@ -409,11 +409,11 @@ class TestMainMenuJSON:
         assert first["icon"] == "1"
         assert first["action"] == "push:autocopy"
 
-    def test_json_last_item_lua(self, menu_json):
+    def test_json_last_item_settings(self, menu_json):
         last = menu_json["screen"]["content"]["items"][-1]
-        assert last["label"] == "LUA Script"
-        assert last["icon"] is None
-        assert last["action"] == "push:lua_script"
+        assert last["label"] == "Settings"
+        assert last["icon"] == "3"
+        assert last["action"] == "push:settings_menu"
 
     def test_json_icons_first_10_non_null(self, menu_json):
         items = menu_json["screen"]["content"]["items"]

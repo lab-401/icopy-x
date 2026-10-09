@@ -216,3 +216,35 @@ class TestConsoleViewFont:
         text_items = _get_text_items(canvas)
         _, t = text_items[0]
         assert t['options']['fill'] == CONSOLE_TEXT_COLOR
+
+
+def test_horizontal_scroll_uses_rendered_font_width(cv, monkeypatch):
+    import tkinter.font as tkfont
+    from types import SimpleNamespace
+
+    measured = []
+    def measure(text):
+        measured.append(text)
+        return 460
+
+    monkeypatch.setattr(tkfont, 'Font', lambda **kwargs: SimpleNamespace(measure=measure))
+    cv.addLine('A' * 40)
+    for _ in range(30):
+        cv.scrollRight()
+    assert measured and measured[-1] == 'A' * 40
+    assert cv._h_offset == 460 - cv._width + 8
+    cv.scrollRight()
+    assert cv._h_offset == 460 - cv._width + 8
+
+
+def test_horizontal_scroll_without_tk_metrics_reaches_line_end(cv, monkeypatch):
+    import tkinter.font as tkfont
+
+    def unavailable(**kwargs):
+        raise RuntimeError('No Tk display')
+
+    monkeypatch.setattr(tkfont, 'Font', unavailable)
+    cv.addLine('A' * 80)
+    for _ in range(100):
+        cv.scrollRight()
+    assert cv._h_offset == 80 * cv._font_size - cv._width + 8

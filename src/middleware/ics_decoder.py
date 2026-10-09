@@ -8,6 +8,8 @@ Protocol:
 """
 
 import glob
+import base64
+import re
 import os
 import sys
 import time
@@ -159,129 +161,126 @@ def detect_decoder():
 def read_card(ser):
     """Send RD and read a card block from the decoder.
 
-    Returns a parsed dict (see parse_block) or None on no-card / error.
+    Returns a parsed dict (see parse_block) or None on no-card. Disconnection raises ConnectionError.
     """
     if ser is None or not ser.is_open:
-        return None
+        raise ConnectionError('Decoder unavailable')
 
     try:
         ser.write(_CMD_RD.encode('utf-8'))
-    except Exception:
-        return None
+    except Exception as error:
+        raise ConnectionError('Decoder command failed') from error
 
-    buf = ''
-    while True:
+    response = bytearray()
+    frame_started = False
+    status_only = True
+    serial_timeout = getattr(ser, 'timeout', None)
+    if not isinstance(serial_timeout, (int, float)) or serial_timeout <= 0:
+        serial_timeout = _READLINE_TIMEOUT
+    deadline = time.monotonic() + 4 * serial_timeout
+    while time.monotonic() < deadline and len(response) < 65536:
         try:
             raw = ser.readline()
             if not raw:
                 break
-            line = raw.decode('utf-8', errors='ignore').strip()
+            response.extend(raw)
+            line = raw.decode('utf-8', errors='replace').strip('\x00 \t\r\n')
         except Exception:
-            return None
+            if response:
+                result = parse_block(response.decode('utf-8', errors='replace'), bytes(response))
+                result['status'] = 'decoder_error'
+                return result
+            raise ConnectionError('Decoder response failed')
 
         if not line:
             continue
 
-        buf += line + '\n'
-
-        if '??' in line:
-            return None
-
-        if '$A_CARD_STOP$' in line:
+        if line == '$A_CARD_START$':
+            frame_started = True
+        if line not in ('OK', '??'):
+            status_only = False
+        if frame_started and line == '$A_CARD_STOP$':
             break
 
-    return parse_block(buf)
-
-
-def parse_block(text):
-    """Parse a $A_CARD_START$...$A_CARD_STOP$ block into a dict.
-
-    Keys: blk7, wiedata, bits, bit, fc, id, hex, sio_pacs.
-    Returns None if Blk7# is missing.
-
-    For SEOS cards, FC/CN may not be in plaintext - they must be extracted
-    from the SIO PACS payload using the NN right-shift method.
-    """
-    result = {}
-    for line in text.splitlines():
-        line = line.strip()
-        if line.startswith('Blk7#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['blk7'] = val[:16].zfill(16)
-        elif line.startswith('wiedata#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['wiedata'] = val
-        elif line.startswith('Bit#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            try:
-                result['bit'] = int(val)
-            except ValueError:
-                pass
-        elif line.startswith('Bits#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['bits'] = val
-        elif line.startswith('FC#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            try:
-                result['fc'] = int(val)
-            except ValueError:
-                pass
-        elif line.startswith('ID#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            try:
-                result['id'] = int(val)
-            except ValueError:
-                pass
-        elif line.startswith('Hex#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['hex'] = val
-        elif line.startswith('SIO#') or line.startswith('PACS#') or line.startswith('sio#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['sio_pacs'] = val
-        elif line.startswith('SIO_CONTAINER#') or line.startswith('CONTAINER#'):
-            val = line.split(':', 1)[1].strip() if ':' in line else ''
-            result['sio_container'] = val
-
-    if 'blk7' not in result:
+    if not response or (not frame_started and status_only):
         return None
+    return parse_block(response.decode('utf-8', errors='replace'), bytes(response))
 
-    _log('SEOS_READ blk7={} fc={} id={} sio_pacs={} hex={}'.format(
-        result.get('blk7', ''),
-        result.get('fc', ''),
-        result.get('id', ''),
-        result.get('sio_pacs', '')[:30],
-        result.get('hex', '')[:30]))
 
-    if 'fc' not in result or 'id' not in result:
-        if 'sio_pacs' in result:
-            parsed = parse_sio_pacs(result['sio_pacs'])
-            if parsed['valid']:
-                result['fc'] = parsed['fc']
-                result['id'] = parsed['cn']
-                result['raw'] = parsed['raw_26bit']
-        elif 'hex' in result:
-            parsed = parse_sio_pacs(result['hex'])
-            if parsed['valid']:
-                result['fc'] = parsed['fc']
-                result['id'] = parsed['cn']
-                result['raw'] = parsed['raw_26bit']
-        elif 'sio_container' in result:
-            parsed = parse_sio_container(result['sio_container'])
-            if parsed['valid']:
-                result['fc'] = parsed['fc']
-                result['id'] = parsed['cn']
-                result['raw'] = parsed['raw_26bit']
+def parse_block(text, raw_bytes=None):
+    """Parse a framed response, preserving source bytes and unsupported fields."""
+    if raw_bytes is None:
+        raw_bytes = text.encode('utf-8')
+    result = {
+        'raw_response_b64': base64.b64encode(raw_bytes).decode('ascii'),
+        'raw_response_text': text,
+        'raw_fields': {},
+        'format': 'Unknown/Unsupported',
+        'status': 'unsupported',
+    }
+    lines = [line.strip('\x00 \t\r\n') for line in text.splitlines()]
+    try:
+        start = lines.index('$A_CARD_START$')
+        stop = lines.index('$A_CARD_STOP$', start + 1)
+    except ValueError:
+        result['status'] = 'malformed'
+        return result
+    if '$A_CARD_START$' in lines[start + 1:stop]:
+        result['status'] = 'malformed'
+        return result
+    body = '\n'.join(lines[start + 1:stop])
+    names = {
+        'blk7': 'raw_blk7', 'wiedata': 'wiedata', 'bit': 'bit',
+        'bits': 'bits', 'fc': 'reported_fc', 'id': 'reported_id',
+        'hex': 'hex', 'sio': 'sio_pacs', 'pacs': 'sio_pacs',
+        'sio_container': 'sio_container', 'container': 'sio_container',
+        'technology': 'source_technology',
+    }
+    for line in body.splitlines():
+        if ':' not in line or '#' not in line.split(':', 1)[0]:
+            continue
+        key, value = line.split(':', 1)
+        key = key.strip().rstrip('#').lower()
+        value = value.strip()
+        result['raw_fields'][key] = value
+        field = names.get(key)
+        if field and value:
+            result[field] = value
 
-    _log('SEOS_PARSE fc={} id={} raw={} blk7={}'.format(
-        result.get('fc', ''),
-        result.get('id', ''),
-        result.get('raw', ''),
-        result.get('blk7', '')))
+    bit_text = result.get('bit')
+    if bit_text and bit_text.isdigit():
+        result['bit_length'] = int(bit_text)
+    elif re.fullmatch(r'[01]+', result.get('bits', '')):
+        result['bit_length'] = len(result['bits'])
+    result.pop('bit', None)
 
+    raw_blk7 = result.get('raw_blk7', '').replace(' ', '')
+    if re.fullmatch(r'[0-9A-Fa-f]{16}', raw_blk7) and int(raw_blk7, 16) != 0:
+        result['derived_legacy'] = {'blk7': raw_blk7.upper(), 'source': 'decoder_reported'}
+        result['blk7'] = raw_blk7.upper()
+
+    if result.get('bit_length') == 26:
+        reported_fc = result.get('reported_fc', '')
+        reported_id = result.get('reported_id', '')
+        if reported_fc.isdigit() and reported_id.isdigit():
+            fc, card_id = int(reported_fc), int(reported_id)
+            frame = result.get('wiedata', '')
+            if (0 <= fc <= 255 and 0 <= card_id <= 65535 and (fc or card_id) and
+                    re.fullmatch(r'[01]{26}', frame) and
+                    int(frame, 2) == calculate_wiegand26_parity(fc, card_id)):
+                result.update(fc=fc, id=card_id, raw=hex(int(frame, 2)),
+                              format='H10301 (26-bit)', status='decoded')
+        if result['status'] != 'decoded':
+            for field, parser in (('sio_pacs', parse_sio_pacs), ('hex', parse_sio_pacs)):
+                parsed = parser(result.get(field), bit_length=26)
+                if parsed['valid']:
+                    result.update(fc=parsed['fc'], id=parsed['cn'],
+                                  raw=parsed['raw_26bit'], format='H10301 (26-bit)', status='decoded')
+                    break
     return result
 
 
-def extract_and_shift_wiegand(payload_bytes: bytes) -> dict:
+def extract_and_shift_wiegand(payload_bytes: bytes, bit_length=None) -> dict:
     """Strip ASN.1 Tag 85 if present, extract padding byte NN,
     and apply right-shift to construct the Wiegand frame.
 
@@ -294,14 +293,17 @@ def extract_and_shift_wiegand(payload_bytes: bytes) -> dict:
     Returns:
         Dict with keys: valid, fc, cn, shifted_hex
     """
+    if bit_length != 26:
+        return {"valid": False}
     data = payload_bytes
 
     if len(data) > 2 and data[0] == 0x85:
         length = data[1]
+        if length != len(data) - 2:
+            return {"valid": False}
         data = data[2:2 + length]
-        _log('BITSHIFT ASN1 tag=0x85 len={}'.format(length))
 
-    if len(data) < 2:
+    if len(data) < 5 or data[0] > 7:
         return {"valid": False, "fc": 0, "cn": 0, "shifted_hex": "0"}
 
     shift_nn = data[0]
@@ -309,12 +311,13 @@ def extract_and_shift_wiegand(payload_bytes: bytes) -> dict:
 
     raw_int = int.from_bytes(payload_data, byteorder="big")
     shifted = raw_int >> shift_nn
+    if shifted == 0 or shifted >= (1 << 26):
+        return {"valid": False}
 
     fc = (shifted >> 17) & 0xFF
     cn = (shifted >> 1) & 0xFFFF
-
-    _log('BITSHIFT nn={} raw_int={} shifted={} fc={} cn={}'.format(
-        shift_nn, hex(raw_int), hex(shifted), fc, cn))
+    if calculate_wiegand26_parity(fc, cn) != shifted:
+        return {"valid": False}
 
     return {
         "valid": True,
@@ -324,7 +327,7 @@ def extract_and_shift_wiegand(payload_bytes: bytes) -> dict:
     }
 
 
-def parse_sio_pacs(hex_string):
+def parse_sio_pacs(hex_string, bit_length=None):
     """Parse SEOS SIO PACS payload to extract FC and Card Number.
 
     SIO PACS Wiegand Format (Black Hat Asia 2025 - Iceman & evildaemond):
@@ -346,7 +349,7 @@ def parse_sio_pacs(hex_string):
     Returns:
         Dict with keys: fc, cn, raw_26bit, valid
     """
-    if not hex_string:
+    if not hex_string or bit_length != 26:
         return {"fc": 0, "cn": 0, "raw_26bit": "0", "valid": False}
 
     try:
@@ -355,7 +358,7 @@ def parse_sio_pacs(hex_string):
             return {"fc": 0, "cn": 0, "raw_26bit": "0", "valid": False}
 
         raw_bytes = bytes.fromhex(hex_string)
-        result = extract_and_shift_wiegand(raw_bytes)
+        result = extract_and_shift_wiegand(raw_bytes, bit_length=bit_length)
         if result['valid']:
             return {
                 "fc": result['fc'],
@@ -368,7 +371,7 @@ def parse_sio_pacs(hex_string):
         return {"fc": 0, "cn": 0, "raw_26bit": "0", "valid": False}
 
 
-def parse_sio_container(hex_string):
+def parse_sio_container(hex_string, bit_length=None):
     """Parse SEOS SIO ASN.1 TLV container to extract PACS payload.
 
     SEOS SIO Container Format (ASN.1 TLV):
@@ -390,13 +393,13 @@ def parse_sio_container(hex_string):
     Returns:
         Dict with keys: fc, cn, raw_26bit, valid
     """
-    if not hex_string:
+    if not hex_string or bit_length != 26:
         return {"fc": 0, "cn": 0, "raw_26bit": "0", "valid": False}
 
     try:
         hex_string = hex_string.strip().replace(' ', '').replace(':', '')
         data = bytes.fromhex(hex_string)
-        result = extract_and_shift_wiegand(data)
+        result = extract_and_shift_wiegand(data, bit_length=bit_length)
         if result['valid']:
             return {
                 "fc": result['fc'],
@@ -460,28 +463,19 @@ def write_to_card(blk7_hex):
         '2020666666668888',  # Virgin Picopass transport key
     ]
 
-    _log('WRITE blk7={}'.format(blk7_hex))
-
     try:
         se_data = iclasswrite.make_se_data(blk7_hex)
     except Exception as e:
-        _log('WRITE make_se_data error: {}'.format(e))
         return False
-
-    _log('WRITE se_data={}'.format(se_data))
 
     for key in ICLASS_KEYS:
         try:
             ret = iclasswrite.writeDataBlocks(17, se_data, key)
-            _log('WRITE key={} ret={}'.format(key[:8], ret))
             if ret == 0:
-                _log('WRITE success with key={}'.format(key[:8]))
                 return True
         except Exception as e:
-            _log('WRITE key={} error: {}'.format(key[:8], e))
             continue
 
-    _log('WRITE failed all keys')
     return False
 
 
@@ -618,9 +612,7 @@ def write_to_t5577(fc, card_id):
         if int(fc) == 0 and int(card_id) == 0:
             return False
         cmd = 'lf hid clone -w H10301 --fc {} --cn {}'.format(int(fc), int(card_id))
-        _log('WRITE fc={} cn={}'.format(int(fc), int(card_id)))
         ret = executor.startPM3Task(cmd, timeout=5000)
-        _log('WRITE ret={}'.format(ret))
         # Accept 0 or 1 as success (command completed), only flag failure on -1 or error
         write_success = ret in (0, 1)
         if write_success:
@@ -643,7 +635,11 @@ def is_valid_26bit(fc, cn):
     Returns:
         True if valid 26-bit format (fc > 0 or cn > 0)
     """
-    return int(fc) > 0 or int(cn) > 0
+    try:
+        fc, cn = int(fc), int(cn)
+        return 0 <= fc <= 255 and 0 <= cn <= 65535 and (fc != 0 or cn != 0)
+    except (TypeError, ValueError):
+        return False
 
 
 def calculate_wiegand26_parity(fc: int, cn: int) -> int:
@@ -686,9 +682,6 @@ def verify_target_card(target_type, source_data):
     expected_blk7 = source_data.get('raw_block7', source_data.get('blk7', '')).replace(" ", "").lower()
     is_26bit = source_data.get('is_26bit', False) or (expected_fc > 0 and expected_cn > 0)
 
-    _log('VERIFY type={} exp_fc={} exp_cn={} exp_blk7={} 26bit={}'.format(
-        target_type, expected_fc, expected_cn, expected_blk7[:16], is_26bit))
-
     try:
         import executor
     except ImportError:
@@ -707,8 +700,6 @@ def verify_target_card(target_type, source_data):
             cmd = 'hf iclass rdbl --blk 7 -k {}'.format(key)
             ret = executor.startPM3Task(cmd, timeout=3000)
             output = executor.getPrintContent()
-            _log('VERIFY rdbl key={} ret={}'.format(key[:8], ret))
-            _log('VERIFY output={}'.format(output[:120] if output else 'None'))
             if output:
                 for line in output.splitlines():
                     if "block" in line.lower() and ":" in line:
@@ -721,17 +712,12 @@ def verify_target_card(target_type, source_data):
             if read_hex:
                 break
 
-        _log('VERIFY read_hex={} key={}'.format(read_hex, used_key[:8] if used_key else None))
-
         if not read_hex:
             return (False, "Auth failed")
 
         # Normalize both strings for comparison
         clean_read = read_hex.strip().replace(" ", "").lower()
         clean_exp = expected_blk7.strip().replace(" ", "").lower()
-
-        _log('VERIFY clean_read={} clean_exp={} match={}'.format(
-            clean_read, clean_exp, clean_read == clean_exp))
 
         # Direct raw match takes precedence
         if clean_read == clean_exp and len(clean_read) == 16:
@@ -746,8 +732,6 @@ def verify_target_card(target_type, source_data):
                 raw_int = int(clean_read, 16)
                 read_fc = (raw_int >> 17) & 0xFF
                 read_cn = (raw_int >> 1) & 0xFFFF
-                _log('VERIFY bitshift read_fc={} read_cn={} exp_fc={} exp_cn={}'.format(
-                    read_fc, read_cn, expected_fc, expected_cn))
                 if read_fc == expected_fc and read_cn == expected_cn:
                     return (True, "Verified FC:{} CN:{}".format(read_fc, read_cn))
                 else:
@@ -768,12 +752,10 @@ def verify_target_card(target_type, source_data):
 
         cmd = 'lf hid reader'
         ret = executor.startPM3Task(cmd, timeout=5000)
-        _log('VERIFY lf_hid ret={}'.format(ret))
         if ret == -1:
             return (False, "No LF signal")
 
         output = executor.getPrintContent()
-        _log('VERIFY lf_output={}'.format(output[:150] if output else 'None'))
         if not output:
             return (False, "No LF signal")
 
@@ -791,20 +773,14 @@ def verify_target_card(target_type, source_data):
                     read_cn = int(cn_match.group(1))
                     break  # Found the correct line, stop searching
 
-        _log('VERIFY read_fc={} read_cn={} exp_fc={} exp_cn={}'.format(
-            read_fc, read_cn, expected_fc, expected_cn))
-
         if read_fc is None or read_cn is None:
             return (False, "Failed to parse LF")
 
         if read_fc == expected_fc and read_cn == expected_cn:
             reconstructed_w26 = calculate_wiegand26_parity(read_fc, read_cn)
-            _log('VERIFY w26={}'.format(hex(reconstructed_w26)))
             return (True, "FC:{} CN:{}".format(read_fc, read_cn))
 
         return (False, "R:FC:{} CN:{} != E:FC:{} CN:{}".format(
             read_fc, read_cn, expected_fc, expected_cn))
 
     return (False, "Unknown target")
-
-
