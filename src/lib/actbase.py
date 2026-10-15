@@ -622,7 +622,7 @@ class BaseActivity(Activity):
         # an audio failure (no mixer / missing asset) never blocks
         # the actual key handler.
         try:
-            from lib import audio
+            import audio
             if key == KEY_UP or key == KEY_DOWN:
                 audio.playNavTap()
             elif key in (KEY_OK, KEY_M1, KEY_M2, KEY_PWR):
