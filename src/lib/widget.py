@@ -1287,7 +1287,7 @@ class Toast:
         # avoid pulling pygame in for the hundreds of widgets that
         # never call show().
         try:
-            from lib import audio
+            import audio
             audio.playSystemToast()
         except Exception:
             pass
@@ -1988,9 +1988,12 @@ class ConsoleView:
         if not self._lines:
             return 0
         longest = max(self._lines, key=len)
-        # Approximate: char_width ~ font_size * 0.6 for monospace
-        char_w = self._font_size * 0.6
-        content_w = len(longest) * char_w
+        try:
+            import tkinter.font as tkfont
+            font = tkfont.Font(font=resources.get_font(self._font_size))
+            content_w = font.measure(longest)
+        except Exception:
+            content_w = len(longest) * self._font_size
         return max(0, int(content_w - self._width + 8))
 
     # -----------------------------------------------------------------
