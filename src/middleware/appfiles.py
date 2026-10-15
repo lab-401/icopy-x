@@ -47,7 +47,7 @@ except ImportError:
 PATH_UPAN = '/mnt/upan/'
 PATH_DUMP = '/mnt/upan/dump/'
 PATH_KEYS = '/mnt/upan/keys/'
-PATH_LOG_FILE = '/mnt/upan/logs/app.log'
+PATH_LOG_FILE = '/mnt/upan/log.txt'
 PATH_TRACE = '/mnt/upan/trace/'
 
 # ---------------------------------------------------------------------------
