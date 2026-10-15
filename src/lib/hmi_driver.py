@@ -287,7 +287,7 @@ def _serial_key_handle(keycode):
         # OS shutdown happen in parallel, the chime just plays out
         # over the actual halt sequence.
         try:
-            from lib import audio
+            import audio
             audio.playSystemShutdown()
         except Exception:
             pass
