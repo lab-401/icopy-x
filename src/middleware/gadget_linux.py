@@ -210,55 +210,11 @@ def remount_upan_partition():
     mount_upan_partition()
 
 
-def _ensure_dictionary_dirs():
-    """Create dictionary directories on /mnt/upan if they don't exist.
-
-    Ensures mf1, t55xx, and iclass key directories exist so plugins
-    and middleware can write to them without manual "Load Dictionaries".
-    Also copies default dictionary files from the app plugin bundle if missing.
-    """
-    import shutil
-    
-    base = '/mnt/upan/keys'
-    # Plugin bundle is in the app directory, not on USB partition
-    app_dir = '/home/pi/ipk_app_main'
-    plugin_base = os.path.join(app_dir, 'plugins', 'manage_dictionaries', 'dictionaries')
-    
-    dicts = {
-        'mf1': ('mfc_default_keys.dic', 'mfc_default_keys.dic'),
-        't55xx': ('t55xx_default_pwds.dic', 't55xx_default_pwds.dic'),
-        'iclass': ('iclass_default_keys.dic', 'iclass_default_keys.dic'),
-    }
-    
-    for sub, (src_name, dst_name) in dicts.items():
-        path = os.path.join(base, sub)
-        try:
-            os.makedirs(path, exist_ok=True)
-            logger.debug("gadget_linux: ensured directory %s", path)
-        except Exception as e:
-            logger.warning("gadget_linux: failed to create %s: %s", path, e)
-        
-        # Copy default dictionary if destination doesn't exist
-        dst_file = os.path.join(path, dst_name)
-        if not os.path.isfile(dst_file):
-            src_file = os.path.join(plugin_base, sub, src_name)
-            if os.path.isfile(src_file):
-                try:
-                    shutil.copy(src_file, dst_file)
-                    logger.info("gadget_linux: copied default %s dictionary", sub)
-                except Exception as e:
-                    logger.warning("gadget_linux: failed to copy %s: %s", sub, e)
-            else:
-                logger.debug("gadget_linux: no bundled %s dictionary at %s", sub, src_file)
-
-
 def auto_ms_remount():
     """Auto-remount mass storage after gadget teardown.
 
     Called by kill_all_module when auto_remount=True.
     Remounts the partition so the device can access its storage again.
-    Also ensures dictionary directories exist.
     """
     logger.debug("gadget_linux: auto_ms_remount()")
     remount_upan_partition()
-    _ensure_dictionary_dirs()
