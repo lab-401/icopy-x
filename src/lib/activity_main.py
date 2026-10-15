@@ -1054,7 +1054,7 @@ class AboutActivity(BaseActivity):
         # scroller widget itself failed (no point silencing the song
         # because of a draw glitch).
         try:
-            from lib import audio
+            import audio
             audio.startScrollerMusic(self._SCROLLER_OGG)
         except Exception:
             logger.exception("Failed to start scroller music")
@@ -1065,7 +1065,7 @@ class AboutActivity(BaseActivity):
         # canvas so the audio cuts cleanly on page change rather than
         # tailing into the next page's render.
         try:
-            from lib import audio
+            import audio
             audio.stopScrollerMusic()
         except Exception:
             pass
@@ -8421,6 +8421,9 @@ class IClassSEActivity(BaseActivity):
         else:
             self._start_target_poll()
 
+    def _write_target_available(self, source, target_type, selected_target_type):
+        return True
+
     def _do_write(self):
         source = self._source_data
         if not source:
@@ -8438,8 +8441,11 @@ class IClassSEActivity(BaseActivity):
         try:
             import ics_decoder
             # Re-detect target before writing to ensure card is still present
+            selected_target_type = self._target_type
             self._target_type = ics_decoder.detect_target()
-            if not self._target_type:
+            if (self._target_type not in (self.TARGET_HF_ICLASS, self.TARGET_LF_T5577) or
+                    not self._write_target_available(source, self._target_type, selected_target_type)):
+                self._write_blocked_reason = 'target_not_compatible'
                 self._last_write_ok = False
                 self._verify_success = None
                 self._verify_msg = ''
@@ -9741,3 +9747,550 @@ class WarningT5X4X05KeyEnterActivity(BaseActivity):
             if key == KEY_PWR and self._handlePWR():
                 return
             self.finish()
+
+
+class ICSDecoderActivity(IClassSEActivity):
+    FEATURE_VERSION = 'v1.1'
+    STATE_HOME = 'home'
+    STATE_DECODED = 'decoded'
+    STATE_SAVED = 'saved'
+    STATE_SAVED_ACTIONS = 'saved_actions'
+    STATE_DETAILS = 'details'
+    STATE_NAMING = 'naming'
+    STATE_ABOUT = 'about'
+    STATE_DELETE = 'delete'
+
+    def __init__(self, bundle=None):
+        self._menu = None
+        self._info_view = None
+        self._menu_actions = []
+        self._keyboard = None
+        self._saved_records = []
+        self._selected_record = None
+        self._details_origin = None
+        self._write_origin = None
+        self._credential_store = None
+        self._read_generation = 0
+        self._read_in_flight = False
+        super().__init__(bundle)
+
+    def onCreate(self, bundle):
+        import ics_credentials
+        self._credential_store = ics_credentials.SavedCredentials()
+        self._toast = Toast(self.getCanvas())
+        self._show_home()
+
+    def _hide_menu(self):
+        if self._menu is not None:
+            self._menu.hide()
+            self._menu = None
+        if self._info_view is not None:
+            self._info_view.hide()
+            self._info_view = None
+        if self._keyboard is not None:
+            self._keyboard.hide()
+            self._keyboard = None
+
+    def _show_options(self, state, title, options, subtitle=None, details=None):
+        from lib.widget import ConsoleView, ListView
+        self._hide_menu()
+        self._state = state
+        self._clear_canvas()
+        self.setTitle(title)
+        self.setLeftButton('Back')
+        self.setRightButton('Select')
+        canvas = self.getCanvas()
+        if subtitle:
+            self._info_view = ConsoleView(canvas, y=42, height=64 if details else 32)
+            self._info_view.addText('\n'.join([subtitle] + (details or [])))
+            self._info_view._scroll_offset = 0
+            self._info_view.show()
+        y = 110 if details else (80 if subtitle else 40)
+        height = 22 if details else (30 if subtitle else 40)
+        self._menu = ListView(canvas, xy=(0, y), item_height=height)
+        self._menu.setDisplayItemMax(4)
+        self._menu.setItems([label for label, action in options])
+        self._menu_actions = [action for label, action in options]
+        self._menu.show()
+
+    def _show_info(self, state, title, lines):
+        from lib.ics_info_view import ICSInfoView
+        self._hide_menu()
+        self._state = state
+        self._clear_canvas()
+        self.setTitle(title)
+        self.setLeftButton('Back')
+        self.setRightButton('')
+        self._info_view = ICSInfoView(self.getCanvas())
+        self._info_view.addText('\n'.join(str(line) for line in lines))
+        self._info_view._scroll_offset = 0
+        self._info_view.show()
+
+    def _show_home(self):
+        self._show_options(self.STATE_HOME, 'iCS Decoder', [
+            ('Read Credential', 'read'),
+            ('Saved Credentials', 'saved'),
+            ('About', 'about'),
+            ('Back', 'back'),
+        ])
+
+    def _start_read(self):
+        import threading
+        self._hide_menu()
+        self._stop_poll()
+        self._stop_target_poll()
+        if self._ser is not None:
+            try:
+                self._ser.close()
+            except Exception:
+                pass
+        self._read_generation += 1
+        self._read_in_flight = False
+        self._ser = None
+        self._source_data = None
+        self._state = self.STATE_DETECTING
+        self.setTitle('iCS Decoder')
+        self._render_detecting_state()
+        self._detect_thread = threading.Thread(
+            target=self._detect_decoder_bg, args=(self._read_generation,), daemon=True)
+        self._detect_thread.start()
+
+    def _detect_decoder_bg(self, generation):
+        try:
+            import ics_decoder
+            ser = ics_decoder.detect_decoder()
+        except Exception:
+            ser = None
+        from lib import actstack
+        if actstack._root is not None:
+            try:
+                actstack._root.after(0, self._on_decoder_found, ser, generation)
+            except Exception:
+                if ser is not None:
+                    try:
+                        ser.close()
+                    except Exception:
+                        pass
+        else:
+            self._on_decoder_found(ser, generation)
+
+    def _on_decoder_found(self, ser, generation):
+        if generation != self._read_generation or self._state != self.STATE_DETECTING:
+            if ser is not None:
+                try:
+                    ser.close()
+                except Exception:
+                    pass
+            return
+        super()._on_decoder_found(ser)
+
+    def _poll_decoder(self):
+        self._poll_timer = None
+        if self._state != self.STATE_READING or self._ser is None or self._read_in_flight:
+            return
+        self._read_in_flight = True
+        serial_port = self._ser
+        generation = self._read_generation
+        from lib import actstack
+        if actstack._root is None:
+            self._read_decoder_bg(serial_port, generation)
+            return
+        import threading
+        threading.Thread(target=self._read_decoder_bg,
+                         args=(serial_port, generation), daemon=True).start()
+
+    def _read_decoder_bg(self, serial_port, generation):
+        try:
+            import ics_decoder
+            capture = ics_decoder.read_card(serial_port)
+        except Exception:
+            capture = {'status': 'decoder_error', 'format': 'Unknown/Unsupported'}
+        from lib import actstack
+        if actstack._root is not None:
+            try:
+                actstack._root.after(0, self._on_read_finished,
+                                     capture, serial_port, generation)
+            except Exception:
+                pass
+        else:
+            self._on_read_finished(capture, serial_port, generation)
+
+    def _on_read_finished(self, capture, serial_port, generation):
+        if (generation != self._read_generation or self._state != self.STATE_READING or
+                serial_port is not self._ser):
+            return
+        self._read_in_flight = False
+        if capture is not None:
+            self._source_data = capture
+            self._show_decoded()
+            return
+        self._start_poll()
+
+    def _show_decoded(self):
+        import ics_credentials
+        capture = self._source_data or {}
+        status = capture.get('status')
+        if status == 'decoded':
+            summary = capture.get('format', 'Source decoded')
+        elif status == 'malformed':
+            summary = 'Malformed response'
+        elif status == 'decoder_error':
+            self._show_options(self.STATE_DECODED, 'Decoder Error', [
+                ('Retry Read', 'retry'),
+                ('View Details', 'details'),
+                ('Back', 'back'),
+            ], 'Decoder read failed')
+            return
+        else:
+            summary = 'Unknown/Unsupported'
+        details = []
+        if 'fc' in capture and 'id' in capture:
+            details.append('FC: {}  ID: {}'.format(capture['fc'], capture['id']))
+        elif capture.get('bit_length'):
+            details.append('Bit length: {}'.format(capture['bit_length']))
+        legacy = capture.get('derived_legacy') or {}
+        if legacy.get('blk7'):
+            details.append('Legacy BLK7: {}'.format(legacy['blk7']))
+        options = [('Save Credential', 'save')]
+        if ics_credentials.can_write(capture):
+            options.append(('Write Credential', 'write'))
+        options.extend([('View Details', 'details'), ('Back', 'back')])
+        self._show_options(self.STATE_DECODED, 'Credential Result', options,
+                           summary, details)
+
+    def _show_saved(self):
+        try:
+            self._saved_records = self._credential_store.all()
+        except OSError:
+            self._saved_records = []
+        options = [
+            (record.get('name', 'Credential')[:28], ('open', record))
+            for record in self._saved_records
+        ]
+        if not options:
+            options = [('No saved credentials', None)]
+        self._show_options(self.STATE_SAVED, 'Saved Credentials', options)
+
+    def _show_saved_actions(self):
+        import copy
+        import ics_credentials
+        if self._selected_record is None:
+            self._show_saved()
+            return
+        self._source_data = copy.deepcopy(self._selected_record.get('capture', {}))
+        legacy = ics_credentials.legacy_block(self._source_data)
+        if legacy:
+            self._source_data['blk7'] = legacy
+        options = [('View Details', 'details')]
+        if ics_credentials.can_write(self._source_data):
+            options.append(('Write Credential', 'write'))
+        options.extend([('Delete Credential', 'delete'), ('Back', 'back')])
+        self._show_options(self.STATE_SAVED_ACTIONS, 'Saved Credential', options,
+                           self._selected_record.get('name', 'Credential'))
+
+    def _detail_lines(self):
+        capture = self._source_data or {}
+        lines = ['SOURCE']
+        fields = (
+            ('Technology', 'source_technology'), ('Bit length', 'bit_length'),
+            ('Wiegand', 'wiedata'), ('Bits', 'bits'), ('Hex', 'hex'),
+            ('SIO PACS', 'sio_pacs'), ('SIO container', 'sio_container'),
+            ('Reported FC', 'reported_fc'),
+            ('Reported ID', 'reported_id'),
+        )
+        for label, key in fields:
+            if key in capture:
+                lines.append('{}: {}'.format(label, capture[key]))
+        lines.append('DECODED')
+        lines.append('Format: {}'.format(capture.get('format', 'Unknown/Unsupported')))
+        for label, key in (('FC', 'fc'), ('Card ID', 'id'), ('Frame', 'raw')):
+            if key in capture:
+                lines.append('{}: {}'.format(label, capture[key]))
+        legacy = capture.get('derived_legacy') or {}
+        if legacy.get('blk7'):
+            lines.extend(['LEGACY CONVERSION', 'Decoder BLK7: {}'.format(legacy['blk7'])])
+        raw = capture.get('raw_response_b64')
+        if raw:
+            text = capture.get('raw_response_text')
+            if text:
+                lines.append('RAW RESPONSE')
+                lines.extend(text.splitlines())
+            lines.append('RAW RESPONSE (BASE64)')
+            lines.append(raw)
+        return lines
+
+    def _show_details(self, origin):
+        self._details_origin = origin
+        self._show_info(self.STATE_DETAILS, 'Credential Details', self._detail_lines())
+
+    def _show_about(self):
+        self._show_info(self.STATE_ABOUT, 'About iCS Decoder', [
+            'iCS Decoder ' + self.FEATURE_VERSION,
+            'iCLASS SE/SEOS credential decoder',
+            'Contributors:',
+            '@Dysonian',
+            '@PhantomPlanet',
+        ])
+
+    def _show_naming(self):
+        from lib.widget import KeyboardInput
+        self._hide_menu()
+        self._state = self.STATE_NAMING
+        self._clear_canvas()
+        self.setTitle('Save Credential')
+        self.setLeftButton('Cancel')
+        self.setRightButton('Save')
+        self._keyboard = KeyboardInput(self.getCanvas(), placeholder='Credential name', max_len=40)
+        self._keyboard.show()
+
+    def _save_credential(self):
+        name = self._keyboard.getText() if self._keyboard else ''
+        try:
+            self._credential_store.save(self._source_data, name)
+        except (OSError, ValueError, TypeError):
+            if self._toast:
+                self._toast.show('Save failed')
+            return
+        self._show_decoded()
+        if self._toast:
+            self._toast.show('Credential saved')
+
+    def _show_delete_confirmation(self):
+        self._hide_menu()
+        self._state = self.STATE_DELETE
+        self._clear_canvas()
+        self.setTitle('Delete Credential')
+        self.setLeftButton('Cancel')
+        self.setRightButton('Delete')
+        self.getCanvas().create_text(120, 110, text='Delete saved credential?',
+                                     fill='#8B0000', font=resources.get_font(14),
+                                     anchor='center', tags='_ics_prompt')
+
+    def _start_write(self):
+        import ics_credentials
+        if not ics_credentials.can_write(self._source_data or {}):
+            if self._toast:
+                self._toast.show('Write unavailable')
+            return
+        if self._state != self.STATE_RESULT:
+            self._write_origin = self._state
+        self._hide_menu()
+        self._stop_poll()
+        self._target_type = None
+        self._state = self.STATE_WAIT_BLANK
+        self._render_wait_blank_state()
+        self._start_target_poll()
+
+    def _capture_supports_target(self, capture, target_type):
+        import ics_decoder
+        import ics_credentials
+        if not ics_credentials.can_write(capture):
+            return False
+        if target_type == self.TARGET_HF_ICLASS:
+            return bool(ics_credentials.legacy_block(capture))
+        if target_type == self.TARGET_LF_T5577:
+            return ics_credentials.validated_h10301(capture)
+        return False
+
+    def _target_write_available(self):
+        return self._capture_supports_target(self._source_data or {}, self._target_type)
+
+    def _write_target_available(self, source, target_type, selected_target_type):
+        return (target_type == selected_target_type and
+                self._capture_supports_target(source, target_type))
+
+    def _render_wait_blank_state(self):
+        self._clear_canvas()
+        self.setTitle('Write Credential')
+        self.setLeftButton('Back')
+        available = self._target_write_available()
+        self.setRightButton('Write', active=available)
+        if self._target_type is None:
+            message = 'Place blank on coil'
+            color = '#333333'
+        elif available:
+            message = self._get_target_display_name() or 'Target ready'
+            color = '#006400'
+        else:
+            message = 'Target not compatible'
+            color = '#8B0000'
+        self.getCanvas().create_text(120, 110, text=message, fill=color,
+                                     font=resources.get_font(14), anchor='center',
+                                     tags='_ics_prompt')
+
+    def _poll_target(self):
+        self._target_poll_timer = None
+        if self._state != self.STATE_WAIT_BLANK:
+            return
+        try:
+            import ics_decoder
+            self._target_type = ics_decoder.detect_target()
+        except Exception:
+            self._target_type = None
+        self._render_wait_blank_state()
+        if not self._target_write_available():
+            self._start_target_poll()
+
+    def _render_result_state(self):
+        message = 'Write OK' if self._last_write_ok else 'Write failed'
+        if self._write_blocked_reason:
+            message = 'Target not supported'
+        if self._verify_success is True:
+            message = 'Verified OK'
+        elif self._verify_success is False:
+            message = 'Verify failed'
+        options = []
+        if self._last_write_ok:
+            options.append(('Verify', 'verify'))
+        options.extend([('Write Again', 'write_again'), ('Back', 'back')])
+        self._show_options(self.STATE_RESULT, 'Write Result', options, message)
+
+    def _back(self):
+        state = self._state
+        if state == self.STATE_HOME:
+            self.finish()
+        elif state in (self.STATE_DETECTING, self.STATE_READING):
+            self._read_generation += 1
+            self._read_in_flight = False
+            self._stop_poll()
+            self._state = self.STATE_HOME
+            if self._ser is not None:
+                try:
+                    self._ser.close()
+                except Exception:
+                    pass
+                self._ser = None
+            self._show_home()
+        elif state in (self.STATE_DECODED, self.STATE_SAVED, self.STATE_ABOUT):
+            self._show_home()
+        elif state == self.STATE_SAVED_ACTIONS:
+            self._show_saved()
+        elif state == self.STATE_DETAILS:
+            if self._details_origin == self.STATE_SAVED_ACTIONS:
+                self._show_saved_actions()
+            else:
+                self._show_decoded()
+        elif state == self.STATE_NAMING:
+            self._show_decoded()
+        elif state == self.STATE_DELETE:
+            self._show_saved_actions()
+        elif state == self.STATE_WAIT_BLANK:
+            self._stop_target_poll()
+            self._target_type = None
+            if self._write_origin == self.STATE_SAVED_ACTIONS:
+                self._show_saved_actions()
+            else:
+                self._show_decoded()
+        elif state == self.STATE_RESULT:
+            if self._write_origin == self.STATE_SAVED_ACTIONS:
+                self._show_saved_actions()
+            else:
+                self._show_decoded()
+
+    def _activate(self):
+        if self._menu is None or not self._menu_actions:
+            return
+        action = self._menu_actions[self._menu.selection()]
+        if isinstance(action, tuple) and action[0] == 'open':
+            self._selected_record = action[1]
+            self._show_saved_actions()
+        elif action == 'read':
+            self._selected_record = None
+            self._start_read()
+        elif action == 'retry':
+            self._start_read()
+        elif action == 'saved':
+            self._show_saved()
+        elif action == 'about':
+            self._show_about()
+        elif action == 'save':
+            self._show_naming()
+        elif action == 'details':
+            self._show_details(self._state)
+        elif action == 'write':
+            self._start_write()
+        elif action == 'delete':
+            self._show_delete_confirmation()
+        elif action == 'verify' and self._last_write_ok:
+            self._hide_menu()
+            self._do_verify()
+        elif action == 'write_again':
+            self._start_write()
+        elif action == 'back':
+            self._back()
+
+    def onKeyEvent(self, key):
+        if key == KEY_PWR:
+            if self._handlePWR():
+                return
+            self._back()
+            return
+        if key == KEY_M1:
+            self._back()
+            return
+        if self._state in (self.STATE_DETAILS, self.STATE_ABOUT):
+            if self._info_view is not None:
+                if key == KEY_UP:
+                    self._info_view.scrollUp()
+                elif key == KEY_DOWN:
+                    self._info_view.scrollDown()
+                elif key == KEY_LEFT:
+                    self._info_view.scrollLeft()
+                elif key == KEY_RIGHT:
+                    self._info_view.scrollRight()
+            return
+        if self._state == self.STATE_NAMING:
+            if key == KEY_M2:
+                self._save_credential()
+            elif self._keyboard is not None:
+                if key == KEY_UP:
+                    self._keyboard.moveUp()
+                elif key == KEY_DOWN:
+                    self._keyboard.moveDown()
+                elif key == KEY_LEFT:
+                    self._keyboard.moveLeft()
+                elif key == KEY_RIGHT:
+                    self._keyboard.moveRight()
+                elif key == KEY_OK:
+                    self._keyboard.press()
+            return
+        if self._state == self.STATE_DELETE:
+            if key == KEY_M2 and self._selected_record is not None:
+                try:
+                    self._credential_store.delete(self._selected_record['id'])
+                except (OSError, ValueError):
+                    if self._toast:
+                        self._toast.show('Delete failed')
+                    return
+                self._selected_record = None
+                self._show_saved()
+            return
+        if self._state == self.STATE_WAIT_BLANK:
+            if key in (KEY_OK, KEY_M2) and self._target_write_available():
+                self._stop_target_poll()
+                self._state = self.STATE_WRITING
+                self.setbusy()
+                self._render_writing_state()
+                self.startBGTask(self._do_write)
+            return
+        if self._state == self.STATE_WRITING:
+            return
+        if self._menu is not None:
+            if key == KEY_UP:
+                self._menu.prev()
+                self._menu._redraw()
+            elif key == KEY_DOWN:
+                self._menu.next()
+                self._menu._redraw()
+            elif key == KEY_LEFT and self._info_view is not None:
+                self._info_view.scrollLeft()
+            elif key == KEY_RIGHT and self._info_view is not None:
+                self._info_view.scrollRight()
+            elif key in (KEY_OK, KEY_M2):
+                self._activate()
+
+    def onDestroy(self):
+        self._read_generation += 1
+        self._read_in_flight = False
+        self._hide_menu()
+        super().onDestroy()
