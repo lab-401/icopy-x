@@ -35,6 +35,7 @@ import importlib
 from lib.actbase import BaseActivity
 from lib import actstack
 from lib import resources
+from lib import menu_order
 from lib.widget import ListView
 from lib._constants import (
     LIST_ITEM_H,
@@ -45,6 +46,7 @@ from lib._constants import (
     KEY_M2,
     KEY_PWR,
     KEY_ALL,
+    SELECT_BG,
 )
 
 logger = logging.getLogger(__name__)
@@ -74,7 +76,7 @@ _ACTIVITY_REGISTRY = {
     'lua_script':   ('activity_main',   'LUAScriptCMDActivity'),
     'plugins_menu': ('lib.plugins_menu', 'PluginsMenuActivity'),
     'settings_menu': ('activity_main',  'SettingsMenuActivity'),
-    'iclass_se':    ('activity_main',   'IClassSEActivity'),
+    'iclass_se':    ('activity_main',   'ICSDecoderActivity'),
 }
 
 # =====================================================================
@@ -108,9 +110,9 @@ def init_plugins():
         _discovered_plugins = []
 
 class MainActivity(BaseActivity):
-    """Root activity -- main menu with 14 items.
+    """Root activity -- main menu.
 
-    Uses ListView with icons for all 14 items.
+    Uses ListView with icons for menu items.
     Handles activity launch via actstack.start_activity.
     Battery bar shown via BaseActivity.onResume.
 
@@ -119,7 +121,7 @@ class MainActivity(BaseActivity):
     calling finish().
 
     Instance variables (beyond BaseActivity):
-        lv_main_page    -- ListView widget for the 14-item menu
+        lv_main_page    -- ListView widget for the menu
         _menu_items     -- list of (label, icon_or_None, action_key) tuples
     """
 
@@ -152,6 +154,7 @@ class MainActivity(BaseActivity):
         # re-localise the root menu when the language changed while away.
         self._labels_lang = None
         self._menu_items = list(self.MENU_ITEMS)
+        self._move_snapshot = None
 
         # --- Plugin integration ---
         # Append "Plugins" submenu entry if there are non-promoted plugins,
@@ -167,20 +170,21 @@ class MainActivity(BaseActivity):
             action_key = "plugin:" + plugin.key
             self._menu_items.append((plugin.name, icon, action_key))
 
-        # Settings is always the last menu item
+        # Settings is last in the default menu order
         self._menu_items.append(("Settings", "3", "settings_menu"))
+        self._menu_items = menu_order.ordered_items(self._menu_items)
 
     def onCreate(self, bundle=None):
         """Set up the main menu.
 
         Startup sequence:
             1. setTitle("Main Page")
-            2. setLeftButton("") -- M1 empty on root (no back)
-            3. setRightButton("") -- no button labels on real device
-            4. Create ListView at (0, 40) with 14 items + icons
+            2. setLeftButton("Move") -- M1 reorders the highlighted item
+            3. setRightButton("") -- M2 only labels Cancel in move mode
+            4. Create ListView at (0, 40) with menu items + icons
         """
-        # Buttons: M1 empty, M2 empty (HANDOVER.md, main_page_1_3_1.png)
-        self.setLeftButton("")
+        # Buttons: M1 Move, M2 empty until an item is picked up
+        self.setLeftButton("Move")
         self.setRightButton("")
 
         # Build ListView
@@ -191,6 +195,7 @@ class MainActivity(BaseActivity):
             self.lv_main_page = ListView(
                 canvas, xy=xy, text_size=text_size, item_height=LIST_ITEM_H,
             )
+            self.lv_main_page.setDisplayItemMax(4)
             labels = [self._menu_label(item) for item in self._menu_items]
             self.lv_main_page.setItems(labels)
             self._labels_lang = resources.getLanguage()
@@ -229,6 +234,17 @@ class MainActivity(BaseActivity):
         if self.isbusy():
             return
 
+        if self._move_snapshot is not None:
+            if key == KEY_UP:
+                self._move_item(-1)
+            elif key == KEY_DOWN:
+                self._move_item(1)
+            elif key == KEY_M1:
+                self._place_item()
+            elif key == KEY_M2:
+                self._cancel_move()
+            return
+
         if key == KEY_UP:
             if self.lv_main_page is not None:
                 old_page = self.lv_main_page.getPagePosition()
@@ -249,8 +265,7 @@ class MainActivity(BaseActivity):
                 self._launchActivity(pos)
 
         elif key == KEY_M1:
-            # M1 is empty on main menu -- no action
-            pass
+            self._pick_up_item()
 
         elif key == KEY_ALL:
             # S/R/W button — launch AutoCopy (Scan -> Read -> Write)
@@ -261,6 +276,62 @@ class MainActivity(BaseActivity):
             # PWR triggers shutdown/sleep flow
             # For now, no-op (SleepModeActivity not yet wired)
             pass
+
+    def _refresh_menu(self, selection=None):
+        if self.lv_main_page is None:
+            return
+        if selection is None:
+            selection = self.lv_main_page.selection()
+        labels = [self._menu_label(item) for item in self._menu_items]
+        if self._move_snapshot is not None and 0 <= selection < len(labels):
+            labels[selection] = '[Move] ' + labels[selection]
+        self.lv_main_page.setItems(labels)
+        self.lv_main_page.setIcons([item[1] for item in self._menu_items])
+        self.lv_main_page.setSelection(selection)
+        self._labels_lang = resources.getLanguage()
+        self._updateTitle()
+
+    def _pick_up_item(self):
+        if self.lv_main_page is None or not self._menu_items:
+            return
+        self._move_snapshot = list(self._menu_items)
+        self.setLeftButton('Place')
+        self.setRightButton('Cancel')
+        self.lv_main_page.setupSelectBG('#DCE5F3')
+        self._refresh_menu()
+
+    def _move_item(self, offset):
+        selection = self.lv_main_page.selection()
+        destination = selection + offset
+        if destination < 0 or destination >= len(self._menu_items):
+            return
+        item = self._menu_items.pop(selection)
+        self._menu_items.insert(destination, item)
+        self._refresh_menu(destination)
+
+    def _place_item(self):
+        try:
+            menu_order.save_items(self._menu_items)
+        except OSError:
+            self.setTitle('Menu order not saved')
+            return
+        selection = self.lv_main_page.selection()
+        self._move_snapshot = None
+        self.setLeftButton('Move')
+        self.setRightButton('')
+        self.lv_main_page.setupSelectBG(SELECT_BG)
+        self._refresh_menu(selection)
+
+    def _cancel_move(self):
+        identifier = self._menu_items[self.lv_main_page.selection()][2]
+        self._menu_items = self._move_snapshot
+        self._move_snapshot = None
+        self.setLeftButton('Move')
+        self.setRightButton('')
+        self.lv_main_page.setupSelectBG(SELECT_BG)
+        selection = next(index for index, item in enumerate(self._menu_items)
+                         if item[2] == identifier)
+        self._refresh_menu(selection)
 
     def _launchActivity(self, index):
         """Launch the activity at menu position *index*.
@@ -382,6 +453,8 @@ class MainActivity(BaseActivity):
         [Source: main_page_1_3_1.png, SCREEN_LAYOUT.md "Page indicator"]
         """
         base_title = resources.get_str('main_page')
+        if self._move_snapshot is not None:
+            base_title = 'Move Item'
         if self.lv_main_page is not None:
             total = self.lv_main_page.getPageCount()
             current = self.lv_main_page.getPagePosition() + 1
