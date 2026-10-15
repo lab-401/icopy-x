@@ -151,11 +151,10 @@ def _parse_hw_version(output):
     return result
 
 
-def get_running_version(max_retries=3, retry_delay=1.0):
+def get_running_version():
     """Get currently running PM3 firmware version via TCP executor.
 
-    Sends 'hw version' via the Nikola/Iceman protocol and parses the response.
-    Retries on transient failures.
+    Sends 'hw version' via the Nikola protocol and parses the response.
 
     Returns:
         dict with keys: 'os', 'bootrom', 'nikola', 'client', 'fpga', 'raw'
@@ -165,28 +164,21 @@ def get_running_version(max_retries=3, retry_delay=1.0):
         logger.warning("get_running_version: executor not available")
         return None
 
-    last_exception = None
-    for attempt in range(1, max_retries + 1):
-        try:
-            ret = executor.startPM3Task('hw version', timeout=15000)
-            if ret == 1:
-                output = executor.getPrintContent()
-                if output:
-                    logger.info("get_running_version: hw version succeeded (attempt %d)", attempt)
-                    return _parse_hw_version(output)
-                logger.warning("get_running_version: empty response (attempt %d)", attempt)
-            else:
-                logger.warning("get_running_version: hw version failed (ret=%d, attempt %d)", ret, attempt)
-        except Exception as e:
-            last_exception = e
-            logger.warning("get_running_version: exception (attempt %d): %s", attempt, e)
+    try:
+        ret = executor.startPM3Task('hw version', timeout=10000)
+        if ret != 1:
+            logger.warning("get_running_version: hw version command failed (ret=%s)", ret)
+            return None
 
-        if attempt < max_retries:
-            time.sleep(retry_delay)
+        output = executor.getPrintContent()
+        if not output:
+            logger.warning("get_running_version: empty response from hw version")
+            return None
 
-    if last_exception:
-        logger.error("get_running_version: all %d attempts failed: %s", max_retries, last_exception)
-    return None
+        return _parse_hw_version(output)
+    except Exception as e:
+        logger.error("get_running_version failed: %s", e)
+        return None
 
 
 def get_image_version(manifest_path):
