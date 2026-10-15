@@ -43,33 +43,7 @@ SAFETY MECHANISMS:
 import os
 import shutil
 import sys
-import logging
 
-# ═════════════════════════════════════════════════════════════════════════
-# Verbose logging to USB partition (PC-accessible at H:\logs\) — numbered logs
-# ═════════════════════════════════════════════════════════════════════════
-_LOG_DIR = '/mnt/upan/logs'
-os.makedirs(_LOG_DIR, exist_ok=True)
-
-existing = [f for f in os.listdir(_LOG_DIR) if f.endswith('.log')]
-if existing:
-    nums = sorted([int(f.split('.')[0]) for f in existing if f.split('.')[0].isdigit()])
-    next_num = (nums[-1] + 1) if nums else 1
-else:
-    next_num = 1
-_LOG_FILE = os.path.join(_LOG_DIR, '{:03d}.log'.format(next_num))
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s %(levelname)-8s %(name)s: %(message)s',
-    handlers=[
-        logging.FileHandler(_LOG_FILE, mode='a', encoding='utf-8'),
-        logging.StreamHandler(sys.stdout),
-    ]
-)
-
-# Immediately log boot start
-logging.getLogger(__name__).info("=== iCopy-X boot started ===")
 
 APP_DIR = '/home/pi/ipk_app_main'
 APP_NEW = '/home/pi/ipk_app_new'
