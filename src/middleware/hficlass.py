@@ -51,9 +51,6 @@ _KEY_LEGACY_1 = 'AFA785A7DAB33378'
 _KEY_LEGACY_2 = '2020666666668888'
 _KEY_LEGACY_3 = '6666202066668888'
 
-# iCLASS dictionary keys file path
-_ICLASS_DIC_PATH = '/mnt/upan/keys/iclass/iclass_default_keys.dic'
-
 # PM3 commands
 _CMD_RDBL = 'hf iclass rdbl --blk {:02d} -k {}'
 _CMD_INFO = 'hf iclass info'
@@ -89,32 +86,12 @@ _RE_BLK7 = r'Blk7#:([0-9a-fA-F]+)'
 #   space, hex run).
 #   Matrix divergence (line 508) flagged the prior regex
 #   `r'[Bb]lock \d+ : ...'` as matching NEITHER iceman nor legacy raw
-#   forms — legacy is ` block %02X : ` (uppercase hex block >=10
+#   forms — legacy is ` block %02X : ` (uppercase hex block ≥10
 #   unmatchable by `\d+`); iceman inserts `/0x%02X` between digit and
 #   colon. The iceman-native regex below captures the decimal block
 #   number and the hex payload; Phase 4 will rely on `_normalize_iclass_rdbl`
 #   to rewrite legacy hex block numbers to decimal for cross-fw parity.
 _RE_BLOCK_READ = r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+([A-Fa-f0-9 ]+)'
-
-
-def loadDictionaryKeys():
-    """Load iCLASS keys from dictionary file. Returns list of 16-char hex keys.
-
-    Keys must be 16 hex characters (8 bytes). Lines starting with # are comments.
-    Returns empty list if file not found or unreadable.
-    """
-    try:
-        with open(_ICLASS_DIC_PATH, 'r') as f:
-            keys = []
-            for line in f:
-                key = line.strip()
-                if not key or key.startswith('#'):
-                    continue
-                if len(key) == 16 and all(c in '0123456789abcdefABCDEF' for c in key):
-                    keys.append(key.upper())
-            return keys
-    except (IOError, OSError):
-        return []
 
 
 def checkKey(typ_or_key, key=None, block=1, elite=False):
@@ -225,22 +202,13 @@ def chkKeys_1(infos):
 
     Binary citation: __pyx_pw_8hficlass_9chkKeys_1
     Tries all 3 standard keys without 'e' flag.
-    Falls back to dictionary keys if hardcoded keys fail.
 
     Returns {'key': key, 'type': 'Legacy'} on success, or None.
     """
-    # Try hardcoded keys first
     legacy_keys = [_KEY_LEGACY_1, _KEY_LEGACY_2, _KEY_LEGACY_3]
     for key in legacy_keys:
         if checkKey(key, block=1, elite=False):
             return {'key': key, 'type': 'Legacy'}
-
-    # Fallback: try keys from dictionary file
-    dic_keys = loadDictionaryKeys()
-    for key in dic_keys:
-        if key not in legacy_keys:  # Avoid redundant checks
-            if checkKey(key, block=1, elite=False):
-                return {'key': key, 'type': 'Legacy'}
     return None
 
 
@@ -249,24 +217,15 @@ def chkKeys_2(infos):
 
     Binary citation: __pyx_pw_8hficlass_11chkKeys_2
     Tries all 3 standard keys with 'e' flag.
-    Falls back to dictionary keys if hardcoded keys fail.
 
     Returns {'key': key, 'type': 'Elite', 'e': 'e'} on success, or None.
     The 'e' field is used by iclassread.so::readFromKey to add the elite
     flag to the dump command.
     """
-    # Try hardcoded keys first
     legacy_keys = [_KEY_LEGACY_1, _KEY_LEGACY_2, _KEY_LEGACY_3]
     for key in legacy_keys:
         if checkKey(key, block=1, elite=True):
             return {'key': key, 'type': 'Elite', 'e': 'e'}
-
-    # Fallback: try keys from dictionary file
-    dic_keys = loadDictionaryKeys()
-    for key in dic_keys:
-        if key not in legacy_keys:  # Avoid redundant checks
-            if checkKey(key, block=1, elite=True):
-                return {'key': key, 'type': 'Elite', 'e': 'e'}
     return None
 
 
@@ -300,7 +259,7 @@ def chkKeys(infos):
     # Fallback: file-based key check via 'hf iclass chk'
     # Ground truth: archive/lib_transliterated/hficlass.py line 254
     # Original .so falls back to 'hf iclass chk f <keyfile>' when rdbl fails
-    cmd = _CMD_CHK + _ICLASS_DIC_PATH
+    cmd = 'hf iclass chk --vb6kdf'
     ret = executor.startPM3Task(cmd, 30000)
     if ret == -1:
         return None
@@ -346,8 +305,8 @@ def parser():
     """Identify iCLASS tag type by trying standard keys.
 
     Binary citation: __pyx_pw_8hficlass_17parser
-    Tries Legacy keys in order. If any works -> ICLASS_LEGACY.
-    If none work -> ICLASS_ELITE.
+    Tries Legacy keys in order. If any works → ICLASS_LEGACY.
+    If none work → ICLASS_ELITE.
 
     Returns:
         dict: {'found': True, 'type': 17|18|47, 'uid': ..., ...}
