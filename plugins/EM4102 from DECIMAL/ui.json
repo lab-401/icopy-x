@@ -83,8 +83,8 @@
                 "content": {
                     "type": "text",
                     "lines": [
-                        {"text": "Clone successful!", "size": "large", "align": "center"},
-                        {"text": ""},
+                        {"text": "Write completed.", "size": "large", "align": "center"},
+                        {"text": "No verification performed.", "size": "large", "align": "center"},
                         {"text": ""},
                         {"text": "DEC: {dec_id}",       "size": "medium", "align": "center"},
                         {"text": "HEX: {hex_uid}",      "size": "medium", "align": "center"},
