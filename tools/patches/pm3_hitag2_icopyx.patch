@@ -1,0 +1,210 @@
+diff --git a/armsrc/hitag2.c b/armsrc/hitag2.c
+--- a/armsrc/hitag2.c
++++ b/armsrc/hitag2.c
+@@ -229,7 +229,7 @@
+ // hitag_common.h defines these for Hitag S/u; this file keeps its own values,
+ // the working reader and writer paths below are timed against them
+ #undef HITAG_T_LOW
+-#define HITAG_T_LOW      6  /* T_LOW should be 4..10 */
++#define HITAG_T_LOW      16  /* T_LOW should be 4..10 */ // iCopy-XS: from pm3_hitag2_copyxs_support.patch
+ #undef HITAG_T_0_MIN
+ #define HITAG_T_0_MIN    15 /* T[0] should be 18..22 */
+ #define HITAG_T_0        20 /* T[0] should be 18..22 */
+@@ -1555,7 +1555,7 @@
+             uint8_t mod_state = lf_get_reader_modulation();
+ 
+             while (rxlen < sizeof(rx)) {
+-                periods = lf_count_edge_periods(64);
++                periods = lf_count_edge_periods(128); // iCopy-XS: from pm3_hitag2_copyxs_support.patch
+                 // Evaluate the number of periods before the next edge
+                 if (periods >= 24 && periods < 64) {
+                     // Detected two sequential equal bits and a modulation switch
+@@ -3280,7 +3280,7 @@
+     size_t txlen = 0;
+ 
+     int t_wait_1 = 204;
+-    int t_wait_1_guard = 8;
++    int t_wait_1_guard = 3; // iCopy-X: the PM3-tuned value of 8 loses edges on this antenna/ADC front-end; 3 is the value proven working on this hardware (kwiecien).
+     int t_wait_2 = 128;
+     size_t tag_size = 48;
+     bool bStop = false;
+@@ -3407,18 +3407,15 @@
+         // hitag 2 settings
+         t_wait_1 = HITAG_T_WAIT_1_MIN;
+ 
+-        // t_WAIT2 is a minimum (HT2 datasheet 3.5, "at least 90"), so a reader may
+-        // take longer and a real tag does not care.  Take longer.
+-        //
+-        // Measured against a Proxmark simulating a tag: its answer disturbs its own
+-        // LF front end, and the envelope is still recovering ~580 T0 later when the
+-        // next command would arrive.  A 10 bit READ PAGE rides through that intact,
+-        // but a 32 bit password spans ~830 T0 of the recovery ramp and loses an
+-        // edge partway along - 30 or 31 bits of 32, every time.  Waiting until the
+-        // envelope has settled costs ~9 ms per exchange against a genuine tag and
+-        // makes the difference between an exchange that completes and one that
+-        // cannot.
+-        t_wait_2 = 1200;
++        // iCopy-X: upstream raised this to 1200 (from the datasheet minimum of
++        // 90), reasoning that the reader's own LF front-end envelope is still
++        // recovering when the next command goes out, and a 32 bit password
++        // command spans into that recovery window and loses an edge. That was
++        // measured against a Proxmark simulating a tag, not against this
++        // hardware. Reverted to the datasheet minimum (kwiecien, proven working
++        // here). Revisit if password/crypto exchanges specifically show the
++        // 30-31-of-32-bit symptom described above on real hardware.
++        t_wait_2 = HITAG_T_WAIT_2_MIN;
+         tag_size = 48;
+         DBG DbpString("Configured for " _YELLOW_("Hitag 2") " reader");
+     }
+@@ -3519,44 +3516,16 @@
+         response_start = command_start + command_duration;
+ 
+         // Let the antenna and ADC values settle
+-        // And find the position where edge sampling should start.
+-        //
+-        // Refresh the ADC reference before listening.
+-        //
+-        // lf_count_edge_periods() slices at adc_avg +/- 20, and that average is
+-        // taken once in lf_init() and never renewed - so by the time we listen for
+-        // an answer to a 32 bit command, the reference predates both the field
+-        // settling and our own 890 T0 transmission.  That is the reader side twin
+-        // of the simulator's post-transmission deafness, and it is why the tag's
+-        // first answer decodes and its second one does not.
+-        //
+-        // lf_sample_mean() consumes exactly 32 carrier periods, so take them out of
+-        // the wait rather than adding to it and leave the turnaround unchanged.
+-        //
+-        // Take it at the END of the wait, not the start.  Both orders cost the
+-        // same 32 periods and leave the turnaround identical, but the reference
+-        // has to describe the envelope the answer will actually ride on.  Sampled
+-        // first, it is taken ~170 T0 earlier, while the field is still recovering
+-        // from our own transmission, and the +/- 20 slicing band then sits below
+-        // the settled level - which is where the missed edges come from.
+-        // Measured symptom: the merges cluster in the first few intervals of the
+-        // answer, 16 15 17 15 17 30 18 ..., and the frame lands on 35 bits.
+-        lf_wait_periods(t_wait_1 - t_wait_1_guard - 32);
+-        lf_sample_mean();
+-
+-        // Start listening from a known modulation state.
++        // And find the position where edge sampling should start
+         //
+-        // ht2_receive() opens with lf_get_tag_modulation(), which reports whatever
+-        // `rising_edge` was left at - and nothing reset it, so after our own
+-        // transmission it reflects the last edge of *that*, not the tag's answer.
+-        // When it comes out 0 the receive concludes it missed the first period and
+-        // synthesises a leading sample, which shifts every Manchester pair after
+-        // it.  Measured against a simulator: its answer arrived as 76 samples of
+-        // 1,0,1,1,0,1,0,1... where the genuine fob gives 1,0,1,0,1,0,1,0... - the
+-        // same stream with one sample inserted - so the SOF check failed and the
+-        // whole read was abandoned.  It happens after a 32 bit command and not
+-        // after a 5 bit one, which is why the UID reads and the password does not.
+-        lf_reset_counter();
++        // iCopy-X: upstream added an ADC-reference recalibration here
++        // (wait -32 periods + lf_sample_mean() + lf_reset_counter()), tuned
++        // against a simulator and stock PM3 hardware. On this hardware's
++        // antenna/ADC front-end it does not reproduce the kwiecien fix's read
++        // reliability, so it is reverted to the simple wait proven working here.
++        // Revisit only if the specific decode symptom upstream describes (first
++        // answer decodes, second does not) reappears on this hardware.
++        lf_wait_periods(t_wait_1 - t_wait_1_guard);
+ 
+         response_start += t_wait_1 - t_wait_1_guard;
+ 
+@@ -3681,7 +3650,7 @@
+     size_t txlen = 0;
+ 
+     int t_wait_1 = 204;
+-    int t_wait_1_guard = 8;
++    int t_wait_1_guard = 3; // iCopy-X: matches the proven-working ReaderHitag value (kwiecien).
+     int t_wait_2 = 128;
+     size_t tag_size = 48;
+ 
+@@ -3771,12 +3740,10 @@
+     } else if (payload->cmd <= HT2_LAST_CMD) {
+         // hitag 2 settings
+         t_wait_1 = HITAG_T_WAIT_1_MIN;
+-        // Same as the reader path: t_WAIT2 is a minimum, so wait past the
+-        // simulator's post-answer recovery.  Left at 90 here, the writer's
+-        // password landed while a simulated tag was still deaf and came back as a
+-        // garbled 30 bit frame spanning 3023 T0, so the exchange died straight
+-        // after the UID.
+-        t_wait_2 = 1200;
++        // iCopy-X: reverted to the datasheet minimum, matching ReaderHitag above
++        // (see that comment) - upstream's 1200 was tuned against a simulator,
++        // not this hardware.
++        t_wait_2 = HITAG_T_WAIT_2_MIN;
+         tag_size = 48;
+         DBG DbpString("Configured for " _YELLOW_("Hitag 2") " writer");
+     }
+@@ -3860,44 +3827,16 @@
+         response_start = command_start + command_duration;
+ 
+         // Let the antenna and ADC values settle
+-        // And find the position where edge sampling should start.
+-        //
+-        // Refresh the ADC reference before listening.
+-        //
+-        // lf_count_edge_periods() slices at adc_avg +/- 20, and that average is
+-        // taken once in lf_init() and never renewed - so by the time we listen for
+-        // an answer to a 32 bit command, the reference predates both the field
+-        // settling and our own 890 T0 transmission.  That is the reader side twin
+-        // of the simulator's post-transmission deafness, and it is why the tag's
+-        // first answer decodes and its second one does not.
+-        //
+-        // lf_sample_mean() consumes exactly 32 carrier periods, so take them out of
+-        // the wait rather than adding to it and leave the turnaround unchanged.
+-        //
+-        // Take it at the END of the wait, not the start.  Both orders cost the
+-        // same 32 periods and leave the turnaround identical, but the reference
+-        // has to describe the envelope the answer will actually ride on.  Sampled
+-        // first, it is taken ~170 T0 earlier, while the field is still recovering
+-        // from our own transmission, and the +/- 20 slicing band then sits below
+-        // the settled level - which is where the missed edges come from.
+-        // Measured symptom: the merges cluster in the first few intervals of the
+-        // answer, 16 15 17 15 17 30 18 ..., and the frame lands on 35 bits.
+-        lf_wait_periods(t_wait_1 - t_wait_1_guard - 32);
+-        lf_sample_mean();
+-
+-        // Start listening from a known modulation state.
++        // And find the position where edge sampling should start
+         //
+-        // ht2_receive() opens with lf_get_tag_modulation(), which reports whatever
+-        // `rising_edge` was left at - and nothing reset it, so after our own
+-        // transmission it reflects the last edge of *that*, not the tag's answer.
+-        // When it comes out 0 the receive concludes it missed the first period and
+-        // synthesises a leading sample, which shifts every Manchester pair after
+-        // it.  Measured against a simulator: its answer arrived as 76 samples of
+-        // 1,0,1,1,0,1,0,1... where the genuine fob gives 1,0,1,0,1,0,1,0... - the
+-        // same stream with one sample inserted - so the SOF check failed and the
+-        // whole read was abandoned.  It happens after a 32 bit command and not
+-        // after a 5 bit one, which is why the UID reads and the password does not.
+-        lf_reset_counter();
++        // iCopy-X: upstream added an ADC-reference recalibration here
++        // (wait -32 periods + lf_sample_mean() + lf_reset_counter()), tuned
++        // against a simulator and stock PM3 hardware. On this hardware's
++        // antenna/ADC front-end it does not reproduce the kwiecien fix's read
++        // reliability, so it is reverted to the simple wait proven working here.
++        // Revisit only if the specific decode symptom upstream describes (first
++        // answer decodes, second does not) reappears on this hardware.
++        lf_wait_periods(t_wait_1 - t_wait_1_guard);
+ 
+         response_start += t_wait_1 - t_wait_1_guard;
+ 
+@@ -4012,7 +3951,7 @@
+                      , uint8_t *tx, size_t txlen, bool send_bits) {
+ 
+     // Tag specific configuration settings (sof, timings, etc.)  HITAG2 Settings
+-#define T_WAIT_1_GUARD  7
++#define T_WAIT_1_GUARD  3 // iCopy-XS: from pm3_hitag2_copyxs_support.patch
+ 
+     if (turn_on) {
+         // Wait 50ms with field off to be sure the transponder gets reset
+@@ -4498,7 +4437,7 @@
+ 
+     uint8_t nrz_samples[HT2_MAX_NRSZ];
+ 
+-    uint8_t attempt_count = 3;
++    uint8_t attempt_count = 5; // iCopy-XS: from pm3_hitag2_copyxs_support.patch
+ 
+     int res = PM3_EFAILED;
+     bool turn_on = true;
