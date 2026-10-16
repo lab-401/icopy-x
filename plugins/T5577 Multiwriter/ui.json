@@ -1,0 +1,294 @@
+{
+    "plugin": true,
+    "name": "T5577 Multiwriter",
+    "version": "1.0.0",
+    "initial_state": "init",
+
+    "states": {
+
+        "init": {
+            "on_enter": "run:do_init",
+            "screen": {
+                "title": "T5577 Multiwriter",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Initializing...", "size": "normal", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error":             "menu"
+            }
+        },
+
+        "menu": {
+            "screen": {
+                "title": "T5577 Multiwriter",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{uid_count_label}", "size": "normal"},
+                        {"text": "{uid_summary}",     "size": "small"},
+                        {"text": ""},
+                        {"text": "OK  - Add UID",       "size": "normal"},
+                        {"text": "Right - Write T5577",  "size": "normal"},
+                        {"text": "Left  - Remove last",  "size": "small"}
+                    ]
+                },
+                "buttons": {"left": "Remove", "right": "Write"},
+                "keys": {
+                    "OK":  "set_state:add_uid_method",
+                    "M1":  "run:do_remove_last",
+                    "M2":  "set_state:place_tag"
+                }
+            },
+            "transitions": {
+                "on_result.status==ok":    "menu",
+                "on_result.status==empty": "menu",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "add_uid_method": {
+            "screen": {
+                "title": "Add UID",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "How to enter UID?", "size": "normal", "align": "center"},
+                        {"text": ""},
+                        {"text": "OK  - HEX input",      "size": "normal"},
+                        {"text": "Right - DEC input",     "size": "normal"},
+                        {"text": "      (engraved ID)",   "size": "small"},
+                        {"text": "Left  - Read from fob", "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Read fob", "right": "DEC"},
+                "keys": {
+                    "OK":  "set_state:input_hex",
+                    "M1":  "run:do_read_fob",
+                    "M2":  "set_state:input_dec"
+                }
+            },
+            "transitions": {
+                "on_result.status==stored_more": "uid_added",
+                "on_result.status==stored_full": "uid_added_full",
+                "on_result.status==error":       "error",
+                "on_error":                      "error"
+            }
+        },
+
+        "input_hex": {
+            "screen": {
+                "title": "Enter HEX UID",
+                "content": {
+                    "type": "input_hex",
+                    "label": "EM4102 UID (10 hex chars)",
+                    "length": 10,
+                    "placeholder": "0000000000"
+                },
+                "buttons": {"left": "Cancel", "right": null},
+                "keys": {
+                    "OK":  "run:do_capture_hex",
+                    "M1":  "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==stored_more": "uid_added",
+                "on_result.status==stored_full": "uid_added_full",
+                "on_result.status==error":       "error",
+                "on_error":                      "error"
+            }
+        },
+
+        "input_dec": {
+            "screen": {
+                "title": "Enter DEC UID",
+                "content": {
+                    "type": "input_hex",
+                    "label": "Engraved ID (10 digits)",
+                    "length": 10,
+                    "placeholder": "0000000000"
+                },
+                "buttons": {"left": "Cancel", "right": null},
+                "keys": {
+                    "OK":  "run:do_capture_dec",
+                    "M1":  "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==stored_more": "uid_added",
+                "on_result.status==stored_full": "uid_added_full",
+                "on_result.status==error":       "error",
+                "on_error":                      "error"
+            }
+        },
+
+        "uid_added": {
+            "screen": {
+                "title": "UID Added",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Added: {last_uid}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "{uid_count_label}",  "size": "normal"},
+                        {"text": "{uid_summary}",      "size": "small"},
+                        {"text": ""},
+                        {"text": "OK  - Add another",  "size": "normal"},
+                        {"text": "Right - Write now",  "size": "small"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Write"},
+                "keys": {
+                    "OK":  "set_state:add_uid_method",
+                    "M1":  "set_state:menu",
+                    "M2":  "set_state:place_tag"
+                }
+            }
+        },
+
+        "uid_added_full": {
+            "screen": {
+                "title": "3 UIDs Ready",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Maximum 3 UIDs reached", "size": "normal", "align": "center"},
+                        {"text": ""},
+                        {"text": "{uid_summary}", "size": "small"},
+                        {"text": ""},
+                        {"text": "OK - Write to T5577", "size": "normal", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK":  "set_state:place_tag",
+                    "M1":  "set_state:menu"
+                }
+            }
+        },
+
+        "place_tag": {
+            "screen": {
+                "title": "T5577 Multiwriter",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Place T5577 tag",     "size": "large",  "align": "center"},
+                        {"text": "on the reader",       "size": "normal", "align": "center"},
+                        {"text": ""},
+                        {"text": "{uid_count_label}",   "size": "normal", "align": "center"},
+                        {"text": "{uid_summary}",       "size": "small"},
+                        {"text": ""},
+                        {"text": "OK to write",         "size": "normal", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK":  "run:do_write",
+                    "M1":  "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done":  "verifying",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "verifying": {
+            "on_enter": "run:do_verify",
+            "screen": {
+                "title": "Verifying...",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Verifying write...", "size": "normal", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok":     "success",
+                "on_result.status==failed": "verify_fail",
+                "on_result.status==error":  "error",
+                "on_error":                 "error"
+            }
+        },
+
+        "success": {
+            "screen": {
+                "title": "Write OK",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Write successful!",   "size": "large",  "align": "center"},
+                        {"text": ""},
+                        {"text": "{uid_count_label}",   "size": "normal", "align": "center"},
+                        {"text": "{uid_summary}",       "size": "small"},
+                        {"text": ""},
+                        {"text": "OK - Write another",  "size": "small"},
+                        {"text": "Left - New session",  "size": "small"}
+                    ]
+                },
+                "buttons": {"left": "New", "right": "Again"},
+                "keys": {
+                    "OK":  "set_state:place_tag",
+                    "M1":  "run:do_init",
+                    "M2":  "set_state:place_tag"
+                }
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error":             "menu"
+            }
+        },
+
+        "verify_fail": {
+            "screen": {
+                "title": "Verify Failed",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "Adjust T5577 position", "size": "small"},
+                        {"text": "OK - Retry write",      "size": "normal"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK":  "set_state:place_tag",
+                    "M1":  "set_state:menu"
+                }
+            }
+        },
+
+        "error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "normal"},
+                        {"text": ""},
+                        {"text": "OK - back to menu",  "size": "small"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": null},
+                "keys": {
+                    "OK":  "set_state:menu",
+                    "M1":  "finish"
+                }
+            }
+        }
+    }
+}
+
