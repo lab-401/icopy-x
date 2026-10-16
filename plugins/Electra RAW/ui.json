@@ -1,0 +1,179 @@
+{
+    "plugin": true,
+    "name": "Electra RAW",
+    "version": "1.0.0",
+    "initial_state": "init",
+
+    "states": {
+
+        "init": {
+            "on_enter": "run:do_init",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Initializing...", "size": "medium", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error": "menu"
+            }
+        },
+
+        "menu": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "list",
+                    "style": "radio",
+                    "checked_by_selection": true,
+                    "items": [
+                        {"label": "  Read Electra tag", "value": "read", "action": "set_state:read_tag"},
+                        {"label": "  Clone last RAW",   "value": "clone_last", "action": "run:do_show_last_raw"}
+                    ]
+                },
+                "buttons": {"left": null, "right": "Select"},
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "OK": "select",
+                    "M2": "select"
+                }
+            },
+            "transitions": {
+                "on_result.status==found":      "show_data",
+                "on_result.status==found_last": "clone_last_prompt",
+                "on_result.status==done":       "clone_ok",
+                "on_result.status==error":      "error",
+                "on_error":                     "error"
+            }
+        },
+
+        "read_tag": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Place Electra tag", "size": "medium", "align": "center"},
+                        {"text": ""},
+                        {"text": "OK to read", "size": "medium", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Read"},
+                "keys": {
+                    "OK": "run:do_read_tag",
+                    "M2": "run:do_read_tag",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "clone_last_prompt": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Facility: {electra_facility}", "size": "medium"},
+                        {"text": "ID:       {electra_id}",       "size": "medium"},
+                        {"text": "Epilogue: {electra_epilogue}", "size": "medium"},
+                        {"text": ""},
+                        {"text": "Place T5577 tag.", "size": "medium"},
+                        {"text": "OK to clone.", "size": "medium"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Clone"},
+                "keys": {
+                    "OK": "run:do_clone_raw",
+                    "M2": "run:do_clone_raw",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done":  "clone_ok",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "show_data": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Facility: {electra_facility}", "size": "medium"},
+                        {"text": "ID:       {electra_id}",       "size": "medium"},
+                        {"text": "Epilogue: {electra_epilogue}", "size": "medium"},
+                        {"text": "Cloned tags: {clone_count}",   "size": "medium"},
+                        {"text": "OK - Clone to T5577", "size": "medium"}
+                    ]
+                },
+                "buttons": {"left": "Menu", "right": "Clone"},
+                "keys": {
+                    "OK": "run:do_clone_raw",
+                    "M2": "run:do_clone_raw",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done":  "clone_ok",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "clone_ok": {
+            "screen": {
+                "title": "Clone Success!",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "RAW cloned OK", "size": "medium"},
+                        {"text": "Cloned tags: {clone_count}", "size": "medium"},
+                        {"text": ""},
+                        {"text": "OK - clone again", "size": "medium"},
+                        {"text": "Menu - back",       "size": "medium"}
+                    ]
+                },
+                "buttons": {"left": "Menu", "right": "Next"},
+                "keys": {
+                    "OK": "set_state:show_data",
+                    "M2": "set_state:show_data",
+                    "M1": "set_state:menu"
+                }
+            }
+        },
+
+        "error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "medium"},
+                        {"text": ""},
+                        {"text": "OK - back to menu", "size": "medium"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Menu"},
+                "keys": {
+                    "OK": "set_state:menu",
+                    "M2": "set_state:menu",
+                    "M1": "set_state:menu"
+                }
+            }
+        }
+    }
+}
