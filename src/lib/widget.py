@@ -700,8 +700,8 @@ class ListView:
                     icon_drawn = True
 
             # --- Item text ---
-            text_x = (LIST_TEXT_X_WITH_ICON if icon_drawn
-                      else LIST_TEXT_X_NO_ICON)
+            # Native optimization override: force plain text list text to align at exactly 10px padding margin
+            text_x = (LIST_TEXT_X_WITH_ICON if icon_drawn else 10)
             text_y = y_pos + self._item_height // 2
 
             self._canvas.create_text(
@@ -1204,8 +1204,8 @@ class CheckedListView(ListView):
                     icon_drawn = True
 
             # --- Item text ---
-            text_x = (LIST_TEXT_X_WITH_ICON if icon_drawn
-                      else LIST_TEXT_X_NO_ICON)
+            # Native optimization override: force plain text list text to align at exactly 10px padding margin
+            text_x = (LIST_TEXT_X_WITH_ICON if icon_drawn else 10)
             text_y = y_pos + self._item_height // 2
 
             self._canvas.create_text(
@@ -1216,7 +1216,6 @@ class CheckedListView(ListView):
                 anchor=LIST_TEXT_ANCHOR,
                 tags=self._tag_text,
             )
-
 
 # =====================================================================
 # Toast
