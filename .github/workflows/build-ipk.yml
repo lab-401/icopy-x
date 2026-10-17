@@ -201,17 +201,11 @@ jobs:
               if len(py_libs) < 50:
                   errors.append(f'Too few lib/*.py: {len(py_libs)} (expected 50+)')
 
-              # PM3 binary + lua (factory versions from build/)
+              # PM3 binary + lua (iceman v4.23346 from build/)
               if 'pm3/proxmark3' not in names:
                   errors.append('MISSING: pm3/proxmark3')
               if 'pm3/lua.zip' not in names:
                   errors.append('MISSING: pm3/lua.zip')
-
-              # PM3 binary should be factory (smaller than iceman)
-              if 'pm3/proxmark3' in names:
-                  pm3_size = z.getinfo('pm3/proxmark3').file_size
-                  if pm3_size > 3000000:
-                      errors.append(f'pm3/proxmark3 too large ({pm3_size}b) — expected factory client (<3MB)')
 
               # Firmware (MUST NOT be present in no-flash IPK)
               fw = [n for n in names if 'firmware' in n and n.endswith('.elf')]
@@ -649,14 +643,14 @@ jobs:
         run: |
           mkdir -p /tmp/clients-noflash/linux /tmp/clients-noflash/windows /tmp/clients-noflash/macos
           # Binaries per platform
-          cp build/clients/factory/linux/proxmark3 /tmp/clients-noflash/linux/
-          cp build/clients/factory/macos/proxmark3 /tmp/clients-noflash/macos/
-          cp -r build/clients/factory/windows/* /tmp/clients-noflash/windows/
-          # Ship the factory client's data next to each binary, not at the zip
+          cp build/clients/linux/proxmark3 /tmp/clients-noflash/linux/
+          cp build/clients/macos/proxmark3 /tmp/clients-noflash/macos/
+          cp -r build/clients/windows/* /tmp/clients-noflash/windows/
+          # Ship the client's data next to each binary, not at the zip
           # root, so it is found relative to the executable on every platform
           # (same root cause as the flash client — issue #13).
           for p in linux windows macos; do
-            cp -r build/clients/factory/share/* /tmp/clients-noflash/$p/
+            cp -r build/clients/share/* /tmp/clients-noflash/$p/
           done
           cd /tmp/clients-noflash && zip -r ${{ github.workspace }}/clients-noflash.zip .
           echo "=== clients-noflash.zip layout ===" && find . -maxdepth 2 -type d | sort
@@ -679,7 +673,7 @@ jobs:
             | File | PM3 firmware | LUA scripts | Use when |
             |------|-------------|-------------|----------|
             | `icopy-x-flash.ipk` | RRG/Iceman (included) | Lua 5.4 (iceman) | You want the latest PM3 client + firmware |
-            | `icopy-x-noflash.ipk` | Unchanged (factory) | Lua 5.1 (factory) | You want to keep your current PM3 version |
+            | `icopy-x-noflash.ipk` | Unchanged (keep current PM3) | Lua 5.4 (iceman) | You want to keep your current PM3 firmware |
 
             ### Installation
 
@@ -706,7 +700,7 @@ jobs:
             | File | PM3 version | Contents |
             |------|------------|----------|
             | `clients-flash.zip` | RRG/Iceman ${{ env.PM3_TAG }} | Linux x86_64 + macOS + Windows CLI clients |
-            | `clients-noflash.zip` | Factory (iCopy-X original) | Windows client (pre-built) |
+            | `clients-noflash.zip` | Open-source (iceman v4.23346) | Linux + macOS + Windows CLI clients |
 
             ### Using the companion client
 

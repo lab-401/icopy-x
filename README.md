@@ -170,7 +170,7 @@ After writing, select Verify on Write Result to read back the target card and ch
 # Installation
 There are **two flavours** to choose from: "No Flash" and "Flash".
 
- - **"No Flash"**: Full open-source system, but leaves your iCopy-X's proxmark module untouched. You can easily move back and forth between factory/vanilla middleware. However, you will be limited to circa ~2022 proxmark client + firmware.
+ - **"No Flash"**: Full open-source system, but leaves your iCopy-X's proxmark module untouched. You can easily move back and forth between the open-source middleware and the stock Lab401 middleware. However, you will be limited to circa ~2022 proxmark client + firmware.
  - **"Flash"**: Full open-source system, running latest iceman firmware + client. You'll be prompted to flash after you install the IPK. Flashing **does not touch the bootloader** - you will NOT brick your device. Likewise, the iCopy-X has protections to recover from a soft-brick.
 
 Installation is simple: 
@@ -219,7 +219,7 @@ python tools/plugin_i18n.py check my_plugin            # verifies coverage and p
 
 When your iCopy-X is in "PC-Mode", you can connect to your iCopy-X's Proxmark module directly from your computer.
 Each release contains multi-platform binaries, compiled to match your device's version:
- - `clients-noflash.zip` : Contains windows, linux and macos clients for the "factory firmware" / "no flash" version
+ - `clients-noflash.zip` : Contains windows, linux and macos clients for the "no flash" version (keeps your current PM3 firmware)
  - `clients-flash.zip` : Contains windows, linux and macos clients for the latest iceman / "flash" version.
 
 ### Using the companion client
@@ -290,11 +290,11 @@ https://github.com/quantum-x from https://www.lab401.com
 ## I flashed my device and I don't like it and I want to go back to vanilla...
 
 ### Via the UI
-Add a factory pm3 firmware image (found in an original .IPK archive:  `res/firmware/pm3/fullimage.elf`) inside the `res/firmware/pm3` folder of a "flash". Copy to your device, install and flash. Then, install the "noflash.ipk" on your device. __or__
+Add an original Lab401 PM3 firmware image (found in an original .IPK archive:  `res/firmware/pm3/fullimage.elf`) inside the `res/firmware/pm3` folder of a "flash". Copy to your device, install and flash. Then, install the "noflash.ipk" on your device. __or__
 
 ### Via SSH
 1) Connect to your device via SSH (You'll need USB-C Ethernet connector/hub): login: root/fa
-2) Transfer the factory pm3 firmware image (found in an original .IPK archive:  `res/firmware/pm3/fullimage.elf`) to the icopy-x.
+2) Transfer the original Lab401 PM3 firmware image (found in an original .IPK archive:  `res/firmware/pm3/fullimage.elf`) to the icopy-x.
 3) `systemctl stop icopy`
 4) `/home/pi/ipk_app_main/pm3/proxmark3 /dev/ttyACM0 --flash --force --image /path/to/fullimage.elf`
 5) Reboot your device, install "noflash.ipk"
@@ -306,7 +306,7 @@ Add a factory pm3 firmware image (found in an original .IPK archive:  `res/firmw
 ## Does this solve the "Boot Timeout" problem?
 Not directly. "Boot Timeout" means that the GD32 (Microcontroller, that controls that hardware) hasn't received the signal to handoff the screen to the linux device / UI. There are multiple things that can cause this - but the fasted solution is: reflash the microSD card.
 
-Please see the following page for more information, and factory images to reflash your microSD!
+Please see the following page for more information, and original Lab401 images to reflash your microSD!
 https://lab401.com/blogs/academy/icopy-xs-fixing-the-boot-timeout-problem
 
 Once your device is reflashed and booting, you can apply the Open Source IPKs.
