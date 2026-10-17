@@ -99,6 +99,11 @@ _T55_LEN = 8   # T55xx password = 4 bytes = 8 hex chars
 _USER_DST = '/mnt/upan/keys/mf1/mfc_users_keys.dic'
 _USER_LEN = 12
 
+# iCLASS Legacy keys dictionary (for iCLASS SE/SEOS card cloning)
+_ICLASS_SRC = os.path.join(_BUNDLED_DIR, 'iclass', 'iclass_default_keys.dic')
+_ICLASS_DST = '/mnt/upan/keys/iclass/iclass_default_keys.dic'
+_ICLASS_LEN = 16  # iCLASS key = 8 bytes = 16 hex chars
+
 # Comment written once above the block of user-added keys
 _HEADER = '# iCopy-XS Added Key'
 
@@ -110,6 +115,7 @@ _BACKUP_DIR = '/mnt/upan/backup_dictionaries'
 _MFC_NAME = os.path.basename(_MFC_DST)  # mfc_default_keys.dic
 _T55_NAME = os.path.basename(_T55_DST)  # t55xx_default_pwds.dic
 _USER_NAME = os.path.basename(_USER_DST)  # mfc_users_keys.dic
+_ICLASS_NAME = os.path.basename(_ICLASS_DST)  # iclass_default_keys.dic
 
 
 class ManageDictionariesPlugin(object):
@@ -128,12 +134,15 @@ class ManageDictionariesPlugin(object):
         return None
 
     def do_cycle_type(self):
-        """Cycle the displayed dictionary type: MF1 -> MF1 User -> T55xx."""
-        order = ['MF1', 'MF1 User', 'T55xx']
+        """Cycle the displayed dictionary type: MF1 -> MF1 User -> T55xx -> ICLASS."""
         current = self.host.get_var('dic_type', 'MF1')
-        try:
-            nxt = order[(order.index(current) + 1) % len(order)]
-        except ValueError:
+        if current == 'MF1':
+            nxt = 'MF1 User'
+        elif current == 'MF1 User':
+            nxt = 'T55xx'
+        elif current == 'T55xx':
+            nxt = 'ICLASS'
+        else:
             nxt = 'MF1'
         self.host.set_var('dic_type', nxt)
         self.host.update_screen()
@@ -147,6 +156,8 @@ class ManageDictionariesPlugin(object):
         """
         if self.host.get_var('dic_type', 'MF1') == 'T55xx':
             return {'status': 't55xx'}
+        if self.host.get_var('dic_type', 'MF1') == 'ICLASS':
+            return {'status': 'iclass'}
         return {'status': 'mfc'}
 
     # ------------------------------------------------------------------
@@ -162,6 +173,10 @@ class ManageDictionariesPlugin(object):
     def do_capture_t55xx(self):
         """Capture and append a T55xx password (8 hex chars)."""
         return self._capture(_T55_DST, _T55_LEN, 'T55xx')
+
+    def do_capture_iclass(self):
+        """Capture and append an iCLASS key (16 hex chars)."""
+        return self._capture(_ICLASS_DST, _ICLASS_LEN, 'iCLASS')
 
     def _capture(self, path, keylen, label):
         """Validate the hex input then append it to the given dictionary.
@@ -213,11 +228,13 @@ class ManageDictionariesPlugin(object):
         """
         mf_ok = self._copy_one(_MFC_SRC, _MFC_DST)
         t55_ok = self._copy_one(_T55_SRC, _T55_DST)
+        iclass_ok = self._copy_one(_ICLASS_SRC, _ICLASS_DST)
 
         self.host.set_var('load_mf', 'OK' if mf_ok else 'FAILED')
         self.host.set_var('load_t55', 'OK' if t55_ok else 'FAILED')
+        self.host.set_var('load_iclass', 'OK' if iclass_ok else 'FAILED')
 
-        if mf_ok and t55_ok:
+        if mf_ok and t55_ok and iclass_ok:
             return {'status': 'done'}
         return {'status': 'error'}
 
@@ -251,11 +268,13 @@ class ManageDictionariesPlugin(object):
         self.host.set_var('backup_mf', '--')
         self.host.set_var('backup_user', '--')
         self.host.set_var('backup_t55', '--')
+        self.host.set_var('backup_iclass', '--')
 
         present = [
             (_MFC_DST, _MFC_NAME, 'mf'),
             (_USER_DST, _USER_NAME, 'user'),
             (_T55_DST, _T55_NAME, 't55'),
+            (_ICLASS_DST, _ICLASS_NAME, 'iclass'),
         ]
         present = [(s, n, tag) for (s, n, tag) in present if os.path.isfile(s)]
 

@@ -75,7 +75,8 @@
                         {"text": "Dictionaries loaded", "size": "large", "align": "center"},
                         {"text": ""},
                         {"text": "MF1:   {load_mf}", "size": "medium", "align": "center"},
-                        {"text": "T55xx: {load_t55}", "size": "medium", "align": "center"}
+                        {"text": "T55xx: {load_t55}", "size": "medium", "align": "center"},
+                        {"text": "iCLASS: {load_iclass}", "size": "medium", "align": "center"}
                     ]
                 },
                 "buttons": {"left": "Menu", "right": "OK"},
@@ -96,6 +97,7 @@
                         {"text": ""},
                         {"text": "MF1:   {load_mf}", "size": "medium", "align": "center"},
                         {"text": "T55xx: {load_t55}", "size": "medium", "align": "center"},
+                        {"text": "iCLASS: {load_iclass}", "size": "medium", "align": "center"},
                         {"text": "Check source files", "size": "medium", "align": "center"}
                     ]
                 },
@@ -156,7 +158,8 @@
                         {"text": "Backup #1 created", "size": "large", "align": "center"},
                         {"text": "MF1:   {backup_mf}", "size": "medium", "align": "center"},
                         {"text": "User:  {backup_user}", "size": "medium", "align": "center"},
-                        {"text": "T55xx: {backup_t55}", "size": "medium", "align": "center"}
+                        {"text": "T55xx: {backup_t55}", "size": "medium", "align": "center"},
+                        {"text": "iCLASS: {backup_iclass}", "size": "medium", "align": "center"}
                     ]
                 },
                 "buttons": {"left": "Menu", "right": "OK"},
@@ -235,7 +238,8 @@
             },
             "transitions": {
                 "on_result.status==mfc": "input_mfc",
-                "on_result.status==t55xx": "input_t55xx"
+                "on_result.status==t55xx": "input_t55xx",
+                "on_result.status==iclass": "input_iclass"
             }
         },
         "input_mfc": {
@@ -275,6 +279,30 @@
                 "keys": {
                     "OK": "run:do_capture_t55xx",
                     "M2": "run:do_capture_t55xx",
+                    "M1": "set_state:add_picker"
+                }
+            },
+            "transitions": {
+                "on_result.status==added": "add_done",
+                "on_result.status==duplicate": "add_dup",
+                "on_result.status==invalid": "add_invalid",
+                "on_result.status==error": "add_error",
+                "on_error": "add_error"
+            }
+        },
+        "input_iclass": {
+            "screen": {
+                "title": "Add iCLASS Key",
+                "content": {
+                    "type": "input_hex",
+                    "label": "Enter iCLASS key (16 hex)",
+                    "length": 16,
+                    "placeholder": "AFA785A7DAB33378"
+                },
+                "buttons": {"left": "Back", "right": "Add"},
+                "keys": {
+                    "OK": "run:do_capture_iclass",
+                    "M2": "run:do_capture_iclass",
                     "M1": "set_state:add_picker"
                 }
             },
