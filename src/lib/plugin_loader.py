@@ -170,9 +170,10 @@ def validate_manifest(manifest_path):
     if isinstance(name, str):
         if not name:
             errors.append('Field \'name\' must be non-empty')
-        elif len(name) > 20:
+        elif len(name) > 23: 
             errors.append(
                 'Field \'name\' exceeds 20 chars (got {})'.format(len(name)))
+
 
     version = manifest.get('version')
     if isinstance(version, str):

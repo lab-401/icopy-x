@@ -370,7 +370,11 @@ class JsonRenderer:
                 chk_x = SCREEN_W - CHECK_BOX_MARGIN_RIGHT - CHECK_BOX_SIZE // 2
                 chk_y = y + LIST_ITEM_H // 2
                 sz = CHECK_BOX_SIZE // 2
-                if item.get('checked', False):
+                if content.get('checked_by_selection'):
+                    is_checked = is_sel
+                else:
+                    is_checked = item.get('checked', False)
+                if is_checked:
                     c.create_rectangle(chk_x - sz, chk_y - sz,
                                        chk_x + sz, chk_y + sz,
                                        fill=CHECK_COLOR_CHECKED_FILL,

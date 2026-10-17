@@ -1,8 +1,7 @@
 diff --git a/client/src/cmdhf14a.c b/client/src/cmdhf14a.c
-index dc3066b..6eb1e74 100644
 --- a/client/src/cmdhf14a.c
 +++ b/client/src/cmdhf14a.c
-@@ -268,7 +268,7 @@ int hf14a_getversion_data(iso14a_card_select_t *card, uint64_t select_status, ve
+@@ -268,7 +268,7 @@
              DropField();
  
              if (res == PM3_ETIMEOUT) {
@@ -11,21 +10,21 @@ index dc3066b..6eb1e74 100644
                  return PM3_ETIMEOUT;
              }
  
-@@ -2717,7 +2717,7 @@ int infoHF14A(bool verbose, bool do_nack_test, bool do_aid_search) {
-     SendCommandMIX(CMD_HF_ISO14443A_READER, ISO14A_CONNECT | ISO14A_CLEARTRACE | ISO14A_NO_DISCONNECT, 0, 0, NULL, 0);
+@@ -2942,7 +2942,7 @@
      PacketResponseNG resp;
-     if (WaitForResponseTimeout(CMD_ACK, &resp, 2500) == false) {
+     uint8_t sel_2815 = 0;
+     if (WaitForIso14aReply(&resp, 2500, NULL, &sel_2815) == false) {
 -        PrintAndLogEx(DEBUG, "iso14443a card select timeout");
 +        PrintAndLogEx(WARNING, "iso14443a card select timeout");
          DropField();
          return PM3_ETIMEOUT;
      }
-@@ -2735,7 +2735,7 @@ int infoHF14A(bool verbose, bool do_nack_test, bool do_aid_search) {
-     uint64_t select_status = resp.oldarg[0];
+@@ -2960,7 +2960,7 @@
+     uint64_t select_status = sel_2815;
  
      if (select_status == 0) {
 -        PrintAndLogEx(DEBUG, "iso14443a card select failed");
 +        PrintAndLogEx(WARNING, "iso14443a card select failed");
-         DropField();
-         return select_status;
+         // Status 5 avoids the standard ISO14443-4 application probe in hf search.
+         return hf14a_timeslot_select(true, true, true) == PM3_SUCCESS ? 5 : 0;
      }

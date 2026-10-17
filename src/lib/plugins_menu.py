@@ -110,8 +110,10 @@ class PluginsMenuActivity(BaseActivity):
             )
             self.lv_plugins.setItems(self._labels())
             self._labels_lang = resources.getLanguage()
-            icons = [p.icon_path or 'plugin' for p in self._plugins]
-            self.lv_plugins.setIcons(icons)
+            
+            # ── ENHANCEMENT: Enforce plain text mode to shift items to x=19 and drop icon gaps ──
+            self.lv_plugins._style = "plain"
+            
             self.lv_plugins.setOnPageChangeCall(self._onPageChange)
             self.lv_plugins.show()
 

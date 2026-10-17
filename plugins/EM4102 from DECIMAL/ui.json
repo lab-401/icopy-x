@@ -1,0 +1,130 @@
+{
+    "plugin": true,
+    "name": "EM4102 From Dec",
+    "version": "1.0.0",
+    "initial_state": "init",
+
+    "states": {
+
+        "init": {
+            "on_enter": "run:do_init",
+            "screen": {
+                "title": "EM4102 - Dec",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Initializing...", "size": "medium", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": null, "right": null},
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "enter_dec",
+                "on_error":             "enter_dec"
+            }
+        },
+
+        "enter_dec": {
+            "screen": {
+                "title": "EM4102 From Dec",
+                "content": {
+                    "type": "input_dec",
+                    "label": "Engraved ID (10 digits)",
+                    "length": 10,
+                    "placeholder": "0000000000"
+                },
+                "buttons": {"left": "Exit", "right": "OK"},
+                "keys": {
+                    "OK":  "run:do_capture_dec",
+                    "M2":  "run:do_capture_dec",
+                    "M1":  "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==ok":    "confirm_clone",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "confirm_clone": {
+            "screen": {
+                "title": "Confirm Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": ""},
+                        {"text": ""},
+                        {"text": "DEC: {dec_id}",  "size": "medium", "align": "center"},
+                        {"text": "HEX: {hex_uid}", "size": "large", "align": "center"},
+                        {"text": ""},
+                        {"text": "Place T5577 on reader", "size": "medium", "align": "center"},
+                        {"text": "OK to clone",           "size": "medium", "align": "center"}
+                    ]
+                },
+                "buttons": {"left": "Back", "right": "Clone"},
+                "keys": {
+                    "OK":  "run:do_clone",
+                    "M2":  "run:do_clone",
+                    "M1":  "set_state:enter_dec"
+                }
+            },
+            "transitions": {
+                "on_result.status==done":  "clone_ok",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "clone_ok": {
+            "screen": {
+                "title": "Clone OK",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "Write completed.", "size": "large", "align": "center"},
+                        {"text": "No verification performed.", "size": "large", "align": "center"},
+                        {"text": ""},
+                        {"text": "DEC: {dec_id}",       "size": "medium", "align": "center"},
+                        {"text": "HEX: {hex_uid}",      "size": "medium", "align": "center"},
+                        {"text": "Tags: {clone_count}", "size": "medium", "align": "center"},
+                        {"text": ""}
+                    ]
+                },
+                "buttons": {"left": "New ID", "right": "Again"},
+                "keys": {
+                    "OK":  "run:do_clone",
+                    "M2":  "run:do_clone",
+                    "M1":  "set_state:enter_dec"
+                }
+            },
+            "transitions": {
+                "on_result.status==done":  "clone_ok",
+                "on_result.status==error": "error",
+                "on_error":                "error"
+            }
+        },
+
+        "error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {"text": "{error_msg}", "size": "medium"},
+                        {"text": ""},
+                        {"text": "OK - try again", "size": "medium"}
+                    ]
+                },
+                "buttons": {"left": "Exit", "right": "Retry"},
+                "keys": {
+                    "OK":  "set_state:enter_dec",
+                    "M2":  "set_state:enter_dec",
+                    "M1":  "finish"
+                }
+            }
+        }
+
+    }
+}

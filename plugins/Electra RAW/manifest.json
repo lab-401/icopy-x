@@ -1,0 +1,9 @@
+{
+    "name": "Electra RAW Clone",
+    "version": "1.0.0",
+    "author": "jareckib (decode/encode ported from protocol_electra.c by Leptoptilos, Flipper Zero)",
+    "description": "Read a genuine Electra (Romania) intercom fob and clone its RAW bitstream to T5577.",
+    "entry_class": "ElectraPlugin",
+    "permissions": ["pm3"],
+    "order": 41
+}

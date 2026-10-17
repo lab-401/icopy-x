@@ -356,7 +356,7 @@ def scan_lfsea():
     """
     try:
         import executor
-        ret = executor.startPM3Task('lf sea', 10000)
+        ret = executor.startPM3Task('lf sea', 11000)
         if ret == -1:
             return createExecTimeout(1)
         import lfsearch

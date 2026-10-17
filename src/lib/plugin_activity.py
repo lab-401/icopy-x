@@ -255,19 +255,39 @@ class PluginActivity(BaseActivity):
 
         # Forward navigation keys to input widget if active
         if self._input_widget is not None:
+            ACTIVE_TEXT_COLOR = '#FFFFFF'   # Bright white font for highlighted cell
+            NORMAL_TEXT_COLOR = '#000000'   # Standard black font for unselected cells
+
             if key == KEY_UP:
                 self._input_widget.rollUp()
-                return
             elif key == KEY_DOWN:
                 self._input_widget.rollDown()
-                return
             elif key == KEY_LEFT:
                 self._input_widget.prevChar()
-                return
             elif key == KEY_RIGHT:
                 self._input_widget.nextChar()
+            else:
+                # KEY_OK and KEY_M2 fall through to keys_map to trigger action
+                pass
+
+            if key in (KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT):
+                # Force physical redraw execution loop on the display canvas
+                self._input_widget._redraw()
+
+                # ── DYNAMIC CURSOR FONT RECOLOR ENGINE (Reverse Video Emulation) ──
+                try:
+                    char_tag = self._input_widget._tag_char
+                    text_ids = self.getCanvas().find_withtag(char_tag)
+                    current_focus = self._input_widget.getFocus()
+
+                    for idx, text_id in enumerate(text_ids):
+                        if idx == current_focus:
+                            self.getCanvas().itemconfig(text_id, fill=ACTIVE_TEXT_COLOR)
+                        else:
+                            self.getCanvas().itemconfig(text_id, fill=NORMAL_TEXT_COLOR)
+                except Exception:
+                    pass
                 return
-            # KEY_OK and KEY_M2 fall through to keys_map to trigger action
 
         # Look up key action in current screen definition
         state_def = self._screens.get(self._current_state_id)
@@ -468,18 +488,23 @@ class PluginActivity(BaseActivity):
                 resolved_title = '%s %s' % (resolved_title, self._renderer.resolve(page))
             self.setTitle(resolved_title)
 
-        # Render content — input_hex/input_text use the InputMethods widget,
+        # Render content — input_hex/input_text/input_dec use the InputMethods widget,
         # all others go through JsonRenderer (existing behaviour untouched).
         content = screen.get('content', {})
         content_type = content.get('type')
-        if content_type in ('input_hex', 'input_text'):
+        if content_type in ('input_hex', 'input_text', 'input_dec'):
             is_text = content_type == 'input_text'
-            fmt = 'text' if is_text else 'hex'
-            length = content.get('length', 16 if is_text else 8)
-            if is_text:
-                placeholder = content.get('placeholder', ' ' * length)
-            else:
+            is_dec = content_type == 'input_dec'
+            
+            if is_dec:
+                fmt = 'dec'
+                length = content.get('length', 10)
                 placeholder = content.get('placeholder', '0' * length)
+            else:
+                fmt = 'text' if is_text else 'hex'
+                length = content.get('length', 16 if is_text else 8)
+                placeholder = content.get('placeholder', ' ' * length if is_text else '0' * length)
+                
             label = content.get('label', '')
             if label:
                 canvas.create_text(
@@ -514,6 +539,7 @@ class PluginActivity(BaseActivity):
             # on screen.  Handing the buttons to the renderer as well
             # drew every label twice (issue #22).
             self._renderer.render(dict(screen, buttons={}))
+
 
         # Buttons: a plain string or {"text": ..., "active": bool}.
         # Drawn once, through the framework, which also sets the
