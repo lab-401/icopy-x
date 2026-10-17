@@ -8,9 +8,10 @@ dist/
 *.7z
 .coverage
 
-# Build outputs (Docker-produced, not checked in)
-build/proxmark3
-build/lua.zip
+# Build outputs: the release client (iceman v4.23346 Frosty Lemon), Lua 5.4
+# script bundle and per-platform clients under build/clients/ ARE checked in.
+# Only local build scratch below build/ is ignored.
+build/docker_fw_out/
 
 # Screenshots (dev only)
 screenshot_*.png
@@ -44,7 +45,6 @@ memory-bank/
 
 # Extracted IPK / local build output (not project files)
 ipk_extract/
-build/docker_fw_out/
 # Debug logs
 icopy_debug.log
 
