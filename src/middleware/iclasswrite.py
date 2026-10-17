@@ -100,7 +100,7 @@ TIMEOUT = 10000
 # converts iceman dots to colon globally, which breaks this regex when
 # the adapter is active; Phase 4 must disable that normalizer for
 # Xor div key. Entry logged in phase3_phase4_gap_log.md under P3.7.
-_RE_XOR_DIV_KEY = r'Xor div key\.+\s+([0-9A-Fa-f ]+)'
+_RE_XOR_DIV_KEY = r'Xor div key[:\.]+\s+([0-9A-Fa-f ]+)'
 
 # _KW_WRBL_SUCCESS — iceman `hf iclass wrbl` success sentinel.
 #   Source: /tmp/rrg-pm3/client/src/cmdhficlass.c:3134
@@ -116,7 +116,7 @@ _RE_XOR_DIV_KEY = r'Xor div key\.+\s+([0-9A-Fa-f ]+)'
 # After compat flip: middleware targets the iceman-native `( ok )`
 # sentinel directly. The adapter normalizer becomes obsolete; Phase 4
 # will remove the normalizer, the iceman-native keyword will still match.
-_KW_WRBL_SUCCESS = r'\( ok \)'
+_KW_WRBL_SUCCESS = r'successful|\( ok \)'
 
 
 # ===========================================================================
@@ -202,7 +202,7 @@ def calcNewKey(typ, oldkey, newkey, l2e=False):
 def writeDataBlock(typ, block, data, key):
     """Write a single data block to an iClass tag.
 
-    Binary string: 'hf iclass wrbl -b {} -d {} -k {}'
+    Binary string: 'hf iclass wrbl --blk {} -d {} -k {}'
     Returns 0 on success, -10 on PM3 task error.
     """
     # Elite cards (type 18) need --elite for key derivation
@@ -277,7 +277,10 @@ def write(infos, bundle):
         typ = int(infos.get('type', getattr(tagtypes, 'ICLASS_LEGACY', 17)))
     except (ValueError, TypeError):
         typ = getattr(tagtypes, 'ICLASS_LEGACY', 17)
-    key_info = infos.get('key', '2020666666668888')
+    key_info = infos.get('key', '')
+    # Check bundle for key if infos didn't have one
+    if not key_info and isinstance(bundle, dict):
+        key_info = bundle.get('key', '')
 
     # Determine if bundle is a file path or dict
     if isinstance(bundle, str):
@@ -317,7 +320,10 @@ def verify(infos, bundle):
         typ = int(infos.get('type', getattr(tagtypes, 'ICLASS_LEGACY', 17)))
     except (ValueError, TypeError):
         typ = getattr(tagtypes, 'ICLASS_LEGACY', 17)
-    key_info = infos.get('key', '2020666666668888')
+    key_info = infos.get('key', '')
+    # Check bundle for key if infos didn't have one
+    if not key_info and isinstance(bundle, dict):
+        key_info = bundle.get('key', '')
 
     if isinstance(bundle, str):
         file_path = bundle
@@ -361,7 +367,7 @@ def verify(infos, bundle):
         # `/0x..` infix) nor legacy blocks ≥10 (regex used `[0-9a-fA-F]`
         # which accepted hex, but the `\s*:` split failed on iceman). See
         # divergence_matrix.md "hf iclass rdbl" (line 493, Systemic #4).
-        m = re.search(r'block\s+\d+\s*/0x[0-9A-Fa-f]+\s*:\s+([A-Fa-f0-9 ]+)',
+        m = re.search(r'(?:block\s+\d+/0x[0-9A-Fa-f]+|block\s+\d+)\s*:\s+([A-Fa-f0-9 ]+)',
                       content)
         if m:
             read_data = m.group(1).strip().replace(' ', '').upper()
