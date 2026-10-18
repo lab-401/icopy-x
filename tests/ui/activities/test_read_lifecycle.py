@@ -188,3 +188,24 @@ def test_old_poll_cannot_consume_retry_or_lose_its_timer(read_flow, monkeypatch)
     assert activity.state == 'reading'
     activity.callKeyEvent(KEY_PWR)
     assert not ui._timers
+
+
+def test_progress_backlog_cannot_hide_a_queued_failure(read_flow, monkeypatch):
+    import activity_read
+    activity = reading(read_flow)
+    ui = MockCanvas()
+    monkeypatch.setattr(actstack, '_root', ui)
+    monkeypatch.setattr(activity_read.time, 'monotonic', lambda: ui._now_ms / 1000)
+    read_flow.reader.is_reading.return_value = False
+    activity._startRead()
+    # More than two seconds of bounded queue draining: a completed worker's
+    # result must win over the legacy progress-based completion fallback.
+    for _ in range(5000):
+        read_flow.reader.call_reading({'progress': 50})
+    read_flow.reader.call_reading({'success': False, 'return': -2})
+    ui.advance(2000)
+    assert activity.state == 'reading'
+    assert activity._read_bundle is None
+    ui.advance(1000)
+    activity.getCanvas().advance(250)
+    assert activity.state == 'read_failed'

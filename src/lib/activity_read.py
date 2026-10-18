@@ -655,7 +655,10 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         # Some legacy readers complete without the result callback. Capture
         # the reader itself; an old poll must never observe a replacement.
         try:
-            finished = not reader.is_reading()
+            # A finished worker may still have more than one tick's worth of
+            # progress ahead of its terminal result. Never let the fallback
+            # turn that backlog into success before the result is delivered.
+            finished = not reader.is_reading() and events.empty()
         except AttributeError:
             finished = False
         except Exception as error:
