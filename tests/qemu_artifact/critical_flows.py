@@ -92,6 +92,10 @@ def run(root, output, variant, callback_errors):
         return [canvas.itemcget(item, 'text') for item in canvas.find_all()
                 if canvas.type(item) == 'text' and canvas.itemcget(item, 'state') != 'hidden']
 
+    def visible_text(activity):
+        # Real Tk may wrap a toast into several canvas text items.
+        return ' '.join(' '.join(texts(activity)).split())
+
     def no_tag_steps():
         return copy.deepcopy(fixtures[firmware]['no_tag'])
 
@@ -199,7 +203,7 @@ def run(root, output, variant, callback_errors):
                         if name == 'exit_reenter':
                             activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 1})
                             pump(lambda: activity.state == 'no_tag')
-                            assert 'No tag found' in '\n'.join(texts(activity))
+                            assert 'No tag found' in visible_text(activity)
                     elif name in ('single_tag_reader_dispatch', 'console_roundtrip'):
                         pump(lambda: activity.state == 'reading' and bool(reads))
                         assert len(reads) == 1 and reads[0][0] == 1, reads
@@ -217,12 +221,12 @@ def run(root, output, variant, callback_errors):
                     else:
                         pump(lambda: activity.state == 'no_tag')
                         expected = 'Multiple tags detected!' if name == 'collision_refuses_reader' else 'No tag found'
-                        assert expected in '\n'.join(texts(activity)), texts(activity)
+                        assert expected in visible_text(activity), texts(activity)
                         assert reads == []
                         if name == 'no_tag_rescan':
                             activity.callKeyEvent(KEY_M2)
                             pump(lambda: activity.state == 'no_tag')
-                            assert 'No tag found' in '\n'.join(texts(activity)) and not reads
+                            assert 'No tag found' in visible_text(activity) and not reads
                 if not activity.life.destroyed:
                     activity.callKeyEvent(KEY_PWR)
                 assert actstack.get_current_activity() is main
