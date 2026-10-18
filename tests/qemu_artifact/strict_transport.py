@@ -38,10 +38,10 @@ class Transcript:
             self.reject('Expected %r, received %r' % (expected, data))
         self.pending = step['response'].encode('utf-8')
         self.blocked = step.get('blocked', False)
-        self.entered.set()
 
     def recv(self, size):
         if self.blocked:
+            self.entered.set()
             if not self.release.wait(5):
                 self.reject('Test did not release the in-flight hardware response')
             self.blocked = False

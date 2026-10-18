@@ -5,7 +5,7 @@
     "collision_refuses_reader": "A synthetic collision result displays the warning and never starts a Reader.",
     "single_tag_reader_dispatch": "Real scan/parser/translation dispatch exactly one Reader with the accepted UID and type.",
     "cancel_inflight_empty": "PWR during a held no-tag response exits and ignores the late worker callback.",
-    "cancel_inflight_found": "PWR during a held found-tag response exits without starting a Reader.",
+    "cancel_inflight_found": "PWR during the Gen1 probe after UID parsing exits without starting a Reader from the late found result.",
     "exit_reenter": "After exit and worker completion, a fresh activity can scan again without stale callbacks.",
     "console_roundtrip": "Console opens during reader dispatch; PWR restores the read screen, then exits cleanly.",
     "decoder_absent": "Real discovery with empty serial inventory reports absent decoder and permits exit."

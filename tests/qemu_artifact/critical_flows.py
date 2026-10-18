@@ -120,9 +120,14 @@ def run(root, output, variant, callback_errors):
         else:
             steps = []
         if name.startswith('cancel_') or name == 'exit_reenter':
-            steps[0]['blocked'] = True
+            # Hold the Gen1 probe after UID parsing for a real late-found result.
+            # Holding the initial info command would make cancellation return a
+            # timeout before parsing, duplicating the late-empty case instead.
+            index = -1 if name == 'cancel_inflight_found' else 0
+            steps[index]['blocked'] = True
         transport = Transcript(steps)
         started = time.monotonic()
+        error = None
 
         def forbidden(*args, **kwargs):
             failures.append('Unexpected hardware/process operation: ' + repr(args))
@@ -232,22 +237,31 @@ def run(root, output, variant, callback_errors):
                 assert actstack.get_current_activity() is main
                 transport.verify()
                 assert not failures and not callback_errors, (failures, callback_errors)
-                row.update(status='PASS', commands=transport.commands, connections=transport.connections,
-                           reader_dispatches=reads)
-            except BaseException as error:
-                row.update(status='FAIL', error=repr(error), commands=transport.commands,
-                           transport_errors=transport.violations, forbidden_operations=failures)
-                raise
+            except BaseException as caught:
+                error = caught
             finally:
                 transport.release.set()
-                while actstack.get_current_activity() is not None:
-                    actstack.finish_activity()
-                pump(lambda: not (set(threading.enumerate()) - before_threads))
-                drain()
-                assert not root.tk.call('after', 'info'), 'Activity left pending Tk callbacks'
-                assert not failures and not callback_errors, (failures, callback_errors)
-                row['seconds'] = round(time.monotonic() - started, 3)
+                try:
+                    while actstack.get_current_activity() is not None:
+                        actstack.finish_activity()
+                    pump(lambda: not (set(threading.enumerate()) - before_threads))
+                    drain()
+                    assert not root.tk.call('after', 'info'), 'Activity left pending Tk callbacks'
+                    assert not failures and not callback_errors, (failures, callback_errors)
+                except BaseException as cleanup_error:
+                    row['cleanup_error'] = repr(cleanup_error)
+                    if error is None:
+                        error = cleanup_error
+                row.update(status='FAIL' if error else 'PASS', commands=transport.commands,
+                           connections=transport.connections, reader_dispatches=reads,
+                           transport_errors=transport.violations, forbidden_operations=failures,
+                           seconds=round(time.monotonic() - started, 3))
+                if error is not None:
+                    row['error'] = repr(error)
+                    report['status'] = 'FAIL'
                 save()
+            if error is not None:
+                raise error
         print('PASS: critical/' + name, flush=True)
     report['status'] = 'PASS'
     save()
