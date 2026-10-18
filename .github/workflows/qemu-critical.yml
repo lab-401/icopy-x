@@ -5,7 +5,10 @@ on:
     paths:
       - '.github/workflows/qemu-critical.yml'
       - 'tools/qemu_ci/**'
+      - 'tools/qemu_artifact_smoke.py'
       - 'tests/qemu_ci/**'
+      - 'tests/qemu_runner/**'
+      - 'tests/qemu_artifact/**'
   workflow_run:
     workflows: ['Build iCopy-X IPK']
     types: [completed]
