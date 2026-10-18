@@ -20,8 +20,7 @@ env:
   PM3_REPO: https://github.com/RfidResearchGroup/proxmark3.git
   # Both client and firmware use PM3ICOPYX (iCopy-X with XC3S100E FPGA).
   # hw version confirms: "fpga_icopyx_hf.ncd image 3s100evq100"
-  PM3_CLIENT_PLATFORM: PM3ICOPYX
-  PM3_FW_PLATFORM: PM3ICOPYX
+  PM3_PLATFORM: PM3ICOPYX
   ARM_TOOLCHAIN: arm-linux-gnueabihf
 
 jobs:
@@ -30,13 +29,16 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       pm3_tag: ${{ steps.resolve.outputs.tag }}
+      pm3_commit: ${{ steps.resolve.outputs.commit }}
     steps:
       - name: Resolve latest PM3 release
         id: resolve
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REQUESTED_PM3_TAG: ${{ inputs.pm3_tag }}
         run: |
-          TAG="${{ github.event.inputs.pm3_tag }}"
+          set -euo pipefail
+          TAG="$REQUESTED_PM3_TAG"
           if [ -z "$TAG" ]; then
             TAG=$(gh release view --repo RfidResearchGroup/proxmark3 \
               --json tagName --jq '.tagName')
@@ -44,7 +46,11 @@ jobs:
           else
             echo "Using provided: $TAG"
           fi
+          COMMIT=$(gh api "repos/RfidResearchGroup/proxmark3/commits/$TAG" --jq .sha)
+          [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          echo "Resolved PM3 source: $TAG at $COMMIT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
 
   ensure-tag:
     name: Ensure Release Tag
@@ -108,9 +114,14 @@ jobs:
         run: |
           cp /tmp/pm3-client/proxmark3 build/proxmark3
           chmod +x build/proxmark3
-          [ -f /tmp/pm3-client/lua.zip ] && cp /tmp/pm3-client/lua.zip build/lua.zip
-          find /tmp/pm3-firmware/ -name "fullimage.elf" -exec cp {} res/firmware/pm3/fullimage.elf \;
-          find /tmp/pm3-firmware/ -name "pm3_manifest.json" -exec cp {} res/firmware/pm3/manifest.json \; 2>/dev/null || true
+          cp /tmp/pm3-client/lua.zip build/lua.zip
+          cp /tmp/pm3-firmware/armsrc/obj/fullimage.elf res/firmware/pm3/fullimage.elf
+          python tools/pm3_build_contract.py assemble \
+            --client build/proxmark3 --lua build/lua.zip \
+            --client-metadata /tmp/pm3-client/pm3_client_build.json \
+            --firmware res/firmware/pm3/fullimage.elf \
+            --firmware-metadata /tmp/pm3-firmware/pm3_manifest.json \
+            --output res/firmware/pm3/manifest.json
 
       - name: Build and verify flash IPK
         env:
@@ -238,6 +249,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -258,6 +270,8 @@ jobs:
           docker run --rm \
             -v /tmp/pm3-out:/out \
             -v ${{ github.workspace }}/tools/patches:/patches:ro \
+            -v ${{ github.workspace }}/tools/pm3_build_contract.py:/build-contract.py:ro \
+            -e PM3_TAG -e PM3_COMMIT -e PM3_REPO -e PM3_PLATFORM \
             ubuntu:16.04 bash -c '
             set -e
 
@@ -273,21 +287,14 @@ jobs:
             apt-get update -qq
             apt-get install -y -qq \
               gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf \
-              make pkg-config git zip \
+              make pkg-config git zip python3 \
               libbz2-dev:armhf zlib1g-dev:armhf liblz4-dev:armhf
 
-            git clone --depth 1 --branch '"$PM3_TAG"' '"$PM3_REPO"' /tmp/pm3
+            git -c core.autocrlf=false clone --depth 1 --branch "$PM3_TAG" "$PM3_REPO" /tmp/pm3
             cd /tmp/pm3
 
-            echo "Applying iCopy-X patches..."
-            for p in /patches/pm3_*.patch; do
-              [ -f "$p" ] || continue
-              if git apply --check "$p" 2>/dev/null; then
-                git apply "$p" && echo "  Applied: $(basename $p)"
-              else
-                echo "  Skipped: $(basename $p)"
-              fi
-            done
+            python3 /build-contract.py prepare-client --source /tmp/pm3 \
+              --commit "$PM3_COMMIT" --patch-dir /patches --profile device
 
             # GCC 5.4 compat fixups for newer PM3 releases
             sed -i "s/-fstack-clash-protection//g" Makefile.defs client/Makefile 2>/dev/null || true
@@ -300,7 +307,7 @@ jobs:
             export PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig
 
             make -j$(nproc) client \
-              PLATFORM='"$PM3_CLIENT_PLATFORM"' \
+              PLATFORM="$PM3_PLATFORM" \
               CC=arm-linux-gnueabihf-gcc \
               CXX=arm-linux-gnueabihf-g++ \
               LD=arm-linux-gnueabihf-ld \
@@ -317,6 +324,9 @@ jobs:
             cd client
             zip -r /out/lua.zip luascripts/ lualibs/
             echo "lua.zip packaged: $(du -h /out/lua.zip | cut -f1)"
+            python3 /build-contract.py client --source /tmp/pm3 \
+              --commit "$PM3_COMMIT" --tag "$PM3_TAG" --binary /out/proxmark3 \
+              --lua /out/lua.zip --output /out/pm3_client_build.json
           '
 
           echo "=== Build result ==="
@@ -342,6 +352,7 @@ jobs:
           path: |
             /tmp/pm3-out/proxmark3
             /tmp/pm3-out/lua.zip
+            /tmp/pm3-out/pm3_client_build.json
 
   cross-compile-pm3-firmware:
     name: Cross-compile PM3 Firmware (fullimage)
@@ -349,6 +360,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -364,47 +376,23 @@ jobs:
 
       - name: Clone RRG Proxmark3
         run: |
-          git clone --depth 1 --branch $PM3_TAG $PM3_REPO /tmp/proxmark3
-
-      - name: Apply iCopy-X firmware patches
-        run: |
-          cd /tmp/proxmark3
-          for p in ${{ github.workspace }}/tools/patches/pm3_*.patch; do
-            [ -f "$p" ] || continue
-            if git apply --check "$p" 2>/dev/null; then
-              git apply "$p" && echo "  Applied: $(basename $p)"
-            else
-              echo "  Skipped (client-only or N/A): $(basename $p)"
-            fi
-          done
+          git -c core.autocrlf=false clone --depth 1 --branch "$PM3_TAG" "$PM3_REPO" /tmp/proxmark3
+          test "$(git -C /tmp/proxmark3 rev-parse HEAD)" = "$PM3_COMMIT"
 
       - name: Build PM3 firmware (fullimage only — NEVER flash bootrom)
         run: |
           cd /tmp/proxmark3
           # NEVER build bootrom — flashing it = permanent brick (no JTAG).
           make -j$(nproc) fullimage \
-            PLATFORM=${{ env.PM3_FW_PLATFORM }} \
+            PLATFORM=${{ env.PM3_PLATFORM }} \
             SKIPREVENGTEST=1
 
       - name: Generate firmware manifest
         run: |
-          cd /tmp/proxmark3
-          PM3_VER=$(git describe --tags --always 2>/dev/null || echo "unknown")
-          PM3_SHA=$(sha256sum armsrc/obj/fullimage.elf | cut -d' ' -f1)
-          PM3_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          PM3_PLATFORM="${{ env.PM3_FW_PLATFORM }}"
-
-          cat > /tmp/proxmark3/pm3_manifest.json << MANIFEST_EOF
-          {
-              "pm3_firmware_version": "${PM3_VER}",
-              "pm3_firmware_sha256": "${PM3_SHA}",
-              "pm3_client_version": "${PM3_VER}",
-              "build_platform": "${PM3_PLATFORM}",
-              "build_date": "${PM3_DATE}"
-          }
-          MANIFEST_EOF
-
-          echo "Manifest:"
+          python3 tools/pm3_build_contract.py firmware --source /tmp/proxmark3 \
+            --commit "$PM3_COMMIT" --tag "$PM3_TAG" \
+            --binary /tmp/proxmark3/armsrc/obj/fullimage.elf \
+            --output /tmp/proxmark3/pm3_manifest.json
           cat /tmp/proxmark3/pm3_manifest.json
 
       - name: Upload firmware artifacts
@@ -417,11 +405,15 @@ jobs:
 
   build-iceman-client-linux:
     name: Iceman PM3 Client (Linux x86_64)
-    needs: [resolve-pm3-tag]
+    needs: [resolve-pm3-tag, ensure-tag]
     runs-on: ubuntu-latest
     env:
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -430,14 +422,20 @@ jobs:
 
       - name: Clone and build
         run: |
-          git clone --depth 1 --branch ${{ env.PM3_TAG }} ${{ env.PM3_REPO }} /tmp/pm3
+          git -c core.autocrlf=false clone --depth 1 --branch "$PM3_TAG" "$PM3_REPO" /tmp/pm3
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" prepare-client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" \
+            --patch-dir "$GITHUB_WORKSPACE/tools/patches" --profile companion
           cd /tmp/pm3
           make -j$(nproc) client \
-            PLATFORM=${{ env.PM3_CLIENT_PLATFORM }} \
+            PLATFORM=${{ env.PM3_PLATFORM }} \
             SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
           file client/proxmark3
           mkdir -p /tmp/out/linux
           cp client/proxmark3 /tmp/out/linux/
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" --tag "$PM3_TAG" \
+            --binary client/proxmark3 --output "/tmp/out/linux/pm3_client_build.json"
           cp -r client/lualibs client/luascripts /tmp/out/
           cp -r client/resources /tmp/out/ 2>/dev/null || true
           cp client/dictionaries/*.dic /tmp/out/ 2>/dev/null || true
@@ -450,14 +448,18 @@ jobs:
 
   build-iceman-client-windows:
     name: Iceman PM3 Client (Windows x86_64)
-    needs: [resolve-pm3-tag]
+    needs: [resolve-pm3-tag, ensure-tag]
     runs-on: windows-latest
     env:
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     defaults:
       run:
         shell: msys2 {0}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -472,18 +474,25 @@ jobs:
             mingw-w64-x86_64-zlib
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-jansson
+            mingw-w64-x86_64-python
             git make pkg-config
 
       - name: Clone and build
         run: |
-          git clone --depth 1 --branch $PM3_TAG $PM3_REPO /tmp/pm3
+          git -c core.autocrlf=false clone --depth 1 --branch "$PM3_TAG" "$PM3_REPO" /tmp/pm3
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" prepare-client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" \
+            --patch-dir "$GITHUB_WORKSPACE/tools/patches" --profile companion
           cd /tmp/pm3
           make -j$(nproc) client \
-            PLATFORM=$PM3_CLIENT_PLATFORM \
+            PLATFORM=$PM3_PLATFORM \
             SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
           file client/proxmark3.exe
           mkdir -p $GITHUB_WORKSPACE/client-out/windows
           cp client/proxmark3.exe $GITHUB_WORKSPACE/client-out/windows/
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" --tag "$PM3_TAG" \
+            --binary client/proxmark3.exe --output "$GITHUB_WORKSPACE/client-out/windows/pm3_client_build.json"
           # Bundle MinGW runtime DLLs
           for dll in libgcc_s_seh-1.dll libstdc++-6.dll libwinpthread-1.dll \
                      libreadline8.dll libtermcap-0.dll libjansson-4.dll \
@@ -499,24 +508,34 @@ jobs:
 
   build-iceman-client-macos:
     name: Iceman PM3 Client (macOS)
-    needs: [resolve-pm3-tag]
+    needs: [resolve-pm3-tag, ensure-tag]
     runs-on: macos-latest
     env:
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
       - name: Install dependencies
         run: brew install readline pkg-config openssl lz4
 
       - name: Clone and build
         run: |
-          git clone --depth 1 --branch ${{ env.PM3_TAG }} ${{ env.PM3_REPO }} /tmp/pm3
+          git -c core.autocrlf=false clone --depth 1 --branch "$PM3_TAG" "$PM3_REPO" /tmp/pm3
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" prepare-client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" \
+            --patch-dir "$GITHUB_WORKSPACE/tools/patches" --profile companion
           cd /tmp/pm3
           make -j$(sysctl -n hw.ncpu) client \
-            PLATFORM=${{ env.PM3_CLIENT_PLATFORM }} \
+            PLATFORM=${{ env.PM3_PLATFORM }} \
             SKIPQT=1 SKIPPYTHON=1 SKIPBT=1 SKIPGD=1
           file client/proxmark3
           mkdir -p /tmp/out/macos
           cp client/proxmark3 /tmp/out/macos/
+          python3 "$GITHUB_WORKSPACE/tools/pm3_build_contract.py" client \
+            --source /tmp/pm3 --commit "$PM3_COMMIT" --tag "$PM3_TAG" \
+            --binary client/proxmark3 --output "/tmp/out/macos/pm3_client_build.json"
 
       - name: Upload
         uses: actions/upload-artifact@v4
@@ -554,9 +573,14 @@ jobs:
         run: |
           cp /tmp/pm3-client/proxmark3 build/proxmark3
           chmod +x build/proxmark3
-          [ -f /tmp/pm3-client/lua.zip ] && cp /tmp/pm3-client/lua.zip build/lua.zip
-          find /tmp/pm3-firmware/ -name "fullimage.elf" -exec cp {} res/firmware/pm3/fullimage.elf \;
-          find /tmp/pm3-firmware/ -name "pm3_manifest.json" -exec cp {} res/firmware/pm3/manifest.json \; 2>/dev/null || true
+          cp /tmp/pm3-client/lua.zip build/lua.zip
+          cp /tmp/pm3-firmware/armsrc/obj/fullimage.elf res/firmware/pm3/fullimage.elf
+          python tools/pm3_build_contract.py assemble \
+            --client build/proxmark3 --lua build/lua.zip \
+            --client-metadata /tmp/pm3-client/pm3_client_build.json \
+            --firmware res/firmware/pm3/fullimage.elf \
+            --firmware-metadata /tmp/pm3-firmware/pm3_manifest.json \
+            --output res/firmware/pm3/manifest.json
 
       - name: Build flash IPK
         env:
@@ -590,6 +614,7 @@ jobs:
     env:
       RELEASE_TAG: ${{ inputs.release_tag != '' && inputs.release_tag || github.ref_name }}
       PM3_TAG: ${{ needs.resolve-pm3-tag.outputs.pm3_tag }}
+      PM3_COMMIT: ${{ needs.resolve-pm3-tag.outputs.pm3_commit }}
     steps:
       - uses: actions/checkout@v4
         with:

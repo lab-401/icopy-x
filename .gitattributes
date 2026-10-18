@@ -1,0 +1,2 @@
+# Patches must apply to upstream LF sources on Windows as well as Unix.
+/tools/patches/*.patch text eol=lf

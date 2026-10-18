@@ -44,7 +44,7 @@ jobs:
       - name: Install test dependencies
         run: python -m pip install -r tests/requirements-host.txt
       - name: Run host suite
-        run: python -m pytest tests/ui --junitxml=host-test-results.xml
+        run: python -m pytest tests/ui tests/build tests/test_build_ipk_contracts.py --junitxml=host-test-results.xml
       - name: Check QEMU runner contracts (no emulation)
         if: runner.os == 'Linux'
         run: python -m pytest tests/qemu_runner --junitxml=qemu-runner-results.xml

@@ -31,6 +31,7 @@ RUN dpkg --add-architecture armhf && \
         git \
         file \
         zip \
+        python3 \
         libbz2-dev:armhf \
         zlib1g-dev:armhf \
         liblz4-dev:armhf && \
@@ -46,6 +47,7 @@ ENV PM3_REPO=https://github.com/RfidResearchGroup/proxmark3.git
 ENV PM3_TAG=latest
 
 COPY tools/patches/pm3_*.patch /patches/
+COPY tools/pm3_build_contract.py /build-contract.py
 
 CMD bash -c '\
     set -e && \
@@ -56,17 +58,11 @@ CMD bash -c '\
         echo "Resolved latest release: ${PM3_TAG}"; \
     fi && \
     echo "Cloning RRG PM3 at ${PM3_TAG}..." && \
-    git clone --depth 1 --branch ${PM3_TAG} ${PM3_REPO} /tmp/pm3 && \
+    git -c core.autocrlf=false clone --depth 1 --branch ${PM3_TAG} ${PM3_REPO} /tmp/pm3 && \
     cd /tmp/pm3 && \
-    echo "Applying iCopy-X patches..." && \
-    for p in /patches/pm3_*.patch; do \
-        [ -f "$p" ] || continue; \
-        if git apply --check "$p" 2>/dev/null; then \
-            git apply "$p" && echo "  Applied: $(basename $p)"; \
-        else \
-            echo "  Skipped (already applied or N/A): $(basename $p)"; \
-        fi; \
-    done && \
+    PM3_COMMIT=$(git rev-parse HEAD) && \
+    python3 /build-contract.py prepare-client --source /tmp/pm3 \
+        --commit "$PM3_COMMIT" --patch-dir /patches --profile device && \
     echo "GCC $(arm-linux-gnueabihf-gcc -dumpversion) compat fixups..." && \
     sed -i "s/-fstack-clash-protection//g" Makefile.defs client/Makefile && \
     if [ -f client/src/cmdhfaliro.c ]; then \
@@ -91,4 +87,7 @@ CMD bash -c '\
     echo "Binary: $(file /out/proxmark3)" && \
     cd client && \
     zip -r /out/lua.zip luascripts/ lualibs/ && \
+    python3 /build-contract.py client --source /tmp/pm3 \
+        --commit "$PM3_COMMIT" --tag "$PM3_TAG" --binary /out/proxmark3 \
+        --lua /out/lua.zip --output /out/pm3_client_build.json && \
     echo "lua.zip: $(du -h /out/lua.zip | cut -f1)"'
