@@ -332,7 +332,7 @@ class TestExecutorIntegration:
         monkeypatch.setattr(executor.pm3_compat, 'translate_response', fake_translate_response)
         monkeypatch.setattr(executor.pm3_localize, 'localize', fake_localize)
 
-        fake = _FakeSocket([b'No card found\n'])
+        fake = _FakeSocket([b'No card found\npm3 -->\n'])
         monkeypatch.setattr(executor, '_socket_instance', fake)
         monkeypatch.setattr(executor, 'LABEL_PM3_CMD_TASK_STOPPING', False)
 

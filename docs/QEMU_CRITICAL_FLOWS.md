@@ -1,6 +1,6 @@
 # Critical ARM/Tk flows
 
-`critical-v4` is a small package acceptance profile intended for PR CI and
+`critical-v5` is a small package acceptance profile intended for PR CI and
 release-candidate validation. Run it for **both** flash and no-flash IPKs using
 the same entry point as the [package smoke test](QEMU_TESTS.md):
 
@@ -30,6 +30,8 @@ checks, then runs the ordered inventory in
 | Reader cancellation | PWR exits during a held LF read response; after worker completion, a fresh activity reads successfully |
 | Reader failure and retry | An LF reply without tag data saves no dump and offers rescan; the next read succeeds |
 | Reader cancellation with overlap | PWR returns while the old response is held; re-entry waits without blocking Tk or replacing the socket, then reads successfully |
+| Late LF timeout | Late completed output is discarded without saving a dump; a user rescan reads successfully |
+| Truncated LF retry | Missing completion marker fails even with valid-looking tag bytes; rescan waits for an explicit daemon READY acknowledgement |
 | Ultralight full read | Real Reader validates the simulated client file, UID, header and page count before full success |
 | Ultralight partial read | Valid partial data is retained and visibly identified as partial |
 | Ultralight missing/empty/truncated file | Three cases reject invalid output despite plausible response text and clear the stale write path |
@@ -47,7 +49,7 @@ The TCP socket is a finite transcript: every wire command must match exactly,
 every response must be consumed, and every expected command must occur. A
 transport mismatch remains a failure even if application code catches it.
 The declared firmware profile is supplied to the translator. The original scan
-cases observe Reader dispatch. The five `reader_*` cases run the packaged
+cases observe Reader dispatch. The seven `reader_*` cases run the packaged
 Reader, EM410x scan/read parsers, dump saving and ReadActivity through real
 threads and Tk callbacks. Dump files go into the disposable worker's `/mnt/upan`.
 Audio is silent; HMI abort releases the held response except in the overlap
@@ -73,7 +75,9 @@ These checks do **not** validate RF, actual card reads/writes, the PM3 executabl
 firmware detection/flashing, installed startup, the USB stack, or an attached
 ICS Decoder. The overlap case establishes scan/read ownership with a held,
 complete reply, not remote-daemon recovery after a truncated reply or timeout.
-Those boundaries need focused tests and, where relevant, physical acceptance.
+The new timeout/truncation cases inject synthetic socket faults; host tests run
+the actual daemon and local TCP stack. [PM3_RECOVERY.md](PM3_RECOVERY.md) documents
+the shortened test deadlines, recovery contract and remaining physical checks.
 
 `Reader` and `Scanner` hold executor ownership across protocol commands and
 parsing of the shared response cache. Cancellation unwinds at executor boundaries,
@@ -82,7 +86,8 @@ next protocol command. Cancelled workers waiting for ownership can exit without
 waiting for the active owner. ReadActivity invalidates callbacks before requesting
 hardware abort, requests executor cancellation without waiting on Tk, drops queued
 callbacks from old reads, and drains current callbacks on Tk without worker calls to Tk.
-An already-running receive retains ownership until it returns; software cancellation
+An already-running receive retains ownership through a bounded drain; missing
+completion requires daemon synchronization before new work. Software cancellation
 alone cannot guarantee a prompt hardware abort. Files already saved are not rolled back.
 Host tests additionally cover late success/failure/progress/exception callbacks,
 retry identity, exception classification, and the legacy completion poll.
@@ -94,7 +99,7 @@ Public executor socket/reset/restart entry points serialize with these owners;
 legacy callers outside Scanner/Reader do not yet own entire multi-command
 protocols or their parsing gaps. This profile does not establish that broader guarantee.
 
-Still pending: reconnect after a partial response or timeout, ownership scopes for
+Still pending: physical timeout/recovery confirmation, ownership scopes for
 other multi-command operations, and the separate Auto Copy activity's callback
 lifecycle. The legacy completion
 fallback still infers success from progress when no result callback arrives;

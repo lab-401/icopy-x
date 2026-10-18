@@ -8,7 +8,7 @@ Scenarios:
   - _ensure_pipeline_ready: closes socket + reconnects when flag is True
   - _pipeline_needs_cleanup set when _send_and_cache breaks due to STOPPING
   - rftask _send_cmd lock serializes concurrent HandleServer threads
-  - rftask _send_cmd lock timeout returns None (triggers auto-recovery)
+  - rftask _send_cmd lock timeout fails without replay or restart
   - rftask _destroy_subprocess unblocks pending _send_cmd via output_event
   - rftask reader thread exit unblocks pending _send_cmd via output_event
   - Full flow: interrupt command → next startPM3Task cleans pipeline
@@ -29,9 +29,11 @@ import executor
 # =====================================================================
 
 @pytest.fixture(autouse=True)
-def _reset_executor_state():
+def _reset_executor_state(monkeypatch):
     """Reset executor module state before each test."""
+    monkeypatch.setattr(executor, "RESPONSE_DRAIN_SECONDS", .02)
     executor._pipeline_needs_cleanup = False
+    executor._pipeline_uncertain = False
     executor._socket_instance = None
     executor.CONTENT_OUT_IN__TXT_CACHE = ''
     executor.LABEL_PM3_CMD_TASK_RUNNING = False
@@ -39,6 +41,7 @@ def _reset_executor_state():
     executor.LABEL_PM3_CMD_TASK_STOPPING = False
     yield
     executor._pipeline_needs_cleanup = False
+    executor._pipeline_uncertain = False
     executor._socket_instance = None
     executor.CONTENT_OUT_IN__TXT_CACHE = ''
     executor.LABEL_PM3_CMD_TASK_RUNNING = False
@@ -119,6 +122,7 @@ class TestPipelineFlagSetting:
         mock_sock = MagicMock()
         executor._socket_instance = mock_sock
 
+        mock_sock.recv.return_value = b""
         # Set STOPPING before calling _send_and_cache
         executor.LABEL_PM3_CMD_TASK_STOPPING = True
 
@@ -140,18 +144,18 @@ class TestPipelineFlagSetting:
 
         assert executor._pipeline_needs_cleanup is False
 
-    def test_flag_not_set_on_socket_timeout(self):
-        """Flag is NOT set on socket timeout (handled by startPM3Task retry)."""
+    def test_timeout_marks_pipeline_uncertain(self):
+        """Timeout requires proof of completion; it must never replay."""
         mock_sock = MagicMock()
         mock_sock.recv.side_effect = socket.timeout("timed out")
         executor._socket_instance = mock_sock
 
         with patch.object(executor, 'pm3_compat', None):
-            result = executor._send_and_cache('hf mf fchk 1 keys.dic', timeout=1000)
+            result = executor._send_and_cache('hf mf fchk 1 keys.dic', timeout=10)
 
-        # Timeout is handled by existing retry logic, not pipeline cleanup
-        assert executor._pipeline_needs_cleanup is False
-        assert 'timeout' in result
+        assert executor._pipeline_needs_cleanup is True
+        assert executor._pipeline_uncertain is True
+        assert result == ''
 
 
 # =====================================================================
@@ -177,6 +181,7 @@ class TestStartPM3TaskCleanup:
         mock_sock = MagicMock()
         executor._socket_instance = mock_sock
 
+        mock_sock.recv.return_value = b""
         # Step 1: Simulate STOPPING interrupt during _send_and_cache
         executor.LABEL_PM3_CMD_TASK_STOPPING = True
         with patch.object(executor, 'pm3_compat', None):
@@ -187,7 +192,8 @@ class TestStartPM3TaskCleanup:
 
         # Step 2: Next startPM3Task should clean up
         new_sock = MagicMock()
-        new_sock.recv.return_value = b'UID: AABBCCDD\npm3 -->\n'
+        new_sock.recv.side_effect = [b'READY\nNikola.D: 0\n',
+                                     b'UID: AABBCCDD\npm3 -->\n']
 
         with patch.object(executor, 'connect2PM3') as mock_connect, \
              patch.object(executor, 'pm3_compat', None):
@@ -207,6 +213,8 @@ class TestStartPM3TaskCleanup:
         assert executor._pipeline_needs_cleanup is False
         # Command should succeed
         assert result == 1
+        assert executor._pipeline_uncertain is False
+        assert new_sock.sendall.call_args_list[0].args == (b"Nikola.D.CTL = sync\n",)
 
 
 # =====================================================================

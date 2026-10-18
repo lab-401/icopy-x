@@ -1,5 +1,5 @@
 {
-  "version": "critical-v4",
+  "version": "critical-v5",
   "cases": {
     "no_tag_rescan": "Six-stage no-card scan completes; M2 starts one new scan and returns to no-tag.",
     "collision_refuses_reader": "A synthetic collision result displays the warning and never starts a Reader.",
@@ -20,6 +20,8 @@
     "mfu_read_empty_file": "An empty MFU file cannot report success or become the write bundle.",
     "mfu_read_truncated": "A binary with fewer pages than its header declares cannot report success.",
     "mfu_read_empty_response": "A completed MFU command with no body or file displays read failure.",
-    "mfu_auto_partial": "Auto Copy preserves the MFU path and shows partial data instead of full-read success."
+    "mfu_auto_partial": "Auto Copy preserves the MFU path and shows partial data instead of full-read success.",
+    "reader_timeout_late": "A late completed LF response is drained but cannot save a dump or report success; a user rescan reads successfully without implicit replay.",
+    "reader_truncated_retry": "Useful LF tag bytes without a completion marker fail; a fresh scan requires an explicit daemon READY acknowledgement before reading successfully."
   }
 }

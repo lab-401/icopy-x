@@ -49,6 +49,7 @@ def wire(monkeypatch):
     monkeypatch.setattr(executor, 'pm3_localize', None)
     monkeypatch.setattr(executor, '_socket_instance', None)
     monkeypatch.setattr(executor, '_pipeline_needs_cleanup', False)
+    monkeypatch.setattr(executor, '_pipeline_uncertain', False)
     monkeypatch.setattr(executor, '_consecutive_reworks', 0)
     monkeypatch.setattr(executor, 'CONTENT_OUT_IN__TXT_CACHE', '')
     monkeypatch.setattr(executor, 'LABEL_PM3_CMD_TASK_RUNNING', False)

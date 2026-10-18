@@ -87,14 +87,16 @@ logger = logging.getLogger(__name__)
 DEFAULT_CMD_START = "Nikola.D.CMD"
 DEFAULT_CTL_START = "Nikola.D.CTL"
 DEFAULT_PLT_START = "Nikola.D.PLT"
-DEFAULT_OFFLINE = "Nikola.D.OFFLINE"
+DEFAULT_OFFLINE = "Nikola.D.OFFLINE\nNikola.D: -1"
+COMMAND_LOCK_SECONDS = 3.0
+COMMAND_TIMEOUT_SECONDS = 120.0
 
 # End-of-command regex (from binary: "Nikola\.D:.*?\d+\s+")
-# The genuine Lab401 PM3 binary emits "Nikola.D: 0" (success) or
+# The factory PM3 binary emits "Nikola.D: 0" (success) or
 # "Nikola.D: -10" (error) after each command.
 NIKOLA_PATTERN = re.compile(r'Nikola\.D:\s*-?\d+\s*$')
 
-# Fallback prompt for simulator / non-Lab401 PM3 builds
+# Fallback prompt for simulator / upstream PM3 builds
 _RE_PM3_PROMPT = re.compile(r'^(\[.*?\]\s+)?pm3\s+-->\s*$')
 
 
@@ -135,11 +137,13 @@ class RemoteTaskManager:
         self._output_event = threading.Event()
         self._expecting_response = False
         self._line_listeners = []
-        # Serialize _send_cmd access — prevents concurrent HandleServer
-        # threads from corrupting shared state after socket reconnection.
-        # 3s timeout acts as the pipeline probe: if the previous command
-        # hasn't finished in 3s, the caller escalates to reworkManager().
+        # The command lock covers stdin, response ownership and lifecycle.
         self._cmd_lock = threading.Lock()
+        self._lifecycle_lock = threading.Lock()
+        self._generation = 0
+        self._command_sequence = 0
+        self._response_complete = False
+        self._needs_recovery = False
 
         # Set up TCP handler class (closure over self, matching binary's
         # HandleServer + request_task_cmd/ctl/plt inner functions)
@@ -204,6 +208,9 @@ class RemoteTaskManager:
         if not self._create_subprocess():
             return False
 
+        with self._output_lock:
+            self._generation += 1
+            self._needs_recovery = False
         self._has_manager = True
         self._create_read_thread()
         self._create_server_thread()
@@ -233,19 +240,40 @@ class RemoteTaskManager:
         Fix: only restart the subprocess and reader thread. The TCP server
         stays running throughout.
         """
-        self._has_manager = False
-        self._destroy_read_thread()
-        self._destroy_subprocess()
-        # /dev/ttyACM0 needs 2-3s to re-enumerate after PM3 power cycle.
-        # 1s was too short — new PM3 process couldn't connect to device.
-        time.sleep(3)
-        if not self._create_subprocess():
+        if not self._lifecycle_lock.acquire(timeout=COMMAND_LOCK_SECONDS):
             return False
-        self._has_manager = True
-        self._create_read_thread()
-        # Wait for PM3 to finish startup (banner + prompt)
-        time.sleep(1)
-        return True
+        try:
+            # Invalidate and wake the old owner BEFORE waiting for its lock.
+            # A wakeup from a restart is not an end-of-response marker.
+            with self._output_lock:
+                self._needs_recovery = True
+                self._generation += 1
+                self._output_event.set()
+            if not self._cmd_lock.acquire(timeout=COMMAND_LOCK_SECONDS):
+                return False
+            try:
+                self._has_manager = False
+                if not self._destroy_subprocess():
+                    return False
+                self._destroy_read_thread()
+                # Preserve the device's USB re-enumeration delay.
+                time.sleep(3)
+                if not self._create_subprocess():
+                    return False
+                self._has_manager = True
+                self._create_read_thread()
+                time.sleep(1)
+                # This confirms a fresh live process, not RF/card readiness.
+                with self._output_lock:
+                    if (self._process is None or self._process.poll() is not None or
+                            not self._read_thread.is_alive()):
+                        return False
+                    self._needs_recovery = False
+                return True
+            finally:
+                self._cmd_lock.release()
+        finally:
+            self._lifecycle_lock.release()
 
     def destroy(self):
         """Full cleanup.
@@ -279,94 +307,49 @@ class RemoteTaskManager:
     _INTERACTIVE_CMDS = frozenset({'hf tune', 'lf tune'})
 
     def _request_task_cmd(self, cmd):
-        """Execute a PM3 command and collect output, with auto-recovery.
-
-        Binary: request_task_cmd closure inside __init__.
-        Timeout: 120s (matches archive — long commands like darkside, nested,
-        dump can take 25-60+ seconds).
-
-        Auto-recovery (invisible to middleware):
-          1. Send command, wait for EOR marker.
-          2. If no EOR (timeout) → restart PM3 subprocess, retry once.
-          3. If EOR but empty response (RF dead) → send hw ping to
-             wake the module, retry once.
-          4. Return whatever we get — middleware sees a normal response.
-
-        Race-condition fix (2026-04-12): _expecting_response MUST be set True
-        BEFORE writing the command to stdin. Otherwise, for fast-responding
-        commands (hw version — cache-based, instant), the reader thread may
-        see the Nikola.D marker before _expecting_response is True, and never
-        set the event. This caused intermittent timeouts on fast commands.
-        """
+        """Execute once. A lost reply is never permission to replay a write."""
         result = self._send_cmd(cmd)
-
-        # Auto-recovery: no EOR marker received (timeout) → restart PM3
-        if result is None:
-            logger.warning('rftask: no response for "%s" — restarting PM3',
-                           cmd[:60])
-            if self.reworkManager():
-                # Wait for PM3 to reinitialize after restart
-                time.sleep(2)
-                result = self._send_cmd(cmd)
-            if result is None:
-                return DEFAULT_OFFLINE
-
-        # Auto-recovery: EOR received but response is effectively empty
-        # (just whitespace / EOR marker). PM3 is alive but returned nothing.
-        # Retry once with a short delay.
-        stripped = result.strip()
-        is_empty = (not stripped or stripped in ('pm3 -->', ''))
-        if is_empty and cmd.strip() not in ('hw ping', 'hw version'):
-            logger.info('rftask: empty response for "%s" — retrying',
-                        cmd[:60])
-            self._send_cmd('hw ping')
-            time.sleep(0.3)
-            retry = self._send_cmd(cmd)
-            if retry is not None:
-                result = retry
-
-        return result
+        return DEFAULT_OFFLINE if result is None else result
 
     def _send_cmd(self, cmd):
-        """Low-level: send a single command and wait for EOR.
+        """Return only a completed response from this process generation.
 
-        Returns the response string, or None if no EOR was received
-        (timeout / subprocess dead / lock timeout).
-
-        Lock timeout (3s): when a previous command is still in flight
-        (e.g. PM3 stuck after presspm3 abort), the lock won't be acquired.
-        Returning None triggers _request_task_cmd's auto-recovery which
-        calls reworkManager() — restarting the PM3 subprocess via GD32
-        restartpm3 command.  This is the escalation path for stuck PM3.
+        Lock contention, EOF, reset and timeout are failures. They do not
+        restart PM3 or repeat commands, including commands that write cards.
         """
-        acquired = self._cmd_lock.acquire(timeout=3)
+        acquired = self._cmd_lock.acquire(timeout=COMMAND_LOCK_SECONDS)
         if not acquired:
             logger.warning('rftask: _send_cmd lock timeout — '
                            'previous command still in flight')
             return None
         try:
-            self._expecting_response = False
             with self._output_lock:
+                if self._needs_recovery:
+                    return None
+                proc, generation = self._process, self._generation
+                if proc is None or proc.poll() is not None:
+                    self._needs_recovery = True
+                    return None
                 self._output_lines.clear()
-            self._output_event.clear()
-            self._expecting_response = True
-
-            # Check subprocess health
-            if not self._process or self._process.poll() is not None:
-                self._expecting_response = False
-                return None
+                self._output_event.clear()
+                self._response_complete = False
+                self._command_sequence += 1
+                sequence = self._command_sequence
+                self._expecting_response = True
 
             # For interactive commands (hf tune, lf tune), schedule a delayed
             # Enter keystroke to terminate the measurement after a few samples.
             is_interactive = cmd.strip() in self._INTERACTIVE_CMDS
             if is_interactive:
-                proc = self._process
-
                 def _send_enter():
                     time.sleep(0.5)
                     try:
-                        proc.stdin.write(b'\n')
-                        proc.stdin.flush()
+                        with self._output_lock:
+                            if (generation == self._generation and
+                                    sequence == self._command_sequence and
+                                    self._expecting_response and not self._response_complete):
+                                proc.stdin.write(b'\n')
+                                proc.stdin.flush()
                     except Exception:
                         pass
 
@@ -374,21 +357,23 @@ class RemoteTaskManager:
 
             # Write command to PM3 stdin
             try:
-                self._process.stdin.write(('%s\n' % cmd).encode('utf-8'))
-                self._process.stdin.flush()
+                proc.stdin.write(('%s\n' % cmd).encode('utf-8'))
+                proc.stdin.flush()
             except Exception:
-                self._expecting_response = False
+                with self._output_lock:
+                    self._needs_recovery = True
                 return None
 
-            # Wait for end-of-command marker from reader thread
-            got_eor = self._output_event.wait(timeout=120)
-            self._expecting_response = False
-
+            self._output_event.wait(timeout=COMMAND_TIMEOUT_SECONDS)
             with self._output_lock:
-                result = '\n'.join(self._output_lines)
-
-            return result if got_eor else None
+                complete = self._response_complete and generation == self._generation
+                if not complete:
+                    self._needs_recovery = True
+                    return None
+                return '\n'.join(self._output_lines)
         finally:
+            with self._output_lock:
+                self._expecting_response = False
             self._cmd_lock.release()
 
     def _request_task_ctl(self, ctl):
@@ -418,24 +403,37 @@ class RemoteTaskManager:
         server thread stays listening (factory audit §1: "RTM (port 8888):
         STILL LISTENING").
         """
+        if ctl == 'sync':
+            if not self._cmd_lock.acquire(timeout=COMMAND_LOCK_SECONDS):
+                return 'BUSY\nNikola.D: -1'
+            try:
+                with self._output_lock:
+                    dirty = (self._needs_recovery or self._process is None or
+                             self._process.poll() is not None)
+                return 'DIRTY\nNikola.D: -1' if dirty else 'READY\nNikola.D: 0'
+            finally:
+                self._cmd_lock.release()
+
         if ctl == 'restart':
-            self.reworkManager()
-            return 'OK'
+            return ('OK\nNikola.D: 0' if self.reworkManager()
+                    else 'FAIL\nNikola.D: -1')
 
         if ctl == '':
-            self._has_manager = False
-            self._destroy_read_thread()
-            self._destroy_subprocess()
-            return 'OK'
+            # PC mode takes exclusive ownership of the PM3 serial port.
+            with self._lifecycle_lock:
+                self._has_manager = False
+                stopped = self._destroy_subprocess()
+                self._destroy_read_thread()
+            return 'OK\nNikola.D: 0' if stopped else 'FAIL\nNikola.D: -1'
 
-        return ''
+        return 'FAIL\nNikola.D: -1'
 
     def _request_task_plt(self, plt_cmd):
         """Handle platform commands.
 
         Binary: request_task_plt closure. No-op in practice.
         """
-        return ''
+        return 'Nikola.D: 0'
 
     def _set_has_tasking(self, tasking):
         """Thread-safe tasking flag setter.
@@ -537,7 +535,10 @@ class RemoteTaskManager:
         # HandleServer thread) stays blocked on output_event.wait(120s),
         # holding _cmd_lock and preventing the new HandleServer from
         # sending commands after reworkManager().
-        self._output_event.set()
+        with self._output_lock:
+            self._needs_recovery = True
+            self._generation += 1
+            self._output_event.set()
 
         if self._process:
             try:
@@ -551,11 +552,31 @@ class RemoteTaskManager:
             try:
                 self._process.wait(timeout=5)
             except Exception:
-                pass
+                # Never launch a replacement while an unreaped child may still
+                # own the serial device. Escalate once, then fail closed.
+                try:
+                    os.killpg(os.getpgid(self._process.pid), signal.SIGKILL)
+                except Exception:
+                    try:
+                        self._process.kill()
+                    except Exception:
+                        return False
+                try:
+                    self._process.wait(timeout=2)
+                except Exception:
+                    return False
             self._process = None
 
         if self._pm3_kill_cmd:
-            os.system(self._pm3_kill_cmd)
+            try:
+                cleanup = subprocess.run(self._pm3_kill_cmd, shell=True, timeout=3,
+                                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                # main.py configures killall: 1 means no matching process.
+                if cleanup.returncode not in (0, 1):
+                    return False
+            except (OSError, subprocess.TimeoutExpired):
+                return False
+        return True
 
     # ── Thread management ────────────────────────────────────────
 
@@ -568,6 +589,7 @@ class RemoteTaskManager:
         """
         self._read_thread = threading.Thread(
             target=self._run_std_output_error,
+            args=(self._process, self._generation),
             daemon=True,
             name='pm3_reader',
         )
@@ -590,54 +612,37 @@ class RemoteTaskManager:
             except Exception:
                 pass
 
-    def _run_std_output_error(self):
-        """Read PM3 stdout line by line, signal on end-of-command markers.
-
-        Binary: method index 5 (_run_std_output_error). Detects both
-        Lab401 "Nikola.D: N" markers AND standard "pm3 -->" prompts.
-
-        Pipeline isolation: lines are ONLY appended to _output_lines when
-        _expecting_response is True.  This prevents stale output from a
-        previous command (e.g. felica timeout arriving late) from leaking
-        into the next command's response.
-        """
-        while self._process and self._has_manager:
-            try:
-                line = self._process.stdout.readline()
+    def _run_std_output_error(self, process=None, generation=None):
+        """Bind a reader to one process; stale readers cannot finish new work."""
+        process = self._process if process is None else process
+        generation = self._generation if generation is None else generation
+        try:
+            while process is not None and self._has_manager:
+                line = process.stdout.readline()
                 if not line:
-                    if self._process and self._process.poll() is not None:
-                        break
-                    continue
-
+                    break
                 text = line.decode('utf-8', errors='ignore').rstrip()
-
-                # Only collect output when a command is actively pending.
-                # Stale data arriving between commands is discarded.
-                if self._expecting_response:
-                    with self._output_lock:
+                with self._output_lock:
+                    if generation != self._generation or process is not self._process:
+                        return
+                    if self._expecting_response and not self._response_complete:
                         self._output_lines.append(text)
-
+                        if line.endswith(b'\n') and (NIKOLA_PATTERN.match(text.strip()) or
+                                                     _RE_PM3_PROMPT.match(text.strip())):
+                            self._response_complete = True
+                            self._output_event.set()
                 for listener in self._line_listeners:
                     try:
                         listener(text)
                     except Exception:
                         pass
-
-                # End-of-command detection
-                stripped = text.strip()
-                if NIKOLA_PATTERN.match(stripped) or _RE_PM3_PROMPT.match(stripped):
-                    if self._expecting_response:
-                        self._output_event.set()
-
-            except Exception as e:
-                if self._has_manager:
-                    logger.error('rftask reader error: %s', e)
-                break
-
-        # Reader exiting — unblock any _send_cmd blocked on output_event.
-        # This happens when the subprocess dies (readline returns EOF) or
-        # when _has_manager is set to False by reworkManager/stopManger.
-        self._output_event.set()
+        except Exception as e:
+            logger.error('rftask reader error: %s', e)
+        finally:
+            with self._output_lock:
+                if generation == self._generation and process is self._process:
+                    self._needs_recovery = True
+                    self._output_event.set()
 
     def _create_server_thread(self):
         """Start the TCP server thread.

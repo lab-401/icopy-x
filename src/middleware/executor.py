@@ -48,7 +48,6 @@ Behavioral notes (from binary analysis + QEMU verification):
 
 import logging
 import re
-import select
 import socket
 import threading
 from contextlib import contextmanager
@@ -247,6 +246,10 @@ _socket_instance = None
 # (stopPM3Task during active recv), indicating stale data may be
 # in the TCP socket buffer.  Checked at the start of startPM3Task.
 _pipeline_needs_cleanup = False
+# A reconnect alone cannot establish that the daemon finished the old command.
+_pipeline_uncertain = False
+RESPONSE_POLL_SECONDS = 0.1
+RESPONSE_DRAIN_SECONDS = 3.0
 
 # Cumulative rework tracking — fast-fail when PM3 is genuinely unresponsive.
 # Incremented on every reworkPM3All(), reset on any successful command.
@@ -257,9 +260,9 @@ MAX_CONSECUTIVE_REWORKS = 3
 _consecutive_reworks = 0
 
 # Nikola.D end-of-response regex — executor_strings.txt: "Nikola.D:"
-_RE_NIKOLA_END = re.compile(r'Nikola\.D:\s*-?\d+\s*$', re.MULTILINE)
+_RE_NIKOLA_END = re.compile(r'(?:^|\n)Nikola\.D:[ \t]*-?\d+[ \t]*\r?\n\Z')
 # Alternative end marker — executor_strings.txt: "pm3 -->"
-_RE_PROMPT_END = re.compile(r'pm3\s+-->\s*$', re.MULTILINE)
+_RE_PROMPT_END = re.compile(r'(?:^|\n)(?:\[[^\n]*\][ \t]+)?pm3[ \t]+-->[ \t]*\r?\n\Z')
 
 # ===========================================================================
 # State management
@@ -305,6 +308,7 @@ def connect2PM3(serial_port=None, baudrate=None):
     """
     global _socket_instance
 
+    _close_socket()
     try:
         _socket_instance = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         _socket_instance.settimeout(5)
@@ -318,75 +322,106 @@ def connect2PM3(serial_port=None, baudrate=None):
 
         return True
     except Exception:
-        _socket_instance = None
+        _close_socket()
         return False
 
-def _ensure_pipeline_ready():
-    """Pre-flight check: clean up dirty pipeline from an interrupted command.
-
-    When a PM3 command is interrupted (stopPM3Task sets STOPPING while
-    _send_and_cache is in its recv loop), the TCP connection may have stale
-    response data from the command that was still in flight.
-
-    Cleanup: close the old TCP connection (discards all stale data) and
-    reconnect.  The new connection gets a fresh HandleServer thread in
-    rftask.py.  If the previous command is still in flight in rftask
-    (PM3 hardware stuck), the _cmd_lock in rftask._send_cmd provides a
-    3-second timeout — if the lock can't be acquired, rftask auto-recovers
-    by calling reworkManager() which restarts the PM3 subprocess via the
-    GD32 restartpm3 command.
-
-    This function runs at the start of startPM3Task, NOT during activity
-    exit.  This avoids blocking the Tk main thread (the previous agent's
-    reworkPM3All-in-onDestroy crash).
-    """
-    global _socket_instance, _pipeline_needs_cleanup
-
-    if not _pipeline_needs_cleanup:
-        return
-
-    _pipeline_needs_cleanup = False
-    logger.info('executor: pipeline cleanup — reconnecting')
-
+def _close_socket():
+    global _socket_instance
     if _socket_instance is not None:
         try:
             _socket_instance.close()
-        except Exception:
+        except OSError:
             pass
         _socket_instance = None
 
-    connect2PM3()
 
-def _send_raw(cmd):
-    """Send a raw command string and read response (no caching, no callbacks).
+def _ensure_pipeline_ready():
+    """Reconnect when necessary; an uncertain command requires daemon proof.
 
-    socket.sendall + recv(1024) loop.
-    Recv buffer: 0x400 = 1024 bytes.
+    BUSY is a bounded failure, never permission to reset another owner. DIRTY
+    permits one explicit restart, but never replay of the interrupted command.
     """
+    global _pipeline_needs_cleanup, _pipeline_uncertain
+    if _pipeline_needs_cleanup or _socket_instance is None:
+        _close_socket()
+        if not connect2PM3():
+            return False
+        _pipeline_needs_cleanup = False
+    if _pipeline_uncertain:
+        status = _send_ctrl('sync', timeout=4000)
+        if status.strip() == 'DIRTY\nNikola.D: -1':
+            return False if LABEL_PM3_CMD_TASK_STOPPING else reworkPM3All()
+        if status.strip() != 'READY\nNikola.D: 0':
+            _pipeline_needs_cleanup = True
+            return False
+        _pipeline_uncertain = False
+    return True
+
+
+def _exchange(wire_cmd, timeout, callbacks=False):
+    """Receive one framed response with an absolute deadline and bounded drain.
+
+    An abandoned response is discarded, even if its terminator arrives during
+    the grace period. Ownership remains held throughout the drain. A missing
+    terminator poisons the pipeline until the daemon confirms it is idle.
+    """
+    global _pipeline_needs_cleanup, _pipeline_uncertain
     if _socket_instance is None:
         return ''
-
+    deadline = time.monotonic() + timeout / 1000.0 if timeout > 0 else None
+    abandoned = False
+    buf = b''
     try:
-        _socket_instance.sendall((cmd + '\n').encode('utf-8'))
-
-        buf = b''
-        _socket_instance.settimeout(3.0)
+        _socket_instance.settimeout(5.0)
+        _socket_instance.sendall(wire_cmd.encode('utf-8'))
         while True:
+            now = time.monotonic()
+            if not abandoned and (LABEL_PM3_CMD_TASK_STOPPING or
+                                  (deadline is not None and now >= deadline)):
+                abandoned = True
+                deadline = now + RESPONSE_DRAIN_SECONDS
+                _pipeline_needs_cleanup = True
+            if abandoned and now >= deadline:
+                break
+            remaining = RESPONSE_POLL_SECONDS
+            if deadline is not None:
+                remaining = min(remaining, max(0.001, deadline - now))
+            _socket_instance.settimeout(remaining)
             try:
                 chunk = _socket_instance.recv(1024)
-                if not chunk:
-                    break
-                buf += chunk
-                text = buf.decode('utf-8', errors='ignore')
-                if _RE_NIKOLA_END.search(text) or _RE_PROMPT_END.search(text):
-                    break
-                _socket_instance.settimeout(1.0)
             except socket.timeout:
+                continue
+            if not chunk:
                 break
+            buf += chunk
+            text = buf.decode('utf-8', errors='ignore')
+            complete = bool(_RE_NIKOLA_END.search(text) or _RE_PROMPT_END.search(text))
+            if callbacks and not abandoned and not LABEL_PM3_CMD_TASK_STOPPING:
+                with LOCK_CALL_PRINT:
+                    for cb in list(LIST_CALL_PRINT):
+                        try:
+                            cb(text)
+                        except Exception:
+                            pass
+            if complete:
+                # A daemon failure has a terminator, but its PM3 may be dirty.
+                if 'Nikola.D.OFFLINE' in text:
+                    _pipeline_uncertain = True
+                    _pipeline_needs_cleanup = True
+                return '' if abandoned or LABEL_PM3_CMD_TASK_STOPPING else text
+    except (OSError, ValueError):
+        pass
+    _pipeline_needs_cleanup = True
+    _pipeline_uncertain = True
+    return ''
 
-        return buf.decode('utf-8', errors='ignore')
-    except Exception:
+
+def _send_raw(cmd):
+    """Send an uncached command using the same response ownership rules."""
+    if not _ensure_pipeline_ready():
         return ''
+    return _exchange('Nikola.D.CMD = %s\n' % cmd, 3000)
+
 
 def _send_and_cache(cmd, timeout=5888):
     """Send command, cache result in CONTENT_OUT_IN__TXT_CACHE, fire callbacks.
@@ -395,65 +430,18 @@ def _send_and_cache(cmd, timeout=5888):
     LIST_CALL_PRINT callbacks per line.
     Strings: "Nikola.D.CMD = {}", "Nikola.D:", "timeout while waiting for reply"
     """
-    global CONTENT_OUT_IN__TXT_CACHE, _pipeline_needs_cleanup
+    global CONTENT_OUT_IN__TXT_CACHE
 
-    result = ''
-    if _socket_instance is None:
-        CONTENT_OUT_IN__TXT_CACHE = result
-        return result
-
-    try:
-        # Translate command for current PM3 firmware version (old→new syntax)
-        translated_cmd = cmd
-        if pm3_compat is not None:
-            try:
-                translated_cmd = pm3_compat.translate(cmd)
-            except Exception:
-                translated_cmd = cmd
-        wire_cmd = 'Nikola.D.CMD = %s\n' % translated_cmd
-        timeout_sec = timeout / 1000.0 if timeout > 0 else None
-        _socket_instance.settimeout(timeout_sec)
-        _socket_instance.sendall(wire_cmd.encode('utf-8'))
-
-        buf = b''
-        while True:
-            if LABEL_PM3_CMD_TASK_STOPPING:
-                _pipeline_needs_cleanup = True
-                break
-            try:
-                # Use select for timeout=-1 (infinite) case
-                if timeout_sec is None:
-                    readable, _, _ = select.select([_socket_instance], [], [], 0.5)
-                    if not readable:
-                        continue
-                chunk = _socket_instance.recv(1024)
-                if not chunk:
-                    break
-                buf += chunk
-
-                # Fire callbacks per line
-                text = buf.decode('utf-8', errors='ignore')
-                with LOCK_CALL_PRINT:
-                    for cb in list(LIST_CALL_PRINT):
-                        try:
-                            cb(text)
-                        except Exception:
-                            pass
-
-                # Check for end-of-response
-                if _RE_NIKOLA_END.search(text) or _RE_PROMPT_END.search(text):
-                    break
-            except socket.timeout:
-                result = 'timeout while waiting for reply'
-                CONTENT_OUT_IN__TXT_CACHE = result
-                return result
-
-        result = buf.decode('utf-8', errors='ignore')
-
-    except socket.timeout:
-        result = 'timeout while waiting for reply'
-    except Exception:
-        result = ''
+    CONTENT_OUT_IN__TXT_CACHE = ''
+    translated_cmd = cmd
+    if pm3_compat is not None:
+        try:
+            translated_cmd = pm3_compat.translate(cmd)
+        except Exception:
+            pass
+    result = _exchange('Nikola.D.CMD = %s\n' % translated_cmd, timeout, callbacks=True)
+    if not result:
+        return ''
 
     # Always: strip ANSI codes and PM3 output noise so middleware
     # regex patterns (hasKeyword, getContentFromRegex) match correctly.
@@ -481,80 +469,18 @@ def _send_and_cache(cmd, timeout=5888):
     return result
 
 def _send_ctrl(cmd, timeout=5888):
-    """Send a control command via Nikola.D.CTL channel.
-
-    startPM3Ctrl uses "Nikola.D.CTL = {}" format.
-    Strings: "Nikola.D.CTL = {}"
-    """
+    """Send a framed control request. Partial acknowledgements are failures."""
     global CONTENT_OUT_IN__TXT_CACHE
+    result = _exchange('Nikola.D.CTL = %s\n' % cmd, timeout)
+    CONTENT_OUT_IN__TXT_CACHE = result
+    return result
 
-    if _socket_instance is None:
-        CONTENT_OUT_IN__TXT_CACHE = ''
-        return ''
-
-    try:
-        wire_cmd = 'Nikola.D.CTL = %s\n' % cmd
-        _socket_instance.settimeout(timeout / 1000.0)
-        _socket_instance.sendall(wire_cmd.encode('utf-8'))
-
-        buf = b''
-        while True:
-            try:
-                chunk = _socket_instance.recv(1024)
-                if not chunk:
-                    break
-                buf += chunk
-                text = buf.decode('utf-8', errors='ignore')
-                if _RE_NIKOLA_END.search(text) or _RE_PROMPT_END.search(text):
-                    break
-                _socket_instance.settimeout(1.0)
-            except socket.timeout:
-                break
-
-        result = buf.decode('utf-8', errors='ignore')
-        CONTENT_OUT_IN__TXT_CACHE = result
-        return result
-    except Exception:
-        CONTENT_OUT_IN__TXT_CACHE = ''
-        return ''
 
 def _send_plat(cmd, timeout=5888):
-    """Send a platform command via Nikola.D.PLT channel.
-
-    startPM3Plat uses "Nikola.D.PLT = {}" format.
-    Strings: "Nikola.D.PLT = {}"
-    """
     global CONTENT_OUT_IN__TXT_CACHE
-
-    if _socket_instance is None:
-        CONTENT_OUT_IN__TXT_CACHE = ''
-        return ''
-
-    try:
-        wire_cmd = 'Nikola.D.PLT = %s\n' % cmd
-        _socket_instance.settimeout(timeout / 1000.0)
-        _socket_instance.sendall(wire_cmd.encode('utf-8'))
-
-        buf = b''
-        while True:
-            try:
-                chunk = _socket_instance.recv(1024)
-                if not chunk:
-                    break
-                buf += chunk
-                text = buf.decode('utf-8', errors='ignore')
-                if _RE_NIKOLA_END.search(text) or _RE_PROMPT_END.search(text):
-                    break
-                _socket_instance.settimeout(1.0)
-            except socket.timeout:
-                break
-
-        result = buf.decode('utf-8', errors='ignore')
-        CONTENT_OUT_IN__TXT_CACHE = result
-        return result
-    except Exception:
-        CONTENT_OUT_IN__TXT_CACHE = ''
-        return ''
+    result = _exchange('Nikola.D.PLT = %s\n' % cmd, timeout)
+    CONTENT_OUT_IN__TXT_CACHE = result
+    return result
 
 # ===========================================================================
 # PM3 task execution
@@ -574,7 +500,10 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     """
     global CONTENT_OUT_IN__TXT_CACHE, _consecutive_reworks
 
-    _ensure_pipeline_ready()
+    CONTENT_OUT_IN__TXT_CACHE = ''
+    if not _ensure_pipeline_ready():
+        CONTENT_OUT_IN__TXT_CACHE = ''
+        return CODE_PM3_TASK_ERROR
 
     # Fast-fail when PM3 has already been reworked MAX_CONSECUTIVE_REWORKS
     # times without a successful command in between — the tag is almost
@@ -591,35 +520,18 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     _set_stopped(False)
 
     try:
-        success = False
-        for attempt in range(rework_max + 1):
-            _check_operation()
-            if LABEL_PM3_CMD_TASK_STOPPING:
-                break
-
-            result = _send_and_cache(cmd, timeout)
-            _check_operation()
-
-            # An interrupted command is not a reason to restart PM3. Scoped
-            # scan/read cancellation has already unwound above; unscoped
-            # callers retain the legacy error return and response cache.
-            if LABEL_PM3_CMD_TASK_STOPPING:
-                break
-
-            if result and not isPM3Offline(result) and not isCMDTimeout(result):
-                success = True
-                _consecutive_reworks = 0  # reset counter on any good response
-                break
-
-            if attempt < rework_max:
-                if _consecutive_reworks + 1 >= MAX_CONSECUTIVE_REWORKS:
-                    # One more rework would hit the cap — do the rework so the
-                    # notification fires, then stop attempting.
-                    reworkPM3All()
-                    break
-                reworkPM3All()
-
-        return 1 if success else CODE_PM3_TASK_ERROR
+        # A command may already have changed a card when its reply is lost.
+        # Keep rework_max in the public signature for callers, but never replay.
+        _check_operation()
+        if LABEL_PM3_CMD_TASK_STOPPING:
+            return CODE_PM3_TASK_ERROR
+        result = _send_and_cache(cmd, timeout)
+        _check_operation()
+        if (not LABEL_PM3_CMD_TASK_STOPPING and result and
+                not isPM3Offline(result) and not isCMDTimeout(result)):
+            _consecutive_reworks = 0
+            return 1
+        return CODE_PM3_TASK_ERROR
     finally:
         if listener is not None:
             del_task_call(listener)
@@ -653,6 +565,8 @@ def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     Default ctrl_cmd='': original .so calls this without arguments from
     PCModeActivity.startPCMode() (activity_main_strings.txt:29912).
     """
+    if not _ensure_pipeline_ready():
+        return ''
     _set_running(True)
     _set_stopped(False)
 
@@ -669,6 +583,8 @@ def startPM3Plat(plat_cmd, timeout=5888):
     Uses Nikola.D.PLT channel, sets RUNNING/STOPPED state.
     Default timeout: 5888ms.
     """
+    if not _ensure_pipeline_ready():
+        return ''
     _set_running(True)
     _set_stopped(False)
 
@@ -693,42 +609,30 @@ def reworkPM3All():
     a fresh scan of a different tag. Rework implies cache-is-stale by
     definition, so clear before reconnect.
     """
-    global _socket_instance, _consecutive_reworks, CONTENT_OUT_IN__TXT_CACHE
-
+    global _consecutive_reworks, CONTENT_OUT_IN__TXT_CACHE
+    global _pipeline_uncertain, _pipeline_needs_cleanup
+    if _consecutive_reworks >= MAX_CONSECUTIVE_REWORKS:
+        return False
     _consecutive_reworks += 1
     CONTENT_OUT_IN__TXT_CACHE = ''
-
+    _pipeline_uncertain = True
+    _pipeline_needs_cleanup = True
     if hmi_driver is not None:
         try:
             hmi_driver.restartpm3()
         except Exception:
             pass
-
-    if _socket_instance is not None:
-        try:
-            _socket_instance.close()
-        except Exception:
-            pass
-        _socket_instance = None
-
+    _close_socket()
     time.sleep(3)
-    connect2PM3()
-
-    # Force rftask to respawn its PM3 subprocess right here, rather than
-    # letting the next startPM3Task trigger an auto-recovery cascade
-    # (rework_max=2 × reworkManager retries). Factory audit §5 shows
-    # PM3 RUNNING immediately post-stop; matching that requires driving
-    # the respawn synchronously.
-    #
-    # Evidence (2026-04-17): before this change, stopPCMode left the
-    # rftask subprocess dead (killed by our empty-CTL handler on entry)
-    # and took ~112 s to stabilise through retry amplification. With
-    # this direct ctl=restart, the subprocess respawn is one deterministic
-    # step (~4 s).
-    try:
-        _send_ctrl('restart', timeout=8000)
-    except Exception:
-        pass
+    if not connect2PM3():
+        return False
+    result = _send_ctrl('restart', timeout=15000)
+    CONTENT_OUT_IN__TXT_CACHE = ''
+    if result.strip() != 'OK\nNikola.D: 0':
+        return False
+    _pipeline_uncertain = False
+    _pipeline_needs_cleanup = False
+    return True
 
 
 @_serialized
@@ -739,11 +643,8 @@ def resetReworkCount():
     scan/read/write/erase activity).  The counter also resets automatically
     whenever a PM3 command returns a valid, non-timeout response.
 
-    Additionally sets _pipeline_needs_cleanup so the next startPM3Task runs
-    _ensure_pipeline_ready(), which closes and reconnects the TCP socket.
-    This clears any stale responses queued in the buffer from a previous
-    rework cascade or long-running command that got aborted without a
-    stopPM3Task (e.g. when the user exits to the main menu during a chk).
+    Reconnect before the next command, preserving _pipeline_uncertain so
+    reset cannot bypass the daemon's ownership/recovery acknowledgement.
     """
     global _consecutive_reworks, _pipeline_needs_cleanup
     _consecutive_reworks = 0

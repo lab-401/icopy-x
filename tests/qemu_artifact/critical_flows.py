@@ -16,6 +16,7 @@ from unittest.mock import patch
 import uuid  # noqa: F401 - initialize stdlib's real `uname -p` probe before process guards
 
 from strict_transport import Transcript, ConnectionTranscript
+from recovery_transport import RecoveryTranscript
 import ultralight_cases
 
 
@@ -33,6 +34,7 @@ def run(root, output, variant, callback_errors):
     import executor
     import glob
     import hmi_driver
+    import lfread
     import hfmfuread
     import ics_decoder
     import os
@@ -112,6 +114,7 @@ def run(root, output, variant, callback_errors):
     for row in rows:
         name = row['id']
         mfu = name.startswith('mfu_')
+        recovery = name in ('reader_timeout_late', 'reader_truncated_retry')
         real_reader = name.startswith('reader_') or mfu
         row['reader_mode'] = 'real' if real_reader else 'dispatch_observer'
         before_threads = set(threading.enumerate())
@@ -120,7 +123,15 @@ def run(root, output, variant, callback_errors):
             steps = []
         elif real_reader:
             steps = copy.deepcopy(fixtures[firmware]['lf_read'])
-            if name in ('reader_cancel_reenter', 'reader_cancel_overlap'):
+            if recovery:
+                if name == 'reader_timeout_late':
+                    steps[-1]['delay'] = .15
+                else:
+                    steps[-1]['response'] = steps[-1]['response'].split('Nikola.D:')[0]
+                    steps[-1]['truncated'] = True
+                    steps.append(dict(control='sync', response='READY\nNikola.D: 0\n'))
+                steps += copy.deepcopy(fixtures[firmware]['lf_read'])
+            elif name in ('reader_cancel_reenter', 'reader_cancel_overlap'):
                 steps[-1]['blocked'] = True
                 steps += copy.deepcopy(fixtures[firmware]['lf_read'])
             elif name == 'reader_queued_exit':
@@ -147,6 +158,8 @@ def run(root, output, variant, callback_errors):
             index = -1 if name == 'cancel_inflight_found' else 0
             steps[index]['blocked'] = True
         transport = (ConnectionTranscript if name == 'reader_cancel_overlap' else Transcript)(steps)
+        if recovery:
+            transport = RecoveryTranscript(steps)
         if mfu:
             mfu_dir = Path(appfiles.PATH_DUMP) / 'mfu' / variant / name
             transport, partial = ultralight_cases.prepare(name, firmware, mfu_dir)
@@ -187,6 +200,12 @@ def run(root, output, variant, callback_errors):
             return original_finish(activity, result, scan_token=scan_token)
 
         with ExitStack() as stack:
+            if recovery:
+                stack.enter_context(patch.object(lfread, 'TIMEOUT', 30))
+                stack.enter_context(patch.object(executor, 'RESPONSE_DRAIN_SECONDS', .4, create=True))
+                row['deadline_substitution'] = 'LF read 30ms, drain 400ms, late reply 150ms'
+            # create=True permits negative controls against the pre-fix package.
+            stack.enter_context(patch.object(executor, '_pipeline_uncertain', False, create=True))
             if mfu:
                 stack.enter_context(patch.object(appfiles, 'PATH_DUMP_MFU', str(mfu_dir)))
                 stack.enter_context(patch.object(hfmfuread, 'FILE_MFU_READ', 'stale-previous-read.bin'))
@@ -314,7 +333,7 @@ def run(root, output, variant, callback_errors):
                         # does not assert concurrent PM3 connection ownership.
                         if name == 'reader_cancel_reenter':
                             activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 8})
-                    elif name == 'reader_failure_retry':
+                    elif name == 'reader_failure_retry' or recovery:
                         pump(lambda: activity.state == 'no_tag')
                         assert activity._read_bundle is None
                         assert not set(dump_dir.glob('*.txt')) - before_dumps
