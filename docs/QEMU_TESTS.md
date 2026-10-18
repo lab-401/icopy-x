@@ -153,7 +153,8 @@ Contributors do not need a device, a factory image or a QEMU server to submit a
 fix. Start with the commands in [HOST_TESTS.md](HOST_TESTS.md); add a focused
 host regression test for the behavior being changed when it can be exercised
 there. Describe any remaining ARM, packaging or hardware boundary in the PR.
-Maintainers run the relevant QEMU checks against the candidate CI-built IPKs.
+The [critical QEMU workflow](QEMU_CI.md) runs both candidate CI-built IPKs on
+disposable hosted workers. Maintainers run additional relevant lab checks.
 Do not create a separate emulator setup or bespoke shell harness for each PR.
 
 The layers have different responsibilities:
@@ -162,12 +163,13 @@ The layers have different responsibilities:
 |---|---|---|
 | Host and package checks | Fast logic, translation and flash/no-flash content regressions | Existing GitHub Actions workflows |
 | QEMU harness contracts | Missing results, nonzero exits, timeouts, stale output and invalid archives must fail | Linux host CI; `python -m pytest tests/qemu_runner` |
-| Real ARM runtime and IPK smoke | Device Python, imports, dependencies, real Tk/fonts and packaged UI navigation | Maintainer-operated lab; commands above |
+| Real ARM runtime, IPK smoke and critical flows | Device Python, imports, real Tk/fonts, package navigation and bounded scan/UI contracts | Disposable hosted CI; the same profile can run in the lab |
 | Legacy source scenarios | Candidate behavior checks with mocked PM3 responses | Exploratory until each scenario and fixture is audited |
 | Physical acceptance | USB, RF, accessory behavior, firmware and installation on hardware | Selected checks for the changed hardware boundary |
 
-There is **no automatic ARM/QEMU PR job yet**. Passing harness contracts is not
-an emulation run. Likewise, the legacy inventory of 417 scenarios is not 417
+Passing harness contracts is not an emulation run: the separate **QEMU critical
+flows** status requires both real ARM runs. See [activation and repository-rule
+requirements](QEMU_CI.md#activation-and-limits). The legacy inventory of 417 scenarios is not 417
 validated behaviors: sampled cases contained stale expectations and incorrect
 menu navigation. Do not make that entire suite a required gate or weaken its
 assertions merely to obtain a green result.
@@ -199,9 +201,9 @@ leave the coverage gap visible. Repair, replace or explicitly retire obsolete
 tests. Revisit the matrix when supported firmware, runtime dependencies or build
 contents change. Unavailable hardware remains pending, not passed.
 
-The next automation step is a maintainer-approved job on a disposable worker
-without credentials or device access, using a pinned environment and exact PR
-artifacts. Run the small runtime/package profile for relevant changes; reserve
-broader audited scenarios for affected areas and scheduled regression runs.
+The hosted workflow uses a pinned environment and exact build artifacts, with
+candidate execution isolated from credentials and device access. Keep this
+required profile small; reserve broader audited scenarios for affected areas
+and scheduled regression runs.
 Do not execute unreviewed PR code with sudo on the shared SSH lab. A model review
 can flag missing coverage and scope creep, but cannot substitute for these checks.
