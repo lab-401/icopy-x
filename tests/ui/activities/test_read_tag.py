@@ -64,8 +64,8 @@ def test_scan_completion_waits_for_animation_then_starts_reader(read_flow):
     activity.getCanvas().advance(250)
     assert activity.state == 'reading'
     assert activity.isbusy()
-    assert read_flow.reader.call_reading == activity.onReading
-    assert read_flow.reader.call_exception == activity._onReadException
+    assert read_flow.reader.call_reading.__self__ is activity
+    assert read_flow.reader.call_exception.__self__ is activity
     read_flow.reader.start.assert_called_once_with(1, {'infos': HF, 'force': False})
 
 

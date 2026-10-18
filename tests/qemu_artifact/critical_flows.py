@@ -1,8 +1,9 @@
 """Small ARM/Tk acceptance profile. Hardware boundaries are explicit below.
 
 Scanner workers, executor, translation, parsers, activity decisions and Tk stay
-real. PM3 transport is a finite transcript. Reader dispatch is observed without
-performing a card read. Audio/HMI/serial boundaries cannot touch hardware.
+real. PM3 transport is a finite transcript. Scan cases observe Reader dispatch;
+reader_* cases execute real Reader/LF parsing and dump saving. Audio/HMI/serial
+boundaries cannot touch hardware.
 """
 from contextlib import ExitStack
 import copy
@@ -26,6 +27,7 @@ def run(root, output, variant, callback_errors):
     import actstack
     import activity_main
     import activity_read
+    import appfiles
     import audio
     import executor
     import glob
@@ -45,11 +47,11 @@ def run(root, output, variant, callback_errors):
     fixtures = json.loads(fixture_path.read_text())
     firmware = 'original' if variant == 'noflash' else 'iceman'
     rows = [dict(id=name, status='INCOMPLETE') for name in CASE_IDS]
-    report = dict(profile='critical-v1', firmware_profile=firmware,
+    report = dict(profile=PROFILE['version'], firmware_profile=firmware,
                   status='INCOMPLETE', cases=rows, fixture_provenance=fixtures['provenance'],
                   substitutions=['executor TCP socket: exact finite PM3 transcript',
                                  'pm3_compat._current_version: declared firmware profile',
-                                 'read.Reader: dispatch observer; no card read',
+                                 'read.Reader: dispatch observer in scan cases; real in reader_* cases',
                                  'HMI abort: release the held transport response',
                                  'audio playback: silent sink',
                                  'decoder serial enumeration: empty inventory'],
@@ -106,9 +108,21 @@ def run(root, output, variant, callback_errors):
     save()
     for row in rows:
         name = row['id']
+        real_reader = name.startswith('reader_')
+        row['reader_mode'] = 'real' if real_reader else 'dispatch_observer'
         before_threads = set(threading.enumerate())
         failures, reads, aborts, scan_results = [], [], [], []
-        if name == 'no_tag_rescan':
+        if real_reader:
+            steps = copy.deepcopy(fixtures[firmware]['lf_read'])
+            if name == 'reader_cancel_reenter':
+                steps[-1]['blocked'] = True
+                steps += copy.deepcopy(fixtures[firmware]['lf_read'])
+            elif name == 'reader_queued_exit':
+                steps[-1]['blocked'] = True
+            elif name == 'reader_failure_retry':
+                steps[-1]['response'] = 'No tag found.\nNikola.D: 0\n'
+                steps += copy.deepcopy(fixtures[firmware]['lf_read'])
+        elif name == 'no_tag_rescan':
             steps = no_tag_steps() * 2
         elif name == 'collision_refuses_reader':
             steps = [dict(command='hf 14a info', response='Multiple tags detected\nNikola.D: 0\n')]
@@ -170,7 +184,7 @@ def run(root, output, variant, callback_errors):
                 (executor, 'CONTENT_OUT_IN__TXT_CACHE', ''),
                 (executor, 'socket', socket_api),
                 (pm3_compat, '_current_version', firmware),
-                (read, 'Reader', ReaderObserver),
+                (read, 'Reader', read.Reader if real_reader else ReaderObserver),
                 (activity_read.ReadActivity, 'onScanFinish', observe_finish),
                 (hmi_driver, 'presspm3', abort),
                 (hmi_driver, 'restartpm3', forbidden),
@@ -207,6 +221,57 @@ def run(root, output, variant, callback_errors):
                     assert actstack.get_current_activity() is activity
                     assert activity._state == activity.STATE_HOME
                     assert 'Read Credential' in visible_text(activity)
+                elif real_reader:
+                    dump_dir = Path(appfiles.PATH_DUMP) / 'em410x'
+                    before_dumps = set(dump_dir.glob('*.txt'))
+                    activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 8})
+                    if name in ('reader_cancel_reenter', 'reader_queued_exit'):
+                        pump(transport.entered.is_set)
+                        assert activity.state == 'reading'
+                        reader = activity._reader
+                        assert reader._thread.is_alive()
+                        if name == 'reader_queued_exit':
+                            # Intentionally do not pump Tk while the real reader
+                            # finishes. A worker must enqueue its callback without
+                            # blocking on Tk; PWR then discards that queued result.
+                            transport.release.set()
+                            reader._thread.join(timeout=3)
+                            assert not reader._thread.is_alive(), 'Reader worker blocked on UI delivery'
+                            assert activity.state == 'reading' and activity._read_bundle is None
+                        activity.callKeyEvent(KEY_PWR)
+                        assert activity.life.destroyed and actstack.get_current_activity() is main
+                        pump(lambda: not (set(threading.enumerate()) - before_threads))
+                        drain()
+                        assert activity._read_bundle is None
+                        assert aborts == ['presspm3']
+                        assert not reader._thread.is_alive()
+                        assert actstack.get_current_activity() is main
+                        # Callback cancellation is not a protocol/file rollback.
+                        # Do not let any cancelled read's file satisfy the new
+                        # read's save assertion below.
+                        after_cancel = set(dump_dir.glob('*.txt'))
+                        row['cancelled_read_dump_count'] = len(after_cancel - before_dumps)
+                        before_dumps = after_cancel
+                        # Re-entry deliberately waits for the old worker. This
+                        # does not assert concurrent PM3 connection ownership.
+                        if name == 'reader_cancel_reenter':
+                            activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 8})
+                    elif name == 'reader_failure_retry':
+                        pump(lambda: activity.state == 'no_tag')
+                        assert activity._read_bundle is None
+                        assert not set(dump_dir.glob('*.txt')) - before_dumps
+                        activity.callKeyEvent(KEY_M2)
+                    if name != 'reader_queued_exit':
+                        pump(lambda: activity.state == 'read_success')
+                        pump(lambda: 'File saved' in visible_text(activity))
+                        assert activity._read_bundle['data'] == '1122334455', activity._read_bundle
+                        assert activity._read_bundle['return'] == 1
+                        dumps = set(dump_dir.glob('*.txt')) - before_dumps
+                        assert len(dumps) == 1, 'Successful real LF read must save one new dump'
+                        assert all(path.read_text().splitlines()[:2] == ['1122334455', '1122334455']
+                                   for path in dumps), dumps
+                        row['read_result'] = copy.deepcopy(activity._read_bundle)
+                        row['saved_dumps'] = [str(path) for path in sorted(dumps)]
                 else:
                     activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 1})
                     if name.startswith('cancel_') or name == 'exit_reenter':

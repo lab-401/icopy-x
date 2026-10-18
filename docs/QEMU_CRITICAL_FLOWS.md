@@ -1,6 +1,6 @@
 # Critical ARM/Tk flows
 
-`critical-v1` is a small package acceptance profile intended for PR CI and
+`critical-v2` is a small package acceptance profile intended for PR CI and
 release-candidate validation. Run it for **both** flash and no-flash IPKs using
 the same entry point as the [package smoke test](QEMU_TESTS.md):
 
@@ -25,6 +25,10 @@ checks, then runs the ordered inventory in
 | Exit and re-enter | After the old worker finishes, a new activity scans successfully |
 | Console round trip | PWR first closes the console without exiting the reading screen |
 | Decoder absent | Real discovery with no serial ports reports absence and allows exit |
+| Reader success | EM410x scan, real Reader, protocol parser, dump file and success UI agree on the identity |
+| Queued Reader completion | The real worker finishes while Tk is paused; PWR discards its queued completion |
+| Reader cancellation | PWR exits during a held LF read response; after worker completion, a fresh activity reads successfully |
+| Reader failure and retry | An LF reply without tag data saves no dump and offers rescan; the next read succeeds |
 
 ## What executes and what is substituted
 
@@ -36,14 +40,18 @@ decisions, key dispatch and Tk callbacks execute normally.
 The TCP socket is a finite transcript: every wire command must match exactly,
 every response must be consumed, and every expected command must occur. A
 transport mismatch remains a failure even if application code catches it.
-The declared firmware profile is supplied to the translator. Reader dispatch
-is observed without reading a card; audio is silent; HMI abort releases the
-held response. Unexpected serial opens, restarts and process execution fail.
+The declared firmware profile is supplied to the translator. The original scan
+cases observe Reader dispatch. The four `reader_*` cases run the packaged
+Reader, EM410x scan/read parsers, dump saving and ReadActivity through real
+threads and Tk callbacks. Dump files go into the disposable worker's `/mnt/upan`.
+Audio is silent; HMI abort releases the held response. Unexpected serial opens,
+restarts and process execution fail.
 The decoder test substitutes an empty port inventory only.
 
 The successful Iceman response comes from the repository's existing captured
 response fixture. Factory-format success, no-card replies and the legacy
 collision literal are **synthetic contracts**, identified in `transcripts.json`.
+The EM410x cases also use explicitly synthetic, firmware-specific responses.
 The collision case protects the UI's handling of `found=True` with the collision
 return code; it does not establish that current firmware emits that literal.
 
@@ -52,6 +60,22 @@ firmware detection/flashing, installed startup, the USB stack, or an attached
 ICS Decoder. Exit/re-entry waits for worker completion; it does not prove safe
 concurrent PM3 ownership between old and new activities. Those boundaries need
 focused tests and, where relevant, physical acceptance.
+
+Reader cancellation coverage is deliberately narrow. `Reader.stop()` suppresses
+future callbacks and skips protocol work if the worker has not entered it yet;
+it does not interrupt a protocol function already running. ReadActivity invalidates
+callbacks before requesting the existing hardware abort, drops queued callbacks
+from old reads, and drains current callbacks on Tk without worker calls to Tk.
+Host tests additionally cover late success/failure/progress/exception callbacks,
+retry identity, exception classification, and the legacy completion poll.
+
+Still pending: cancellation between stages of a multi-command protocol, shared
+PM3 socket/cache ownership, reconnect after a partial response or timeout, and
+the separate Auto Copy activity's callback lifecycle. The legacy completion
+fallback still infers success from progress when no result callback arrives;
+these tests do not establish that inference as proof of a valid card dump.
+The bound callback's `__self__` is preserved, but these packages execute Python
+`read.py`; direct callbacks from an original binary `read.so` are not validated.
 
 ## Maintaining the profile
 

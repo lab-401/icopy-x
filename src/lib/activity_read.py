@@ -47,6 +47,9 @@ Import convention: ``from lib.activity_read import ReadActivity``
 """
 
 from functools import partial
+from queue import Empty, SimpleQueue
+import time
+from types import MethodType
 
 from lib.actbase import BaseActivity
 from lib.widget import Toast, ProgressBar
@@ -191,6 +194,8 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         self._scanner = None
         self._scan_token = None
         self._reader = None
+        self._read_token = None
+        self._read_timer = None
         self._toast = None
         self._progress = None
         self._got_progress = False  # True once onReading progress fires
@@ -305,6 +310,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             # Invalidate callbacks before aborting PM3: abort can release an
             # in-flight scan command and cause its final callbacks to arrive.
             self._cancelScan()
+            self._cancelRead()
             # Dismiss toast if showing (but don't swallow the key)
             for attr in ('_toast',):
                 toast = getattr(self, attr, None)
@@ -564,6 +570,14 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                    Ground truth: force-read test Phase 3 triggers this
                    after WarningM1Activity returns action='force'.
         """
+        self._cancelRead()
+        if self._progress is not None:
+            self._progress.dispose()
+        read_token = self._read_token = object()
+        events = SimpleQueue()
+        self._got_progress = False
+        self._read_bundle = None
+        self._pending_result = None
         self._state = 'reading'
         self.setbusy()
         # Ground truth: read_tag_reading_2.png — no action bar during read.
@@ -595,70 +609,78 @@ class ReadActivity(ConsoleMixin, BaseActivity):
 
         try:
             import read as _read_mod
-            self._reader = _read_mod.Reader()
-            # call_reading receives onReading bound method.
-            # read.so extracts __self__ to get the activity reference,
-            # then calls showReadToast() directly on the activity.
-            # Ground truth: trace_read_flow_20260401.txt line 20 —
-            # <bound method ReadActivity.onReading of ReadListActivity>
-            self._reader.call_reading = self.onReading
-            self._reader.call_exception = self._onReadException
-            self._reader.start(self._tag_type, bundle)
-
-            # Completion is handled through FOUR mechanisms (all ground truth):
-            #
-            # 1. MFC reads: onReading receives completion dict with 'success'
-            #    key. Handled in onReading() above.
-            #
-            # 2. LF/T55xx failures: read.so pushes Warning activities DIRECTLY
-            #    via actstack.start_activity. Ground truth: trace_fail_read_flow.
-            #
-            # 3. Errors: call_exception fires. Handled in _onReadException().
-            #
-            # 4. Other readers (iCLASS, UL, ISO15693, Felica, Legic):
-            #    completion doesn't reliably use mechanisms 1-3. Fallback
-            #    to is_reading() poll with delay to allow 1-3 to act first.
-            import threading as _thr
-            def _wait_for_completion():
-                import time
-                # Wait for reader to finish, then give 2s for mechanisms
-                # 1-3 to fire before falling back to success.
-                while self._reader is not None and self._state == 'reading':
-                    try:
-                        if not self._reader.is_reading():
-                            # Wait for Warning push / onReading dict / exception
-                            time.sleep(2.0)
-                            # If state already changed, another mechanism handled it
-                            if self._state != 'reading':
-                                return
-                            # Check if a Warning was pushed on top of us
-                            try:
-                                top = actstack.get_current_activity()
-                                if top is not self:
-                                    return  # Warning activity handles the UI
-                            except Exception:
-                                pass
-                            # No other mechanism fired.
-                            # If progress updates were received, read started
-                            # and completed → success. If no progress, the
-                            # read failed silently → "Read Failed".
-                            self._reader = None
-                            if self._got_progress:
-                                self._showReadSuccess()
-                            else:
-                                self._showReadFailed()
-                            return
-                    except Exception:
-                        pass
-                    time.sleep(0.3)
-            _thr.Thread(target=_wait_for_completion, daemon=True).start()
+            reader = self._reader = _read_mod.Reader()
+            reader.call_reading = self._readCallback(read_token, events, self.onReading)
+            reader.call_exception = self._readCallback(read_token, events, self._onReadException)
+            reader.start(self._tag_type, bundle)
+            self._pollRead(read_token, events, reader)
         except Exception as e:
             import traceback as _tb
             print('[READ] read start error: %s' % e, flush=True)
             _tb.print_exc()
+            self._cancelRead()
             self._showReadFailed()
 
+    def _isCurrentRead(self, token):
+        return (token is not None and token is self._read_token
+                and self._state == 'reading' and not self.life.destroyed)
+
+    def _readCallback(self, token, events, callback):
+        # Preserve __self__: legacy read.so uses it to reach the activity.
+        # Workers enqueue plain Python data. Calling Tk.after from a worker
+        # can block while the UI thread is waiting for PM3 cancellation.
+        def deliver(activity, *args):
+            if activity._isCurrentRead(token):
+                if actstack._root is None:
+                    callback(*args)  # Headless activity tests.
+                else:
+                    events.put((callback, args))
+        return MethodType(deliver, self)
+
+    def _pollRead(self, token, events, reader, finished_at=None):
+        """Drain this read's callbacks on Tk; retain the legacy completion poll."""
+        if not self._isCurrentRead(token):
+            return
+        self._read_timer = None
+        # Bound each tick so a busy reader cannot starve key handling.
+        for _ in range(100):
+            try:
+                callback, args = events.get_nowait()
+            except Empty:
+                break
+            callback(*args)
+            if not self._isCurrentRead(token):
+                return
+
+        # Some legacy readers complete without the result callback. Capture
+        # the reader itself; an old poll must never observe a replacement.
+        try:
+            finished = not reader.is_reading()
+        except AttributeError:
+            finished = False
+        except Exception as error:
+            self._onReadException(str(error))
+            return
+        if finished:
+            if finished_at is None:
+                finished_at = time.monotonic()
+            elif time.monotonic() - finished_at >= 2:
+                if actstack.get_current_activity() is self:
+                    self._reader = None
+                    if self._got_progress:
+                        self._showReadSuccess()
+                    else:
+                        self._showReadFailed()
+                return
+        if actstack._root is not None:
+            self._read_timer = actstack._root.after(
+                50, self._pollRead, token, events, reader, finished_at)
+
     def _cancelRead(self):
+        self._read_token = None
+        if self._read_timer is not None:
+            actstack._root.after_cancel(self._read_timer)
+            self._read_timer = None
         self.setidle()
         self._cancel_fake_progress()
         if self._reader is not None:
@@ -707,7 +729,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         Screenshot: read_tag_reading_1.png — "Reading..." at bottom,
         read_tag_scanning_5.png — "Reading...32/32Keys".
         """
-        if not args:
+        if not args or not self._isCurrentRead(self._read_token):
             return
 
         # COMPLETION CHECK: read.so sends the final result THROUGH
@@ -758,13 +780,6 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 # scan.getScanCache() has 'sak'/'atqa'
                 #   for HF tags (MFC, UL, NTAG, iCLASS, etc.) but not LF
                 sc = self._scan_cache or {}
-                try:
-                    import scan as _s
-                    _sc = _s.getScanCache()
-                    if _sc:
-                        sc = _sc
-                except Exception:
-                    pass
                 # If scan confirmed a specific tag type, read genuinely
                 # failed → "Read Failed". If scan was tentative (no type
                 # confirmed), read couldn't verify → "Wrong type".
@@ -828,25 +843,13 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         else:
             status = ''
 
-        # Schedule UI update on Tk main thread — callback fires from
-        # read background thread.  ProgressBar widget handles rendering
-        # at the correct position with correct colors.
-        def _update_ui():
-            if self._progress is not None:
-                if progress:
-                    self._progress.setProgress(int(progress))
-                if status:
-                    self._progress.setMessage(status)
-                self._progress.setTimer(timer)
-
-        try:
-            from lib import actstack
-            if actstack._root is not None:
-                actstack._root.after(0, _update_ui)
-            else:
-                _update_ui()
-        except Exception:
-            pass
+        # Registered callbacks are already delivered by the UI queue.
+        if self._progress is not None:
+            if progress:
+                self._progress.setProgress(int(progress))
+            if status:
+                self._progress.setMessage(status)
+            self._progress.setTimer(timer)
 
     def showReadToast(self, *args):
         """Called DIRECTLY by read.so on the activity when read completes.
@@ -904,7 +907,10 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         on read ERRORS (not success). This is the only callback that
         reliably reaches Python objects from read.so.
         """
+        if not self._isCurrentRead(self._read_token):
+            return
         self._reader = None
+        self._cancel_fake_progress()
         if args:
             print('[READ-EXC] %s' % str(args[0])[:300], flush=True)
         # Exception during read: if no progress updates were received,
@@ -1038,11 +1044,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
         canvas = self.getCanvas()
         if canvas is not None:
             canvas.delete('_read_status')
-        try:
-            import scan as _scan_mod
-            infos = _scan_mod.getScanCache() or self._scan_cache or {}
-        except Exception:
-            infos = self._scan_cache or {}
+        infos = self._scan_cache or {}
         bundle = {'infos': infos}
         try:
             from lib.activity_main import WarningM1Activity

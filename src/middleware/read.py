@@ -247,6 +247,8 @@ class Reader:
         self._reading = False
         self._stop_label = False
         self._thread = None
+        self._state_lock = threading.Lock()
+        self._cancelled = threading.Event()
 
     @property
     def call_reading(self):
@@ -273,36 +275,61 @@ class Reader:
         """
         infos = tag_data.get('infos', tag_data) if isinstance(tag_data, dict) else {}
         is_force = tag_data.get('force', False) if isinstance(tag_data, dict) else False
-        listener = self._call_reading
+        with self._state_lock:
+            if self._reading:
+                raise RuntimeError('Reader is already running')
+            self._cancelled.set()
+            self._reading = True
+            self._stop_label = False
+            cancelled = self._cancelled = threading.Event()
+        reading_callback = self._call_reading
+        exception_callback = self._call_exception
 
-        self._reading = True
-        self._stop_label = False
-
-        # Fresh rework budget for this read — previous flows should not
-        # pre-brick this one.
-        try:
-            executor.resetReworkCount()
-        except (AttributeError, NameError):
-            pass
+        def listener(*args):
+            if not cancelled.is_set() and reading_callback:
+                reading_callback(*args)
 
         def _run():
             try:
+                if cancelled.is_set():
+                    return
+                # Fresh rework budget for this read.
+                try:
+                    executor.resetReworkCount()
+                except (AttributeError, NameError):
+                    pass
                 ret, bundle = _dispatch_read(tag_type, infos, listener)
                 call_on_finish(ret, listener, infos, bundle, is_force)
             except Exception:
                 tb = traceback.format_exc()
-                if self._call_exception:
+                if not cancelled.is_set() and exception_callback:
                     try:
-                        self._call_exception(tb)
+                        exception_callback(tb)
                     except Exception:
                         pass
                 callReadFailed(listener, infos, -1)
             finally:
-                self._reading = False
+                with self._state_lock:
+                    self._reading = False
 
-        self._thread = threading.Thread(target=_run, daemon=True)
-        self._thread.start()
+        try:
+            self._thread = threading.Thread(target=_run, daemon=True)
+            self._thread.start()
+        except Exception:
+            with self._state_lock:
+                self._reading = False
+            raise
+
+    def is_reading(self):
+        with self._state_lock:
+            return self._reading
 
     def stop(self):
-        """Request read stop."""
-        self._stop_label = True
+        """Suppress future callbacks; the caller still owns the PM3 abort.
+
+        This cannot interrupt an in-flight protocol function. An activity must
+        also invalidate callbacks already delivered or queued before stop().
+        """
+        with self._state_lock:
+            self._stop_label = True
+            self._cancelled.set()

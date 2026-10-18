@@ -3,7 +3,8 @@
     "iceman_found": "HF14A_INFO_NEW and CGETBLK_NEW_FAIL retained from tests/ui/fixtures/pm3_iceman_responses.json; trace/catalog provenance there. These are recorded responses, not new device observations.",
     "factory_found": "Synthetic factory-format UID/SAK/ATQA/PRNG response. Expected command syntax follows the checked-in factory compatibility contract; not a new factory hardware capture.",
     "no_tag": "Synthetic finite six-command no-card pipeline based on scan.Scanner and leaf parser contracts. The transport completes every command but no parser should find a tag.",
-    "collision": "Synthetic legacy 'Multiple tags detected' parser contract, exercising the PR #51 collision regression. Not evidence that current PM3 firmware emits this literal."
+    "collision": "Synthetic legacy 'Multiple tags detected' parser contract, exercising the PR #51 collision regression. Not evidence that current PM3 firmware emits this literal.",
+    "lf_read": "Synthetic EM410x scan/read responses following lfsearch, lfread and pm3_compat contracts. Factory uses EM TAG ID and 410x_read; Iceman uses EM 410x ID and 410x reader. No RF or hardware capture claim."
   },
   "original": {
     "no_tag": [
@@ -40,6 +41,20 @@
       {
         "command": "hf mf cgetblk 0",
         "response": "Can't read block. error=-1\nNikola.D: -10\n"
+      }
+    ],
+    "lf_read": [
+      {
+        "command": "hf 14a info",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf sea",
+        "response": "EM TAG ID      : 1122334455\nValid EM410x ID found!\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf em 410x_read",
+        "response": "EM TAG ID      : 1122334455\nValid EM410x ID found!\nNikola.D: 0\n"
       }
     ]
   },
@@ -78,6 +93,20 @@
       {
         "command": "hf mf cgetblk --blk 0",
         "response": "[usb|script] pm3 --> hf mf cgetblk --blk 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n"
+      }
+    ],
+    "lf_read": [
+      {
+        "command": "hf 14a info",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf sea",
+        "response": "EM 410x ID 1122334455\nValid EM410x ID found!\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf em 410x reader",
+        "response": "EM 410x ID 1122334455\nValid EM410x ID found!\nNikola.D: 0\n"
       }
     ]
   }
