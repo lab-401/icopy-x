@@ -86,13 +86,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('ipk', type=Path)
     parser.add_argument('--variant', required=True, choices=('flash', 'noflash'))
+    parser.add_argument('--profile', choices=('smoke', 'critical'), default='smoke')
     args = parser.parse_args(argv)
     if not all(os.environ.get(k) for k in ('ICOPY_QEMU_RUN', 'QEMU_BIN', 'QEMU_PYTHON')):
         parser.error('Run inside tools/qemu_env.sh; missing emulation is an error')
     run = Path(os.environ['ICOPY_QEMU_RUN'])
-    output = run / 'results' / ('artifact-' + args.variant)
+    suffix = '-critical' if args.profile == 'critical' else ''
+    output = run / 'results' / ('artifact-' + args.variant + suffix)
     output.mkdir(exist_ok=False)
-    report = {'status': 'INCOMPLETE', 'variant': args.variant,
+    report = {'status': 'INCOMPLETE', 'variant': args.variant, 'profile': args.profile,
               'ipk': str(args.ipk.resolve()),
               'boundary': 'packaged module imports and real Tk menu navigation; no startup, RF or flashing'}
     report_path = output / 'report.json'
@@ -105,6 +107,11 @@ def main(argv=None):
         report['ipk_sha256'] = sha256(args.ipk)
         report['harness_sha256'] = sha256(__file__)
         report['guest_harness_sha256'] = sha256(guest)
+        if args.profile == 'critical':
+            report['critical_inputs_sha256'] = {
+                name: sha256(guest.parent / name) for name in
+                ('critical_flows.py', 'strict_transport.py', 'critical_cases.json', 'transcripts.json')}
+            report['boundary'] = 'packaged ARM/Tk critical flows with scripted hardware boundaries; no RF, flashing or boot chain'
         extracted = output / 'app'
         files = extract_ipk(args.ipk, extracted, args.variant)
         (output / 'files.json').write_text(json.dumps(files, indent=2) + '\n')
@@ -126,7 +133,7 @@ def main(argv=None):
             with (output / 'guest.log').open('wb') as guest_log:
                 completed = subprocess.run(
                     [os.environ['QEMU_BIN'], os.environ['QEMU_PYTHON'], '-I', '-u',
-                     str(guest), str(extracted), str(output)], env=env,
+                     str(guest), str(extracted), str(output), args.profile, args.variant], env=env,
                     stdout=guest_log, stderr=subprocess.STDOUT, timeout=120)
             if completed.returncode:
                 raise RuntimeError('ARM guest exited with status ' + str(completed.returncode))
@@ -135,6 +142,14 @@ def main(argv=None):
         guest_report = json.loads((output / 'guest.json').read_text())
         if guest_report.get('status') != 'PASS':
             raise RuntimeError('Missing successful guest assertions')
+        if args.profile == 'critical':
+            expected = json.loads((guest.parent / 'critical_cases.json').read_text())
+            critical = guest_report.get('critical', {})
+            rows = critical.get('cases', [])
+            if (critical.get('status') != 'PASS' or critical.get('profile') != expected['version'] or
+                    [r['id'] for r in rows] != list(expected['cases']) or
+                    any(r.get('status') != 'PASS' for r in rows)):
+                raise RuntimeError('Critical-flow inventory incomplete or failed')
         for module in guest_report['modules'].values():
             if files.get(module['relative_path']) != module['sha256']:
                 raise RuntimeError('Imported module does not match archive: ' + str(module))

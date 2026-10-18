@@ -1,0 +1,84 @@
+{
+  "provenance": {
+    "iceman_found": "HF14A_INFO_NEW and CGETBLK_NEW_FAIL retained from tests/ui/fixtures/pm3_iceman_responses.json; trace/catalog provenance there. These are recorded responses, not new device observations.",
+    "factory_found": "Synthetic factory-format UID/SAK/ATQA/PRNG response. Expected command syntax follows the checked-in factory compatibility contract; not a new factory hardware capture.",
+    "no_tag": "Synthetic finite six-command no-card pipeline based on scan.Scanner and leaf parser contracts. The transport completes every command but no parser should find a tag.",
+    "collision": "Synthetic legacy 'Multiple tags detected' parser contract, exercising the PR #51 collision regression. Not evidence that current PM3 firmware emits this literal."
+  },
+  "original": {
+    "no_tag": [
+      {
+        "command": "hf 14a info",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf sea",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf sea",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf t55xx detect",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf em 4x05_info FFFFFFFF",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf felica reader",
+        "response": "No tag found.\nNikola.D: 0\n"
+      }
+    ],
+    "found": [
+      {
+        "command": "hf 14a info",
+        "response": "UID: 5E 5B CE 4C\nATQA: 00 04\nSAK: 08 [2]\nMIFARE Classic 1K\nPrng detection: weak\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf mf cgetblk 0",
+        "response": "Can't read block. error=-1\nNikola.D: -10\n"
+      }
+    ]
+  },
+  "iceman": {
+    "no_tag": [
+      {
+        "command": "hf 14a info",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf sea",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf sea",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf t55xx detect",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "lf em 4x05 info -p FFFFFFFF",
+        "response": "No tag found.\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf felica reader",
+        "response": "No tag found.\nNikola.D: 0\n"
+      }
+    ],
+    "found": [
+      {
+        "command": "hf 14a info",
+        "response": "[usb|script] pm3 --> hf 14a info\n\n[=] ---------- ISO14443-A Information ----------\n[+]  UID: 5E 5B CE 4C   ( ONUID, re-used )\n[+] ATQA: 00 04\n[+]  SAK: 08 [2]\n[+] Possible types:\n[+]    MIFARE Classic 1K\n[=]\n[=] Proprietary non iso14443-4 card found\n[=] RATS not supported\n[+] Prng detection..... weak\n\n\n\nNikola.D: 0\n"
+      },
+      {
+        "command": "hf mf cgetblk --blk 0",
+        "response": "[usb|script] pm3 --> hf mf cgetblk --blk 0\n[#] wupC1 error\n[!!] Can't read block. error=-1\n\nNikola.D: -10\n"
+      }
+    ]
+  }
+}

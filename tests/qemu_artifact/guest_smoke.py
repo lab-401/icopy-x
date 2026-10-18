@@ -15,6 +15,9 @@ import traceback
 app = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
 harness = Path(__file__).resolve()
+profile, variant = sys.argv[3:5] if len(sys.argv) == 5 else ('smoke', 'noflash')
+assert profile in ('smoke', 'critical') and variant in ('flash', 'noflash')
+harness_paths = {harness}
 sys.dont_write_bytecode = True
 rootfs = Path(os.environ['QEMU_LD_PREFIX']).resolve()
 stdlib = rootfs / 'usr' / 'local' / 'python-3.8.0' / 'lib'
@@ -63,6 +66,7 @@ assert 'mononoki' in [f.lower() for f in font.families(root)]
 face = font.Font(root, family='mononoki', size=12)
 assert face.actual('family').lower() == 'mononoki' and face.measure('Settings') > 0
 
+critical = None
 try:
     actstack.init(root)
     main = actstack.start_activity(actmain.MainActivity)
@@ -95,6 +99,14 @@ try:
     root.after(250, root.quit)
     root.mainloop()
     assert not errors, errors
+    if profile == 'critical':
+        sys.path.insert(0, str(harness.parent))
+        try:
+            import critical_flows
+        finally:
+            sys.path.pop(0)
+        harness_paths.update(harness.parent / name for name in ('critical_flows.py', 'strict_transport.py'))
+        critical = critical_flows.run(root, output, variant, errors)
 finally:
     root.destroy()
 assert not errors, errors
@@ -106,7 +118,7 @@ for name, module in list(sys.modules.items()):
     if not filename:
         continue
     path = Path(filename).resolve()
-    if path == harness:
+    if path in harness_paths:
         continue
     if app in path.parents:
         modules[name] = dict(relative_path=str(path.relative_to(app)),
@@ -121,5 +133,7 @@ result = dict(status='PASS', compiled_python_files=compiled, modules=modules,
               cases=['packaged imports', 'main menu renders', 'read-list navigation and teardown'],
               path_redirects={'config._CONF_PATH': config._CONF_PATH},
               hardware_mocks=[], boot_chain_executed=False)
+if critical is not None:
+    result.update(critical=critical, hardware_mocks=critical['substitutions'])
 (output / 'guest.json').write_text(json.dumps(result, indent=2) + '\n')
 print('PASS: packaged modules and real Tk navigation', flush=True)
