@@ -110,7 +110,8 @@ def main(argv=None):
         if args.profile == 'critical':
             report['critical_inputs_sha256'] = {
                 name: sha256(guest.parent / name) for name in
-                ('critical_flows.py', 'strict_transport.py', 'critical_cases.json', 'transcripts.json')}
+                ('critical_flows.py', 'strict_transport.py', 'ultralight_cases.py',
+                 'critical_cases.json', 'transcripts.json')}
             report['boundary'] = 'packaged ARM/Tk critical flows with scripted hardware boundaries; no RF, flashing or boot chain'
         extracted = output / 'app'
         files = extract_ipk(args.ipk, extracted, args.variant)

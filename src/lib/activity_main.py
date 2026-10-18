@@ -5625,7 +5625,7 @@ class AutoCopyActivity(ConsoleMixin, BaseActivity):
                 if success:
                     self._read_bundle = data.get('bundle', data.get('tag_info', ''))
                     self._read_data = data
-                    if data.get('force'):
+                    if data.get('force') or data.get('partial'):
                         self._showReadPartialSuccess()
                     else:
                         self._promptSwapCard()

@@ -4,7 +4,8 @@
     "factory_found": "Synthetic factory-format UID/SAK/ATQA/PRNG response. Expected command syntax follows the checked-in factory compatibility contract; not a new factory hardware capture.",
     "no_tag": "Synthetic finite six-command no-card pipeline based on scan.Scanner and leaf parser contracts. The transport completes every command but no parser should find a tag.",
     "collision": "Synthetic legacy 'Multiple tags detected' parser contract, exercising the PR #51 collision regression. Not evidence that current PM3 firmware emits this literal.",
-    "lf_read": "Synthetic EM410x scan/read responses following lfsearch, lfread and pm3_compat contracts. Factory uses EM TAG ID and 410x_read; Iceman uses EM 410x ID and 410x reader. No RF or hardware capture claim."
+    "lf_read": "Synthetic EM410x scan/read responses following lfsearch, lfread and pm3_compat contracts. Factory uses EM TAG ID and 410x_read; Iceman uses EM 410x ID and 410x reader. No RF or hardware capture claim.",
+    "mfu_read": "Iceman shape informed by 2026-10-18 physical USCUID-UL session; UID/payload synthetic. Factory responses synthetic. Both clients produce a 56-byte mfu_dump_t header; scripted binary fixtures simulate file output, not RF or PM3 execution."
   },
   "original": {
     "no_tag": [

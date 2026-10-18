@@ -38,6 +38,15 @@ def test_no_bundle_remains_idle(read_flow):
     read_flow.scanner.scan_all_asynchronous.assert_not_called()
 
 
+def test_partial_ultralight_is_not_presented_as_full_read(read_flow):
+    activity = reading(read_flow, {'found': True, 'type': 2, 'uid': '04112233445566'})
+    read_flow.read_result(activity, {'success': True, 'force': False, 'partial': True,
+                                     'bundle': '/mnt/upan/dump/mfu/partial.bin'})
+    assert activity.state == 'read_partial'
+    assert any('Partial data' in t for t in activity.getCanvas().get_all_text())
+    assert activity._read_bundle == '/mnt/upan/dump/mfu/partial.bin'
+
+
 @pytest.mark.parametrize('tag_type', [1, 8, 23, 24])
 def test_starts_correct_scanner(read_flow, tag_type):
     activity = start(read_flow, tag_type)

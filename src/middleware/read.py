@@ -63,17 +63,24 @@ except ImportError:
 # ---------------------------------------------------------------------------
 # Callback helpers (match .so API)
 # ---------------------------------------------------------------------------
-def callReadSuccess(listener, infos, bundle, is_force=False):
+# Internal dispatch result; partial data is distinct from forced MIFARE reads.
+READ_PARTIAL = 2
+
+
+def callReadSuccess(listener, infos, bundle, is_force=False, partial=False):
     if listener:
-        listener({'success': True, 'tag_info': infos, 'force': is_force, 'bundle': bundle})
+        result = {'success': True, 'tag_info': infos, 'force': is_force, 'bundle': bundle}
+        if partial:
+            result['partial'] = True
+        listener(result)
 
 def callReadFailed(listener, infos, ret):
     if listener:
         listener({'success': False, 'tag_info': infos, 'return': ret})
 
 def call_on_finish(ret, listener, infos, bundle, is_force=False):
-    if ret == 1 or ret == 0:
-        callReadSuccess(listener, infos, bundle, is_force)
+    if ret in (0, 1, READ_PARTIAL):
+        callReadSuccess(listener, infos, bundle, is_force, partial=ret == READ_PARTIAL)
     else:
         callReadFailed(listener, infos, ret)
 
@@ -149,7 +156,9 @@ def _read_ultralight(infos, listener):
     result = hfmfuread.read(infos)
     ret = result.get('return', -1)
     file_path = result.get('file', '')
-    return (0 if ret >= 0 else -1, file_path)
+    if ret < 0:
+        return (-1, '')
+    return (READ_PARTIAL if result.get('partial') else 0, file_path)
 
 def _read_lf(infos, listener):
     """LF 125kHz read."""

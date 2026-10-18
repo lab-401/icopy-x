@@ -42,6 +42,15 @@ def test_creation_starts_scan(read_flow):
     read_flow.scanner.scan_all_asynchronous.assert_called_once_with()
 
 
+def test_partial_ultralight_uses_partial_toast_and_preserves_bundle(read_flow):
+    activity = reading(read_flow, {'found': True, 'type': 2, 'uid': '04112233445566'})
+    read_flow.read_result(activity, {'success': True, 'force': False, 'partial': True,
+                                     'bundle': '/mnt/upan/dump/mfu/partial.bin'})
+    assert activity.state == 'place_card'
+    assert any('Partial data' in t for t in activity.getCanvas().get_all_text())
+    assert activity._read_bundle == '/mnt/upan/dump/mfu/partial.bin'
+
+
 def test_scan_waits_for_animation_and_delivers_cache_to_reader(read_flow):
     import scan
     activity = start(read_flow)

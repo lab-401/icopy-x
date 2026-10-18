@@ -1,6 +1,6 @@
 # Critical ARM/Tk flows
 
-`critical-v3` is a small package acceptance profile intended for PR CI and
+`critical-v4` is a small package acceptance profile intended for PR CI and
 release-candidate validation. Run it for **both** flash and no-flash IPKs using
 the same entry point as the [package smoke test](QEMU_TESTS.md):
 
@@ -30,6 +30,11 @@ checks, then runs the ordered inventory in
 | Reader cancellation | PWR exits during a held LF read response; after worker completion, a fresh activity reads successfully |
 | Reader failure and retry | An LF reply without tag data saves no dump and offers rescan; the next read succeeds |
 | Reader cancellation with overlap | PWR returns while the old response is held; re-entry waits without blocking Tk or replacing the socket, then reads successfully |
+| Ultralight full read | Real Reader validates the simulated client file, UID, header and page count before full success |
+| Ultralight partial read | Valid partial data is retained and visibly identified as partial |
+| Ultralight missing/empty/truncated file | Three cases reject invalid output despite plausible response text and clear the stale write path |
+| Ultralight empty response | A completed command without data or a file displays read failure |
+| Auto Copy partial Ultralight | The real callback carries partial status to Auto Copy while preserving its path-shaped write bundle |
 
 ## What executes and what is substituted
 
@@ -51,6 +56,11 @@ uses distinct socket buffers and rejects premature close or overlapping
 commands across connections. Unexpected serial opens,
 restarts and process execution fail.
 The decoder test substitutes an empty port inventory only.
+
+The seven `mfu_*` cases execute the packaged Ultralight reader and simulate the
+client-created binary only after the exact dump command matches. Both firmware
+profiles use the verified 56-byte header layout. See [ULTRALIGHT_DUMPS.md](ULTRALIGHT_DUMPS.md)
+for provenance, capacity/partial rules and the physical failure that remains open.
 
 The successful Iceman response comes from the repository's existing captured
 response fixture. Factory-format success, no-card replies and the legacy

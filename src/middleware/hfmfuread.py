@@ -30,6 +30,8 @@ Ground truth:
 """
 
 import os
+import re
+import stat
 
 try:
     import executor
@@ -72,76 +74,75 @@ def createFileNamePreByType(typ):
     return _TYPE_PREFIX.get(typ, 'Unknow')
 
 
+# Both shipped clients write mfu_dump_t, not raw page-only dumps. See
+# docs/ULTRALIGHT_DUMPS.md for source references and the factory display bug.
+_HEADER_BYTES = 56
+_MAX_DUMP_BYTES = _HEADER_BYTES + 256 * 4
+_FULL_PAGES = {2: (16,), 3: (48,), 4: (20, 41), 5: (45,), 6: (135,), 7: (231,)}
+
+
+def _validate_dump(path, infos, partial):
+    """Validate a newly generated binary; never rewrite or pad its contents."""
+    try:
+        if not stat.S_ISREG(os.stat(path, follow_symlinks=False).st_mode):
+            return None
+        with open(path, 'rb') as stream:
+            data = stream.read(_MAX_DUMP_BYTES + 1)
+    except OSError:
+        return None
+    # Pages 0 and 1 are required to bind the saved UID to the scanned card.
+    if not _HEADER_BYTES + 8 <= len(data) <= _MAX_DUMP_BYTES:
+        return None
+    pages = data[11] + 1
+    if len(data) != _HEADER_BYTES + pages * 4:
+        return None
+    uid = (data[56:59] + data[60:64]).hex().upper()
+    if uid != infos['uid'].upper():
+        return None
+    expected = _FULL_PAGES[infos['type']]
+    if infos['type'] == 4:
+        # GET_VERSION storage byte distinguishes the two supported EV1 sizes.
+        # Zero/unknown versions occur on compatible cards; retain both sizes.
+        expected = {0x0b: (20,), 0x0e: (41,)}.get(data[6], expected)
+    if pages > max(expected):
+        return None
+    return dict(partial=bool(partial or pages not in expected), pages=pages)
+
+
 def read(infos):
-    """Read MIFARE Ultralight/NTAG tag.
+    """Save a verified Ultralight/NTAG dump, explicitly identifying partial data.
 
-    PM3: ``hf mfu dump -f {path}``  (timeout=30000)
-
-    Iceman-native success signals (this device's build, per iceman_output.
-    json `hf mfu dump f` samples 1-3):
-      - full dump: ``saved N bytes to binary file <path>`` + JSON sibling
-        (cmdhfmfu.c:3766 via pm3_save_dump) — verified by .bin existence
-        on host filesystem rather than text parsing.
-      - partial dump: ``Partial dump created. (%d of %d blocks)``
-        (/tmp/rrg-pm3/client/src/cmdhfmfu.c:3769). Emission IDENTICAL on
-        legacy (matrix section `hf mfu dump`, divergence_matrix.md L900).
-
-    Iceman-native failure signal: ``Can't select card.`` from the 14443a
-    reader helper at /tmp/rrg-pm3/client/src/cmdhf14a.c:1817
-    (PrintAndLogEx WARNING). On iceman HEAD the `ul_select()` path
-    (cmdhfmfu.c:386-409) logs only at DEBUG so this keyword is dormant
-    for HEAD; however the device's installed iceman build still routes
-    a select-failure through the 14a reader helper in some error paths.
-    Kept as a defensive check — TODO(Phase 4) audit: if the device's
-    older iceman truly never emits this for `hf mfu dump`, drop the
-    keyword check and rely solely on .bin existence.
-
-    Returns: ``{'return': 0, 'file': path}`` on success, ``{'return': -1,
-    'file': ''}`` on failure.
+    A completed command or a partial-dump message alone is not a saved read.
+    Invalid output stays on disk for diagnosis but is never cached for writing.
     """
     global FILE_MFU_READ
-
+    FILE_MFU_READ = None
+    failed = {'return': -1, 'file': ''}
     typ = infos.get('type', 2)
-    uid = infos.get('uid', 'UNKNOWN')
+    uid = infos.get('uid', '')
+    if typ not in _FULL_PAGES or not isinstance(uid, str) or not re.fullmatch(r'[0-9a-fA-F]{14}', uid):
+        return failed
+    infos = dict(infos, type=typ)
     prefix = createFileNamePreByType(typ)
-
     dump_dir = appfiles.PATH_DUMP_MFU if appfiles else '/mnt/upan/dump/mfu/'
     try:
         os.makedirs(dump_dir, exist_ok=True)
     except OSError:
-        pass
+        return failed
 
-    n = 1
-    while True:
-        path = os.path.join(dump_dir, '{}_{}'.format(prefix, uid))
-        full = '{}_{}'.format(path, n)
-        if not os.path.exists(full + '.bin'):
+    # Never reuse stale output, including orphaned JSON files or broken links.
+    for n in range(1, 1000):
+        file_path = os.path.join(dump_dir, '{}_{}_{}'.format(prefix, uid, n))
+        if not any(os.path.lexists(file_path + ext) for ext in ('.bin', '.json')):
             break
-        n += 1
-        if n > 999:
-            break
-
-    file_path = '{}_{}'.format(path, n)
-    cmd = 'hf mfu dump -f {}'.format(file_path)
-    ret = executor.startPM3Task(cmd, 30000)
-
-    if ret == -1:
-        return {'return': -1, 'file': ''}
-
-    # Iceman / legacy 14a-select failure — cmdhf14a.c:1817. Emission is
-    # identical on both firmwares after the executor strips the `[!]`
-    # prefix; see matrix `hf mfu dump` L900.
-    if executor.hasKeyword("Can't select card"):
-        return {'return': -1, 'file': ''}
-
+    else:
+        return failed
+    ret = executor.startPM3Task('hf mfu dump -f {}'.format(file_path), 30000)
+    if ret == -1 or executor.hasKeyword("Can't select card"):
+        return failed
     bin_path = file_path + '.bin'
-    if os.path.exists(bin_path):
-        FILE_MFU_READ = bin_path
-        return {'return': 0, 'file': bin_path}
-
-    # Iceman-native partial-dump emission (cmdhfmfu.c:3769).
-    if executor.hasKeyword('Partial dump created'):
-        FILE_MFU_READ = bin_path
-        return {'return': 0, 'file': bin_path}
-
-    return {'return': -1, 'file': ''}
+    details = _validate_dump(bin_path, infos, executor.hasKeyword('Partial dump created'))
+    if details is None:
+        return failed
+    FILE_MFU_READ = bin_path
+    return dict(details, **{'return': 0, 'file': bin_path})

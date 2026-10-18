@@ -16,6 +16,7 @@ from unittest.mock import patch
 import uuid  # noqa: F401 - initialize stdlib's real `uname -p` probe before process guards
 
 from strict_transport import Transcript, ConnectionTranscript
+import ultralight_cases
 
 
 PROFILE = json.loads(Path(__file__).with_name('critical_cases.json').read_text())
@@ -32,6 +33,7 @@ def run(root, output, variant, callback_errors):
     import executor
     import glob
     import hmi_driver
+    import hfmfuread
     import ics_decoder
     import os
     import pm3_compat
@@ -50,6 +52,7 @@ def run(root, output, variant, callback_errors):
     report = dict(profile=PROFILE['version'], firmware_profile=firmware,
                   status='INCOMPLETE', cases=rows, fixture_provenance=fixtures['provenance'],
                   substitutions=['executor TCP socket: exact finite PM3 transcript',
+                                 'MFU client-produced binary: explicit full/partial/invalid fixture',
                                  'pm3_compat._current_version: declared firmware profile',
                                  'read.Reader: dispatch observer in scan cases; real in reader_* cases',
                                  'HMI abort: release the held transport response',
@@ -108,11 +111,14 @@ def run(root, output, variant, callback_errors):
     save()
     for row in rows:
         name = row['id']
-        real_reader = name.startswith('reader_')
+        mfu = name.startswith('mfu_')
+        real_reader = name.startswith('reader_') or mfu
         row['reader_mode'] = 'real' if real_reader else 'dispatch_observer'
         before_threads = set(threading.enumerate())
         failures, reads, aborts, scan_results = [], [], [], []
-        if real_reader:
+        if mfu:
+            steps = []
+        elif real_reader:
             steps = copy.deepcopy(fixtures[firmware]['lf_read'])
             if name in ('reader_cancel_reenter', 'reader_cancel_overlap'):
                 steps[-1]['blocked'] = True
@@ -141,6 +147,10 @@ def run(root, output, variant, callback_errors):
             index = -1 if name == 'cancel_inflight_found' else 0
             steps[index]['blocked'] = True
         transport = (ConnectionTranscript if name == 'reader_cancel_overlap' else Transcript)(steps)
+        if mfu:
+            mfu_dir = Path(appfiles.PATH_DUMP) / 'mfu' / variant / name
+            transport, partial = ultralight_cases.prepare(name, firmware, mfu_dir)
+            assert not mfu_dir.exists(), 'MFU cases require fresh output directories'
         started = time.monotonic()
         error = None
 
@@ -177,6 +187,9 @@ def run(root, output, variant, callback_errors):
             return original_finish(activity, result, scan_token=scan_token)
 
         with ExitStack() as stack:
+            if mfu:
+                stack.enter_context(patch.object(appfiles, 'PATH_DUMP_MFU', str(mfu_dir)))
+                stack.enter_context(patch.object(hfmfuread, 'FILE_MFU_READ', 'stale-previous-read.bin'))
             for module, attribute, value in (
                 (executor, '_socket_instance', None),
                 (executor, '_pipeline_needs_cleanup', False),
@@ -222,6 +235,26 @@ def run(root, output, variant, callback_errors):
                     assert actstack.get_current_activity() is activity
                     assert activity._state == activity.STATE_HOME
                     assert 'Read Credential' in visible_text(activity)
+                elif mfu:
+                    is_auto = name == 'mfu_auto_partial'
+                    activity = (actstack.start_activity(activity_main.AutoCopyActivity) if is_auto else
+                                actstack.start_activity(activity_read.ReadActivity, {'tag_type': 2}))
+                    accepted = name in ('mfu_read_success', 'mfu_read_partial', 'mfu_auto_partial')
+                    expected = ('place_card' if is_auto else ('read_partial' if partial else 'read_success')) if accepted else 'read_failed'
+                    pump(lambda: activity.state == expected)
+                    message = ('Partial data saved' if partial else 'File saved') if accepted else 'Read Failed!'
+                    pump(lambda: message in visible_text(activity))
+                    if accepted:
+                        assert activity._read_bundle == str(transport.path)
+                        assert hfmfuread.FILE_MFU_READ == str(transport.path)
+                        assert transport.path.read_bytes() == ultralight_cases.binary(8 if partial else 16)
+                    else:
+                        assert activity._read_bundle is None and hfmfuread.FILE_MFU_READ is None
+                        assert 'File saved' not in visible_text(activity)
+                    assert set(mfu_dir.glob('*.bin')) == ({transport.path} if transport.data is not None else set())
+                    row.update(read_state=activity.state, partial=partial,
+                               dump_bytes=len(transport.data) if transport.data is not None else None,
+                               accepted_for_write=accepted)
                 elif real_reader:
                     dump_dir = Path(appfiles.PATH_DUMP) / 'em410x'
                     before_dumps = set(dump_dir.glob('*.txt'))

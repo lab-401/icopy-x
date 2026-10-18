@@ -758,7 +758,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                 # awid_write_trace line 11: bundle is read result dict
                 # full_read_write_trace line 49: bundle is dump file path
                 self._read_bundle = data.get('bundle', data.get('tag_info', ''))
-                if data.get('force'):
+                if data.get('force') or data.get('partial'):
                     self._showReadSuccess(partial=True)
                 else:
                     self._showReadSuccess()
