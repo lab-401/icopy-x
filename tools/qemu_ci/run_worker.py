@@ -14,6 +14,7 @@ import signal
 import stat
 import subprocess
 import sys
+import time
 import uuid
 
 
@@ -123,6 +124,11 @@ def main(argv=None):
     report = dict(status='INCOMPLETE', artifact_sha256=package_hashes,
                   runtime_image_sha256=runtime_info['source_image_sha256'],
                   qemu_sha256=runtime_info['qemu_sha256'], controller_sha256=sha256(Path(__file__)))
+    pin = json.loads(Path(__file__).with_name('runtime_pin.json').read_text())
+    if any(runtime_info[key] != pin[key] for key in ('source_image_sha256', 'qemu_sha256')):
+        raise ValueError('Unexpected runtime identity')
+    report['runtime_archive_sha256'] = pin['archive_sha256']
+    started = time.monotonic()
     process = None
     unit = 'icopy-qemu-' + uuid.uuid4().hex + '.scope'
     try:
@@ -141,6 +147,9 @@ def main(argv=None):
             parsed = json.loads(data)
             if relative != 'sandbox.json' and parsed.get('status') != 'PASS':
                 raise RuntimeError('Missing successful report: ' + relative)
+            if relative == 'results/runtime.json' and (not parsed['python'].startswith(pin['python'] + ' ') or
+                    parsed['tcl'] != pin['tcl'] or parsed['tk'] != pin['tk'] or parsed['pointer_bits'] != 32):
+                raise RuntimeError('Unexpected ARM interpreter/Tcl/Tk versions')
         expected = json.loads((harness / 'tests/qemu_artifact/critical_cases.json').read_text())
         for variant in ('flash', 'noflash'):
             relative = 'results/artifact-' + variant + '-critical/report.json'
@@ -171,6 +180,11 @@ def main(argv=None):
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait(timeout=5)
         # Copy a bounded allowlist only, including diagnostics on failed guests.
+        for relative in ('sandbox.json', 'job.json', 'results/runtime.json', 'results/xvfb.log'):
+            try:
+                (evidence / relative.replace('/', '--')).write_bytes(read_guest_file(work, relative))
+            except (OSError, ValueError):
+                pass
         for variant in ('flash', 'noflash'):
             for name in ('guest.log', 'report.json', 'critical.json'):
                 try:
@@ -178,6 +192,7 @@ def main(argv=None):
                     (evidence / (variant + '-' + name)).write_bytes(data)
                 except (OSError, ValueError):
                     pass
+        report['seconds'] = round(time.monotonic() - started, 3)
         (evidence / 'summary.json').write_text(json.dumps(report, indent=2) + '\n')
         for path in evidence.iterdir():
             path.chmod(0o644)
