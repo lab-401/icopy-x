@@ -106,7 +106,7 @@ def run(root, output, variant, callback_errors):
     for row in rows:
         name = row['id']
         before_threads = set(threading.enumerate())
-        failures, reads, aborts = [], [], []
+        failures, reads, aborts, scan_results = [], [], [], []
         if name == 'no_tag_rescan':
             steps = no_tag_steps() * 2
         elif name == 'collision_refuses_reader':
@@ -154,6 +154,11 @@ def run(root, output, variant, callback_errors):
 
         socket_api = SimpleNamespace(socket=socket_factory, AF_INET=socket.AF_INET,
                                      SOCK_STREAM=socket.SOCK_STREAM, timeout=socket.timeout)
+        original_finish = activity_read.ReadActivity.onScanFinish
+
+        def observe_finish(activity, result, scan_token=None):
+            scan_results.append(copy.deepcopy(result))
+            return original_finish(activity, result, scan_token=scan_token)
 
         with ExitStack() as stack:
             for module, attribute, value in (
@@ -165,6 +170,7 @@ def run(root, output, variant, callback_errors):
                 (executor, 'socket', socket_api),
                 (pm3_compat, '_current_version', firmware),
                 (read, 'Reader', ReaderObserver),
+                (activity_read.ReadActivity, 'onScanFinish', observe_finish),
                 (hmi_driver, 'presspm3', abort),
                 (hmi_driver, 'restartpm3', forbidden),
                 (subprocess, 'Popen', forbidden),
@@ -205,6 +211,8 @@ def run(root, output, variant, callback_errors):
                         pump(lambda: not (set(threading.enumerate()) - before_threads))
                         drain()
                         assert reads == [] and aborts == ['presspm3'], (reads, aborts)
+                        assert len(scan_results) == 1, scan_results
+                        assert scan_results[0]['found'] is (name == 'cancel_inflight_found'), scan_results
                         if name == 'exit_reenter':
                             activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 1})
                             pump(lambda: activity.state == 'no_tag')
@@ -254,6 +262,7 @@ def run(root, output, variant, callback_errors):
                         error = cleanup_error
                 row.update(status='FAIL' if error else 'PASS', commands=transport.commands,
                            connections=transport.connections, reader_dispatches=reads,
+                           scan_results=scan_results,
                            transport_errors=transport.violations, forbidden_operations=failures,
                            seconds=round(time.monotonic() - started, 3))
                 if error is not None:
