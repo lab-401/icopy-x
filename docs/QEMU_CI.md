@@ -5,6 +5,12 @@ both IPKs from one completed **Build iCopy-X IPK** run. The build workflow stays
 unchanged. The QEMU workflow runs afterwards on a fresh GitHub-hosted Ubuntu
 24.04 VM and publishes the commit status **QEMU critical flows**.
 
+The main-branch rule requires that status and all three existing host-test jobs
+(Linux Python 3.8/3.12 and Windows Python 3.8), with GitHub Actions as their
+expected source. Branches must be up to date before merging. Administrators
+retain an override for deliberate maintainer decisions; an override does not
+turn missing or failed validation into passing evidence.
+
 For PR builds, the controller checks the current PR head before downloading and
 before reporting. It resolves missing fork associations through GitHub's commit
 API. A moved or closed PR cannot receive a fresh passing status from an old run.
