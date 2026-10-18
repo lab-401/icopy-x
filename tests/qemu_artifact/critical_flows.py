@@ -202,6 +202,11 @@ def run(root, output, variant, callback_errors):
                     activity.callKeyEvent(KEY_OK)
                     pump(lambda: 'No decoder found!' in texts(activity))
                     assert 'Check USB connection' in texts(activity)
+                    activity.callKeyEvent(KEY_PWR)
+                    root.update()
+                    assert actstack.get_current_activity() is activity
+                    assert activity._state == activity.STATE_HOME
+                    assert 'Read Credential' in visible_text(activity)
                 else:
                     activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 1})
                     if name.startswith('cancel_') or name == 'exit_reenter':
