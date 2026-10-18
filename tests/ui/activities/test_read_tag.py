@@ -191,4 +191,4 @@ def test_power_exits_including_busy_and_toast_states(read_flow, phase):
     activity.callKeyEvent(KEY_PWR)
     assert actstack.get_current_activity() is None
     if phase in ('scanning', 'reading'):
-        read_flow.stop_pm3.assert_called_once_with()
+        read_flow.stop_pm3.assert_called_once_with(wait=False)

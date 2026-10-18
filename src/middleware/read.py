@@ -293,13 +293,12 @@ class Reader:
             try:
                 if cancelled.is_set():
                     return
-                # Fresh rework budget for this read.
-                try:
+                with executor.pm3_operation(cancelled):
                     executor.resetReworkCount()
-                except (AttributeError, NameError):
-                    pass
-                ret, bundle = _dispatch_read(tag_type, infos, listener)
-                call_on_finish(ret, listener, infos, bundle, is_force)
+                    ret, bundle = _dispatch_read(tag_type, infos, listener)
+                    call_on_finish(ret, listener, infos, bundle, is_force)
+            except executor.PM3OperationCancelled:
+                pass
             except Exception:
                 tb = traceback.format_exc()
                 if not cancelled.is_set() and exception_callback:
@@ -325,10 +324,11 @@ class Reader:
             return self._reading
 
     def stop(self):
-        """Suppress future callbacks; the caller still owns the PM3 abort.
+        """Cancel this protocol; the caller still owns the hardware abort.
 
-        This cannot interrupt an in-flight protocol function. An activity must
-        also invalidate callbacks already delivered or queued before stop().
+        The worker unwinds at the next executor boundary and keeps ownership
+        until then. Already written files are not rolled back. An activity
+        must also invalidate callbacks already delivered or queued before stop.
         """
         with self._state_lock:
             self._stop_label = True

@@ -15,7 +15,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import uuid  # noqa: F401 - initialize stdlib's real `uname -p` probe before process guards
 
-from strict_transport import Transcript
+from strict_transport import Transcript, ConnectionTranscript
 
 
 PROFILE = json.loads(Path(__file__).with_name('critical_cases.json').read_text())
@@ -114,7 +114,7 @@ def run(root, output, variant, callback_errors):
         failures, reads, aborts, scan_results = [], [], [], []
         if real_reader:
             steps = copy.deepcopy(fixtures[firmware]['lf_read'])
-            if name == 'reader_cancel_reenter':
+            if name in ('reader_cancel_reenter', 'reader_cancel_overlap'):
                 steps[-1]['blocked'] = True
                 steps += copy.deepcopy(fixtures[firmware]['lf_read'])
             elif name == 'reader_queued_exit':
@@ -140,7 +140,7 @@ def run(root, output, variant, callback_errors):
             # timeout before parsing, duplicating the late-empty case instead.
             index = -1 if name == 'cancel_inflight_found' else 0
             steps[index]['blocked'] = True
-        transport = Transcript(steps)
+        transport = (ConnectionTranscript if name == 'reader_cancel_overlap' else Transcript)(steps)
         started = time.monotonic()
         error = None
 
@@ -160,12 +160,13 @@ def run(root, output, variant, callback_errors):
 
         def abort():
             aborts.append('presspm3')
-            transport.release.set()
+            if name != 'reader_cancel_overlap':
+                transport.release.set()
 
         def socket_factory(family, kind):
             if family != socket.AF_INET or kind != socket.SOCK_STREAM:
                 forbidden('unexpected socket family/type', family, kind)
-            return transport
+            return transport.new_socket() if name == 'reader_cancel_overlap' else transport
 
         socket_api = SimpleNamespace(socket=socket_factory, AF_INET=socket.AF_INET,
                                      SOCK_STREAM=socket.SOCK_STREAM, timeout=socket.timeout)
@@ -225,7 +226,31 @@ def run(root, output, variant, callback_errors):
                     dump_dir = Path(appfiles.PATH_DUMP) / 'em410x'
                     before_dumps = set(dump_dir.glob('*.txt'))
                     activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 8})
-                    if name in ('reader_cancel_reenter', 'reader_queued_exit'):
+                    if name == 'reader_cancel_overlap':
+                        pump(transport.entered.is_set)
+                        assert activity.state == 'reading'
+                        old_activity, old_reader = activity, activity._reader
+                        sent, connected = len(transport.commands), len(transport.connections)
+                        activity.callKeyEvent(KEY_PWR)
+                        assert old_activity.life.destroyed and actstack.get_current_activity() is main
+                        assert old_reader._thread.is_alive(), 'Test must hold the old worker across re-entry'
+                        activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 8})
+                        # The real Scanner reserves its run before its ownership
+                        # wait; drain runs actual Tk callbacks while it waits.
+                        pump(lambda: activity._scanner._scan_running)
+                        drain()
+                        assert activity.state == 'scanning'
+                        assert len(transport.commands) == sent, 'New scan stole the old response'
+                        assert len(transport.connections) == connected, 'New scan replaced the owned socket'
+                        assert not transport.violations, transport.violations
+                        assert not set(dump_dir.glob('*.txt')) - before_dumps
+                        transport.release.set()
+                        pump(lambda: not old_reader.is_reading())
+                        assert old_activity._read_bundle is None
+                        assert aborts == ['presspm3']
+                        row['overlap_held_commands'] = sent
+                        row['overlap_held_connections'] = connected
+                    elif name in ('reader_cancel_reenter', 'reader_queued_exit'):
                         pump(transport.entered.is_set)
                         assert activity.state == 'reading'
                         reader = activity._reader
@@ -282,8 +307,7 @@ def run(root, output, variant, callback_errors):
                         pump(lambda: not (set(threading.enumerate()) - before_threads))
                         drain()
                         assert reads == [] and aborts == ['presspm3'], (reads, aborts)
-                        assert len(scan_results) == 1, scan_results
-                        assert scan_results[0]['found'] is (name == 'cancel_inflight_found'), scan_results
+                        assert scan_results == [], 'Cancelled Scanner delivered a result: ' + repr(scan_results)
                         if name == 'exit_reenter':
                             activity = actstack.start_activity(activity_read.ReadActivity, {'tag_type': 1})
                             pump(lambda: activity.state == 'no_tag')

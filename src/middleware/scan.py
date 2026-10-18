@@ -49,6 +49,11 @@ Module-level state:
 import threading
 import traceback
 
+try:
+    import executor
+except ImportError:
+    from . import executor
+
 # ---------------------------------------------------------------------------
 # Constants (exactly as extracted from scan.so __pyx_int_neg_*)
 # ---------------------------------------------------------------------------
@@ -679,6 +684,7 @@ class Scanner:
         self._scan_lock = threading.RLock()
         self._scan_running = False
         self._stop_label = False
+        self._cancelled = threading.Event()
 
     # -- Properties (match the .so property descriptors) --
 
@@ -763,6 +769,40 @@ class Scanner:
     # -- Public scan methods --
 
     def scan_all_synchronous(self):
+        self._start_scan(self._scan_all)
+
+    def scan_type_synchronous(self, typ):
+        self._start_scan(self._scan_type, (typ,))
+
+    def _start_scan(self, method, args=(), asynchronous=False):
+        # Reserve this run before starting a thread, so an immediate stop is
+        # not lost when the worker eventually enters. Different Scanner and
+        # Reader instances share executor ownership, not this instance lock.
+        with self._scan_lock:
+            self._raise_on_multi_scan()
+            self._set_run_label(True)
+            cancelled = self._cancelled = threading.Event()
+
+        def run():
+            try:
+                with executor.pm3_operation(cancelled):
+                    executor.resetReworkCount()
+                    method(*args)
+            except executor.PM3OperationCancelled:
+                pass
+            finally:
+                self._set_run_label(False)
+
+        if not asynchronous:
+            run()
+            return
+        try:
+            threading.Thread(target=run, daemon=True).start()
+        except Exception:
+            self._set_run_label(False)
+            raise
+
+    def _scan_all(self):
         """Run a full scan (HF + LF), blocking.
 
         Pipeline order (spec section 6.5, verified from original_current_ui
@@ -780,15 +820,6 @@ class Scanner:
         Between each step, _is_can_next is checked.
         Results are delivered via call_resulted callback.
         """
-        self._raise_on_multi_scan()
-        self._set_run_label(True)
-        # Fresh rework budget for this scan — previous flows should not
-        # pre-brick this one.
-        try:
-            import executor as _exec
-            _exec.resetReworkCount()
-        except (ImportError, AttributeError):
-            pass
         try:
             result = None
 
@@ -855,6 +886,7 @@ class Scanner:
                                 r = scan_felica()
                                 result = r
 
+            executor._check_operation()
             # Cache result if enabled and tag found
             if INFOS_CACHE_ENABLE and result and result.get('found'):
                 setScanCache(result)
@@ -867,31 +899,20 @@ class Scanner:
 
         except Exception:
             self._call_exception_method()
-        finally:
-            self._set_stop_label(True)
-            self._set_run_label(False)
 
     def scan_all_asynchronous(self):
         """Run a full scan (HF + LF) in a background daemon thread.
 
         Returns immediately. Results delivered via callbacks.
         """
-        t = threading.Thread(target=self.scan_all_synchronous, daemon=True)
-        t.start()
+        self._start_scan(self._scan_all, asynchronous=True)
 
-    def scan_type_synchronous(self, typ):
+    def _scan_type(self, typ):
         """Scan for a specific tag type, blocking.
 
         Dispatches to the appropriate scan function based on typ.
         Results are delivered via call_resulted callback.
         """
-        self._raise_on_multi_scan()
-        self._set_run_label(True)
-        try:
-            import executor as _exec
-            _exec.resetReworkCount()
-        except (ImportError, AttributeError):
-            pass
         try:
             import tagtypes
             result = None
@@ -973,6 +994,7 @@ class Scanner:
             else:
                 result = None  # Unknown type
 
+            executor._check_operation()
             # Type match check
             if result and result.get('found') and result.get('type', -1) != typ:
                 result = createTagTypeWrong(result.get('progress', 0))
@@ -989,18 +1011,16 @@ class Scanner:
 
         except Exception:
             self._call_exception_method()
-        finally:
-            self._set_stop_label(True)
-            self._set_run_label(False)
 
     def scan_type_asynchronous(self, typ):
         """Scan for a specific tag type in a background daemon thread.
 
         Returns immediately. Results delivered via callbacks.
         """
-        t = threading.Thread(target=self.scan_type_synchronous, args=(typ,), daemon=True)
-        t.start()
+        self._start_scan(self._scan_type, (typ,), asynchronous=True)
 
     def scan_stop(self):
-        """Request scan stop. Sets _stop_label=True, checked by _is_can_next."""
-        self._stop_label = True
+        """Cancel this run, including a worker waiting for another PM3 owner."""
+        with self._scan_lock:
+            self._stop_label = True
+            self._cancelled.set()

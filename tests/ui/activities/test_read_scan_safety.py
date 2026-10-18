@@ -49,7 +49,7 @@ def test_power_cancels_scanner_using_its_public_api(read_flow):
     activity = start_read()
     activity.callKeyEvent(KEY_PWR)
     read_flow.scanner.scan_stop.assert_called_once_with()
-    read_flow.stop_pm3.assert_called_once_with()
+    read_flow.stop_pm3.assert_called_once_with(wait=False)
     assert activity._scanner is None
     assert actstack.get_current_activity() is None
 
@@ -107,13 +107,13 @@ def test_real_scanner_callbacks_after_power_exit_are_ignored(read_flow, monkeypa
 
     monkeypatch.setattr(scan, 'scan_14a', finish_in_flight_command)
     read_flow.workers[0].run()
-    # The real Scanner stops the next stage but still delivers a final callback.
+    # Cancellation now unwinds before caching/delivering the late result.
     lf_scan.assert_not_called()
     if isinstance(result, Exception):
         late_exception.assert_called_once()
     else:
-        late_progress.assert_called_once_with((100, 100))
-        late_result.assert_called_once_with(result)
+        late_progress.assert_not_called()
+        late_result.assert_not_called()
     canvas.advance(250)
     assert canvas.get_all_text() == []
     read_flow.reader.start.assert_not_called()
@@ -128,7 +128,7 @@ def test_result_during_hardware_abort_cannot_start_reader(read_flow, monkeypatch
     activity.getCanvas().advance(250)
     stop_counts_at_abort = []
 
-    def abort():
+    def abort(**kwargs):
         stop_counts_at_abort.append(read_flow.scanner.scan_stop.call_count)
         read_flow.scanner.call_resulted(HF.copy())
 

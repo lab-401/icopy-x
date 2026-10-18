@@ -1,6 +1,6 @@
 # Critical ARM/Tk flows
 
-`critical-v2` is a small package acceptance profile intended for PR CI and
+`critical-v3` is a small package acceptance profile intended for PR CI and
 release-candidate validation. Run it for **both** flash and no-flash IPKs using
 the same entry point as the [package smoke test](QEMU_TESTS.md):
 
@@ -29,6 +29,7 @@ checks, then runs the ordered inventory in
 | Queued Reader completion | The real worker finishes while Tk is paused; PWR discards its queued completion |
 | Reader cancellation | PWR exits during a held LF read response; after worker completion, a fresh activity reads successfully |
 | Reader failure and retry | An LF reply without tag data saves no dump and offers rescan; the next read succeeds |
+| Reader cancellation with overlap | PWR returns while the old response is held; re-entry waits without blocking Tk or replacing the socket, then reads successfully |
 
 ## What executes and what is substituted
 
@@ -41,10 +42,13 @@ The TCP socket is a finite transcript: every wire command must match exactly,
 every response must be consumed, and every expected command must occur. A
 transport mismatch remains a failure even if application code catches it.
 The declared firmware profile is supplied to the translator. The original scan
-cases observe Reader dispatch. The four `reader_*` cases run the packaged
+cases observe Reader dispatch. The five `reader_*` cases run the packaged
 Reader, EM410x scan/read parsers, dump saving and ReadActivity through real
 threads and Tk callbacks. Dump files go into the disposable worker's `/mnt/upan`.
-Audio is silent; HMI abort releases the held response. Unexpected serial opens,
+Audio is silent; HMI abort releases the held response except in the overlap
+case, where the harness deliberately holds it across exit/re-entry. That case
+uses distinct socket buffers and rejects premature close or overlapping
+commands across connections. Unexpected serial opens,
 restarts and process execution fail.
 The decoder test substitutes an empty port inventory only.
 
@@ -57,21 +61,32 @@ return code; it does not establish that current firmware emits that literal.
 
 These checks do **not** validate RF, actual card reads/writes, the PM3 executable,
 firmware detection/flashing, installed startup, the USB stack, or an attached
-ICS Decoder. Exit/re-entry waits for worker completion; it does not prove safe
-concurrent PM3 ownership between old and new activities. Those boundaries need
-focused tests and, where relevant, physical acceptance.
+ICS Decoder. The overlap case establishes scan/read ownership with a held,
+complete reply, not remote-daemon recovery after a truncated reply or timeout.
+Those boundaries need focused tests and, where relevant, physical acceptance.
 
-Reader cancellation coverage is deliberately narrow. `Reader.stop()` suppresses
-future callbacks and skips protocol work if the worker has not entered it yet;
-it does not interrupt a protocol function already running. ReadActivity invalidates
-callbacks before requesting the existing hardware abort, drops queued callbacks
-from old reads, and drains current callbacks on Tk without worker calls to Tk.
+`Reader` and `Scanner` hold executor ownership across protocol commands and
+parsing of the shared response cache. Cancellation unwinds at executor boundaries,
+including after the in-flight call returns, without retrying or starting the
+next protocol command. Cancelled workers waiting for ownership can exit without
+waiting for the active owner. ReadActivity invalidates callbacks before requesting
+hardware abort, requests executor cancellation without waiting on Tk, drops queued
+callbacks from old reads, and drains current callbacks on Tk without worker calls to Tk.
+An already-running receive retains ownership until it returns; software cancellation
+alone cannot guarantee a prompt hardware abort. Files already saved are not rolled back.
 Host tests additionally cover late success/failure/progress/exception callbacks,
 retry identity, exception classification, and the legacy completion poll.
 
-Still pending: cancellation between stages of a multi-command protocol, shared
-PM3 socket/cache ownership, reconnect after a partial response or timeout, and
-the separate Auto Copy activity's callback lifecycle. The legacy completion
+Host concurrency regressions also cover cancellation before the next protocol
+command, separate Readers parsing their own responses, Reader/Scanner overlap,
+cancelled waiters, stop before thread entry, and exception/listener cleanup.
+Public executor socket/reset/restart entry points serialize with these owners;
+legacy callers outside Scanner/Reader do not yet own entire multi-command
+protocols or their parsing gaps. This profile does not establish that broader guarantee.
+
+Still pending: reconnect after a partial response or timeout, ownership scopes for
+other multi-command operations, and the separate Auto Copy activity's callback
+lifecycle. The legacy completion
 fallback still infers success from progress when no result callback arrives;
 these tests do not establish that inference as proof of a valid card dump.
 The bound callback's `__self__` is preserved, but these packages execute Python

@@ -62,3 +62,40 @@ def test_reading_past_response_is_recorded_even_if_caught():
         wire.recv(1024)
     with pytest.raises(AssertionError):
         wire.verify()
+
+
+@pytest.mark.parametrize('violation', ['close', 'other_socket', 'closed_recv', 'closed_send'])
+def test_separate_connections_reject_ownership_violations(violation):
+    wire = transport.ConnectionTranscript([
+        dict(command='first', response='first\nNikola.D: 0\n'),
+        dict(command='second', response='second\nNikola.D: 0\n')])
+    first, second = wire.new_socket(), wire.new_socket()
+    first.sendall(b'Nikola.D.CMD = first\n')
+    if violation.startswith('closed_'):
+        first.recv(1024)
+        first.close()
+    with pytest.raises(AssertionError):
+        if violation == 'close':
+            first.close()
+        elif violation == 'other_socket':
+            second.sendall(b'Nikola.D.CMD = second\n')
+        elif violation == 'closed_recv':
+            first.recv(1024)
+        else:
+            first.sendall(b'Nikola.D.CMD = second\n')
+    with pytest.raises(AssertionError):
+        wire.verify()
+
+
+def test_separate_connections_transfer_only_after_consumption():
+    wire = transport.ConnectionTranscript([
+        dict(command='first', response='old\nNikola.D: 0\n'),
+        dict(command='second', response='new\nNikola.D: 0\n')])
+    first = wire.new_socket()
+    first.sendall(b'Nikola.D.CMD = first\n')
+    assert first.recv(1024).startswith(b'old')
+    first.close()
+    second = wire.new_socket()
+    second.sendall(b'Nikola.D.CMD = second\n')
+    assert second.recv(1024).startswith(b'new')
+    wire.verify()

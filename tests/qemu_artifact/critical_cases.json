@@ -1,5 +1,5 @@
 {
-  "version": "critical-v2",
+  "version": "critical-v3",
   "cases": {
     "no_tag_rescan": "Six-stage no-card scan completes; M2 starts one new scan and returns to no-tag.",
     "collision_refuses_reader": "A synthetic collision result displays the warning and never starts a Reader.",
@@ -12,6 +12,7 @@
     "reader_success": "Real scan, Reader, LF protocol/parser and dump saving reach read success with the expected identity.",
     "reader_queued_exit": "A real Reader finishes without waiting for Tk; PWR before UI delivery discards its queued completion.",
     "reader_cancel_reenter": "PWR during a real Reader's held response exits without a stale result; after worker completion, re-entry reads successfully.",
-    "reader_failure_retry": "A completed LF command with no tag data cannot report success or save a dump; rescan and a new Reader recover."
+    "reader_failure_retry": "A completed LF command with no tag data cannot report success or save a dump; rescan and a new Reader recover.",
+    "reader_cancel_overlap": "PWR returns while a Reader response remains held; immediate re-entry keeps Tk responsive and waits for old ownership, then scans/reads on fresh sockets without a cancelled dump."
   }
 }

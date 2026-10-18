@@ -305,7 +305,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
             return
 
         # PWR: always works, even during scanning/reading.
-        # Must abort any in-flight PM3 command before finishing.
+        # Request abort without waiting for a worker on the Tk thread.
         if key == KEY_PWR:
             # Invalidate callbacks before aborting PM3: abort can release an
             # in-flight scan command and cause its final callbacks to arrive.
@@ -328,7 +328,7 @@ class ReadActivity(ConsoleMixin, BaseActivity):
                     pass
                 try:
                     import executor
-                    executor.stopPM3Task()
+                    executor.stopPM3Task(wait=False)
                 except Exception:
                     pass
             self.finish()

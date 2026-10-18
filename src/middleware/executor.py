@@ -51,6 +51,8 @@ import re
 import select
 import socket
 import threading
+from contextlib import contextmanager
+from functools import wraps
 import time
 
 logger = logging.getLogger(__name__)
@@ -144,6 +146,98 @@ LIST_CALL_PRINT = set()
 LOCK_CALL_PRINT = threading.RLock()
 LOCK_THREAD = threading.RLock()
 
+# A scan/read owns the socket AND the shared parser cache until it unwinds.
+# Command-only locking would release the cache before protocol code parses it.
+_operation_local = threading.local()
+_owner_lock = threading.Lock()
+_active_operation = None
+_active_command = None
+
+
+class PM3OperationCancelled(BaseException):
+    """Unwind a cancelled protocol, including its broad ``except Exception``.
+
+    Caught only at the Scanner/Reader operation boundary. Protocol finally
+    blocks still run; this is not a transport failure or a reason to restart.
+    """
+
+
+def _check_operation():
+    cancelled = getattr(_operation_local, 'cancelled', None)
+    if cancelled is not None and cancelled.is_set():
+        raise PM3OperationCancelled()
+
+
+@contextmanager
+def pm3_operation(cancelled):
+    """Own PM3 across commands and parsing; waiting is cancellable off the UI.
+
+    The caller supplies a per-run Event and catches PM3OperationCancelled.
+    The hardware abort remains the caller's responsibility. An in-flight recv
+    retains ownership until it returns; setting the Event never lends its
+    socket to a new worker.
+    """
+    global _active_operation
+    while not LOCK_THREAD.acquire(timeout=.05):
+        if cancelled.is_set():
+            raise PM3OperationCancelled()
+    previous = getattr(_operation_local, 'cancelled', None)
+    try:
+        if previous is not None:
+            raise RuntimeError('Nested PM3 operations are not supported')
+        _operation_local.cancelled = cancelled
+        with _owner_lock:
+            _active_operation = cancelled
+        _check_operation()
+        yield
+        _check_operation()
+    finally:
+        if previous is None:
+            with _owner_lock:
+                _active_operation = None
+        _operation_local.cancelled = previous
+        LOCK_THREAD.release()
+
+
+def _serialized(function):
+    """Serialize socket/cache mutations, including calls outside scan/read."""
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        with LOCK_THREAD:
+            _check_operation()
+            return function(*args, **kwargs)
+    return wrapped
+
+
+def _command(function):
+    """Keep cancellation attached to this command, not the next queued one."""
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        global _active_command, _pipeline_needs_cleanup
+        with LOCK_THREAD:
+            _check_operation()
+            done = threading.Event()
+            with _owner_lock:
+                if _active_command is not None:
+                    raise RuntimeError('A PM3 response callback cannot start another command')
+                _active_command = (threading.get_ident(), done)
+                _set_stopping(False)
+            try:
+                result = function(*args, **kwargs)
+                _check_operation()
+                return result
+            finally:
+                with _owner_lock:
+                    cancelled = getattr(_operation_local, 'cancelled', None)
+                    if LABEL_PM3_CMD_TASK_STOPPING or (cancelled is not None and cancelled.is_set()):
+                        _pipeline_needs_cleanup = True
+                    _set_running(False)
+                    _set_stopped(True)
+                    _set_stopping(False)
+                    _active_command = None
+                    done.set()
+    return wrapped
+
 # ---------------------------------------------------------------------------
 # Internal TCP socket
 # ---------------------------------------------------------------------------
@@ -202,6 +296,7 @@ def _stop_task_user():
 # TCP communication
 # ===========================================================================
 
+@_serialized
 def connect2PM3(serial_port=None, baudrate=None):
     """Connect to PM3 via RemoteTaskManager TCP socket.
 
@@ -468,6 +563,7 @@ def _send_plat(cmd, timeout=5888):
 # Returns: 1=completed, -1=error (memory: project_startPM3Task_return.md)
 # ===========================================================================
 
+@_command
 def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     """Execute a PM3 command.
 
@@ -478,7 +574,6 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     """
     global CONTENT_OUT_IN__TXT_CACHE, _consecutive_reworks
 
-    _wait_if_stopping()
     _ensure_pipeline_ready()
 
     # Fast-fail when PM3 has already been reworked MAX_CONSECUTIVE_REWORKS
@@ -495,59 +590,61 @@ def startPM3Task(cmd, timeout=5000, listener=None, rework_max=2):
     _set_running(True)
     _set_stopped(False)
 
-    success = False
-    for attempt in range(rework_max + 1):
-        if LABEL_PM3_CMD_TASK_STOPPING:
-            break
-
-        result = _send_and_cache(cmd, timeout)
-
-        # Ground truth: when stopPM3Task() sets STOPPING, _send_and_cache
-        # breaks its recv loop and returns partial/empty data.  This is NOT
-        # a PM3 failure — do NOT rework.  Original trace shows ret=1 with
-        # full simulation output after stop; reworking kills the connection
-        # and loses the trace data (OSS trace: ret=-1 + rework cascade).
-        if LABEL_PM3_CMD_TASK_STOPPING:
-            break
-
-        if result and not isPM3Offline(result) and not isCMDTimeout(result):
-            success = True
-            _consecutive_reworks = 0  # reset counter on any good response
-            break
-
-        if attempt < rework_max:
-            if _consecutive_reworks + 1 >= MAX_CONSECUTIVE_REWORKS:
-                # One more rework would hit the cap — do the rework so the
-                # notification fires, then stop attempting.
-                reworkPM3All()
+    try:
+        success = False
+        for attempt in range(rework_max + 1):
+            _check_operation()
+            if LABEL_PM3_CMD_TASK_STOPPING:
                 break
-            reworkPM3All()
 
-    _set_running(False)
-    _set_stopped(True)
+            result = _send_and_cache(cmd, timeout)
+            _check_operation()
 
-    if listener is not None:
-        del_task_call(listener)
+            # An interrupted command is not a reason to restart PM3. Scoped
+            # scan/read cancellation has already unwound above; unscoped
+            # callers retain the legacy error return and response cache.
+            if LABEL_PM3_CMD_TASK_STOPPING:
+                break
 
-    return 1 if success else CODE_PM3_TASK_ERROR
+            if result and not isPM3Offline(result) and not isCMDTimeout(result):
+                success = True
+                _consecutive_reworks = 0  # reset counter on any good response
+                break
+
+            if attempt < rework_max:
+                if _consecutive_reworks + 1 >= MAX_CONSECUTIVE_REWORKS:
+                    # One more rework would hit the cap — do the rework so the
+                    # notification fires, then stop attempting.
+                    reworkPM3All()
+                    break
+                reworkPM3All()
+
+        return 1 if success else CODE_PM3_TASK_ERROR
+    finally:
+        if listener is not None:
+            del_task_call(listener)
 
 def stopPM3Task(listener=None, wait=True):
     """Stop the current PM3 task.
 
-    Sets STOPPING flag, optionally blocks until RUNNING=False.
+    Cancel the current owner; optionally wait for that command to unwind.
+    A nonblocking stop stays latched until command cleanup. Waiting never
+    follows a new command, and callbacks cannot wait for their own thread.
     """
-    _set_stopping(True)
+    with _owner_lock:
+        if _active_operation is not None:
+            _active_operation.set()
+        command = _active_command
+        if command is not None:
+            _set_stopping(True)
 
-    if wait:
-        while LABEL_PM3_CMD_TASK_RUNNING:
-            time.sleep(0.05)
-        _set_stopping(False)
-    else:
-        _set_stopping(False)
+    if wait and command is not None and command[0] != threading.get_ident():
+        command[1].wait()
 
     if listener is not None:
         del_task_call(listener)
 
+@_command
 def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     """Send a control command to PM3.
 
@@ -565,6 +662,7 @@ def startPM3Ctrl(ctrl_cmd='', timeout=5888):
     _set_stopped(True)
     return result
 
+@_command
 def startPM3Plat(plat_cmd, timeout=5888):
     """Send a platform command to PM3.
 
@@ -580,6 +678,7 @@ def startPM3Plat(plat_cmd, timeout=5888):
     _set_stopped(True)
     return result
 
+@_serialized
 def reworkPM3All():
     """Restart the entire PM3 system and reconnect.
 
@@ -632,6 +731,7 @@ def reworkPM3All():
         pass
 
 
+@_serialized
 def resetReworkCount():
     """Reset the consecutive-rework counter and request pipeline cleanup.
 
