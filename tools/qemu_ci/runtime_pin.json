@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "b4344daf47b424433e5c8703453dadc963077f63913aea39b4337e5c73a7fc3a",
+  "archive_bytes": 300133136,
+  "source_image_sha256": "345114e012aa5e6fedd9d33821dd864ff3800cb657665247760770c0215369e6",
+  "qemu_sha256": "9f07762a3cd0f8a199cb5471a92402a4765f8e2fcb7fe91a87ee75da9616a806",
+  "python": "3.8.0",
+  "tcl": "8.6.5",
+  "tk": "8.6.5"
+}
