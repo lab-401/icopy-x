@@ -12,6 +12,7 @@ import threading
 import time
 from types import SimpleNamespace
 from unittest.mock import patch
+import uuid  # noqa: F401 - initialize stdlib's real `uname -p` probe before process guards
 
 from strict_transport import Transcript
 

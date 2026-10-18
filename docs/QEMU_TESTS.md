@@ -144,6 +144,11 @@ The legacy source-flow launcher remains a different, heavily mocked profile.
 
 ## Contribution and maintenance policy
 
+The [critical flow profile](QEMU_CRITICAL_FLOWS.md) extends the built-IPK smoke
+with eight bounded scan/UI/accessory-absent cases for each firmware configuration.
+It uses real translation and parsing with explicitly documented transport
+fixtures. It is separate from the unaudited legacy scenario inventory.
+
 Contributors do not need a device, a factory image or a QEMU server to submit a
 fix. Start with the commands in [HOST_TESTS.md](HOST_TESTS.md); add a focused
 host regression test for the behavior being changed when it can be exercised
