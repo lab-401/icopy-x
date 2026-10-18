@@ -12,6 +12,12 @@ class Transcript:
         self.entered = threading.Event()
         self.release = threading.Event()
         self.blocked = False
+        self.connections = []
+
+    def connect(self, address):
+        self.connections.append(address)
+        if address != ('127.0.0.1', 8888):
+            self.reject('Unexpected transport endpoint: ' + repr(address))
 
     def reject(self, message):
         self.violations.append(message)

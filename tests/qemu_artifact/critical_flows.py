@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import threading
 import time
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from strict_transport import Transcript
@@ -34,6 +35,7 @@ def run(root, output, variant, callback_errors):
     import read
     import scan
     import serial
+    import socket
     import subprocess
     from _constants import KEY_OK, KEY_M2, KEY_PWR, KEY_RIGHT
 
@@ -136,14 +138,22 @@ def run(root, output, variant, callback_errors):
             aborts.append('presspm3')
             transport.release.set()
 
+        def socket_factory(family, kind):
+            if family != socket.AF_INET or kind != socket.SOCK_STREAM:
+                forbidden('unexpected socket family/type', family, kind)
+            return transport
+
+        socket_api = SimpleNamespace(socket=socket_factory, AF_INET=socket.AF_INET,
+                                     SOCK_STREAM=socket.SOCK_STREAM, timeout=socket.timeout)
+
         with ExitStack() as stack:
             for module, attribute, value in (
-                (executor, '_socket_instance', transport),
+                (executor, '_socket_instance', None),
                 (executor, '_pipeline_needs_cleanup', False),
                 (executor, 'LABEL_PM3_CMD_TASK_RUNNING', False),
                 (executor, 'LABEL_PM3_CMD_TASK_STOPPING', False),
                 (executor, 'CONTENT_OUT_IN__TXT_CACHE', ''),
-                (executor, 'connect2PM3', forbidden),
+                (executor, 'socket', socket_api),
                 (pm3_compat, '_current_version', firmware),
                 (read, 'Reader', ReaderObserver),
                 (hmi_driver, 'presspm3', abort),
@@ -218,7 +228,8 @@ def run(root, output, variant, callback_errors):
                 assert actstack.get_current_activity() is main
                 transport.verify()
                 assert not failures and not callback_errors, (failures, callback_errors)
-                row.update(status='PASS', commands=transport.commands, reader_dispatches=reads)
+                row.update(status='PASS', commands=transport.commands, connections=transport.connections,
+                           reader_dispatches=reads)
             except BaseException as error:
                 row.update(status='FAIL', error=repr(error), commands=transport.commands,
                            transport_errors=transport.violations, forbidden_operations=failures)
