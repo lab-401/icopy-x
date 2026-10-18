@@ -71,10 +71,12 @@ on the shared SSH server; that server serves one static runtime file only.
 
 ## Runtime ownership and rotation
 
-`tools/qemu_ci/runtime_pin.json` records the archive, factory-image and QEMU
+`tools/qemu_ci/runtime_pin.json` records the archive, manifest, factory-image and QEMU
 digests and expected Python/Tcl/Tk versions. The private archive contains the
 ARM interpreter, library/site-package dependencies, Tcl/Tk scripts and fonts.
-It excludes the original application, credentials and card data. The runtime
+It excludes the original application, credentials and card data. Before execution,
+the worker checks the pinned manifest and every runtime file/link, rejecting
+missing, additional or modified files even for direct lab calls. The runtime
 exporter normalizes symlinks within the guest filesystem, omits dangling links
 and records individual file hashes. The unpacker checks the archive digest
 before bounded extraction and rejects unsafe paths, special files and hardlinks.

@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import os
 from pathlib import Path
 
@@ -34,3 +35,25 @@ def test_symlink_leaf_parent_and_fifo_rejected(tmp_path):
     for name in ('leaf', 'parent/secret', 'pipe'):
         with pytest.raises((OSError, ValueError)):
             worker.read_guest_file(root, name)
+
+
+def test_runtime_tampering_missing_and_extra_files_rejected(tmp_path):
+    data = tmp_path / 'library'
+    data.write_bytes(b'factory')
+    manifest = dict(source_image_sha256='image', qemu_sha256='emulator',
+                    files={'library': dict(bytes=7, sha256=worker.sha256(data))})
+    record = tmp_path / 'runtime.json'
+    record.write_text(json.dumps(manifest))
+    pin = dict(source_image_sha256='image', qemu_sha256='emulator',
+               manifest_sha256=worker.sha256(record))
+    assert worker.verify_runtime(tmp_path, pin) == manifest
+    data.write_bytes(b'changed')
+    with pytest.raises(ValueError, match='digest'):
+        worker.verify_runtime(tmp_path, pin)
+    data.unlink()
+    with pytest.raises(ValueError, match='Missing or extra'):
+        worker.verify_runtime(tmp_path, pin)
+    data.write_bytes(b'factory')
+    (tmp_path / 'extra').write_bytes(b'code')
+    with pytest.raises(ValueError, match='Missing or extra'):
+        worker.verify_runtime(tmp_path, pin)

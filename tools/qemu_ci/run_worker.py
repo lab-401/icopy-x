@@ -50,6 +50,31 @@ def read_guest_file(root, relative, limit=2 * 1024 * 1024):
         os.close(fd)
 
 
+def verify_runtime(runtime, pin):
+    """Direct lab calls must verify the same bytes as the CI download path."""
+    if sha256(runtime / 'runtime.json') != pin['manifest_sha256']:
+        raise ValueError('Runtime manifest digest mismatch')
+    manifest = json.loads((runtime / 'runtime.json').read_text())
+    if any(manifest[key] != pin[key] for key in ('source_image_sha256', 'qemu_sha256')):
+        raise ValueError('Unexpected runtime identity')
+    files = manifest['files']
+    actual = {p.relative_to(runtime).as_posix() for p in runtime.rglob('*')
+              if p.is_symlink() or not p.is_dir()}
+    if actual != set(files) | {'runtime.json'}:
+        raise ValueError('Missing or extra runtime files')
+    for name, expected in files.items():
+        path = runtime / name
+        if os.path.commonpath((str(runtime), str(path.resolve(strict=True)))) != str(runtime):
+            raise ValueError('Runtime file escapes bundle: ' + name)
+        if 'symlink' in expected:
+            if not path.is_symlink() or os.readlink(path) != expected['symlink']:
+                raise ValueError('Runtime symlink mismatch: ' + name)
+        elif (path.is_symlink() or not path.is_file() or path.stat().st_size != expected['bytes'] or
+              sha256(path) != expected['sha256']):
+            raise ValueError('Runtime file digest mismatch: ' + name)
+    return manifest
+
+
 def command(runtime, artifacts, harness, work):
     rootfs = '/mnt/sdcard/root2/root'
     tcl_root = '/mnt/sdcard/root2/root/usr/share/tcltk'
@@ -110,8 +135,8 @@ def main(argv=None):
         parser.error('Timeout must be between 1 and 600 seconds')
     runtime, artifacts, output = (path.resolve() for path in (args.runtime, args.artifacts, args.output))
     harness = Path(__file__).resolve().parents[2]
-    runtime_info = json.loads((runtime / 'runtime.json').read_text())
-    assert sha256(runtime / 'qemu-arm-static') == runtime_info['qemu_sha256']
+    pin = json.loads(Path(__file__).with_name('runtime_pin.json').read_text())
+    runtime_info = verify_runtime(runtime, pin)
     package_hashes = {v: sha256(artifacts / ('icopy-x-' + v + '.ipk')) for v in ('flash', 'noflash')}
     output.mkdir(exist_ok=False)
     work, evidence = output / 'work', output / 'evidence'
@@ -124,10 +149,8 @@ def main(argv=None):
     report = dict(status='INCOMPLETE', artifact_sha256=package_hashes,
                   runtime_image_sha256=runtime_info['source_image_sha256'],
                   qemu_sha256=runtime_info['qemu_sha256'], controller_sha256=sha256(Path(__file__)))
-    pin = json.loads(Path(__file__).with_name('runtime_pin.json').read_text())
-    if any(runtime_info[key] != pin[key] for key in ('source_image_sha256', 'qemu_sha256')):
-        raise ValueError('Unexpected runtime identity')
     report['runtime_archive_sha256'] = pin['archive_sha256']
+    report['runtime_manifest_sha256'] = pin['manifest_sha256']
     started = time.monotonic()
     process = None
     unit = 'icopy-qemu-' + uuid.uuid4().hex + '.scope'
