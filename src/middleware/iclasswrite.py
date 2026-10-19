@@ -116,7 +116,7 @@ _RE_XOR_DIV_KEY = r'Xor div key\.+\s+([0-9A-Fa-f ]+)'
 # After compat flip: middleware targets the iceman-native `( ok )`
 # sentinel directly. The adapter normalizer becomes obsolete; Phase 4
 # will remove the normalizer, the iceman-native keyword will still match.
-_KW_WRBL_SUCCESS = r'\( ok \)'
+_KW_WRBL_SUCCESS = r'(?i:successful|\(\s*ok\s*\))'
 
 
 # ===========================================================================
@@ -212,12 +212,14 @@ def writeDataBlock(typ, block, data, key):
         cmd += ' --elite'
     ret = executor.startPM3Task(cmd, TIMEOUT)
     if ret == -1:
+        executor.stopPM3Task()
         return -10
 
     # Iceman success: `Wrote block <N> / 0x<NN> ( ok )`
     # (cmdhficlass.c:3134). See _KW_WRBL_SUCCESS for citation detail.
     if executor.hasKeyword(_KW_WRBL_SUCCESS):
         return 0
+    executor.stopPM3Task()
     return -10
 
 

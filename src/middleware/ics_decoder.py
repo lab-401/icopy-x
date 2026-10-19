@@ -33,6 +33,14 @@ _BAUD_RATE = 115200
 _CMD_WHO = 'Who\r\n'
 _CMD_RD = 'RD\r\n'
 _READLINE_TIMEOUT = 1.2  # USB CDC ACM needs >=1.0s for reliable WHO response
+# Filter serial ports by USB VID:PID to avoid conflicts when multiple
+# ACM/USB devices are connected. SparkFun Pro Micro, Arduino/Genuino Micro
+# clones, and Adafruit Feather 32U4 are the supported decoder hardware.
+_DECODER_VID_PID = {
+    (0x2341, 0x0043),  # SparkFun Pro Micro 5V/16MHz
+    (0x2A03, 0x0043),  # Arduino/Genuino Micro (clones)
+    (0x1B4F, 0x9206),  # Adafruit Feather 32U4 (alternate decoder builds)
+}
 
 _log_path_used = None
 _log_dir = '/mnt/upan/dump/ics_decoder'
@@ -91,6 +99,17 @@ def _open_serial(port):
         return None
 
 
+def _decoder_port_devices():
+    """Return set of device paths whose USB VID:PID matches the decoder."""
+    if _comports is None:
+        return set()
+    try:
+        return {p.device for p in _comports()
+                if (p.vid, p.pid) in _DECODER_VID_PID}
+    except Exception:
+        return set()
+
+
 def detect_decoder():
     """Scan serial ports for the ICS Decoder.
 
@@ -110,24 +129,29 @@ def detect_decoder():
     candidates = []
 
     if sys.platform.startswith('linux'):
+        dev_ports = _decoder_port_devices()
         for g in ('/dev/ttyACM*', '/dev/ttyUSB*'):
-            candidates.extend(glob.glob(g))
-        seen = set()
-        candidates = [c for c in candidates if not (c in seen or seen.add(c))]
+            for c in glob.glob(g):
+                if not dev_ports or c in dev_ports:
+                    candidates.append(c)
+        candidates = list(dict.fromkeys(candidates))
     elif sys.platform.startswith('win'):
         if _comports is not None:
             try:
-                candidates = [p.device for p in _comports()]
+                candidates = [p.device for p in _comports()
+                              if (p.vid, p.pid) in _DECODER_VID_PID]
             except Exception:
                 candidates = []
         if not candidates:
             for i in range(1, 257):
                 candidates.append('COM%d' % i)
     elif sys.platform.startswith('darwin'):
+        dev_ports = _decoder_port_devices()
         for g in ('/dev/cu.usbmodem*', '/dev/cu.usbserial*'):
-            candidates.extend(glob.glob(g))
-        seen = set()
-        candidates = [c for c in candidates if not (c in seen or seen.add(c))]
+            for c in glob.glob(g):
+                if not dev_ports or c in dev_ports:
+                    candidates.append(c)
+        candidates = list(dict.fromkeys(candidates))
 
     _log('DETECT_DECODER candidates={}'.format(candidates))
 
@@ -255,6 +279,8 @@ def parse_block(text, raw_bytes=None):
     result.pop('bit', None)
 
     raw_blk7 = result.get('raw_blk7', '').replace(' ', '')
+    if raw_blk7:
+        _log('Key#: {}'.format(raw_blk7.upper()))
     if re.fullmatch(r'[0-9A-Fa-f]{16}', raw_blk7) and int(raw_blk7, 16) != 0:
         result['derived_legacy'] = {'blk7': raw_blk7.upper(), 'source': 'decoder_reported'}
         result['blk7'] = raw_blk7.upper()
