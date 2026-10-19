@@ -946,7 +946,7 @@ class AboutActivity(BaseActivity):
             import version
             info['pm'] = version.getPM()
         except Exception:
-            info['pm'] = '?'
+            info['pm'] = 'n/a'
         try:
             import version
             info['sn'] = version.getSN()

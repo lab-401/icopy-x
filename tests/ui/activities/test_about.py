@@ -234,3 +234,16 @@ class TestAboutUpdatePage:
         texts = canvas.get_all_text()
         all_text = ' '.join(texts)
         assert 'Firmware update' in all_text or 'update' in all_text.lower()
+
+
+def test_missing_pm_version_keeps_other_device_diagnostics(monkeypatch):
+    from activity_main import AboutActivity
+    mod = _make_version_mod(typ='iCopy-XS', hw='1.7', hmi='2.3.1', os='1.0.90')
+    del mod.getPM
+    monkeypatch.setitem(sys.modules, 'version', mod)
+    activity = AboutActivity.__new__(AboutActivity)
+    activity._load_version_info()
+    assert activity._version_info['pm'] == 'n/a'
+    assert activity._version_info['typ'] == 'iCopy-XS'
+    assert activity._version_info['hw'] == '1.7'
+    assert activity._version_info['os'] == '1.0.90'
