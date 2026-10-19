@@ -177,7 +177,7 @@ def decoder_ports():
 
 def _is_pm3_port(port):
     return (sys.platform.startswith('linux') and
-            os.path.realpath(port) == os.path.realpath(_PM3_PORT))
+            port == _PM3_PORT)
 
 
 def detect_decoder(ports=None, cancelled=lambda: False, quiet=False):
