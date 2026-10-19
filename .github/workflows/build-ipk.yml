@@ -106,6 +106,15 @@ jobs:
           cp /tmp/pm3-client/proxmark3 build/proxmark3
           chmod +x build/proxmark3
           cp /tmp/pm3-client/lua.zip build/lua.zip
+          python3 - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('build/lua.zip') as current, zipfile.ZipFile('build/factory_lua.zip') as factory:
+              entries = {name: current.read(name) for name in current.namelist()}
+              entries.update({name: factory.read(name) for name in factory.namelist()})
+          with zipfile.ZipFile('build/lua.zip', 'w') as output:
+              for name, data in entries.items():
+                  output.writestr(name, data)
+          PY
           cp /tmp/pm3-firmware/armsrc/obj/fullimage.elf res/firmware/pm3/fullimage.elf
           python tools/pm3_build_contract.py assemble \
             --client build/proxmark3 --lua build/lua.zip \
@@ -571,6 +580,15 @@ jobs:
           cp /tmp/pm3-client/proxmark3 build/proxmark3
           chmod +x build/proxmark3
           cp /tmp/pm3-client/lua.zip build/lua.zip
+          python3 - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('build/lua.zip') as current, zipfile.ZipFile('build/factory_lua.zip') as factory:
+              entries = {name: current.read(name) for name in current.namelist()}
+              entries.update({name: factory.read(name) for name in factory.namelist()})
+          with zipfile.ZipFile('build/lua.zip', 'w') as output:
+              for name, data in entries.items():
+                  output.writestr(name, data)
+          PY
           cp /tmp/pm3-firmware/armsrc/obj/fullimage.elf res/firmware/pm3/fullimage.elf
           python tools/pm3_build_contract.py assemble \
             --client build/proxmark3 --lua build/lua.zip \
