@@ -477,12 +477,12 @@ def test_landing_highlight_follows_all_rows_on_layered_canvas(store):
     actstack._canvas_factory = lambda: LayerCanvas()
     activity = start()
     canvas = activity.getCanvas()
-    assert activity._menu._items == ['Read Credential', 'Saved Credentials', 'Back']
-    assert activity._menu_actions == ['read', 'saved', 'back']
-    for target in (0, 1, 2, 0):
+    assert activity._menu._items == ['Read Credential', 'Saved Credentials', 'Integration Info', 'Back']
+    assert activity._menu_actions == ['read', 'saved', 'integration_info', 'back']
+    for target in (0, 1, 2, 3, 0):
         if target:
             activity.onKeyEvent(KEY_DOWN)
-        elif activity._menu.selection() == 2:
+        elif activity._menu.selection() == 3:
             activity.onKeyEvent(KEY_DOWN)
         assert activity._menu.selection() == target
         background = canvas.find_withtag('_ics_bg_clear')[0]
@@ -494,7 +494,7 @@ def test_landing_highlight_follows_all_rows_on_layered_canvas(store):
         for row, item in enumerate(texts):
             assert canvas.itemcget(item, 'fill') == 'black'
     activity.onKeyEvent(KEY_UP)
-    assert activity._menu.selection() == 2
+    assert activity._menu.selection() == 3
 
 
 def test_long_details_scroll_both_directions_without_changing_capture(store):
