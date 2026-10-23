@@ -1,0 +1,470 @@
+{
+    "plugin": true,
+    "name": "Electra RAW",
+    "version": "1.0.0",
+    "initial_state": "init",
+    "states": {
+        "init": {
+            "on_enter": "call:do_init",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Initializing...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error": "menu"
+            }
+        },
+        "menu": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "items": [
+                        {
+                            "label": "Read Electra tag",
+                            "value": "read",
+                            "action": "set_state:read_tag"
+                        },
+                        {
+                            "label": "Clone last RAW",
+                            "value": "clone_last",
+                            "action": "call:do_show_last_raw"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "Select"
+                },
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "OK": "select",
+                    "M2": "select",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==found_last": "clone_last_prompt",
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==ready": "checking"
+            }
+        },
+        "read_tag": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Place Electra tag",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "OK - Read tag",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Read"
+                },
+                "keys": {
+                    "OK": "call:do_read_tag",
+                    "M2": "call:do_read_tag",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==wrong_tag": "wrong_tag"
+            }
+        },
+        "clone_last_prompt": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Facility: {electra_facility}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "ID:       {electra_id}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Epilogue: {electra_epilogue}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Place T5577 tag.",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "OK - Clone to T5577",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Clone"
+                },
+                "keys": {
+                    "OK": "call:do_prepare_clone",
+                    "M2": "call:do_prepare_clone",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==ready": "checking"
+            }
+        },
+        "show_data": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Facility: {electra_facility}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "ID:       {electra_id}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Epilogue: {electra_epilogue}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Cloned tags: {clone_count}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "OK - Clone to T5577",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Clone"
+                },
+                "keys": {
+                    "OK": "call:do_prepare_clone",
+                    "M2": "call:do_prepare_clone",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==ready": "checking"
+            }
+        },
+        "clone_ok": {
+            "screen": {
+                "title": "Clone Success!",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "RAW cloned OK",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Cloned tags: {clone_count}",
+                            "size": "medium"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "OK - Clone next tag",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Next"
+                },
+                "keys": {
+                    "OK": "set_state:show_data",
+                    "M2": "set_state:show_data",
+                    "M1": "set_state:menu"
+                }
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "call:do_error_retry",
+                    "M2": "call:do_error_retry",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==found_last": "clone_last_prompt",
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==wrong_tag": "wrong_tag",
+                "on_result.status==ready": "checking"
+            }
+        },
+        "wrong_tag": {
+            "screen": {
+                "title": "Wrong Tag",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "EM4100/4102 detected.",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Not an Electra tag.",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": "Menu"
+                },
+                "keys": {
+                    "OK": "set_state:menu",
+                    "M1": "set_state:menu",
+                    "M2": "set_state:menu"
+                }
+            }
+        },
+        "checking": {
+            "on_enter": "run:do_precheck_clone",
+            "screen": {
+                "title": "Checking T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Checking tag...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "detecting",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "detecting": {
+            "on_enter": "run:do_detect_clone",
+            "screen": {
+                "title": "Detecting T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Detecting tag...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "writing",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "writing": {
+            "on_enter": "run:do_write_raw",
+            "screen": {
+                "title": "Writing T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Writing RAW data...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==written": "verifying",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "verifying": {
+            "on_enter": "run:do_verify_raw",
+            "screen": {
+                "title": "Verifying T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Verifying written data...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        }
+    }
+}

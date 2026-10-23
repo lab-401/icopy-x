@@ -1,0 +1,9 @@
+{
+    "name": "EM4102 From Decimal",
+    "version": "1.0.0",
+    "author": "jareckib",
+    "description": "Clone EM4102 tag from decimal (engraved) ID. Enter 10 decimal digits, clone to T5577.",
+    "entry_class": "Em4102DecPlugin",
+    "permissions": ["pm3"],
+    "order": 42
+}

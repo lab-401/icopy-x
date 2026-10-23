@@ -1,0 +1,383 @@
+{
+    "plugin": true,
+    "name": "EM4102 From Decimal",
+    "version": "1.0.0",
+    "initial_state": "init",
+    "states": {
+        "init": {
+            "on_enter": "run:do_init",
+            "screen": {
+                "title": "EM4102 From Decimal",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Initializing...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "enter_dec",
+                "on_error": "enter_dec"
+            }
+        },
+        "enter_dec": {
+            "on_enter": "call:show_dec_input",
+            "screen": {
+                "title": "EM4102 From Decimal",
+                "content": {
+                    "type": "text",
+                    "lines": []
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "OK"
+                },
+                "keys": {
+                    "UP": "call:dec_roll_up",
+                    "DOWN": "call:dec_roll_down",
+                    "LEFT": "call:dec_move_left",
+                    "RIGHT": "call:dec_move_right",
+                    "OK": "call:do_capture_dec",
+                    "M2": "call:do_capture_dec",
+                    "M1": "call:dec_back_cleanse"
+                }
+            },
+            "transitions": {
+                "on_result.status==ok": "confirm_clone",
+                "on_result.status==error": "validation_error",
+                "on_error": "validation_error"
+            }
+        },
+        "confirm_clone": {
+            "screen": {
+                "title": "Confirm Clone",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "DEC: {dec_id}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "HEX: {hex_uid}",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Place T5577 on reader",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "OK - Clone tag",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Clone"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "clone_ok": {
+            "screen": {
+                "title": "Clone OK",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Write completed.",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Verified OK.",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "DEC: {dec_id}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "HEX: {hex_uid}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Tags: {clone_count}",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "New ID",
+                    "right": "Again"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "validation_error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "OK - Try again",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:enter_dec",
+                    "M2": "set_state:enter_dec",
+                    "M1": "finish"
+                }
+            }
+        },
+        "clone_error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "OK - Try again",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:confirm_clone",
+                    "M2": "set_state:confirm_clone",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "checking_t5577": {
+            "on_enter": "run:do_quick_search",
+            "screen": {
+                "title": "Quick LF Search",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Searching LF tag...",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 5 seconds",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "detecting_t5577",
+                "on_result.status==error": "clone_error",
+                "on_error": "clone_error"
+            }
+        },
+        "writing_t5577": {
+            "on_enter": "run:do_write",
+            "screen": {
+                "title": "Writing T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Writing EM4102 data...",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 15 seconds",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "verifying_t5577",
+                "on_result.status==error": "clone_error",
+                "on_error": "clone_error"
+            }
+        },
+        "verifying_t5577": {
+            "on_enter": "run:do_verify",
+            "screen": {
+                "title": "Verifying T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Verifying written ID...",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 5 seconds",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "clone_error",
+                "on_error": "clone_error"
+            }
+        },
+        "detecting_t5577": {
+            "on_enter": "run:do_precheck",
+            "screen": {
+                "title": "Checking T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": ""
+                        },
+                        {
+                            "text": "Detecting T5577...",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 15 seconds",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "writing_t5577",
+                "on_result.status==error": "clone_error",
+                "on_error": "clone_error"
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Paxton Clone&Down",
+    "version": "3.0.0",
+    "author": "jareckib (ported from lf_ht2_paxton.lua)",
+    "description": "Read a Paxton Net2/Switch2 fob and clone it to PCF7936 or downgrade it to EM4102 (T5577). Verified writes, named log + dump entries, load from log.",
+    "entry_class": "PaxtonCloneDownPlugin",
+    "permissions": [
+        "pm3"
+    ],
+    "order": 30
+}

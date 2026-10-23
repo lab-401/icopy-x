@@ -1,0 +1,1261 @@
+{
+    "plugin": true,
+    "name": "Paxton Clone&Down",
+    "version": "3.9.15",
+    "initial_state": "init",
+    "states": {
+        "init": {
+            "on_enter": "call:do_init",
+            "screen": {
+                "title": "Paxton Clone&Down",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Loading...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error": "menu"
+            }
+        },
+        "menu": {
+            "screen": {
+                "title": "Paxton Clone&Down",
+                "content": {
+                    "type": "list",
+                    "style": "plain",
+                    "items": [
+                        {
+                            "label": "Clone to Paxton",
+                            "action": "call:do_start_clone"
+                        },
+                        {
+                            "label": "Downgrade to EM4102",
+                            "action": "call:do_start_down"
+                        },
+                        {
+                            "label": "Load from log",
+                            "action": "call:do_start_log"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "Select"
+                },
+                "keys": {
+                    "UP": "scroll:-1",
+                    "DOWN": "scroll:1",
+                    "OK": "select",
+                    "M2": "select",
+                    "M1": "finish"
+                }
+            },
+            "transitions": {
+                "on_result.status==clone": "read_clone",
+                "on_result.status==down": "read_down",
+                "on_result.status==log": "find_name",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "read_clone": {
+            "screen": {
+                "title": "Clone to Paxton",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Place Paxton fob",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "on the reader",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "OK - read original fob",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Read"
+                },
+                "keys": {
+                    "OK": "run:do_read_clone",
+                    "M2": "run:do_read_clone",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "readed_clone",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "readed_clone": {
+            "screen": {
+                "title": "Readed Paxton",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Type: {tag_variant}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "UID: {uid}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B4: {block4} | B5: {block5}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B6: {block6} | B7: {block7}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "Place PCF7936 fob to write",
+                            "size": "normal",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Write"
+                },
+                "keys": {
+                    "OK": "set_state:paxton_prepare",
+                    "M2": "set_state:paxton_prepare",
+                    "M1": "run:do_back_from_write"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==loaded": "loaded",
+                "on_result.status==read_clone": "read_clone",
+                "on_result.status==read_down": "read_down",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "clone_ok": {
+            "screen": {
+                "title": "Clone OK",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "Type: {tag_variant}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "UID: {uid}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B4: {block4} | B5: {block5}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B6: {block6} | B7: {block7}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Fobs written: {clone_count}",
+                            "size": "normal",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "OK - write next PCF7936",
+                            "size": "small",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Write Log"
+                },
+                "keys": {
+                    "OK": "set_state:paxton_prepare",
+                    "M2": "set_state:log_name",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "read_down": {
+            "screen": {
+                "title": "Downgrade",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Place original Paxton fob on the reader",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Read"
+                },
+                "keys": {
+                    "OK": "run:do_read_down",
+                    "M2": "run:do_read_down",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==found": "readed_down",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "readed_down": {
+            "screen": {
+                "title": "Downgrade",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "Type: {tag_variant}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "UID: {uid}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "EM4102 ID: {em_id}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B4: {block4} | B5: {block5}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B6: {block6} | B7: {block7}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "Place blank T5577 to write",
+                            "size": "normal",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Write"
+                },
+                "keys": {
+                    "OK": "set_state:em_prepare",
+                    "M2": "set_state:em_prepare",
+                    "M1": "run:do_back_from_write"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "down_ok",
+                "on_result.status==loaded": "loaded",
+                "on_result.status==read_clone": "read_clone",
+                "on_result.status==read_down": "read_down",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "down_ok": {
+            "screen": {
+                "title": "Downgrade OK",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Type: {tag_variant}",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "UID: {uid}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "EM4102 ID: {em_id}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Tags written: {down_count}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": " OK - write next tag",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Write Log"
+                },
+                "keys": {
+                    "OK": "set_state:em_prepare",
+                    "M2": "set_state:log_name",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==done": "down_ok",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "error": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "run:do_error_retry",
+                    "M2": "run:do_error_retry",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==em_search": "em_search",
+                "on_result.status==menu": "menu",
+                "on_result.status==log_name": "log_name",
+                "on_result.status==find_name": "find_name",
+                "on_result.status==readed_clone": "readed_clone",
+                "on_result.status==readed_down": "readed_down",
+                "on_result.status==clone_ok": "clone_ok",
+                "on_result.status==down_ok": "down_ok",
+                "on_result.status==error": "error",
+                "on_error": "menu",
+                "on_result.status==saved": "saved"
+            }
+        },
+        "find_name": {
+            "on_enter": "call:show_txt_input_find",
+            "screen": {
+                "title": "Load log",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "",
+                            "size": "small"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Only A and OK - open list",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Abc2 + OK - to search name",
+                            "size": "small",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Mode"
+                },
+                "keys": {
+                    "UP": "call:txt_roll_up",
+                    "DOWN": "call:txt_roll_down",
+                    "LEFT": "call:txt_move_left",
+                    "RIGHT": "call:txt_move_right",
+                    "M2": "call:txt_next_charset",
+                    "OK": "call:do_capture_find",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==captured": "find_name_processing",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "pick": {
+            "screen": {
+                "title": "Select log",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{pick_pos}",
+                            "size": "normal",
+                            "align": "center"
+                        },
+                        {
+                            "text": "{pick_view}",
+                            "size": "normal",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Select"
+                },
+                "keys": {
+                    "UP": "run:do_pick_up",
+                    "DOWN": "run:do_pick_down",
+                    "OK": "run:do_pick_select",
+                    "M2": "run:do_pick_select",
+                    "M1": "set_state:find_name"
+                }
+            },
+            "transitions": {
+                "on_result.status==loaded": "loaded",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "loaded": {
+            "screen": {
+                "title": "Log entry",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "normal"
+                        },
+                        {
+                            "text": "Name: {src_name}",
+                            "size": "normal",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Paxton UID: {uid}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Type: {tag_variant}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "EM4102 ID: {em_id}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B4: {block4} | B5: {block5}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B6: {block6} | B7: {block7}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "normal"
+                        },
+                        {
+                            "text": "S/R/W - back to menu",
+                            "size": "small",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Paxton",
+                    "right": "EM4102"
+                },
+                "keys": {
+                    "M1": "run:do_load_clone",
+                    "M2": "run:do_load_down",
+                    "ALL": "set_state:menu",
+                    "OK": "run:do_loaded_back"
+                }
+            },
+            "transitions": {
+                "on_result.status==clone": "readed_clone",
+                "on_result.status==down": "readed_down",
+                "on_result.status==pick": "pick",
+                "on_result.status==find": "find_name",
+                "on_error": "error"
+            }
+        },
+        "log_name": {
+            "on_enter": "call:show_txt_input_log",
+            "screen": {
+                "title": "Save log",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Paxton UID: {uid}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "EM4102 ID: {em_id}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B4: {block4} | B5: {block5}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "B6: {block6} | B7: {block7}",
+                            "size": "small",
+                            "align": "center"
+                        },
+                        {
+                            "text": "OK - save Name to log file",
+                            "size": "small",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Mode"
+                },
+                "keys": {
+                    "UP": "call:txt_roll_up",
+                    "DOWN": "call:txt_roll_down",
+                    "LEFT": "call:txt_move_left",
+                    "RIGHT": "call:txt_move_right",
+                    "M2": "call:txt_next_charset",
+                    "OK": "call:do_capture_log_name",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==captured": "log_name_processing",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "saved": {
+            "screen": {
+                "title": "Log saved",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Saved Name to log:",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "{saved_name}",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "{dump_line}",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Back"
+                },
+                "keys": {
+                    "OK": "run:do_back_to_result",
+                    "M2": "run:do_back_to_result",
+                    "M1": "set_state:menu"
+                }
+            },
+            "transitions": {
+                "on_result.status==clone": "clone_ok",
+                "on_result.status==down": "down_ok",
+                "on_error": "menu"
+            }
+        },
+        "log_name_processing": {
+            "on_enter": "run:do_save_captured_log",
+            "screen": {
+                "title": "Save log",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Please wait...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==done": "saved",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "find_name_processing": {
+            "on_enter": "run:do_find_captured",
+            "screen": {
+                "title": "Load log",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "Please wait...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==loaded": "loaded",
+                "on_result.status==pick": "pick",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "paxton_prepare": {
+            "on_enter": "run:do_prepare_paxton",
+            "screen": {
+                "title": "Clone to Paxton",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Preparing PCF7936...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "paxton_search",
+                "on_result.status==done": "paxton_search",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "paxton_writing": {
+            "on_enter": "run:do_write_paxton",
+            "screen": {
+                "title": "Writing PCF7936",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Writing Paxton blocks...",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 10 seconds per block",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "paxton_verifying",
+                "on_result.status==done": "paxton_verifying",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "paxton_verifying": {
+            "on_enter": "run:do_verify_paxton",
+            "screen": {
+                "title": "Verifying PCF7936",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Reading back blocks...",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Reading and comparing blocks...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "clone_ok",
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "em_prepare": {
+            "on_enter": "run:do_prepare_em4102",
+            "screen": {
+                "title": "Downgrade",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Preparing EM4102...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "em_search",
+                "on_result.status==done": "em_search",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "em_search": {
+            "on_enter": "run:do_quick_search_t5577",
+            "screen": {
+                "title": "Quick LF Search",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Searching LF tag...",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 5 seconds",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "em_detect",
+                "on_result.status==done": "em_detect",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "em_detect": {
+            "on_enter": "run:do_detect_t5577",
+            "screen": {
+                "title": "Checking T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Detecting T5577...",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 15 seconds",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "em_writing",
+                "on_result.status==done": "em_writing",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "em_writing": {
+            "on_enter": "run:do_write_em4102",
+            "screen": {
+                "title": "Writing T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Writing EM4102 data...",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Timeout: 15 seconds",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "em_verifying",
+                "on_result.status==done": "em_verifying",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "em_verifying": {
+            "on_enter": "run:do_verify_em4102",
+            "screen": {
+                "title": "Verifying T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Verification...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "down_ok",
+                "on_result.status==done": "down_ok",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "paxton_detect": {
+            "on_enter": "run:do_detect_pcf7936",
+            "screen": {
+                "title": "Detect PCF7936",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Detecting PCF7936...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "paxton_found",
+                "on_result.status==done": "paxton_found",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==info": "paxton_other"
+            }
+        },
+        "paxton_search": {
+            "on_enter": "run:do_search_pcf7936",
+            "screen": {
+                "title": "Quick LF Search",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Searching PCF7936...",
+                            "size": "large",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==candidate": "paxton_detect",
+                "on_result.status==info": "paxton_other",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "paxton_found": {
+            "screen": {
+                "title": "Paxton detected",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Paxton detected",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Type: {detected_type}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Chipset: {detected_chipset}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "UID: {detected_uid}",
+                            "size": "medium",
+                            "align": "center"
+                        },
+                        {
+                            "text": "Ready to write",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Continue"
+                },
+                "keys": {
+                    "M1": "set_state:readed_clone",
+                    "M2": "set_state:paxton_writing",
+                    "OK": "set_state:paxton_writing"
+                }
+            }
+        },
+        "paxton_other": {
+            "screen": {
+                "title": "Tag information",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "{paxton_status}",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "M1": "set_state:readed_clone",
+                    "M2": "set_state:paxton_search",
+                    "OK": "set_state:paxton_search"
+                }
+            }
+        }
+    }
+}
