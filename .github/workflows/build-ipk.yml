@@ -90,13 +90,13 @@ jobs:
           python-version: '3.12'
 
       - name: Download PM3 client
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pm3-client-arm
           path: /tmp/pm3-client
 
       - name: Download PM3 firmware
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pm3-firmware
           path: /tmp/pm3-firmware
@@ -550,13 +550,13 @@ jobs:
           persist-credentials: false
 
       - name: Download PM3 client
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pm3-client-arm
           path: /tmp/pm3-client
 
       - name: Download PM3 firmware
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pm3-firmware
           path: /tmp/pm3-firmware
@@ -616,25 +616,25 @@ jobs:
           persist-credentials: false
 
       - name: Download flash IPK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: icopy-x-flash-ipk
 
       - name: Download no-flash IPK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: icopy-x-noflash-ipk
 
       - name: Download iceman clients
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: iceman-client-linux
           path: /tmp/iceman-linux
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: iceman-client-windows
           path: /tmp/iceman-windows
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: iceman-client-macos
           path: /tmp/iceman-macos
