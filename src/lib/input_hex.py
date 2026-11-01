@@ -52,17 +52,6 @@ class FreeHexInput(object):
         self._digits = ['0']
         self._cursor = 0
 
-        # Adjust the line splitting layouts based on the input boundaries
-        if self._max_length == 8:
-            self._per_line = 8
-        elif self._max_length == 10:
-            self._per_line = 10
-        elif self._max_length == 16:
-            self._per_line = 10
-
-        # Defensive: never allow per_line to exceed max_length
-        if self._per_line > self._max_length:
-            self._per_line = self._max_length
 
     # -- public API ------------------------------------------------
 
@@ -129,24 +118,42 @@ class FreeHexInput(object):
             self._canvas.delete(item)
 
     def _layout(self, digits):
-        """Return digit (row, x) positions; None if two lines cannot hold them.
+        """Return centered (row, x) positions, or None if text cannot fit.
 
-        Keep the second line aligned with the first digit, never with the label.
-        Respect the legacy per_line split as well as real pixel widths.
+        Use one line whenever label + HEX fits in the selected system font.
+        Otherwise split 16 HEX as 8+8 and 10 HEX as 8+2.
+        The second row starts directly below the first HEX digit.
         """
-        first_x = self._x0 + self._measure(self._label)
-        right_edge = SCREEN_W - 4
+        widths = [self._measure(digit) for digit in digits]
+        label_width = self._measure(self._label)
+        margin = max(4, self._x0)
+        available = SCREEN_W - 2 * margin
+        if available <= 0:
+            return None
+
+        if label_width + sum(widths) <= available:
+            split = len(digits)
+        elif self._max_length in (10, 16) and len(digits) > 8:
+            split = 8
+        else:
+            return None
+
+        first_width = label_width + sum(widths[:split])
+        second_width = sum(widths[split:])
+        if first_width > available or second_width > available:
+            return None
+
+        first_left = (SCREEN_W - first_width) // 2
+        first_digit_x = first_left + label_width
+        if first_digit_x + second_width > SCREEN_W - margin:
+            return None
+
         positions = []
-        row = 0
-        x = first_x
-        for i, digit in enumerate(digits):
-            width = self._measure(digit)
-            if row == 0 and (i >= self._per_line or x + width > right_edge):
-                row = 1
-                x = first_x
-            if x + width > right_edge:
-                return None
-            positions.append((row, x))
+        x = first_digit_x
+        for i, width in enumerate(widths):
+            if i == split:
+                x = first_digit_x
+            positions.append((0 if i < split else 1, x))
             x += width
         return positions
 
@@ -157,12 +164,13 @@ class FreeHexInput(object):
         canvas.delete(TAG)
         row_top_y = self._y_offset
         row_bottom_y = row_top_y + self._line_gap
+        positions = self._layout(self._digits)
         if self._label:
-            canvas.create_text(self._x0, row_top_y, text=self._label,
+            label_x = (positions[0][1] - self._measure(self._label)) if positions else self._x0
+            canvas.create_text(label_x, row_top_y, text=self._label,
                                fill=LABEL_COLOR, font=self._font,
                                anchor='w', tags=TAG)
 
-        positions = self._layout(self._digits)
         if positions is None:
             # Defensive fallback for labels changed after text was entered.
             positions = self._layout(self._digits[:1]) or [(0, self._x0)]
