@@ -125,9 +125,9 @@ class FreeTextInput(object):
                 self._chars[self._cursor] = charset[0]
 
     def rollUp(self):
-        self._normalize_current_char()
         charset = CHARSETS[self._charset_idx]
-        idx = charset.index(self._chars[self._cursor])
+        current = self._chars[self._cursor]
+        idx = charset.index(current) if current in charset else -1
         candidate = charset[(idx + 1) % len(charset)]
         proposed = self._chars[:]
         proposed[self._cursor] = candidate
@@ -136,9 +136,9 @@ class FreeTextInput(object):
         self._redraw()
 
     def rollDown(self):
-        self._normalize_current_char()
         charset = CHARSETS[self._charset_idx]
-        idx = charset.index(self._chars[self._cursor])
+        current = self._chars[self._cursor]
+        idx = charset.index(current) if current in charset else 0
         candidate = charset[(idx - 1) % len(charset)]
         proposed = self._chars[:]
         proposed[self._cursor] = candidate
