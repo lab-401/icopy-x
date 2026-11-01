@@ -106,7 +106,7 @@ class FreeDecInput(object):
 
     def _fits(self, value):
         """Measure the actual rendered label + digits, not character count."""
-        available = SCREEN_W - self._x0 - 4
+        available = SCREEN_W - 2 * max(4, self._x0)
         if available <= 0:
             return False
         return self._text_width(self._label + value) <= available
@@ -183,16 +183,14 @@ class FreeDecInput(object):
         # Center the label and digits together using the system font.
         total_width = self._text_width(self._label + ''.join(self._digits))
         x = max(self._x0, (SCREEN_W - total_width) // 2)
+        digit_start = x + self._text_width(self._label)
         if self._label:
             item = canvas.create_text(
                 x, self._y_offset, text=self._label, fill=LABEL_COLOR,
                 font=self._font, anchor='w', tags=TAG,
             )
-            bbox = canvas.bbox(item)
-            if bbox:
-                x = bbox[2]
-
         for i, ch in enumerate(self._digits):
+            x = digit_start + self._text_width(''.join(self._digits[:i]))
             item = canvas.create_text(
                 x, self._y_offset, text=ch, fill=self._text_color,
                 font=self._font, anchor='w', tags=TAG,
@@ -206,7 +204,6 @@ class FreeDecInput(object):
                     x0, y1 + 2, x1, y1 + 2,
                     fill=self._text_color, width=2, tags=TAG,
                 )
-            x = x1
 
         if self._hint:
             canvas.create_text(
