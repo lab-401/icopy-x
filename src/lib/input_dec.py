@@ -51,8 +51,8 @@ and the matching ``ui.json`` screen:
         "DOWN":  "call:dec_roll_down",
         "LEFT":  "call:dec_move_left",
         "RIGHT": "call:dec_move_right",
-        "OK":    "call:do_capture_dec",
-        "M2":    "call:do_capture_dec"
+        "OK":    "run:do_capture_dec",
+        "M2":    "run:do_capture_dec"
     }
 
 ``"type": "empty"`` is required so the framework never attaches its
@@ -73,10 +73,10 @@ import threading
 from lib._constants import SCREEN_W, CONTENT_Y0, CONTENT_H
 from lib import resources
 
-LABEL_COLOR = '#606060'
+LABEL_COLOR = '#000000'
 DIGIT_COLOR = '#0000FF'
 DEFAULT_TEXT_COLOR = DIGIT_COLOR
-HINT_COLOR = '#0000FF'
+HINT_COLOR = '#606060'
 
 TAG = '_dec_input'
 
@@ -84,7 +84,7 @@ TAG = '_dec_input'
 class FreeDecInput(object):
     """Grows a decimal number one digit at a time; no fixed-width boxes."""
 
-    def __init__(self, canvas, label='', hint='', max_length=13,
+    def __init__(self, canvas, label='', hint='', max_length=10,
                  x0=8, font_size=13, hint_font_size=10, y_offset=None,
                  text_color=DEFAULT_TEXT_COLOR):
         self._canvas = canvas
@@ -94,7 +94,7 @@ class FreeDecInput(object):
         self._owner_thread = threading.get_ident()
         self._x0 = x0
         self._font = resources.get_font(font_size)
-        self._hint_font = ('Arial', 9)  # Match Dump Diff 2 SRW footer
+        self._hint_font = resources.get_font(hint_font_size)
         default_y = CONTENT_Y0 + CONTENT_H // 2
         self._y_offset = default_y if y_offset is None else int(y_offset)
         self._text_color = text_color
@@ -106,9 +106,10 @@ class FreeDecInput(object):
 
     def _fits(self, value):
         """Measure the actual rendered label + digits, not character count."""
-        # Keep the whole label+number visible with a small margin on both sides.
-        available = SCREEN_W - 2 * max(4, self._x0)
-        return available > 0 and self._text_width(self._label + value) <= available
+        available = SCREEN_W - self._x0 - 4
+        if available <= 0:
+            return False
+        return self._text_width(self._label + value) <= available
 
     def _text_width(self, text):
         """Measure text with the actual Canvas font, not a font-spec string."""
@@ -151,11 +152,6 @@ class FreeDecInput(object):
         self._digits[self._cursor] = str((d - 1) % 10)
         self._redraw()
 
-    def cursorHome(self):
-        """Move cursor to first digit without changing entered DEC."""
-        self._cursor = 0
-        self._redraw()
-
     def moveLeft(self):
         if self._cursor > 0:
             self._cursor -= 1
@@ -184,9 +180,8 @@ class FreeDecInput(object):
         canvas = self._canvas
         canvas.delete(TAG)
 
-        # Center the complete DEC label and current digits as a single unit.
-        full_text = self._label + ''.join(self._digits)
-        total_width = self._text_width(full_text)
+        # Center the label and digits together using the system font.
+        total_width = self._text_width(self._label + ''.join(self._digits))
         x = max(self._x0, (SCREEN_W - total_width) // 2)
         if self._label:
             item = canvas.create_text(
@@ -214,53 +209,8 @@ class FreeDecInput(object):
             x = x1
 
         if self._hint:
-            lines = self._hint.split('\n')
-            bottom = CONTENT_Y0 + CONTENT_H - 2
-            if len(lines) in (2, 3) and lines[-1].startswith('◀▶'):
-                # Draw glyphs with Canvas-measured bounds, not estimated advance widths.
-                # Exact visible gap between the two arrow bounding boxes: 2 px.
-                left_arrow, right_arrow = '◀', '▶'
-                arrow_font = ('Arial', 9)  # same size as ▲▼ - change digit
-                suffix = lines[-1][2:]
-
-                def draw_measured(value, font, desired_left, tag=TAG):
-                    item = canvas.create_text(
-                        0, bottom, text=value, fill=HINT_COLOR,
-                        font=font, anchor='sw', tags=tag)
-                    bbox = canvas.bbox(item)
-                    if bbox:
-                        canvas.move(item, desired_left - bbox[0], 0)
-                        bbox = canvas.bbox(item)
-                    return item, bbox
-
-                def width_of(value, font):
-                    item, bbox = draw_measured(value, font, 0, '_hint_measure')
-                    width = bbox[2] - bbox[0] if bbox else 0
-                    canvas.delete(item)
-                    return width
-
-                wl = width_of(left_arrow, arrow_font)
-                wr = width_of(right_arrow, arrow_font)
-                ws = width_of(suffix, self._hint_font)
-                # Keep a readable gap before explanatory text as well.
-                total = wl + 2 + wr + 4 + ws
-                left = (SCREEN_W - total) // 2
-
-                canvas.create_text(SCREEN_W // 2, bottom - 16,
-                                   text=lines[-2], fill=HINT_COLOR,
-                                   font=self._hint_font, anchor='s', tags=TAG)
-                if len(lines) == 3:
-                    canvas.create_text(SCREEN_W // 2, bottom - 35,
-                                       text=lines[0], fill=HINT_COLOR,
-                                       font=self._hint_font, anchor='s', tags=TAG)
-                _, b_left = draw_measured(left_arrow, arrow_font, left)
-                _, b_right = draw_measured(right_arrow, arrow_font,
-                                            b_left[2] + 2 if b_left else left + wl + 2)
-                draw_measured(suffix, self._hint_font,
-                              b_right[2] + 4 if b_right else left + wl + 2 + wr + 4)
-            else:
-                canvas.create_text(
-                    SCREEN_W // 2, bottom,
-                    text=self._hint, fill=HINT_COLOR,
-                    font=self._hint_font, anchor='s', tags=TAG,
-                )
+            canvas.create_text(
+                SCREEN_W // 2, CONTENT_Y0 + CONTENT_H - 2,
+                text=self._hint, fill=HINT_COLOR,
+                font=self._hint_font, anchor='s', tags=TAG,
+            )
