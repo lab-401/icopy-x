@@ -169,14 +169,22 @@ class FreeTextInput(object):
         self._normalize_current_char()
         charset = CHARSETS[self._charset_idx]
         idx = charset.index(self._chars[self._cursor])
-        self._chars[self._cursor] = charset[(idx + 1) % len(charset)]
+        candidate = charset[(idx + 1) % len(charset)]
+        proposed = self._chars[:]
+        proposed[self._cursor] = candidate
+        if self._fits_text(''.join(proposed)):
+            self._chars[self._cursor] = candidate
         self._redraw()
 
     def rollDown(self):
         self._normalize_current_char()
         charset = CHARSETS[self._charset_idx]
         idx = charset.index(self._chars[self._cursor])
-        self._chars[self._cursor] = charset[(idx - 1) % len(charset)]
+        candidate = charset[(idx - 1) % len(charset)]
+        proposed = self._chars[:]
+        proposed[self._cursor] = candidate
+        if self._fits_text(''.join(proposed)):
+            self._chars[self._cursor] = candidate
         self._redraw()
 
     def nextCharset(self):
@@ -186,7 +194,10 @@ class FreeTextInput(object):
         self._charset_idx = (self._charset_idx + 1) % len(CHARSETS)
         charset = CHARSETS[self._charset_idx]
         if self._chars[self._cursor] not in charset:
-            self._chars[self._cursor] = charset[0]
+            proposed = self._chars[:]
+            proposed[self._cursor] = charset[0]
+            if self._fits_text(''.join(proposed)):
+                self._chars[self._cursor] = charset[0]
         self._redraw()
 
     def moveLeft(self):
@@ -194,27 +205,22 @@ class FreeTextInput(object):
             self._cursor -= 1
             self._redraw()
 
+    def _fits_text(self, value):
+        """Check the complete label and value against the screen width."""
+        margin = max(4, int(self._x0))
+        available = SCREEN_W - margin - 4
+        return self._text_width(self._label + ' ' + value) <= available
+
     def _get_input_limit(self):
-        # Use measured pixel width; preserve the original 20-character ceiling.
-        char_limit = max(1, self.max_total_chars - len(self._label) - 1)
-        max_chars = min(max(1, int(self._max_length)), char_limit)
-        remaining = SCREEN_W - self._x0 - 4 - self._text_width(self._label + ' ')
-        if remaining <= 0:
-            return 1
-        count = 0
-        for i in range(max_chars):
-            ch = self._chars[i] if i < len(self._chars) else CHARSETS[self._charset_idx][0]
-            if self._text_width(''.join(self._chars[:min(i, len(self._chars))]) +
-                                  (ch if i >= len(self._chars) else '')) > remaining:
-                break
-            count += 1
-        return max(1, count)
+        """Respect max_length and the actual font/label pixel width."""
+        return max(1, min(int(self._max_length), int(self.max_total_chars)))
 
     def moveRight(self):
         input_limit = self._get_input_limit()
         if self._cursor < len(self._chars) - 1:
             self._cursor += 1
-        elif len(self._chars) < input_limit:
+        elif (len(self._chars) < input_limit and
+              self._fits_text(''.join(self._chars) + CHARSETS[self._charset_idx][0])):
             self._chars.append(CHARSETS[self._charset_idx][0])
             self._cursor += 1
         self._redraw()
@@ -237,7 +243,7 @@ class FreeTextInput(object):
 
         text = ''.join(self._chars)
         label_text = self._label + ' '
-        value_text = text[:self._get_input_limit()]
+        value_text = text
 
         # label black
         label_item = canvas.create_text(
