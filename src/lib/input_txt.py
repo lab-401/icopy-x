@@ -12,66 +12,23 @@
 #
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
-"""Free-growing filename-safe text input widget.
+"""Single-line filename-safe text input for iCopy-X / iCopy-XS.
 
-Same mechanics as :mod:`lib.input_dec` / :mod:`lib.input_hex`, but
-rolls through character sets restricted to characters that are safe
-in filenames on both Windows and Linux -- important here since the
-iCopy-X exports its user partition as a USB mass-storage drive, and
-anything written on-device may end up copied/renamed on a PC too.
+Features:
+- Enter A-Z, a-z, 0-9, and filename-safe special characters -_.() and space.
+- Exclude Windows-invalid filename punctuation and control characters.
+- UP/DOWN cycles within the selected character group.
+- nextCharset() cycles UPPER, LOWER, DIGITS and SPECIAL (typically M2).
+- LEFT/RIGHT moves or extends the input; underline marks the cursor.
+- Keep the label and entered text left-aligned, never centered or wrapped.
+- Dynamically check full label + value against the screen width using
+  Canvas.bbox() with the actual configured font.
+- No built-in 20-character ceiling: available width determines capacity.
+- Optional max_length can explicitly impose a shorter caller-defined limit.
+- Recheck width when changing characters, including charset changes.
+- getValue() returns the entered text; callers can strip trailing spaces.
 
-Excluded everywhere: ``\\ / : * ? " < > |`` (forbidden in Windows
-filenames) and control characters.
-
-Unlike input_dec/input_hex (one flat alphabet), this one has FOUR
-character groups, switched with ``nextCharset()`` (bind to M2), in
-this order:
-
-    1. UPPER   -- A-Z
-    2. LOWER   -- a-z
-    3. DIGITS  -- 0-9
-    4. SPECIAL -- - _ . ( ) space
-
-UP/DOWN roll within whichever group is currently active; switching
-groups with M2 resets the character under the cursor to the first
-letter of the new group (e.g. 'A', 'a', '0', '-') so you always know
-where you are. Starts on UPPER, so the very first character shown is
-'A'.
-
-Wire-up is identical to FreeDecInput/FreeHexInput -- imported directly
-by a plugin and driven through ``call:`` (see ``lib.plugin_activity``'s
-``_handle_call``):
-
-    from lib.input_txt import FreeTextInput
-
-    def show_txt_input(self):
-        canvas = self.host.getCanvas()
-        self._txt = FreeTextInput(canvas, label='Name:', max_length=20, y_offset=9)
-        self._txt.show()
-        return {'status': 'ok'}
-
-    def txt_roll_up(self):      self._txt.rollUp()
-    def txt_roll_down(self):    self._txt.rollDown()
-    def txt_move_left(self):    self._txt.moveLeft()
-    def txt_move_right(self):   self._txt.moveRight()
-    def txt_next_charset(self): self._txt.nextCharset()
-
-    def do_capture_txt(self):
-        value = self._txt.getValue()
-        ...
-
-and the matching ``ui.json`` screen:
-
-    "content": {"type": "empty"},
-    "keys": {
-        "UP":    "call:txt_roll_up",
-        "DOWN":  "call:txt_roll_down",
-        "LEFT":  "call:txt_move_left",
-        "RIGHT": "call:txt_move_right",
-        "M2":    "call:txt_next_charset",
-        "OK":    "run:do_capture_txt"
-    }
-    Copyright (c) 2026: jareckib
+Copyright (c) 2026: jareckib
 """
 
 import threading
@@ -99,14 +56,14 @@ TAG = '_txt_input'
 class FreeTextInput(object):
     """Grows a filename-safe string one character at a time."""
 
-    def __init__(self, canvas, label='', hint='', max_length=20,
+    def __init__(self, canvas, label='', hint='', max_length=None,
                  per_line=10, x0=8, font_size=13, hint_font_size=10,
                  line_gap=20, y_offset=9, text_color=DEFAULT_TEXT_COLOR):
         self._canvas = canvas
         self._owner_thread = threading.get_ident()
         self._label = label
         self._hint = hint
-        self._max_length = max_length
+        self._max_length = None if max_length is None else max(1, int(max_length))
         self._per_line = per_line
         self._x0 = x0
         self._font = resources.get_font(font_size)
@@ -117,7 +74,6 @@ class FreeTextInput(object):
         self._charset_idx = 0  # start on UPPER
         self._chars = [CHARSETS[self._charset_idx][0]]  # 'A'
         self._cursor = 0
-        self.max_total_chars = 20
 
     def _check_ui_thread(self):
         return  # Existing plugin is responsible for UI-thread scheduling
@@ -163,7 +119,10 @@ class FreeTextInput(object):
         charset = CHARSETS[self._charset_idx]
         ch = self._chars[self._cursor]
         if ch not in charset:
-            self._chars[self._cursor] = charset[0]
+            proposed = self._chars[:]
+            proposed[self._cursor] = charset[0]
+            if self._fits_text(''.join(proposed)):
+                self._chars[self._cursor] = charset[0]
 
     def rollUp(self):
         self._normalize_current_char()
@@ -212,14 +171,14 @@ class FreeTextInput(object):
         return self._text_width(self._label + ' ' + value) <= available
 
     def _get_input_limit(self):
-        """Respect max_length and the actual font/label pixel width."""
-        return max(1, min(int(self._max_length), int(self.max_total_chars)))
+        """Return optional caller limit; width is always checked separately."""
+        return self._max_length
 
     def moveRight(self):
         input_limit = self._get_input_limit()
         if self._cursor < len(self._chars) - 1:
             self._cursor += 1
-        elif (len(self._chars) < input_limit and
+        elif ((input_limit is None or len(self._chars) < input_limit) and
               self._fits_text(''.join(self._chars) + CHARSETS[self._charset_idx][0])):
             self._chars.append(CHARSETS[self._charset_idx][0])
             self._cursor += 1
@@ -257,8 +216,7 @@ class FreeTextInput(object):
         )
 
         # draw value chars, with underline under active char
-        label_bbox = canvas.bbox(label_item)
-        x = label_bbox[2] if label_bbox else self._x0 + 55
+        x = self._x0 + self._text_width(label_text)
         for i, ch in enumerate(value_text):
             item = canvas.create_text(
                 x,
