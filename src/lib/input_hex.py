@@ -32,7 +32,7 @@ TAG = '_hex_input'
 
 
 class FreeHexInput(object):
-    """Grows a hex value one digit at a time; wraps after per_line chars."""
+    """Grows a hex value one digit at a time; wraps when necessary."""
 
     def __init__(self, canvas, label='', hint='', max_length=16,
                  per_line=8, x0=8, font_size=13, hint_font_size=10,
@@ -43,7 +43,6 @@ class FreeHexInput(object):
         self._max_length = max(1, int(max_length))
         self._per_line = max(1, int(per_line))
         self._x0 = x0
-        self._font_size = int(font_size)
         self._font = resources.get_font(font_size)
         self._hint_font = resources.get_font(hint_font_size)
         self._line_gap = line_gap
@@ -104,51 +103,68 @@ class FreeHexInput(object):
     def length(self):
         return len(self._digits)
 
-    # -- Dump Diff 2 character-capacity layout -------------------------
+    # -- device font measurement ----------------------------------------
 
-    def _line_capacity(self):
-        """Dump Diff 2 Courier New rule: floor(24 * 11 / font_size).
-
-        The agreed size-14 calibration is 21 total positions. One
-        position on each side is reserved as a screen margin.
-        """
-        if self._font_size <= 0:
+    def _measure(self, text):
+        """Measure actual text width with the same Canvas font used to draw."""
+        if not text:
             return 0
-        total = (24 * 11) // self._font_size
-        if self._font_size == 14:
-            total = 21
-        return max(0, total - 2)
+        item = self._canvas.create_text(0, 0, text=text, font=self._font,
+                                        anchor='w', tags='_hex_measure')
+        try:
+            bounds = self._canvas.bbox(item)
+            return max(0, bounds[2] - bounds[0]) if bounds else len(text) * 10
+        finally:
+            self._canvas.delete(item)
 
     def _layout(self, digits):
-        """Center one line when it fits the Dump Diff 2 character budget.
+        """Fit the complete label and HEX text by measured pixel width.
 
-        Otherwise use 8+8 for 16 HEX or 8+2 for 10 HEX, with
-        the second line aligned under the first HEX digit.
+        Center on one row when possible. Otherwise split at the largest
+        fitting digit boundary, aligning row two under the first HEX digit.
+        Never shorten or alter the label or change the configured data limit.
         """
-        capacity = self._line_capacity()
-        label_length = len(self._label)
-        count = len(digits)
-        if label_length + count <= capacity:
-            split = count
-        elif self._max_length in (10, 16) and count > 8:
-            split = 8
-        else:
-            return None
-        if label_length + split > capacity or count - split > capacity:
+        label_width = self._measure(self._label)
+        margin = max(4, self._x0)
+        usable = SCREEN_W - 2 * margin
+        if usable <= 0 or label_width >= usable:
             return None
 
-        # Courier New is monospaced; character positions use the agreed
-        # 240px screen budget rather than measuring Canvas glyph bounds.
-        total_positions = self._line_capacity() + 2
-        cell_width = float(SCREEN_W) / total_positions if total_positions else 0
-        first_width = (label_length + split) * cell_width
-        first_left = (SCREEN_W - first_width) / 2
-        first_digit_x = first_left + label_length * cell_width
-        if first_digit_x + (count - split) * cell_width > SCREEN_W - cell_width:
-            return None
-        return [(0 if i < split else 1,
-                 first_digit_x + (i if i < split else i - split) * cell_width)
-                for i in range(count)]
+        # Measuring whole strings accounts for font-specific spacing.
+        full_width = self._measure(self._label + ''.join(digits))
+        if full_width <= usable:
+            split = len(digits)
+        else:
+            split = 0
+            for i in range(1, len(digits)):
+                if self._measure(self._label + ''.join(digits[:i])) <= usable:
+                    split = i
+                else:
+                    break
+            if not split:
+                return None
+            # Row two begins at the first digit's x position, so it has
+            # less room than a full-width row when the label is long.
+            if self._measure(''.join(digits[split:])) > usable - label_width:
+                return None
+
+        first_width = self._measure(self._label + ''.join(digits[:split]))
+        first_left = max(margin, (SCREEN_W - first_width) // 2)
+        first_digit_x = first_left + label_width
+        second_width = self._measure(''.join(digits[split:]))
+        if first_digit_x + second_width > SCREEN_W - margin:
+            # Shift the centered block left only as far as margins permit.
+            first_digit_x = SCREEN_W - margin - second_width
+            first_left = first_digit_x - label_width
+            if first_left < margin:
+                return None
+
+        positions = []
+        for row, segment in ((0, digits[:split]), (1, digits[split:])):
+            for i in range(len(segment)):
+                prefix = ''.join(segment[:i])
+                positions.append((row, first_digit_x + self._measure(prefix)))
+        return positions
 
     # -- drawing -----------------------------------------------------
 
@@ -159,7 +175,7 @@ class FreeHexInput(object):
         row_bottom_y = row_top_y + self._line_gap
         positions = self._layout(self._digits)
         if self._label:
-            label_x = (positions[0][1] - len(self._label) * (float(SCREEN_W) / (self._line_capacity() + 2))) if positions else self._x0
+            label_x = (positions[0][1] - self._measure(self._label)) if positions else self._x0
             canvas.create_text(label_x, row_top_y, text=self._label,
                                fill=LABEL_COLOR, font=self._font,
                                anchor='w', tags=TAG)
