@@ -15,18 +15,21 @@
 """Single-line filename-safe text input for iCopy-X / iCopy-XS.
 
 Features:
-- Enter A-Z, a-z, 0-9, and filename-safe special characters -_.() and space.
-- Exclude Windows-invalid filename punctuation and control characters.
-- UP/DOWN cycles within the selected character group.
-- nextCharset() cycles UPPER, LOWER, DIGITS and SPECIAL (typically M2).
-- LEFT/RIGHT moves or extends the input; underline marks the cursor.
-- Keep the label and entered text left-aligned, never centered or wrapped.
-- Dynamically check full label + value against the screen width using
-  Canvas.bbox() with the actual configured font.
-- No built-in 20-character ceiling: available width determines capacity.
-- Optional max_length can explicitly impose a shorter caller-defined limit.
-- Recheck width when changing characters, including charset changes.
-- getValue() returns the entered text; callers can strip trailing spaces.
+- Enter uppercase A-Z, lowercase a-z, digits 0-9 and -_.() or space.
+- Exclude characters forbidden in Windows filenames and control characters.
+- UP/DOWN edits the current character within the selected group.
+- M2 / nextCharset() cycles the existing four character groups:
+  UPPER, LOWER, DIGITS and SPECIAL.
+- LEFT/RIGHT moves the cursor or appends a character; the cursor is underlined.
+- Keep the label and value left-aligned on one line, without centering or wrapping.
+- Calculate available space dynamically from the label, selected font and
+  screen width using Canvas.bbox() before extending or changing text.
+- No fixed 20-character limit; an optional max_length set by the caller
+  can impose an additional limit.
+- getValue() returns the text as entered, including any trailing spaces.
+
+Existing character-group switching behavior is retained. This update concerns
+the single-line input width calculation, not a new charset-switching feature.
 
 Copyright (c) 2026: jareckib
 """
