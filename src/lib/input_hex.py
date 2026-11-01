@@ -120,8 +120,8 @@ class FreeHexInput(object):
     def _layout(self, digits):
         """Fit the complete label and HEX text by measured pixel width.
 
-        Center on one row when possible. Otherwise split at the largest
-        fitting digit boundary, aligning row two under the first HEX digit.
+        Center on one row when possible. Otherwise use 8+8 for 16 HEX,
+        or label above all 10 digits for 10 HEX.
         Never shorten or alter the label or change the configured data limit.
         """
         label_width = self._measure(self._label)
@@ -130,27 +130,28 @@ class FreeHexInput(object):
         if usable <= 0 or label_width >= usable:
             return None
 
-        # Measuring whole strings accounts for font-specific spacing.
+        # Fixed, predictable layouts: 16 -> 8+8; 10 -> label / 10.
         full_width = self._measure(self._label + ''.join(digits))
         if full_width <= usable:
             split = len(digits)
-        else:
+        elif self._max_length == 16:
+            split = min(8, len(digits))
+            if (self._measure(self._label + ''.join(digits[:split])) > usable
+                    or self._measure(''.join(digits[split:])) > usable - label_width):
+                return None
+        elif self._max_length == 10:
             split = 0
-            for i in range(1, len(digits)):
-                if self._measure(self._label + ''.join(digits[:i])) <= usable:
-                    split = i
-                else:
-                    break
-            if not split:
+            if self._measure(''.join(digits)) > usable - label_width:
                 return None
-            # Row two begins at the first digit's x position, so it has
-            # less room than a full-width row when the label is long.
-            if self._measure(''.join(digits[split:])) > usable - label_width:
-                return None
+        else:
+            return None
 
         first_width = self._measure(self._label + ''.join(digits[:split]))
         first_left = max(margin, (SCREEN_W - first_width) // 2)
         first_digit_x = first_left + label_width
+        if split == 0:
+            first_left = max(margin, (SCREEN_W - self._measure(self._label + ''.join(digits))) // 2)
+            first_digit_x = first_left + label_width
         second_width = self._measure(''.join(digits[split:]))
         if first_digit_x + second_width > SCREEN_W - margin:
             # Shift the centered block left only as far as margins permit.
@@ -175,7 +176,7 @@ class FreeHexInput(object):
         row_bottom_y = row_top_y + self._line_gap
         positions = self._layout(self._digits)
         if self._label:
-            label_x = (positions[0][1] - self._measure(self._label)) if positions else self._x0
+            label_x = (positions[0][1] - self._measure(self._label)) if positions and positions[0][0] == 0 else (positions[0][1] - self._measure(self._label) if positions else self._x0)
             canvas.create_text(label_x, row_top_y, text=self._label,
                                fill=LABEL_COLOR, font=self._font,
                                anchor='w', tags=TAG)
