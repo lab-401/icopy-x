@@ -84,7 +84,7 @@ TAG = '_dec_input'
 class FreeDecInput(object):
     """Grows a decimal number one digit at a time; no fixed-width boxes."""
 
-    def __init__(self, canvas, label='', hint='', max_length=10,
+    def __init__(self, canvas, label='', hint='', max_length=13,
                  x0=8, font_size=13, hint_font_size=10, y_offset=None,
                  text_color=DEFAULT_TEXT_COLOR):
         self._canvas = canvas
