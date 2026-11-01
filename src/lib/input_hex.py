@@ -12,9 +12,19 @@
 #
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
-"""Free-growing hex digit input widget.
+"""HEX input widget for iCopy-X / iCopy-XS.
 
-Second line is indented to line up under the FIRST digit of line one.
+Features:
+- Enter uppercase hexadecimal digits (0-9, A-F) one at a time.
+- UP/DOWN changes a digit; LEFT/RIGHT moves or extends the input.
+- Cursor underline identifies the editable digit.
+- Canvas font metrics determine whether label + digits fit on one line.
+- For 16-digit inputs, use one line or a fixed 8+8 split.
+- For 10-digit inputs, use one line or put all digits beneath the label.
+- On two lines, align the digits with the label's value column.
+- Keep the configured max_length, font, colors, hint and screen margins.
+- getValue() returns the entered HEX string; no RFID operation is performed.
+
 Copyright (c) 2026: jareckib
 """
 
