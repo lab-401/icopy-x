@@ -12,59 +12,18 @@
 #
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
-"""Free-growing decimal digit input widget.
+"""Decimal input widget for iCopy-X / iCopy-XS.
 
-Unlike the fixed-width ``input_dec`` content type (ten boxes shown up
-front, handled by ``InputMethods`` in :mod:`lib.widget`), this widget
-starts with a single digit and grows one position at a time as the
-user moves right -- useful for a variable-length decimal ID where you
-don't want to stare at nine leading zero boxes to enter e.g. "39".
+Features:
+- Enter digits 0-9, starting from one editable digit.
+- UP/DOWN changes a digit; LEFT/RIGHT moves or extends the input.
+- Underline the active digit and keep the label + value centered.
+- Use actual Canvas font metrics to position digits and check screen fit.
+- Respect the configured max_length (default: 13 digits).
+- Keep original colors, font, hint and key-handling methods.
+- getValue() returns decimal text, including any leading zeroes.
+- This module does not convert, encode or write RFID tags.
 
-This is plain Python with no dependency on :mod:`lib.widget`, meant to
-be imported directly by a plugin and driven through the ``call:``
-action (see ``lib.plugin_activity``'s ``_handle_call``).  A plugin
-wires it up like this:
-
-    from lib.input_dec import FreeDecInput
-
-    def show_dec_input(self):
-        canvas = self.host.getCanvas()
-        self._dec = FreeDecInput(canvas, label='INPUT DEC:',
-                                  hint='Up/Down digit   Left/Right move')
-        self._dec.show()
-        return {'status': 'ok'}
-
-    def dec_roll_up(self):    self._dec.rollUp()
-    def dec_roll_down(self):  self._dec.rollDown()
-    def dec_move_left(self):  self._dec.moveLeft()
-    def dec_move_right(self): self._dec.moveRight()
-
-    def do_capture_dec(self):
-        dec = self._dec.getValue()
-        ...
-
-and the matching ``ui.json`` screen:
-
-    "content": {"type": "empty"},
-    "keys": {
-        "UP":    "call:dec_roll_up",
-        "DOWN":  "call:dec_roll_down",
-        "LEFT":  "call:dec_move_left",
-        "RIGHT": "call:dec_move_right",
-        "OK":    "run:do_capture_dec",
-        "M2":    "run:do_capture_dec"
-    }
-
-``"type": "empty"`` is required so the framework never attaches its
-own ``InputMethods`` widget -- that would also intercept UP/DOWN/
-LEFT/RIGHT and this widget would never see them.
-
-No delete key: there's nothing to delete.  Moving left just reviews
-an already-entered digit (rolling it up/down edits it in place);
-moving right past the last entered digit grows the number by one new
-digit (default ``'0'``), up to ``max_length``.  The digit currently
-under the cursor is always underlined, so it's clear what UP/DOWN
-will change -- wherever the cursor happens to be.
 Copyright (c) 2026: jareckib
 """
 
