@@ -205,12 +205,14 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": ""
@@ -250,12 +252,14 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         }
                     ]
                 },
@@ -297,12 +301,14 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": "Press OK to write",
@@ -386,12 +392,14 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#0000FF"
                         },
                         {
                             "text": ""
