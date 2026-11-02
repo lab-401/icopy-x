@@ -78,9 +78,11 @@
                             "text": "SRW - Exit",
                             "size": "medium",
                             "align": "center"
+                        },
+                        {
+                            "text": ""
                         }
-                    ],
-                    "y": -5
+                    ]
                 },
                 "buttons": {
                     "left": "DEC",
