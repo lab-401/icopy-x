@@ -252,7 +252,447 @@ class T55xxMultiwriterPlugin(object):
     def draw_write_error_footer(self):
         self._draw_bottom_hints('OK - retry write')
 
+    def draw_colored_uid_values(self):
+        """Color only UID/Block HEX values, preserving dark labels."""
+        import tkinter.font as tkfont
+        canvas = self.host.getCanvas()
+        for item in list(canvas.find_withtag('_jr_content')):
+            if canvas.type(item) != 'text':
+                continue
+            text = canvas.itemcget(item, 'text')
+            match = re.match(r'^(UID\\d*|HEX|DEC|Block 0):\\s+([0-9A-Fa-f]+)
+        """Center 12px labels; bottom text baseline is 5px above button bar."""
+        canvas = self.host.getCanvas()
+        canvas.delete('_multiwriter_menu_footer')
+        font = resources.get_font(12)
+        bottom = BTN_BAR_Y0 - 5
+        for i, label in enumerate(reversed(labels)):
+            canvas.create_text(
+                SCREEN_W // 2, bottom - i * 19,
+                text=self._tr(label), font=font,
+                fill=NORMAL_TEXT_COLOR, anchor='s',
+                tags=('_jr_content', '_multiwriter_menu_footer'),
+            )
+
+    def show_dec_input(self):
+        canvas = self.host.getCanvas()
+        self._dec = FreeDecInput(
+            canvas, label=self._tr('DEC: '),
+            hint=self._tr('\nUp/Down - digit\nL/R: move'),
+            hint_font_size=12,
+            max_length=13,
+        )
+        self._dec.show()
+
+    def dec_roll_up(self):
+        if self._dec is not None:
+            self._dec.rollUp()
+
+    def dec_roll_down(self):
+        if self._dec is not None:
+            self._dec.rollDown()
+
+    def dec_move_left(self):
+        if self._dec is not None:
+            self._dec.moveLeft()
+
+    def dec_move_right(self):
+        if self._dec is not None:
+            self._dec.moveRight()
+
+    def do_capture_dec(self):
+        """Get UID from the dec input (up to 13 decimal digits = engraved ID)."""
+        self.host.set_var('error_msg', '')
+        dec = self._dec.getValue() if self._dec is not None else ''
+        if self._dec is not None:
+            self._dec.hide()
+            self._dec = None
+
+        if not dec:
+            return self._input_validation_error('Enter a digit.')
+
+        if int(dec) == 0:
+            return self._input_validation_error('ID cannot be', 'all zeros.')
+
+        uid = dec_to_hex_uid(dec)
+        if uid is None:
+            return self._input_validation_error('Invalid DEC', '(max 40-bit).')
+
+        return self._store_uid(uid)
+
+    # -- HEX input (fixed 10 hex) ----------------------------------------
+
+    def show_hex_input(self):
+        canvas = self.host.getCanvas()
+        # Force exactly 10 hex characters for EM4102
+        self._hex = FreeHexInput(
+            canvas, label=self._tr('INPUT HEX:'),
+            hint=self._tr('\nUp/Down - digit\nL/R: move'),
+            max_length=10,
+            per_line=10,
+            hint_font_size=12,
+        )
+        self._hex.show()
+
+    def hex_roll_up(self):
+        if self._hex is not None:
+            self._hex.rollUp()
+
+    def hex_roll_down(self):
+        if self._hex is not None:
+            self._hex.rollDown()
+
+    def hex_move_left(self):
+        if self._hex is not None:
+            self._hex.moveLeft()
+
+    def hex_move_right(self):
+        if self._hex is not None:
+            self._hex.moveRight()
+
+    def do_capture_hex(self):
+        """Get UID from the hex input widget. Only exactly 10 hex chars accepted."""
+        self.host.set_var('error_msg', '')
+        val = self._hex.getValue() if self._hex is not None else ''
+        if self._hex is not None:
+            self._hex.hide()
+            self._hex = None
+        if not val:
+            return self._input_validation_error('Enter HEX', 'characters.')
+
+        uid = val.upper()
+        # Enforce exact 10-hex length for EM4102
+        if not re.match(r'^[0-9A-F]{10}$', uid):
+            return self._input_validation_error('Invalid HEX length', 'Exactly 10 HEX required.')
+
+        if int(uid, 16) == 0:
+            return self._input_validation_error('UID cannot be', 'all zeros.')
+
+        return self._store_uid(uid)
+
+    def _back_from_input(self, widget_name):
+        """Hide the editor on the UI thread; preserve already stored UIDs."""
+        widget = getattr(self, widget_name)
+        if widget is not None:
+            widget.hide()
+            setattr(self, widget_name, None)
+        count = self._update_uid_count()
+        if count >= 3:
+            return {'status': 'stored_full'}
+        if count > 0:
+            return {'status': 'stored_more'}
+        return {'status': 'empty'}
+
+    def retry_dec_input(self):
+        """Re-enter the DEC editor after a validation error."""
+        self._dec = None
+        self.host.set_var('error_msg', '')
+        self.host.set_var('error_line1', '')
+        self.host.set_var('error_line2', '')
+        return {'status': 'retry'}
+
+    def retry_hex_input(self):
+        """Re-enter the HEX editor after a validation error."""
+        self._hex = None
+        self.host.set_var('error_msg', '')
+        self.host.set_var('error_line1', '')
+        self.host.set_var('error_line2', '')
+        return {'status': 'retry'}
+
+    def dec_back_cleanse(self):
+        return self._back_from_input('_dec')
+
+    def hex_back_cleanse(self):
+        return self._back_from_input('_hex')
+
+    def do_return_to_uid_list(self):
+        """Return to the UID summary without discarding stored entries."""
+        count = self._update_uid_count()
+        if count >= 3:
+            return {'status': 'stored_full'}
+        if count > 0:
+            return {'status': 'stored_more'}
+        return {'status': 'empty'}
+
+    # -- Read original fob ------------------------------------------------
+
+    def do_read_fob(self):
+        """Read UID from the original fob via PM3."""
+        self.host.set_var('error_msg', '')
+        ok, out = self._pm3('lf em 410x reader', TIMEOUT_READ)
+        uid = _parse_em410x_id(out) if out else None
+
+        if not uid:
+            self.host.set_var('error_msg', self._tr('No EM410x tag detected.\nAdjust position and retry.'))
+            return {'status': 'error'}
+
+        if not re.fullmatch(r'[0-9A-F]{10}', uid):
+            self.host.set_var('error_msg', self._tr('Read UID has unsupported length or format.\nExpected exactly 10 hex (EM4102).'))
+            return {'status': 'error'}
+
+        return self._store_uid(uid)
+
+    def _store_uid(self, uid):
+        """Save the UID into the next available slot."""
+        uids = self._get_uid_list()
+        if len(uids) >= 3:
+            self.host.set_var('error_msg', self._tr('Maximum 3 UIDs reached.'))
+            return {'status': 'full'}
+
+        # Encode and verify
+        result = encode_uid(uid)
+        if result is None:
+            self.host.set_var('error_msg', self._tr('Encoding failed for:\n{}').format(uid))
+            return {'status': 'error'}
+
+        # Store in the first empty slot. This also keeps the slot index correct
+        # if the state was left partially populated after navigating Back.
+        idx = None
+        for slot in range(1, 4):
+            if not self.host.get_var('uid{}'.format(slot), ''):
+                idx = slot
+                break
+
+        if idx is None:
+            self.host.set_var('error_msg', self._tr('Maximum 3 UIDs reached.'))
+            return {'status': 'full'}
+
+        self._set_uid(idx, uid)
+        count = self._update_uid_count()
+        self.host.set_var('last_uid', uid)
+
+        if count < 3:
+            return {'status': 'stored_more'}
+        else:
+            return {'status': 'stored_full'}
+
+    def do_precheck(self):
+        """Fast LF protocol check; never start detect if the transport timed out.
+
+        A positive LF decode is evidence of a readable tag, not proof of T5577.
+        Blank/unconfigured/password-protected T5577 may fail this precheck.
+        """
+        self.host.set_var('error_msg', '')
+        if not self._get_uid_list():
+            self.host.set_var('error_msg', self._tr('No UIDs to write.'))
+            return {'status': 'error'}
+        try:
+            ok, out = self._pm3('lf search', TIMEOUT_PRECHECK)
+        except Exception:
+            self.host.set_var('error_msg', self._tr('LF check: communication error.'))
+            return {'status': 'error'}
+        if not ok:
+            self.host.set_var('error_msg', self._tr('LF check failed or timed out.'))
+            return {'status': 'error'}
+        output = out or ''
+        # `No known 125/134 kHz tags found` refers to decoded protocols,
+        # not to the T55xx chipset. PM3 can identify a blank T5577 later
+        # in the same `lf search` response.
+        # Only a positive chipset identification permits the slower detect.
+        found = bool(re.search(
+            r'\bChipset\s*\.{0,4}\s*[:=]?\s*T55x7\b',
+            output, re.IGNORECASE))
+        if not found:
+            self.host.set_var('error_msg', self._tr(
+                'No T55xx chipset found.\nCheck tag and position.'))
+            return {'status': 'error'}
+        return {'status': 'ok'}
+
+    # Keep progress screens visible for at least two seconds. These wrappers
+    # are invoked through run: (worker thread), never through call: (UI thread).
+    def _progress_min_2s(self, handler):
+        start = time.monotonic()
+        try:
+            return handler()
+        finally:
+            remaining = 2.0 - (time.monotonic() - start)
+            if remaining > 0:
+                time.sleep(remaining)
+
+    def do_precheck_visible(self):
+        return self._progress_min_2s(self.do_precheck)
+
+    def do_detect_visible(self):
+        return self._progress_min_2s(self.do_detect)
+
+    def do_write_visible(self):
+        return self._progress_min_2s(self.do_write)
+
+    def do_verify_visible(self):
+        return self._progress_min_2s(self.do_verify)
+
+    # -- Write to T5577 ---------------------------------------------------
+
+    def do_detect(self):
+        """Detect tag only after successful LF precheck."""
+        self.host.set_var('error_msg', '')
+        if not self._get_uid_list():
+            self.host.set_var('error_msg', self._tr('No UIDs to write.'))
+            return {'status': 'error'}
+        try:
+            ok, detect_output = self._pm3('lf t55xx detect', TIMEOUT_DET)
+        except Exception:
+            self.host.set_var('error_msg', self._tr('T5577 detection: communication error.'))
+            return {'status': 'error'}
+        if not ok or not re.search(r'Chip type\s*\.{0,12}\s*[:=]?\s*T55x7\b', detect_output or '', re.IGNORECASE):
+            self.host.set_var('error_msg', self._tr('T5577 detection failed.\nCheck tag and position.'))
+            return {'status': 'error'}
+        return {'status': 'ok'}
+
+    def do_write(self):
+        """Write data only after precheck and detect have succeeded."""
+        self.host.set_var('error_msg', '')
+        uids = self._get_uid_list()
+        if not 1 <= len(uids) <= 3:
+            self.host.set_var('error_msg', self._tr('Invalid UID count.'))
+            return {'status': 'error'}
+        all_blocks = []
+        for uid in uids:
+            result = encode_uid(uid)
+            if result is None or int(uid, 16) == 0:
+                self.host.set_var('error_msg', self._tr('Invalid UID: {}').format(uid))
+                return {'status': 'error'}
+            all_blocks.extend(result)
+        block0 = BLOCK0[len(uids)]
+        self.host.set_var('block0_label', 'Block 0: {}'.format(block0))
+        # A new attempt invalidates the previous verification snapshot.
+        self.host.set_var('written_count', '0')
+        self.host.set_var('written_block0', '')
+        for i in range(1, 7):
+            self.host.set_var('written_block{}'.format(i), '')
+        for i, blk in [(0, block0)] + list(enumerate(all_blocks, 1)):
+            try:
+                ok, _ = self._pm3('lf t55xx write -b {} -d {}'.format(i, blk), TIMEOUT_WRITE)
+            except Exception:
+                self.host.set_var('error_msg', self._tr('Communication error on block {}.').format(i))
+                return {'status': 'error'}
+            if not ok:
+                self.host.set_var('error_msg', self._tr('Write failed on block {}.\nCheck tag position.').format(i))
+                return {'status': 'error'}
+        self.host.set_var('written_block0', block0)
+        for i, blk in enumerate(all_blocks, 1):
+            self.host.set_var('written_block{}'.format(i), blk)
+        self.host.set_var('written_count', str(len(all_blocks)))
+        return {'status': 'done'}
+
+    def do_verify(self):
+        """Verify Page 0 using dump, with per-block reads if dump is unparseable."""
+        self.host.set_var('error_msg', '')
+        block0 = self.host.get_var('written_block0', '')
+        try:
+            n = int(self.host.get_var('written_count', '0'))
+        except (TypeError, ValueError):
+            n = 0
+        if not block0 or not 1 <= n <= 6:
+            self.host.set_var('error_msg', self._tr('No write data to verify.'))
+            return {'status': 'error'}
+
+        # Re-detect after writing Block 0: the RF configuration may have changed.
+        # Do not proceed with dump/read if detection fails or times out.
+        try:
+            detected, detect_output = self._pm3('lf t55xx detect', TIMEOUT_DET)
+        except Exception:
+            detected, detect_output = False, ''
+        if not detected or not re.search(
+                r'Chip type\s*\.{0,12}\s*[:=]?\s*T55x7\b',
+                detect_output or '', re.IGNORECASE):
+            self.host.set_var('error_msg', self._tr(
+                'Cannot detect T5577 after write.\nVerification failed.'))
+            return {'status': 'failed'}
+
+        # First try the existing single dump (one RF command for all blocks).
+        try:
+            ok, all_output = self._pm3('lf t55xx dump', TIMEOUT_READ)
+        except Exception:
+            ok, all_output = False, ''
+        if not ok:
+            all_output = ''
+
+        for i in range(n + 1):
+            expected = block0 if i == 0 else self.host.get_var('written_block{}'.format(i), '')
+            found = _parse_block(all_output, i)
+            if found is None:
+                # Only a missing/unparseable value needs an individual read.
+                # A genuine mismatch must remain a failure, not be hidden.
+                try:
+                    read_ok, read_output = self._pm3('lf t55xx read -b {}'.format(i), TIMEOUT_READ)
+                except Exception:
+                    read_ok, read_output = False, ''
+                if read_ok:
+                    found = _parse_block(read_output, i)
+            if found is None:
+                self.host.set_var('error_msg', self._tr(
+                    'Cannot read block {}.\nVerification failed.').format(i))
+                return {'status': 'failed'}
+            if found.upper() != expected.upper():
+                self.host.set_var('error_msg', self._tr(
+                    'Block {} mismatch.\nExpected: {}\nFound: {}').format(i, expected, found))
+                return {'status': 'failed'}
+        return {'status': 'ok'}
+
+    def do_cancel_write(self):
+        """Cancel the current write attempt without deleting the UID list."""
+        self.host.set_var('error_msg', '')
+        # Invalidate verification data from the failed/abandoned attempt.
+        self.host.set_var('written_count', '0')
+        self.host.set_var('written_block0', '')
+        for i in range(1, 7):
+            self.host.set_var('written_block{}'.format(i), '')
+        count = self._update_uid_count()
+        if count >= 3:
+            return {'status': 'stored_full'}
+        if count > 0:
+            return {'status': 'stored_more'}
+        return {'status': 'empty'}
+
+    def do_remove_last(self):
+        """Remove the last UID and return the state matching the remaining list."""
+        self.host.set_var('error_msg', '')
+        uids = self._get_uid_list()
+        if not uids:
+            self.host.set_var('error_msg', self._tr('No UIDs to remove.'))
+            self._update_uid_count()
+            return {'status': 'empty'}
+
+        # UIDs are stored sequentially, so removing the last item leaves no gaps.
+        self.host.set_var('uid{}'.format(len(uids)), '')
+        count = self._update_uid_count()
+
+        # A previous write/verification no longer represents the current UID list.
+        self.host.set_var('written_count', '0')
+        self.host.set_var('written_block0', '')
+        for i in range(1, 7):
+            self.host.set_var('written_block{}'.format(i), '')
+
+        if count == 0:
+            self.host.set_var('last_uid', '')
+            return {'status': 'empty'}
+        if count >= 3:
+            return {'status': 'stored_full'}
+        return {'status': 'stored_more'}
+, text)
+            if not match:
+                continue
+            label, value = match.groups()
+            label += ': '
+            font_spec = canvas.itemcget(item, 'font')
+            font = tkfont.Font(font=font_spec)
+            total = font.measure(label + value)
+            bbox = canvas.bbox(item)
+            if not bbox:
+                continue
+            x = SCREEN_W // 2 - total // 2
+            y = bbox[1]
+            canvas.delete(item)
+            canvas.create_text(x, y, text=label, font=font_spec,
+                               fill=NORMAL_TEXT_COLOR, anchor='nw',
+                               tags='_jr_content')
+            canvas.create_text(x + font.measure(label), y, text=value,
+                               font=font_spec, fill='#0000FF', anchor='nw',
+                               tags='_jr_content')
+
     def _draw_bottom_hints(self, *labels):
+        self.draw_colored_uid_values()
         """Center 12px labels; bottom text baseline is 5px above button bar."""
         canvas = self.host.getCanvas()
         canvas.delete('_multiwriter_menu_footer')
