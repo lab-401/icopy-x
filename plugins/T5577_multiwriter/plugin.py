@@ -31,6 +31,8 @@ import re
 import time
 from lib.input_dec import FreeDecInput
 from lib.input_hex import FreeHexInput
+from lib._constants import SCREEN_W, BTN_BAR_Y0, NORMAL_TEXT_COLOR
+from lib import resources
 
 TIMEOUT_READ  = 10000
 TIMEOUT_WRITE = 8000
@@ -230,6 +232,22 @@ class T55xxMultiwriterPlugin(object):
         return {'status': 'error'}
 
     # -- DEC input --------------------------------------------------------
+
+    def draw_menu_footer(self):
+        """Draw only the two menu hints, precisely 5 px above button bar."""
+        canvas = self.host.getCanvas()
+        canvas.delete('_multiwriter_menu_footer')
+        font = resources.get_font(12)
+        bottom = BTN_BAR_Y0 - 5
+        for label, y in (
+            ('OK - Read original fob', bottom - 19),
+            ('SRW - Exit', bottom),
+        ):
+            canvas.create_text(
+                SCREEN_W // 2, y, text=self._tr(label),
+                font=font, fill=NORMAL_TEXT_COLOR, anchor='s',
+                tags=('_jr_content', '_multiwriter_menu_footer'),
+            )
 
     def show_dec_input(self):
         canvas = self.host.getCanvas()
