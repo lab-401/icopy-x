@@ -1,0 +1,42 @@
+T5577 MULTIWRITER — EKRANY DO POPRAWY — 2026-11-02
+STATUS: ROBOCZY, NIE WERSJA FINALNA
+
+ZASADY PRACY:
+1. Pracujemy po jednym ekranie, numeracja 01–16 zgodnie z kolejnością przesłanych PNG.
+2. Przed zmianą: odczytaj aktualny ui.json, wielkość fontu, liczbę widocznych linii, długość każdej linii i dostępne miejsce.
+3. Uzgodnij z użytkownikiem nowy tekst i podział linii; nie zmieniaj bez uzgodnienia innych ekranów ani logiki RF.
+4. Zwiększ czytelność i wycentruj tekst. Wartości UID/HEX/DEC oznaczaj niebieskim, bez zmiany znaczenia danych.
+5. Po zatwierdzeniu ekranu EN opracuj odpowiedni ekran FR; zachowaj placeholdery i terminy UID, HEX, DEC.
+6. Zapisz osobno stan przed/po oraz krótką notatkę o zmianie.
+
+ZGŁOSZONE PROBLEMY:
+- Czcionki są zbyt małe; część tekstów jest źle łamana lub niecentrowana.
+- Czasami znika 'OK - Write to T5577' na ekranie UID List (zwłaszcza ostatni pokazany).
+- Na ekranie 'Verify Failed' po zdjęciu taga czytnik potrafi przestać odpowiadać także po ponownym położeniu taga. Nie zakładać, że sam licznik naprawi PM3.
+- Rozważyć bezpieczne odzyskiwanie sesji RF/PM3 po timeout (gotowość, zamknięcie niepewnej operacji, ponowne połączenie). Licznik do ponownej próby może jedynie informować o stanie; nie jest samym resetem.
+- Ekran 'Detecting T5577' pokazuje nieaktualne '115 seconds'; uzgodniony timeout detect to 15 s.
+- Na 'Verify Failed' widać dosłowny '\\n' w komunikacie; wymaga poprawy formatowania.
+- Francuskie tłumaczenia wymagają przeglądu ekran po ekranie.
+
+NUMERACJA PNG (oryginalne załączniki użytkownika, 339x320):
+01 Capture_2026_11_02_15_48_01_563.png — ekran startowy
+02 Capture_2026_11_02_15_48_07_74.png — No EM410x tag detected
+03 Capture_2026_11_02_15_48_12_626.png — UID List (1)
+04 Capture_2026_11_02_15_48_21_474.png — Place T5577 tag
+05 Capture_2026_11_02_15_48_48_162.png — Checking LF tag
+06 Capture_2026_11_02_15_48_53_342.png — Writing T5577
+07 Capture_2026_11_02_15_48_57_276.png — Verifying
+08 Capture_2026_11_02_15_49_03_747.png — Write OK
+09 Capture_2026_11_02_15_49_41_432.png — LF check failed
+10 Capture_2026_11_02_15_49_49_439.png — Detecting T5577 (115 s)
+11 Capture_2026_11_02_15_50_22_909.png — Verify Failed (literal \\n)
+12 Capture_2026_11_02_15_50_42_313.png — LF check failed (powtórzenie)
+13 Capture_2026_11_02_15_52_02_858.png — ID cannot be all zeros
+14 Capture_2026_11_02_15_52_22_175.png — Invalid HEX length
+15 Capture_2026_11_02_15_52_51_879.png — UID List (2)
+16 Capture_2026_11_02_15_52_56_711.png — UID List (1), brak OK Write
+
+ŹRÓDŁO: ZIP T5577_Multiwriter_SearchBeforeDetect_15s.zip, dostarczony w rozmowie.
+PLIKI: plugins/T5577_multiwriter/plugin.py, ui.json, manifest.json, lang/fr.json.
+
+UWAGA: zapis tych notatek nie oznacza, że PNG lub ZIP zostały już przesłane do GitHub.
