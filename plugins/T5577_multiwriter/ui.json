@@ -205,14 +205,12 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": ""
@@ -252,14 +250,12 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         }
                     ]
                 },
@@ -301,14 +297,12 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": "Press OK to write",
@@ -335,7 +329,8 @@
                 "on_result.status==empty": "menu",
                 "on_result.status==error": "write_error",
                 "on_error": "write_error"
-            }
+            },
+            "on_enter": "call:draw_colored_uid_values"
         },
         "verifying": {
             "on_enter": "run:do_verify_visible",
@@ -392,14 +387,12 @@
                         {
                             "text": "{uid_summary}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": "{block0_label}",
                             "size": "medium",
-                            "align": "center",
-                            "color": "#0000FF"
+                            "align": "center"
                         },
                         {
                             "text": ""
@@ -424,7 +417,8 @@
             "transitions": {
                 "on_result.status==ok": "menu",
                 "on_error": "menu"
-            }
+            },
+            "on_enter": "call:draw_colored_uid_values"
         },
         "verify_fail": {
             "screen": {
