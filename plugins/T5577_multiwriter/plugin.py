@@ -690,41 +690,6 @@ class T55xxMultiwriterPlugin(object):
         if count >= 3:
             return {'status': 'stored_full'}
         return {'status': 'stored_more'}
-, text)
-            if not match:
-                continue
-            label, value = match.groups()
-            label += ': '
-            font_spec = canvas.itemcget(item, 'font')
-            font = tkfont.Font(font=font_spec)
-            total = font.measure(label + value)
-            bbox = canvas.bbox(item)
-            if not bbox:
-                continue
-            x = SCREEN_W // 2 - total // 2
-            y = bbox[1]
-            canvas.delete(item)
-            canvas.create_text(x, y, text=label, font=font_spec,
-                               fill=NORMAL_TEXT_COLOR, anchor='nw',
-                               tags='_jr_content')
-            canvas.create_text(x + font.measure(label), y, text=value,
-                               font=font_spec, fill='#0000FF', anchor='nw',
-                               tags='_jr_content')
-
-    def _draw_bottom_hints(self, *labels):
-        self.draw_colored_uid_values()
-        """Center 12px labels; bottom text baseline is 5px above button bar."""
-        canvas = self.host.getCanvas()
-        canvas.delete('_multiwriter_menu_footer')
-        font = resources.get_font(12)
-        bottom = BTN_BAR_Y0 - 5
-        for i, label in enumerate(reversed(labels)):
-            canvas.create_text(
-                SCREEN_W // 2, bottom - i * 19,
-                text=self._tr(label), font=font,
-                fill=NORMAL_TEXT_COLOR, anchor='s',
-                tags=('_jr_content', '_multiwriter_menu_footer'),
-            )
 
     def show_dec_input(self):
         canvas = self.host.getCanvas()
