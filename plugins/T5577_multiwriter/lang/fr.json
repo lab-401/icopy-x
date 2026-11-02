@@ -101,5 +101,15 @@
     "No T55xx chipset found.\nCheck tag and position.": "Puce T55xx introuvable.\nVérifier le tag et sa position.",
     "Confirm Clone": "Confirmer clonage",
     "Block 0: {}": "Bloc 0 : {}",
-    "Block 0: --------": "Bloc 0 : --------"
+    "Block 0: --------": "Bloc 0 : --------",
+    "DEC: ": "DEC: ",
+    "ID cannot be": "ID ne peut pas être",
+    "UID cannot be": "UID ne peut pas être",
+    "all zeros.": "tout à zéro.",
+    "Invalid DEC": "DEC invalide",
+    "(max 40-bit).": "(max. 40 bits).",
+    "Enter HEX": "Saisir des caractères",
+    "characters.": "HEX.",
+    "Invalid HEX length": "Longueur HEX invalide",
+    "Exactly 10 HEX required.": "10 chiffres HEX requis."
 }
