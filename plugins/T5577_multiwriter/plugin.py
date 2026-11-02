@@ -322,6 +322,7 @@ class T55xxMultiwriterPlugin(object):
             hint=self._tr('\nUp/Down - digit\nL/R: move'),
             max_length=10,
             per_line=10,
+            hint_font_size=12,
         )
         self._hex.show()
 
