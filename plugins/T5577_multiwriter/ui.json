@@ -515,26 +515,23 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         },
                         {
-                            "text": "{error_msg}",
-                            "size": "medium",
-                            "align": "center"
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
-                            "text": "OK - try again",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "{error_line2}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         }
-                    ]
+                    ],
+                    "y": 102
                 },
                 "buttons": {
                     "left": "Back",
-                    "right": null
+                    "right": "Retry"
                 },
                 "keys": {
                     "OK": "set_state:input_hex",
@@ -555,26 +552,23 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         },
                         {
-                            "text": "{error_msg}",
-                            "size": "medium",
-                            "align": "center"
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
-                            "text": "OK - try again",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "{error_line2}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         }
-                    ]
+                    ],
+                    "y": 102
                 },
                 "buttons": {
                     "left": "Back",
-                    "right": null
+                    "right": "Retry"
                 },
                 "keys": {
                     "OK": "set_state:input_dec",
