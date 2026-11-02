@@ -318,8 +318,7 @@ class T55xxMultiwriterPlugin(object):
         uid = val.upper()
         # Enforce exact 10-hex length for EM4102
         if not re.match(r'^[0-9A-F]{10}$', uid):
-            self.host.set_var('error_msg', self._tr('Invalid length.\nMust be exactly 10 hex (EM4102).'))
-            return {'status': 'error'}
+            return self._input_validation_error('Invalid HEX length', 'Exactly 10 HEX required.')
 
         if int(uid, 16) == 0:
             return self._input_validation_error('UID cannot be', 'all zeros.')
