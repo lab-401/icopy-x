@@ -12,14 +12,8 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
                             "text": "Initializing...",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         }
                     ]
@@ -54,7 +48,8 @@
                     "RIGHT": "call:dec_move_right",
                     "OK": "call:do_capture_dec",
                     "M2": "call:do_capture_dec",
-                    "M1": "call:dec_back_cleanse"
+                    "M1": "finish",
+                    "ALL": "call:dec_return_to_input"
                 }
             },
             "transitions": {
@@ -70,32 +65,19 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": "DEC: {dec_id}",
-                            "size": "medium",
-                            "align": "center"
-                        },
-                        {
-                            "text": "HEX: {hex_uid}",
-                            "size": "large",
-                            "align": "center"
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
                             "text": "Place T5577 on reader",
-                            "size": "medium",
-                            "align": "center"
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
                             "text": "OK - Clone tag",
-                            "size": "medium",
-                            "align": "center"
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         }
-                    ]
+                    ],
+                    "y": 130
                 },
                 "buttons": {
                     "left": "Back",
@@ -106,7 +88,8 @@
                     "M2": "set_state:checking_t5577",
                     "M1": "set_state:enter_dec"
                 }
-            }
+            },
+            "on_enter": "call:draw_id_pairs"
         },
         "clone_ok": {
             "screen": {
@@ -115,40 +98,49 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
                             "text": "Write completed.",
                             "size": "large",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
                             "text": "Verified OK.",
                             "size": "large",
-                            "align": "center"
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
-                            "text": ""
+                            "text": "",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
-                            "text": "DEC: {dec_id}",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
-                            "text": "HEX: {hex_uid}",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         },
                         {
-                            "text": "Tags: {clone_count}",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "{tags_label}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
+                        },
+                        {
+                            "text": "SRW - Exit",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#202020"
                         }
-                    ]
+                    ],
+                    "y": 49
                 },
                 "buttons": {
                     "left": "New ID",
@@ -157,9 +149,11 @@
                 "keys": {
                     "OK": "set_state:checking_t5577",
                     "M2": "set_state:checking_t5577",
-                    "M1": "set_state:enter_dec"
+                    "M1": "set_state:enter_dec",
+                    "ALL": "finish"
                 }
-            }
+            },
+            "on_enter": "call:draw_success_pairs"
         },
         "validation_error": {
             "screen": {
@@ -168,31 +162,28 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         },
                         {
-                            "text": "{error_msg}",
-                            "size": "medium",
-                            "align": "center"
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
-                            "text": "OK - Try again",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "{error_line2}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         }
-                    ]
+                    ],
+                    "y": 102
                 },
                 "buttons": {
                     "left": "Exit",
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "set_state:enter_dec",
+                    "M1": "finish",
                     "M2": "set_state:enter_dec",
-                    "M1": "finish"
+                    "OK": "set_state:enter_dec"
                 }
             }
         },
@@ -203,30 +194,27 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         },
                         {
-                            "text": "{error_msg}",
-                            "size": "medium",
-                            "align": "center"
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
-                            "text": "OK - Try again",
-                            "size": "medium",
-                            "align": "center"
+                            "text": "{error_line2}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
                         }
-                    ]
+                    ],
+                    "y": 112
                 },
                 "buttons": {
-                    "left": "Exit",
+                    "left": "Return",
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "set_state:confirm_clone",
-                    "M2": "set_state:confirm_clone",
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
                     "M1": "set_state:enter_dec"
                 }
             }
@@ -239,22 +227,17 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
                             "text": "Searching LF tag...",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         },
                         {
                             "text": "Timeout: 5 seconds",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         }
-                    ]
+                    ],
+                    "y": 99
                 },
                 "buttons": {
                     "left": null,
@@ -265,7 +248,12 @@
             "transitions": {
                 "on_result.status==ok": "detecting_t5577",
                 "on_result.status==error": "clone_error",
-                "on_error": "clone_error"
+                "on_error": "clone_error",
+                "on_result.status==error_t5577_timeout": "error_t5577_timeout",
+                "on_result.status==error_clone_failed": "error_clone_failed",
+                "on_result.status==error_verification_timeout": "error_verification_timeout",
+                "on_result.status==error_verification_mismatch": "error_verification_mismatch",
+                "on_result.status==error_verify_failed": "error_verify_failed"
             }
         },
         "writing_t5577": {
@@ -276,22 +264,22 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "Writing EM4102",
+                            "size": "large",
+                            "align": "center"
                         },
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": "Writing EM4102 data...",
-                            "size": "medium",
+                            "text": "data...",
+                            "size": "large",
                             "align": "center"
                         },
                         {
                             "text": "Timeout: 15 seconds",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         }
-                    ]
+                    ],
+                    "y": 108
                 },
                 "buttons": {
                     "left": null,
@@ -302,7 +290,12 @@
             "transitions": {
                 "on_result.status==ok": "verifying_t5577",
                 "on_result.status==error": "clone_error",
-                "on_error": "clone_error"
+                "on_error": "clone_error",
+                "on_result.status==error_t5577_timeout": "error_t5577_timeout",
+                "on_result.status==error_clone_failed": "error_clone_failed",
+                "on_result.status==error_verification_timeout": "error_verification_timeout",
+                "on_result.status==error_verification_mismatch": "error_verification_mismatch",
+                "on_result.status==error_verify_failed": "error_verify_failed"
             }
         },
         "verifying_t5577": {
@@ -313,22 +306,22 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
+                            "text": "Verifying written",
+                            "size": "large",
+                            "align": "center"
                         },
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": "Verifying written ID...",
-                            "size": "medium",
+                            "text": "ID...",
+                            "size": "large",
                             "align": "center"
                         },
                         {
                             "text": "Timeout: 5 seconds",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         }
-                    ]
+                    ],
+                    "y": 90
                 },
                 "buttons": {
                     "left": null,
@@ -339,7 +332,12 @@
             "transitions": {
                 "on_result.status==done": "clone_ok",
                 "on_result.status==error": "clone_error",
-                "on_error": "clone_error"
+                "on_error": "clone_error",
+                "on_result.status==error_t5577_timeout": "error_t5577_timeout",
+                "on_result.status==error_clone_failed": "error_clone_failed",
+                "on_result.status==error_verification_timeout": "error_verification_timeout",
+                "on_result.status==error_verification_mismatch": "error_verification_mismatch",
+                "on_result.status==error_verify_failed": "error_verify_failed"
             }
         },
         "detecting_t5577": {
@@ -350,22 +348,17 @@
                     "type": "text",
                     "lines": [
                         {
-                            "text": ""
-                        },
-                        {
-                            "text": ""
-                        },
-                        {
                             "text": "Detecting T5577...",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         },
                         {
                             "text": "Timeout: 15 seconds",
-                            "size": "medium",
+                            "size": "large",
                             "align": "center"
                         }
-                    ]
+                    ],
+                    "y": 99
                 },
                 "buttons": {
                     "left": null,
@@ -376,7 +369,172 @@
             "transitions": {
                 "on_result.status==ok": "writing_t5577",
                 "on_result.status==error": "clone_error",
-                "on_error": "clone_error"
+                "on_error": "clone_error",
+                "on_result.status==error_t5577_timeout": "error_t5577_timeout",
+                "on_result.status==error_clone_failed": "error_clone_failed",
+                "on_result.status==error_verification_timeout": "error_verification_timeout",
+                "on_result.status==error_verification_mismatch": "error_verification_mismatch",
+                "on_result.status==error_verify_failed": "error_verify_failed"
+            }
+        },
+        "error_t5577_timeout": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
+                        },
+                        {
+                            "text": "{error_line2}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        }
+                    ],
+                    "y": 112
+                },
+                "buttons": {
+                    "left": "Return",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "error_clone_failed": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
+                        },
+                        {
+                            "text": "{error_line2}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        }
+                    ],
+                    "y": 112
+                },
+                "buttons": {
+                    "left": "Return",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "error_verification_timeout": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_line1}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        },
+                        {
+                            "text": "{error_line2}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        }
+                    ],
+                    "y": 112
+                },
+                "buttons": {
+                    "left": "Return",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "error_verification_mismatch": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_line1}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        },
+                        {
+                            "text": "{error_line2}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        }
+                    ],
+                    "y": 112
+                },
+                "buttons": {
+                    "left": "Return",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
+            }
+        },
+        "error_verify_failed": {
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_line1}",
+                            "size": "large",
+                            "align": "center",
+                            "color": "#FF0000"
+                        },
+                        {
+                            "text": "{error_line2}",
+                            "size": "medium",
+                            "align": "center",
+                            "color": "#FF0000"
+                        }
+                    ],
+                    "y": 112
+                },
+                "buttons": {
+                    "left": "Return",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:checking_t5577",
+                    "M2": "set_state:checking_t5577",
+                    "M1": "set_state:enter_dec"
+                }
             }
         }
     }
