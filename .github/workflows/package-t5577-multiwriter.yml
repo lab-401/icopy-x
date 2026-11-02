@@ -15,6 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate Python syntax and JSON
+        run: |
+          python3 -m py_compile plugins/T5577_multiwriter/plugin.py src/lib/input_dec.py src/lib/input_hex.py
+          python3 -m json.tool plugins/T5577_multiwriter/ui.json > /dev/null
+          python3 -m json.tool plugins/T5577_multiwriter/manifest.json > /dev/null
       - name: Build small ZIP
         run: |
           python3 - <<'PY'
