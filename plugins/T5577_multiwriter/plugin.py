@@ -224,7 +224,7 @@ class T55xxMultiwriterPlugin(object):
     def show_dec_input(self):
         canvas = self.host.getCanvas()
         self._dec = FreeDecInput(
-            canvas, label=self._tr('INPUT DEC:'),
+            canvas, label=self._tr('DEC: '),
             hint=self._tr('\nUp/Down - digit\nL/R: move'),
             max_length=13,
         )
