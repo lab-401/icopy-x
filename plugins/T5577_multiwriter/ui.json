@@ -58,15 +58,26 @@
                             "align": "center"
                         },
                         {
-                            "text": ""
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
+                        },
+                        {
+                            "text": "",
+                            "size": "large"
                         },
                         {
                             "text": "OK - Read original fob",
-                            "size": "medium"
+                            "size": "medium",
+                            "align": "center"
                         },
                         {
                             "text": "SRW - Exit",
-                            "size": "medium"
+                            "size": "medium",
+                            "align": "center"
                         }
                     ]
                 },
@@ -539,8 +550,9 @@
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "call:retry_hex_input",
-                    "M1": "run:do_return_to_uid_list"
+                    "OK": "set_state:input_hex",
+                    "M1": "run:do_return_to_uid_list",
+                    "M2": "set_state:input_hex"
                 }
             },
             "transitions": {
@@ -577,8 +589,9 @@
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "call:retry_dec_input",
-                    "M1": "run:do_return_to_uid_list"
+                    "OK": "set_state:input_dec",
+                    "M1": "run:do_return_to_uid_list",
+                    "M2": "set_state:input_dec"
                 }
             },
             "transitions": {
