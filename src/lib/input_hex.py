@@ -21,7 +21,7 @@ Features:
 - Canvas font metrics determine whether label + digits fit on one line.
 - For 16-digit inputs, use one line or a fixed 8+8 split.
 - For 10-digit inputs, use one line or put all digits beneath the label.
-- On two lines, align the digits with the label's value column.
+- Center each row independently while preserving cursor underline.
 - Keep the configured max_length, font, colors, hint and screen margins.
 - getValue() returns the entered HEX string; no RFID operation is performed.
 
@@ -128,54 +128,36 @@ class FreeHexInput(object):
             self._canvas.delete(item)
 
     def _layout(self, digits):
-        """Fit the complete label and HEX text by measured pixel width.
-
-        Center on one row when possible. Otherwise use 8+8 for 16 HEX,
-        or label above all 10 digits for 10 HEX.
-        Never shorten or alter the label or change the configured data limit.
-        """
-        label_width = self._measure(self._label)
+        """Center label and digits, using two rows when necessary."""
         margin = max(4, self._x0)
         usable = SCREEN_W - 2 * margin
-        if usable <= 0 or label_width >= usable:
+        label_width = self._measure(self._label)
+        value = ''.join(digits)
+        if usable <= 0 or label_width > usable:
             return None
-
-        # Fixed, predictable layouts: 16 -> 8+8; 10 -> label / 10.
-        full_width = self._measure(self._label + ''.join(digits))
-        if full_width <= usable:
-            split = len(digits)
-        elif self._max_length == 16:
-            split = min(8, len(digits))
-            if (self._measure(self._label + ''.join(digits[:split])) > usable
-                    or self._measure(''.join(digits[split:])) > usable - label_width):
+        combined = self._measure(self._label + value)
+        if combined <= usable:
+            left = max(margin, (SCREEN_W - combined) // 2)
+            return (left, [(0, left + label_width + self._measure(value[:i]))
+                           for i in range(len(digits))])
+        if self._max_length == 16:
+            first, second = value[:8], value[8:]
+            if (self._measure(self._label + first) > usable
+                    or self._measure(second) > usable):
                 return None
-        elif self._max_length == 10:
-            split = 0
-            if self._measure(''.join(digits)) > usable - label_width:
-                return None
-        else:
+            first_left = max(margin, (SCREEN_W - self._measure(self._label + first)) // 2)
+            second_left = max(margin, (SCREEN_W - self._measure(second)) // 2)
+            positions = [(0, first_left + label_width + self._measure(first[:i]))
+                         for i in range(len(first))]
+            positions += [(1, second_left + self._measure(second[:i]))
+                          for i in range(len(second))]
+            return (first_left, positions)
+        if self._measure(value) > usable:
             return None
-
-        first_width = self._measure(self._label + ''.join(digits[:split]))
-        first_left = max(margin, (SCREEN_W - first_width) // 2)
-        first_digit_x = first_left + label_width
-        if split == 0:
-            first_left = max(margin, (SCREEN_W - self._measure(self._label + ''.join(digits))) // 2)
-            first_digit_x = first_left + label_width
-        second_width = self._measure(''.join(digits[split:]))
-        if first_digit_x + second_width > SCREEN_W - margin:
-            # Shift the centered block left only as far as margins permit.
-            first_digit_x = SCREEN_W - margin - second_width
-            first_left = first_digit_x - label_width
-            if first_left < margin:
-                return None
-
-        positions = []
-        for row, segment in ((0, digits[:split]), (1, digits[split:])):
-            for i in range(len(segment)):
-                prefix = ''.join(segment[:i])
-                positions.append((row, first_digit_x + self._measure(prefix)))
-        return positions
+        label_left = max(margin, (SCREEN_W - label_width) // 2)
+        digit_left = max(margin, (SCREEN_W - self._measure(value)) // 2)
+        return (label_left, [(1, digit_left + self._measure(value[:i]))
+                             for i in range(len(digits))])
 
     # -- drawing -----------------------------------------------------
 
@@ -184,16 +166,14 @@ class FreeHexInput(object):
         canvas.delete(TAG)
         row_top_y = self._y_offset
         row_bottom_y = row_top_y + self._line_gap
-        positions = self._layout(self._digits)
+        layout = self._layout(self._digits)
+        if layout is None:
+            return
+        label_x, positions = layout
         if self._label:
-            label_x = (positions[0][1] - self._measure(self._label)) if positions and positions[0][0] == 0 else (positions[0][1] - self._measure(self._label) if positions else self._x0)
             canvas.create_text(label_x, row_top_y, text=self._label,
                                fill=LABEL_COLOR, font=self._font,
                                anchor='w', tags=TAG)
-
-        if positions is None:
-            # Defensive fallback for labels changed after text was entered.
-            positions = self._layout(self._digits[:1]) or [(0, self._x0)]
 
         for i, (row, x) in enumerate(positions):
             ch = self._digits[i]
