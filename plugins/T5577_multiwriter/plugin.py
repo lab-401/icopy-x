@@ -21,7 +21,7 @@ Stores up to 3 EM4102 UIDs on a single T5577 tag.
 This version restricts HEX input to exactly 10 hex characters (EM4102).
 Supports:
   - Manual HEX input (exactly 10 hex)
-  - Manual DEC input (Free-growing up to 10 decimal digits = engraved ID)
+  - Manual DEC input (up to 13 decimal digits, 40-bit EM4102 range)
   - Read from original fob via PM3
 """
 
@@ -91,10 +91,13 @@ def encode_uid(uid_hex):
 
 
 def dec_to_hex_uid(dec_str):
-    """Convert a 1..10-digit decimal (engraved ID) to a 10-character hex string."""
-    if not re.match(r'^\d{1,10}$', dec_str):
+    """Convert a 1..13-digit decimal ID within the EM4102 40-bit range."""
+    if not re.match(r'^[0-9]{1,13}$', dec_str):
         return None
-    return '{:010X}'.format(int(dec_str))
+    value = int(dec_str)
+    if value > 0xFFFFFFFFFF:
+        return None
+    return '{:010X}'.format(value)
 
 
 # ---------------------------------------------------------------------------
@@ -221,7 +224,7 @@ class T55xxMultiwriterPlugin(object):
         self._dec = FreeDecInput(
             canvas, label=self._tr('INPUT DEC:'),
             hint=self._tr('\nUp/Down - digit\nL/R: move'),
-            max_length=10,
+            max_length=13,
         )
         self._dec.show()
 
@@ -242,7 +245,7 @@ class T55xxMultiwriterPlugin(object):
             self._dec.moveRight()
 
     def do_capture_dec(self):
-        """Get UID from the dec input (10 decimal digits = engraved ID)."""
+        """Get UID from the dec input (up to 13 decimal digits = engraved ID)."""
         self.host.set_var('error_msg', '')
         dec = self._dec.getValue() if self._dec is not None else ''
         if self._dec is not None:
