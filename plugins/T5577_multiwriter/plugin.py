@@ -209,6 +209,8 @@ class T55xxMultiwriterPlugin(object):
     def do_init(self):
         self._clear_uids()
         self.host.set_var('error_msg', '')
+        self.host.set_var('error_line1', '')
+        self.host.set_var('error_line2', '')
         self.host.set_var('last_uid', '')
         self.host.set_var('written_count', '0')
         self.host.set_var('block0_label', 'Block 0: --------')
@@ -218,6 +220,14 @@ class T55xxMultiwriterPlugin(object):
         self._dec = None
         self._hex = None
         return {'status': 'ok'}
+
+    def _input_validation_error(self, first, second=''):
+        """Show two separately centered validation lines, as in EM from dec."""
+        self.host.set_var('error_line1', self._tr(first))
+        self.host.set_var('error_line2', self._tr(second) if second else '')
+        self.host.set_var('error_msg', self._tr(first) +
+                          ('\\n' + self._tr(second) if second else ''))
+        return {'status': 'error'}
 
     # -- DEC input --------------------------------------------------------
 
@@ -255,17 +265,14 @@ class T55xxMultiwriterPlugin(object):
             self._dec = None
 
         if not dec:
-            self.host.set_var('error_msg', self._tr('Enter a digit.'))
-            return {'status': 'error'}
+            return self._input_validation_error('Enter a digit.')
 
         if int(dec) == 0:
-            self.host.set_var('error_msg', self._tr('ID cannot be all zeros.'))
-            return {'status': 'error'}
+            return self._input_validation_error('ID cannot be', 'all zeros.')
 
         uid = dec_to_hex_uid(dec)
         if uid is None:
-            self.host.set_var('error_msg', self._tr('Conversion failed.'))
-            return {'status': 'error'}
+            return self._input_validation_error('Invalid DEC', '(max 40-bit).')
 
         return self._store_uid(uid)
 
@@ -306,8 +313,7 @@ class T55xxMultiwriterPlugin(object):
             self._hex.hide()
             self._hex = None
         if not val:
-            self.host.set_var('error_msg', self._tr('Enter hex characters.'))
-            return {'status': 'error'}
+            return self._input_validation_error('Enter HEX', 'characters.')
 
         uid = val.upper()
         # Enforce exact 10-hex length for EM4102
@@ -316,8 +322,7 @@ class T55xxMultiwriterPlugin(object):
             return {'status': 'error'}
 
         if int(uid, 16) == 0:
-            self.host.set_var('error_msg', self._tr('UID cannot be all zeros.'))
-            return {'status': 'error'}
+            return self._input_validation_error('UID cannot be', 'all zeros.')
 
         return self._store_uid(uid)
 
