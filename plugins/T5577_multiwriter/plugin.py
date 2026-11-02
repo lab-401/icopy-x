@@ -253,15 +253,35 @@ class T55xxMultiwriterPlugin(object):
         self._draw_bottom_hints('OK - retry write')
 
     def draw_colored_uid_values(self):
-        """Color only UID/Block HEX values, preserving dark labels."""
+        """Render UID and Block 0 values blue while keeping labels dark."""
         import tkinter.font as tkfont
         canvas = self.host.getCanvas()
         for item in list(canvas.find_withtag('_jr_content')):
             if canvas.type(item) != 'text':
                 continue
-            text = canvas.itemcget(item, 'text')
-            match = re.match(r'^(UID\\d*|HEX|DEC|Block 0):\\s+([0-9A-Fa-f]+)
-        """Center 12px labels; bottom text baseline is 5px above button bar."""
+            line = canvas.itemcget(item, 'text')
+            match = re.match(r'^(UID[0-9]*|HEX|DEC|Block 0):[ ]+([0-9A-Fa-f]+)$', line)
+            if not match:
+                continue
+            label, value = match.groups()
+            label += ': '
+            font_spec = canvas.itemcget(item, 'font')
+            font = tkfont.Font(font=font_spec)
+            bbox = canvas.bbox(item)
+            if not bbox:
+                continue
+            x = SCREEN_W // 2 - font.measure(label + value) // 2
+            y = bbox[1]
+            canvas.delete(item)
+            canvas.create_text(x, y, text=label, font=font_spec,
+                               fill=NORMAL_TEXT_COLOR, anchor='nw',
+                               tags='_jr_content')
+            canvas.create_text(x + font.measure(label), y, text=value,
+                               font=font_spec, fill='#0000FF', anchor='nw',
+                               tags='_jr_content')
+
+    def _draw_bottom_hints(self, *labels):
+        self.draw_colored_uid_values()
         canvas = self.host.getCanvas()
         canvas.delete('_multiwriter_menu_footer')
         font = resources.get_font(12)
