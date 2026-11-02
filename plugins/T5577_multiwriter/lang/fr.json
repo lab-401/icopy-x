@@ -111,5 +111,6 @@
     "Enter HEX": "Saisir des",
     "characters.": "caractères HEX.",
     "Invalid HEX length": "Longueur HEX erronée",
-    "Exactly 10 HEX required.": "10 caractères HEX."
+    "Exactly 10 HEX required.": "10 caractères HEX.",
+    "SRW - Exit": "SRW - Quitter"
 }
