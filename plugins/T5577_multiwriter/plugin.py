@@ -234,18 +234,35 @@ class T55xxMultiwriterPlugin(object):
     # -- DEC input --------------------------------------------------------
 
     def draw_menu_footer(self):
-        """Draw only the two menu hints, precisely 5 px above button bar."""
+        """Draw the two main-menu hints just above the bottom button bar."""
+        self._draw_bottom_hints('OK - Read original fob', 'SRW - Exit')
+
+    def draw_add_uid_footer(self):
+        self._draw_bottom_hints('OK  - Read EM')
+
+    def draw_uid_added_footer(self):
+        self._draw_bottom_hints('OK - Write to T5577')
+
+    def draw_verify_fail_footer(self):
+        self._draw_bottom_hints('OK - Retry write')
+
+    def draw_input_method_error_footer(self):
+        self._draw_bottom_hints('OK - back to options')
+
+    def draw_write_error_footer(self):
+        self._draw_bottom_hints('OK - retry write')
+
+    def _draw_bottom_hints(self, *labels):
+        """Center 12px labels; bottom text baseline is 5px above button bar."""
         canvas = self.host.getCanvas()
         canvas.delete('_multiwriter_menu_footer')
         font = resources.get_font(12)
         bottom = BTN_BAR_Y0 - 5
-        for label, y in (
-            ('OK - Read original fob', bottom - 19),
-            ('SRW - Exit', bottom),
-        ):
+        for i, label in enumerate(reversed(labels)):
             canvas.create_text(
-                SCREEN_W // 2, y, text=self._tr(label),
-                font=font, fill=NORMAL_TEXT_COLOR, anchor='s',
+                SCREEN_W // 2, bottom - i * 19,
+                text=self._tr(label), font=font,
+                fill=NORMAL_TEXT_COLOR, anchor='s',
                 tags=('_jr_content', '_multiwriter_menu_footer'),
             )
 
