@@ -17,12 +17,14 @@
 
 Port of lf_t55xx_multiwriter.lua by jareckib - Jarek Barwinski
 
-Stores up to 3 EM4102 UIDs on a single T5577 tag.
-This version restricts HEX input to exactly 10 hex characters (EM4102).
+Stores 1, 2 or 3 EM4102 UIDs on a single T5577 tag.
 Supports:
-  - Manual HEX input (exactly 10 hex)
-  - Manual DEC input (up to 13 decimal digits, 40-bit EM4102 range)
-  - Read from original fob via PM3
+  - Manual HEX input: exactly 10 hexadecimal characters (40-bit UID)
+  - Manual DEC input: 1 to 13 decimal digits (engraved ID)
+  - DEC range validation: 0 to 1099511627775 (0xFFFFFFFFFF)
+    (all-zero IDs are rejected during input validation)
+  - Reading EM4102 IDs from an original fob via PM3
+  - Encoding and writing multiple UIDs to T5577
 """
 
 import re
