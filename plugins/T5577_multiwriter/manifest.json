@@ -1,6 +1,6 @@
 {
     "name": "T5577 Multiwriter",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "author": "jareckib (ported from lf_t55xx_multiwriter.lua)",
     "description": "Store 1, 2 or 3 EM4102 UIDs on a single T5577 tag. Supports HEX/DEC input and reading from original fob.",
     "entry_class": "T55xxMultiwriterPlugin",
