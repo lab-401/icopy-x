@@ -63,6 +63,10 @@
                         {
                             "text": "OK - Read original fob",
                             "size": "medium"
+                        },
+                        {
+                            "text": "SRW - Exit",
+                            "size": "medium"
                         }
                     ]
                 },
@@ -73,7 +77,8 @@
                 "keys": {
                     "OK": "run:do_read_fob",
                     "M1": "set_state:input_dec",
-                    "M2": "set_state:input_hex"
+                    "M2": "set_state:input_hex",
+                    "ALL": "finish"
                 }
             },
             "transitions": {
@@ -534,7 +539,7 @@
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "set_state:input_hex",
+                    "OK": "call:retry_hex_input",
                     "M1": "run:do_return_to_uid_list"
                 }
             },
@@ -542,7 +547,8 @@
                 "on_result.status==stored_more": "uid_added",
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
-                "on_error": "menu"
+                "on_error": "menu",
+                "on_result.status==retry": "input_hex"
             }
         },
         "dec_error": {
@@ -571,7 +577,7 @@
                     "right": "Retry"
                 },
                 "keys": {
-                    "OK": "set_state:input_dec",
+                    "OK": "call:retry_dec_input",
                     "M1": "run:do_return_to_uid_list"
                 }
             },
@@ -579,7 +585,8 @@
                 "on_result.status==stored_more": "uid_added",
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
-                "on_error": "menu"
+                "on_error": "menu",
+                "on_result.status==retry": "input_dec"
             }
         },
         "write_error": {
