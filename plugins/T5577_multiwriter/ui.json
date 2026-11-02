@@ -110,11 +110,6 @@
                         },
                         {
                             "text": ""
-                        },
-                        {
-                            "text": "OK  - Read EM",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -133,7 +128,8 @@
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==error": "input_method_error",
                 "on_error": "input_method_error"
-            }
+            },
+            "on_enter": "call:draw_add_uid_footer"
         },
         "input_hex": {
             "on_enter": "call:show_hex_input",
@@ -218,11 +214,6 @@
                         },
                         {
                             "text": ""
-                        },
-                        {
-                            "text": "OK - Write to T5577",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -242,7 +233,8 @@
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
                 "on_error": "menu"
-            }
+            },
+            "on_enter": "call:draw_uid_added_footer"
         },
         "uid_added_full": {
             "screen": {
@@ -264,11 +256,6 @@
                             "text": "{block0_label}",
                             "size": "medium",
                             "align": "center"
-                        },
-                        {
-                            "text": "OK - Write to T5577",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -288,7 +275,8 @@
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
                 "on_error": "uid_added_full"
-            }
+            },
+            "on_enter": "call:draw_uid_added_footer"
         },
         "place_tag": {
             "screen": {
@@ -448,11 +436,6 @@
                             "text": "Adjust T5577 position",
                             "size": "medium",
                             "align": "center"
-                        },
-                        {
-                            "text": "OK - Retry write",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -473,7 +456,8 @@
                 "on_error": "write_error",
                 "on_result.status==done": "verifying",
                 "on_result.status==error": "write_error"
-            }
+            },
+            "on_enter": "call:draw_verify_fail_footer"
         },
         "input_method_error": {
             "screen": {
@@ -491,11 +475,6 @@
                         },
                         {
                             "text": ""
-                        },
-                        {
-                            "text": "OK - back to options",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -513,7 +492,8 @@
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
                 "on_error": "menu"
-            }
+            },
+            "on_enter": "call:draw_input_method_error_footer"
         },
         "hex_error": {
             "screen": {
@@ -609,11 +589,6 @@
                         },
                         {
                             "text": ""
-                        },
-                        {
-                            "text": "OK - retry write",
-                            "size": "medium",
-                            "align": "center"
                         }
                     ]
                 },
@@ -634,7 +609,8 @@
                 "on_result.status==stored_full": "uid_added_full",
                 "on_result.status==empty": "menu",
                 "on_error": "write_error"
-            }
+            },
+            "on_enter": "call:draw_write_error_footer"
         },
         "checking_tag": {
             "on_enter": "run:do_precheck_visible",
