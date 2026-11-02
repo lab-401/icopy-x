@@ -226,7 +226,7 @@ class T55xxMultiwriterPlugin(object):
         self.host.set_var('error_line1', self._tr(first))
         self.host.set_var('error_line2', self._tr(second) if second else '')
         self.host.set_var('error_msg', self._tr(first) +
-                          ('\\n' + self._tr(second) if second else ''))
+                          ('\n' + self._tr(second) if second else ''))
         return {'status': 'error'}
 
     # -- DEC input --------------------------------------------------------
