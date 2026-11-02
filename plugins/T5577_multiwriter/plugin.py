@@ -338,6 +338,22 @@ class T55xxMultiwriterPlugin(object):
             return {'status': 'stored_more'}
         return {'status': 'empty'}
 
+    def retry_dec_input(self):
+        """Re-enter the DEC editor after a validation error."""
+        self._dec = None
+        self.host.set_var('error_msg', '')
+        self.host.set_var('error_line1', '')
+        self.host.set_var('error_line2', '')
+        return {'status': 'retry'}
+
+    def retry_hex_input(self):
+        """Re-enter the HEX editor after a validation error."""
+        self._hex = None
+        self.host.set_var('error_msg', '')
+        self.host.set_var('error_line1', '')
+        self.host.set_var('error_line2', '')
+        return {'status': 'retry'}
+
     def dec_back_cleanse(self):
         return self._back_from_input('_dec')
 
