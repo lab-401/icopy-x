@@ -430,7 +430,7 @@ class T55xxMultiwriterPlugin(object):
         # in the same `lf search` response.
         # Only a positive chipset identification permits the slower detect.
         found = bool(re.search(
-            r'\bChipset\s*\.{0,4}\s*[:=]?\s*T55(?:xx|x7|57|77)\b',
+            r'\bChipset\s*\.{0,4}\s*[:=]?\s*T55x7\b',
             output, re.IGNORECASE))
         if not found:
             self.host.set_var('error_msg', self._tr(
