@@ -189,4 +189,4 @@ class FreeHexInput(object):
         if self._hint:
             canvas.create_text(SCREEN_W // 2, CONTENT_Y0 + CONTENT_H - 2,
                                text=self._hint, fill=HINT_COLOR,
-                               font=self._hint_font, anchor='s', tags=TAG)
+                               font=self._hint_font, anchor='s', justify='center', tags=TAG)
