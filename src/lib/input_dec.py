@@ -17,7 +17,8 @@
 Features:
 - Enter digits 0-9, starting from one editable digit.
 - UP/DOWN changes a digit; LEFT/RIGHT moves or extends the input.
-- Underline the active digit and keep the label + value centered.
+- Underline the active digit; center label + value on one line when possible.
+- If the combined text is too wide, put the label above centered digits.
 - Use actual Canvas font metrics to position digits and check screen fit.
 - Respect the configured max_length (default: 13 digits).
 - Keep original colors, font, hint and key-handling methods.
@@ -63,12 +64,27 @@ class FreeDecInput(object):
     def _check_ui_thread(self):
         return  # Existing plugin is responsible for UI-thread scheduling
 
+    def _layout(self, value):
+        """Return layout based on measured pixels, allowing a two-line fallback."""
+        margin = max(4, self._x0)
+        usable = SCREEN_W - 2 * margin
+        if usable <= 0:
+            return None
+        combined = self._text_width(self._label + value)
+        if combined <= usable:
+            left = max(margin, (SCREEN_W - combined) // 2)
+            return (left, left + self._text_width(self._label),
+                    self._y_offset, self._y_offset)
+        digit_width = self._text_width(value)
+        if digit_width > usable or self._text_width(self._label) > usable:
+            return None
+        return (max(margin, (SCREEN_W - self._text_width(self._label)) // 2),
+                max(margin, (SCREEN_W - digit_width) // 2),
+                self._y_offset - 10, self._y_offset + 10)
+
     def _fits(self, value):
-        """Measure the actual rendered label + digits, not character count."""
-        available = SCREEN_W - 2 * max(4, self._x0)
-        if available <= 0:
-            return False
-        return self._text_width(self._label + value) <= available
+        """Check whether digits fit in one or two rows without clipping."""
+        return self._layout(value) is not None
 
     def _text_width(self, text):
         """Measure text with the actual Canvas font, not a font-spec string."""
@@ -139,19 +155,20 @@ class FreeDecInput(object):
         canvas = self._canvas
         canvas.delete(TAG)
 
-        # Center the label and digits together using the system font.
-        total_width = self._text_width(self._label + ''.join(self._digits))
-        x = max(self._x0, (SCREEN_W - total_width) // 2)
-        digit_start = x + self._text_width(self._label)
+        value = ''.join(self._digits)
+        layout = self._layout(value)
+        if layout is None:
+            return
+        label_x, digit_start, label_y, digit_y = layout
         if self._label:
-            item = canvas.create_text(
-                x, self._y_offset, text=self._label, fill=LABEL_COLOR,
+            canvas.create_text(
+                label_x, label_y, text=self._label, fill=LABEL_COLOR,
                 font=self._font, anchor='w', tags=TAG,
             )
         for i, ch in enumerate(self._digits):
             x = digit_start + self._text_width(''.join(self._digits[:i]))
             item = canvas.create_text(
-                x, self._y_offset, text=ch, fill=self._text_color,
+                x, digit_y, text=ch, fill=self._text_color,
                 font=self._font, anchor='w', tags=TAG,
             )
             bbox = canvas.bbox(item)
