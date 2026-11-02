@@ -1,0 +1,50 @@
+name: Package T5577 Multiwriter
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/package-t5577-multiwriter.yml'
+      - 'plugins/T5577_multiwriter/**'
+      - 'src/lib/input_dec.py'
+      - 'src/lib/input_hex.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build small ZIP
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile, ZIP_DEFLATED
+          from pathlib import Path
+          paths = [
+              'plugins/T5577_multiwriter/plugin.py',
+              'plugins/T5577_multiwriter/ui.json',
+              'plugins/T5577_multiwriter/manifest.json',
+              'plugins/T5577_multiwriter/lang/fr.json',
+              'src/lib/input_dec.py',
+              'src/lib/input_hex.py',
+          ]
+          dest = Path('packages/T5577_Multiwriter_v1.1.5.zip')
+          dest.parent.mkdir(exist_ok=True)
+          with ZipFile(dest, 'w', ZIP_DEFLATED) as z:
+              for p in paths:
+                  assert Path(p).is_file(), p
+                  z.write(p)
+          with ZipFile(dest) as z:
+              assert z.namelist() == paths
+              assert z.testzip() is None
+          print(f'Package created: {dest} ({dest.stat().st_size} bytes)')
+          PY
+      - name: Commit package to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/T5577_Multiwriter_v1.1.5.zip
+          if ! git diff --cached --quiet; then
+            git commit -m "Build T5577 Multiwriter v1.1.5 standalone ZIP"
+            git push
+          fi
