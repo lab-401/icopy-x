@@ -116,12 +116,32 @@ class MirrorService:
         return self._running
 
     def _load_gadget(self):
+        self._release_rndis_udc()
         for mod in ('g_mass_storage', 'g_acm_ms', 'g_ether', 'g_serial'):
             os.system('sudo modprobe -r %s 2>/dev/null' % mod)
         os.system('sudo modprobe g_serial')
 
     def _unload_gadget(self):
         os.system('sudo modprobe -r g_serial 2>/dev/null')
+        self._restore_rndis()
+
+    @staticmethod
+    def _release_rndis_udc():
+        """Free the UDC if the optional configfs RNDIS gadget holds it."""
+        try:
+            import gadget_linux
+            gadget_linux.release_rndis_udc()
+        except Exception as e:
+            log.debug('rndis UDC release skipped: %s', e)
+
+    @staticmethod
+    def _restore_rndis():
+        """Bring the always-on USB network back after the mirror released it."""
+        try:
+            import gadget_linux
+            gadget_linux.restore_rndis()
+        except Exception as e:
+            log.debug('rndis restore skipped: %s', e)
 
     def _serve_loop(self):
         while self._running:
