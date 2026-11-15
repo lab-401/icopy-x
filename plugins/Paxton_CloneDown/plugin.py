@@ -12,6 +12,7 @@
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
 """Paxton Clone&Down plugin for iCopy-XS.
+Copyright (c) 2026: jareckib
 
 Explicit user attempts renew the executor recovery budget when supported.
 Transport failures during reads request one managed reader restart, followed

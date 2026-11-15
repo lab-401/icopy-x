@@ -12,6 +12,7 @@
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
 """
+Copyright (c) 2026: jareckib
 Electra RAW Clone for iCopy-X/XS.
 
 Reads an EM4100-compatible 64-bit base and its 64-bit extension using
@@ -37,10 +38,10 @@ writes are never replayed automatically. The last RAW is saved atomically.
 
 Sources and community reports:
 - Flipper Forum, "Electra intercom": 7E1EAAAA + AAAAAAAA reported by
-  dcaprita (14 May 2023) and jareckib (18/22 July 2023)
+  dcaprita (14 May 2023) and later July 2023 reports
 - Flipper's format documentation lists markers 7E71 and 0030 by Leptopt1los
 - iKey.ru discussions provide additional Electra background, including
-  jareckib's July 2023 read/write reports.
+  July 2023 read/write reports.
 The parser uses the EM4100 Manchester-64 layout and preserves captured RAW;
 forum observations do not establish compatibility with every reader.
 

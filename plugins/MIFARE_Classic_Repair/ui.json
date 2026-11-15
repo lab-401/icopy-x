@@ -1,0 +1,914 @@
+{
+  "plugin": true,
+  "name": "MIFARE Classic Fix",
+  "version": "1.0.0",
+  "initial_state": "init",
+  "states": {
+    "init": {
+      "on_enter": "run:do_init",
+      "screen": {
+        "title": "MIFARE Classic Repair",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Initializing...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "fw_check",
+        "on_error": "fw_error"
+      }
+    },
+    "fw_check": {
+      "on_enter": "run:do_check_firmware",
+      "screen": {
+        "title": "Checking Firmware",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Checking PM3...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "choose_type",
+        "on_result.status==unsupported": "fw_error",
+        "on_error": "fw_error"
+      }
+    },
+    "fw_error": {
+      "screen": {
+        "title": "Firmware Unsupported",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Update firmware",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": null
+        },
+        "keys": {
+          "M1": "finish"
+        }
+      }
+    },
+    "choose_type": {
+      "on_enter": "call:draw_modes",
+      "on_exit": "call:clear_modes",
+      "screen": {
+        "title": "MIFARE Classic Repair",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:mode_up",
+          "DOWN": "call:mode_down",
+          "OK": "call:choose_mode",
+          "M2": "call:choose_mode",
+          "M1": "finish"
+        }
+      },
+      "transitions": {
+        "on_result.status==auto": "auto_detect",
+        "on_result.status==ok": "confirm_repair",
+        "on_result.status==unsupported": "mode_error",
+        "on_error": "mode_error",
+        "on_result.status==keys_only": "keys_only_choice"
+      }
+    },
+    "auto_detect": {
+      "on_enter": "run:do_auto_detect",
+      "screen": {
+        "title": "Auto Detection",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Standard scan first",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Then rescue probes",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{dictionary_message}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{dictionary_progress}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": null
+        },
+        "keys": {
+          "M1": "call:cancel_dictionary_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "confirm_repair",
+        "on_result.status==manual": "auto_manual",
+        "on_result.status==not_magic": "auto_not_magic",
+        "on_result.status==unsafe": "fw_error",
+        "on_error": "auto_manual",
+        "on_result.status==healthy": "card_healthy",
+        "on_result.status==cancelled": "auto_cancelled"
+      }
+    },
+    "auto_cancelled": {
+      "screen": {
+        "title": "Auto Repair",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Dictionary scan",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "cancelled.",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "No changes to card.",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "set_state:choose_type",
+          "M2": "call:retry_auto_scan",
+          "OK": "call:retry_auto_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==retry": "auto_detect"
+      }
+    },
+    "auto_manual": {
+      "screen": {
+        "title": "Auto Repair",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{detect_message}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "M2 - Manual mode",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Retry",
+          "right": "Manual"
+        },
+        "keys": {
+          "M1": "call:retry_auto_scan",
+          "M2": "call:open_manual_menu",
+          "OK": "call:open_manual_menu"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "choose_type",
+        "on_result.status==retry": "auto_detect"
+      }
+    },
+    "auto_not_magic": {
+      "screen": {
+        "title": "Unsupported Card",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Not a confirmed",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Magic UID card.",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Recovery blocked.",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "call:retry_auto_scan",
+          "OK": "call:retry_auto_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==retry": "auto_detect"
+      }
+    },
+    "mode_error": {
+      "screen": {
+        "title": "Not Supported",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Back"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:choose_type",
+          "OK": "set_state:choose_type"
+        }
+      }
+    },
+    "confirm_repair": {
+      "screen": {
+        "title": "Confirm Repair",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{mode_label}",
+              "size": "medium",
+              "align": "center",
+              "color": "blue"
+            },
+            {
+              "text": "New UID:",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{new_uid}",
+              "size": "medium",
+              "align": "center",
+              "color": "blue"
+            },
+            {
+              "text": "Force block 0 write",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Repair"
+        },
+        "keys": {
+          "M1": "set_state:choose_type",
+          "M2": "set_state:repair_busy",
+          "OK": "set_state:repair_busy"
+        }
+      },
+      "on_enter": "call:draw_repair_hint",
+      "on_exit": "call:clear_repair_hint"
+    },
+    "repair_busy": {
+      "on_enter": "run:do_repair",
+      "screen": {
+        "title": "Repairing...",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Repairing block 0...",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Keep card still",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "repair_ok",
+        "on_result.status==error": "repair_error",
+        "on_result.status==unsupported": "fw_error",
+        "on_error": "repair_error"
+      }
+    },
+    "repair_ok": {
+      "screen": {
+        "title": "Repair Verified",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Card detected!",
+              "size": "medium",
+              "align": "center",
+              "color": "blue"
+            },
+            {
+              "text": "New UID:",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{result_uid}",
+              "size": "medium",
+              "align": "center",
+              "color": "blue"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:choose_type",
+          "OK": "set_state:choose_type"
+        }
+      }
+    },
+    "repair_error": {
+      "screen": {
+        "title": "Repair Failed",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:confirm_repair",
+          "OK": "set_state:confirm_repair"
+        }
+      }
+    },
+    "card_healthy": {
+      "screen": {
+        "title": "Card Detected",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Card detected.",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Repair not needed.",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "OK - Return to menu",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Menu"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:choose_type",
+          "OK": "set_state:choose_type"
+        }
+      }
+    },
+    "keys_only_choice": {
+      "screen": {
+        "title": "Key Finding",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "UP": "call:keys_choice_up",
+          "DOWN": "call:keys_choice_down",
+          "M1": "set_state:choose_type",
+          "M2": "call:start_keys_selected",
+          "OK": "call:start_keys_selected"
+        }
+      },
+      "transitions": {
+        "on_result.status==scan": "keys_only_scan"
+      },
+      "on_enter": "call:reset_keys_choice",
+      "on_exit": "call:clear_keys_choice"
+    },
+    "keys_only_scan": {
+      "on_enter": "run:do_find_keys",
+      "screen": {
+        "title": "Key Finding",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{keys_method}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{dictionary_message}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{dictionary_progress}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_elapsed}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_rate}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_eta}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_found}",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": null
+        },
+        "keys": {
+          "M1": "call:cancel_dictionary_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==complete": "keys_only_result",
+        "on_result.status==partial": "keys_only_result",
+        "on_result.status==not_vulnerable": "keys_only_result",
+        "on_result.status==incomplete": "keys_only_result",
+        "on_result.status==no_card": "keys_no_card",
+        "on_result.status==cancelled": "keys_only_result",
+        "on_error": "keys_only_result",
+        "on_result.status==no_seed": "keys_only_result",
+        "on_result.status==no_recovery": "keys_only_result"
+      }
+    },
+    "keys_only_result": {
+      "screen": {
+        "title": "Key Finding Result",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{keys_mode_label}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{keys_result}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{keys_found}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_key}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_elapsed}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "{wipe_option}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "set_state:choose_type",
+          "M2": "set_state:keys_only_choice",
+          "OK": "set_state:keys_only_choice",
+          "ALL": "call:prepare_wipe"
+        }
+      },
+      "transitions": {
+        "on_result.status==confirm": "wipe_confirm",
+        "on_result.status==blocked": "wipe_blocked"
+      }
+    },
+    "wipe_blocked": {
+      "screen": {
+        "title": "Wipe",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{wipe_message}",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Find all keys first",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:keys_only_result",
+          "OK": "set_state:keys_only_result"
+        }
+      }
+    },
+    "wipe_confirm": {
+      "screen": {
+        "title": "Confirm Wipe",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Delete card data?",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "{wipe_message}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Block 0 preserved",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "OK - Wipe",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Wipe"
+        },
+        "keys": {
+          "M1": "set_state:keys_only_result",
+          "M2": "set_state:wipe_busy",
+          "OK": "set_state:wipe_busy"
+        }
+      }
+    },
+    "wipe_busy": {
+      "on_enter": "run:do_wipe_verified",
+      "screen": {
+        "title": "Wipe",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Wiping card...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "wipe_result",
+        "on_result.status==error": "wipe_result",
+        "on_error": "wipe_result"
+      }
+    },
+    "wipe_result": {
+      "screen": {
+        "title": "Wipe Result",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{wipe_message}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Back"
+        },
+        "keys": {
+          "M1": "set_state:choose_type",
+          "M2": "set_state:keys_only_result",
+          "OK": "set_state:keys_only_result"
+        }
+      }
+    },
+    "keys_no_card": {
+      "screen": {
+        "title": "Key Finding Result",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{keys_mode_label}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "{keys_result}",
+              "size": "medium",
+              "align": "center",
+              "color": "red"
+            },
+            {
+              "text": "{keys_found}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_key}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{keys_elapsed}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "{wipe_option}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "set_state:choose_type",
+          "M2": "set_state:keys_only_choice",
+          "OK": "set_state:keys_only_choice",
+          "ALL": "call:prepare_wipe"
+        }
+      },
+      "transitions": {
+        "on_result.status==confirm": "wipe_confirm",
+        "on_result.status==blocked": "wipe_blocked"
+      }
+    }
+  }
+}

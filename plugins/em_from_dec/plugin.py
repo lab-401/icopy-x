@@ -2,7 +2,6 @@
 # Required Notice: Copyright ETOILE401 SAS (http://lab401.com)
 #
 # Copyright (c) 2026: ETOILE401 SAS & https://github.com
-# Copyright (c) 2026: jareckib
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
@@ -14,6 +13,7 @@
 ##########################################################################
 
 """EM4102 From Decimal plugin for iCopy-X/XS.
+Copyright (c) 2026: jareckib
 
 Enter the decimal representation of a 40-bit EM4102 ID (1 to
 1099511627775, up to 13 digits). An engraved number is suitable only

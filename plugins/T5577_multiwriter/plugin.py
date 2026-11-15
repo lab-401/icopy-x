@@ -14,8 +14,9 @@
 ##########################################################################
 
 """T5577 Multiwriter plugin for iCopy-XS
+Copyright (c) 2026: jareckib
 
-Port of lf_t55xx_multiwriter.lua by jareckib - Jarek Barwinski
+Port of lf_t55xx_multiwriter.lua.
 
 Stores 1, 2 or 3 EM4102 UIDs on a single T5577 tag.
 Supports:

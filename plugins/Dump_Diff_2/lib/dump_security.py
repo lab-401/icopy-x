@@ -1,7 +1,3 @@
-"""Dump Diff 2: Anti-Clone, security diagnostics, and multi-capture sequential analysis.
-Consolidated module. Original license and notices retained below.
-"""
-
 ##########################################################################
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
@@ -16,6 +12,11 @@ Consolidated module. Original license and notices retained below.
 #
 # This entire header "Required Notice" must remain in place.
 ##########################################################################
+
+"""Dump Diff 2: Anti-Clone, security diagnostics, and multi-capture sequential analysis.
+Copyright (c) 2026: jareckib
+Consolidated module for security diagnostics and sequential scan analysis.
+"""
 
 # Vendor payloads are decoded by the external PM3 client, not this plugin.
 import re
@@ -452,7 +453,6 @@ def analyze_mfc(data_a, data_b):
 
 """Dump Diff 2 - supplementary two-dump security diagnostics.
 
-@copyright (2026) jareckib
 Independent implementation. Concept inspired by Dump Diff by uaih3k9x.
 These tests identify candidate structures; they do not prove Anti-Copy.
 """

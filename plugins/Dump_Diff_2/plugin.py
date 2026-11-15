@@ -14,7 +14,7 @@
 ##########################################################################
 
 """Dump Diff 2 plugin for iCopy-X/XS.
-Author and integration: jareckib, 2026.
+Copyright (c) 2026: jareckib
 
 Compare RFID dumps, inspect metadata and memory blocks, run Auto Scan,
 and manage saved reports.
@@ -52,7 +52,6 @@ algorithms. Auto Scan delegates card acquisition to the native iCopy-X
 reader, which may perform key recovery depending on the installed firmware,
 client and card.
 
-@copyright (2026) jareckib
 """
 
 import re

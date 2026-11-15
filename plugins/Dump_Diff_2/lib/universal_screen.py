@@ -14,13 +14,14 @@
 ##########################################################################
 
 """Dump Diff 2 dump discovery, parsing and comparison utilities.
+Copyright (c) 2026: jareckib
 
 Read supported RFID dumps, format memory blocks, extract metadata,
 and identify changed blocks for the comparison screen.
 
-@copyright (2026) jareckib"""
+"""
 
-# Dump Diff 2 - independent implementation by jareckib (2026).
+# Dump Diff 2 - independent implementation (2026).
 # Concept inspired by Dump Diff by uaih3k9x; no source code reused.
 import os, re, json
 
