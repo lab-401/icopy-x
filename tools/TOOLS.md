@@ -24,6 +24,13 @@
 | `minimal_launch_090.py` | QEMU launcher. Executor mock, showScanToast bridge, key injection, _direct_read_flow. |
 | `qemu_shims/` | Python shims for Cython modules under QEMU (resources, tagtypes, etc). |
 
+## Device-side helpers
+
+| Tool | Purpose |
+|------|---------|
+| `rndis/` | Always-on USB network over the USB-C cable: configfs RNDIS gadget + `dnsmasq` DHCP, so the PC gets `10.1.1.100-150` and `ssh root@10.1.1.1` works while charging. Also carries `patch_stock_ipk.py`, which injects the UDC-release/restore fix into a stock app so PC mode and screen mirroring stop being silently blocked. See `rndis/README.md`. |
+| `telemetry/` | Sysmon + telemetry deployment for hardware runs. |
+
 ## Usage
 
 ### Run Read walker
