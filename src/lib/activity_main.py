@@ -616,6 +616,34 @@ class SettingsMenuActivity(BaseActivity):
         except Exception:
             pass
         self._draw_toggle()
+        self._apply_mirror()
+
+    def _apply_mirror(self):
+        """Start or stop the mirror service so the toggle takes effect now.
+
+        The service is otherwise only started once, from application.py, when
+        getScreenMirror() is set at launch — flipping this row used to change
+        nothing until the app was restarted, so no COM port ever appeared.
+
+        Runs off the UI thread: start() releases the UDC and modprobes g_serial,
+        stop() joins the serve thread. Both can take a moment.
+        """
+        import threading
+
+        wanted = self._mirror_state
+
+        def _run():
+            try:
+                from lib.mirror_service import get_service
+                service = get_service()
+                if wanted:
+                    service.start()
+                else:
+                    service.stop()
+            except Exception as e:
+                logger.warning('mirror toggle failed: %s', e)
+
+        threading.Thread(target=_run, daemon=True).start()
 
     def onKeyEvent(self, key):
         if key == KEY_UP:

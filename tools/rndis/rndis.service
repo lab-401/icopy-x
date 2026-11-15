@@ -1,0 +1,13 @@
+[Unit]
+Description=iCopy-X RNDIS USB gadget (power + network over USB-C)
+After=systemd-modules-load.service
+Before=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh /home/pi/rndis.sh
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target

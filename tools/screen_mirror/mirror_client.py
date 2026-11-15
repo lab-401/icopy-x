@@ -552,7 +552,14 @@ class MirrorApp:
         # Transparency: mask.png cyan (#00fff2) regions become see-through.
         # Use magenta as OS color key — won't appear in the device photo.
         TRANSPARENT = '#ff00ff'
-        self.root.attributes('-transparentcolor', TRANSPARENT)
+        try:
+            # Windows-only colour key: the device photo is composited over a
+            # magenta canvas, so the screen cut-out shows the live stream.
+            self.root.attributes('-transparentcolor', TRANSPARENT)
+        except tk.TclError:
+            # X11 and macOS have no colour-key transparency. The cut-out is
+            # simply covered by the first frame, so nothing else changes.
+            log.info('colour-key transparency unsupported here; using a plain window')
         self._transparent_color = TRANSPARENT
         self._transparent_rgb = (255, 0, 255)
 
