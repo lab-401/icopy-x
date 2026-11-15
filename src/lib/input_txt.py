@@ -2,7 +2,6 @@
 # Required Notice: Copyright ETOILE401 SAS (http://www.lab401.com)
 #
 # Copyright (c) 2026: ETOILE401 SAS & https://github.com/quantum-x/
-# Copyright (c) 2026: jareckib
 #
 # This software is licensed under the PolyForm Noncommercial License 1.0.0.
 # You may not use this software for commercial purposes.
