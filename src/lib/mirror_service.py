@@ -42,6 +42,7 @@ Transport:
 
 import logging
 import os
+import select
 import struct
 import threading
 import time
@@ -66,6 +67,10 @@ FB_SIZE = 240 * 240 * 2
 SERIAL_PATH = '/dev/ttyGS0'
 SCREEN_W = 240
 SCREEN_H = 240
+
+# A connected client requests frames continuously, so silence means it is gone.
+# Hosts do not deliver EOF when they close a CDC ACM port, hence the timeout.
+IDLE_TIMEOUT = 5.0
 
 
 class MirrorService:
@@ -243,13 +248,34 @@ class MirrorService:
             return None, None
 
     def _readn(self, fd, n):
-        """Read exactly n bytes. Blocking. fd close unblocks with OSError."""
+        """Read exactly n bytes, giving up when the client goes silent.
+
+        A host closing its side of a CDC ACM port does not deliver EOF to the
+        device — it simply stops sending. A blocking read then never returns,
+        ``_session()`` never comes back, and the next client is never served
+        (observed: the second connection hangs until mirroring is toggled off
+        and on again).
+
+        select() is polled in short slices rather than one long wait: stop()
+        joins this thread with a 3 s timeout and must not leave it holding
+        /dev/ttyGS0, otherwise ``modprobe -r g_serial`` fails and the RNDIS
+        gadget can never take the controller back.
+        """
         buf = b''
+        last_data = time.monotonic()
         while len(buf) < n:
+            if not self._running:
+                raise ConnectionError('stopped')
+            ready, _, _ = select.select([fd], [], [], 0.25)
+            if not ready:
+                if time.monotonic() - last_data > IDLE_TIMEOUT:
+                    raise ConnectionError('idle')
+                continue
             chunk = os.read(fd, n - len(buf))
             if not chunk:
                 raise ConnectionError('EOF')
             buf += chunk
+            last_data = time.monotonic()
         return buf
 
 
