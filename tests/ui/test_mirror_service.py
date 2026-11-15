@@ -223,3 +223,38 @@ def test_handle_serves_welcome_and_frames_over_a_socket(service_paths, monkeypat
         worker.join(timeout=3)
         if svc._fb_fd:
             svc._fb_fd.close()
+
+
+def test_start_dispatches_to_the_configured_loop(monkeypatch, tmp_path):
+    """The transport choice must pick the serving loop, not just a flag."""
+    fb = tmp_path / 'fb.raw'
+    fb.write_bytes(b'\x01' * mirror_service.FB_SIZE)
+    monkeypatch.setattr(mirror_service, 'FB_PATH', str(fb))
+    monkeypatch.setattr(mirror_service.MirrorService, '_load_gadget', lambda self: None)
+    monkeypatch.setattr(mirror_service.MirrorService, '_unload_gadget', lambda self: None)
+    loops = []
+    monkeypatch.setattr(mirror_service.MirrorService, '_serve_loop',
+                        lambda self: loops.append('serial'))
+    monkeypatch.setattr(mirror_service.MirrorService, '_serve_tcp_loop',
+                        lambda self: loops.append('tcp'))
+
+    svc = mirror_service.MirrorService()
+    svc.start(mirror_service.TRANSPORT_ETHERNET)
+    svc.stop()
+    assert loops == ['tcp'], 'ethernet must not enter the serial loop'
+
+    svc.start(mirror_service.TRANSPORT_SERIAL)
+    svc.stop()
+    assert loops == ['tcp', 'serial'], 'serial must not enter the TCP loop'
+
+
+def test_settings_default_transport_is_serial(monkeypatch):
+    """A device that never opened the menu keeps the transport it shipped with."""
+    import settings
+
+    seen = []
+    monkeypatch.setattr(
+        settings.config, 'getValue',
+        lambda key, default=None: seen.append((key, default)) or default)
+    assert settings.getMirrorTransport() == 0
+    assert seen == [('mirror_transport', '0')]

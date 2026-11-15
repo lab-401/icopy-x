@@ -245,3 +245,31 @@ def test_client_reconnects_when_the_stream_goes_silent(monkeypatch):
         device.close()
 
     assert len(device.drops) >= 2, 'a silent session must be abandoned and retried'
+
+
+def test_disconnect_blanks_the_last_frame():
+    """A dropped session must not leave a frozen picture that still looks live."""
+    class _Root:
+        def after(self, _delay, fn):
+            fn()
+
+    class _Canvas:
+        def __init__(self):
+            self.calls = []
+
+        def itemconfigure(self, item, **kwargs):
+            self.calls.append((item, kwargs))
+
+    app = mc.MirrorApp.__new__(mc.MirrorApp)
+    app.root = _Root()
+    app.canvas = _Canvas()
+    app._screen_id = 1
+    app._status_id = 2
+    statuses = []
+    app._update_status = statuses.append
+
+    app._on_disconnected()
+
+    assert (1, {'image': ''}) in app.canvas.calls, 'the stale frame must be removed'
+    assert (2, {'state': mc.tk.NORMAL}) in app.canvas.calls, 'the status line returns'
+    assert statuses and 'econnect' in statuses[0]
