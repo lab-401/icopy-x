@@ -51,18 +51,30 @@ import tkinter as tk
 import zlib
 from pathlib import Path
 
+def _require(package, import_error):
+    """Report a missing dependency against the interpreter that is running us.
+
+    "pip install ..." alone is not enough advice: the usual failure is a second
+    interpreter (system python vs a venv) that does not have the package.
+    """
+    print("Error: %s is required but missing from this interpreter." % package)
+    print("       interpreter: %s" % sys.executable)
+    print("       install:     %s -m pip install %s" % (sys.executable, package))
+    if import_error is not None:
+        print("       (%s)" % import_error)
+    sys.exit(1)
+
+
 try:
     from PIL import Image, ImageTk
-except ImportError:
-    print("Error: Pillow is required. Install with: pip install pillow")
-    sys.exit(1)
+except ImportError as exc:
+    _require("pillow", exc)
 
 try:
     import serial
     import serial.tools.list_ports
-except ImportError:
-    print("Error: pyserial is required. Install with: pip install pyserial")
-    sys.exit(1)
+except ImportError as exc:
+    _require("pyserial", exc)
 
 try:
     import numpy as np
@@ -244,8 +256,14 @@ class SocketTransport:
 
     @property
     def in_waiting(self):
+        """Bytes ready to read.
+
+        The frame loop reads ``in_waiting`` bytes per iteration, so reporting a
+        bare "1" throttles it to one byte per poll (a few bytes per second).
+        Report a large batch and let recv() return what is available.
+        """
         ready, _, _ = select.select([self._sock], [], [], 0)
-        return 1 if ready else 0
+        return 65536 if ready else 0
 
     def read(self, count):
         try:
@@ -933,7 +951,9 @@ def parse_args():
     )
     parser.add_argument(
         'port', nargs='?', default=None,
-        help='Serial port (e.g. /dev/ttyACM0, COM3). Auto-detect if omitted.',
+        help='Serial port (e.g. /dev/ttyACM0, COM3) or "host:port" for the '
+             'Ethernet link (e.g. 10.1.1.1:7767). Auto-detect if omitted: the '
+             'Ethernet link is tried first, then the serial ports.',
     )
     parser.add_argument(
         '--assets-dir', default=None,
