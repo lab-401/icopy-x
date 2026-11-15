@@ -41,6 +41,8 @@ Dependencies:
 
 import argparse
 import logging
+import select
+import socket
 import struct
 import sys
 import threading
@@ -111,6 +113,11 @@ DEFAULT_HEIGHT = 240
 # Serial settings
 BAUD_RATE = 115200
 SERIAL_TIMEOUT = 1.0
+
+# Ethernet transport (mirror over the RNDIS link): pass "host:port" instead of a
+# COM port. 10.1.1.1 is the device address on usb0.
+DEFAULT_TCP = '10.1.1.1:7767'
+TCP_CONNECT_TIMEOUT = 2.0
 
 # Reconnect interval (seconds)
 RECONNECT_INTERVAL = 2.0
@@ -224,6 +231,54 @@ def parse_header(data):
 # Serial communication thread
 # ---------------------------------------------------------------------------
 
+class SocketTransport:
+    """Serial-like wrapper around a TCP socket (Ethernet mirror).
+
+    Exposes only the surface the connection uses — write/read/in_waiting/close —
+    so the framing code is shared with the USB-serial transport.
+    """
+
+    def __init__(self, sock):
+        self._sock = sock
+        self.is_open = True
+
+    @property
+    def in_waiting(self):
+        ready, _, _ = select.select([self._sock], [], [], 0)
+        return 1 if ready else 0
+
+    def read(self, count):
+        try:
+            return self._sock.recv(max(1, count))
+        except (socket.timeout, BlockingIOError):
+            return b''
+
+    def write(self, data):
+        self._sock.sendall(data)
+        return len(data)
+
+    def flush(self):
+        pass
+
+    def reset_input_buffer(self):
+        timeout = self._sock.gettimeout()
+        self._sock.settimeout(0)
+        try:
+            while self._sock.recv(4096):
+                pass
+        except (BlockingIOError, socket.timeout, OSError):
+            pass
+        finally:
+            self._sock.settimeout(timeout)
+
+    def close(self):
+        self.is_open = False
+        try:
+            self._sock.close()
+        except Exception:
+            pass
+
+
 class SerialConnection:
     """Manages serial communication with the iCopy-X device."""
 
@@ -306,7 +361,20 @@ class SerialConnection:
                     self.on_disconnected()
 
     def _open_port(self, port):
-        """Try to open a serial port. Returns True on success."""
+        """Open a serial port, or a TCP endpoint given as "host:port"."""
+        if ':' in str(port):
+            try:
+                host, _, port_s = str(port).rpartition(':')
+                sock = socket.create_connection((host, int(port_s)),
+                                                timeout=TCP_CONNECT_TIMEOUT)
+                sock.settimeout(SERIAL_TIMEOUT)
+                self.ser = SocketTransport(sock)
+                log.info("Connected to %s", port)
+                return True
+            except (OSError, ValueError) as exc:
+                log.debug("Could not connect to %s: %s", port, exc)
+                self.ser = None
+                return False
         try:
             self.ser = serial.Serial(
                 port=port,
@@ -322,7 +390,10 @@ class SerialConnection:
             return False
 
     def _auto_detect_port(self):
-        """Scan available serial ports and try to find the iCopy-X device."""
+        """Find the device, preferring the Ethernet link over a COM port."""
+        if self._try_handshake(DEFAULT_TCP):
+            return DEFAULT_TCP
+
         ports = serial.tools.list_ports.comports()
         candidates = []
         for p in ports:

@@ -48,11 +48,13 @@ def _setup_actstack():
 def mirror(monkeypatch):
     """Stub the persisted setting and the mirror service."""
     recorder = MirrorRecorder()
-    state = {'on': 0}
+    state = {'on': 0, 'transport': 0}
 
     settings_mod = types.ModuleType('settings')
     settings_mod.getScreenMirror = lambda: state['on']
     settings_mod.setScreenMirror = lambda value: state.__setitem__('on', value)
+    settings_mod.getMirrorTransport = lambda: state['transport']
+    settings_mod.setMirrorTransport = lambda value: state.__setitem__('transport', value)
     monkeypatch.setitem(sys.modules, 'settings', settings_mod)
 
     import lib.mirror_service as service_mod
@@ -102,3 +104,28 @@ def test_opening_the_menu_does_not_restart_the_service(mirror):
 
     assert activity._mirror_state is True
     assert recorder.snapshot() == [], 'application.py owns the launch-time start'
+
+
+def test_transport_row_switches_the_link_and_restarts(mirror, activity_workers):
+    """Changing the link must restart the service so the new transport is used."""
+    recorder, state = mirror
+    state['on'] = 1                       # mirroring is on
+    activity = _open_settings()
+    assert activity._transport == 0
+
+    activity._selected = activity._ROW_TRANSPORT
+    activity.onKeyEvent(KEY_OK)
+
+    assert activity._transport == 1
+    assert state['transport'] == 1, 'the choice must be persisted'
+    assert len(activity_workers) == 1, 'a restart must be scheduled'
+    activity_workers[0].run()
+    assert recorder.snapshot() == ['stop', 'start'],         'restart stops the old transport before starting the new one'
+
+
+def test_transport_row_is_rendered(mirror):
+    recorder, state = mirror
+    activity = _open_settings()
+    texts = activity.getCanvas().get_all_text()
+    assert any('Mirror Link' in t for t in texts), texts
+    assert any(t in ('Serial', 'Ethernet') for t in texts), texts

@@ -106,3 +106,120 @@ def test_readn_stops_promptly_when_the_service_is_stopped_mid_wait(service, monk
     finally:
         os.close(read_fd)
         os.close(write_fd)
+
+
+# ---------------------------------------------------------------------------
+# Transport selection (USB serial gadget vs Ethernet over the RNDIS link)
+# ---------------------------------------------------------------------------
+
+def _settings_stub(monkeypatch, transport=0):
+    import sys
+    import types
+
+    stub = types.ModuleType('settings')
+    stub.getMirrorTransport = lambda: transport
+    monkeypatch.setitem(sys.modules, 'settings', stub)
+    return stub
+
+
+def test_configured_transport_defaults_to_serial(monkeypatch):
+    _settings_stub(monkeypatch, 0)
+    assert mirror_service._configured_transport() == mirror_service.TRANSPORT_SERIAL
+
+
+def test_configured_transport_reads_the_saved_value(monkeypatch):
+    _settings_stub(monkeypatch, 1)
+    assert mirror_service._configured_transport() == mirror_service.TRANSPORT_ETHERNET
+
+
+def test_configured_transport_survives_a_broken_setting(monkeypatch):
+    stub = _settings_stub(monkeypatch, 0)
+
+    def boom():
+        raise RuntimeError('config unreadable')
+
+    stub.getMirrorTransport = boom
+    assert mirror_service._configured_transport() == mirror_service.TRANSPORT_SERIAL
+
+
+@pytest.fixture
+def service_paths(monkeypatch, tmp_path):
+    """Point the service at a temporary framebuffer and neutral gadget calls."""
+    fb = tmp_path / 'fb.raw'
+    fb.write_bytes(b'\x01' * mirror_service.FB_SIZE)
+    monkeypatch.setattr(mirror_service, 'FB_PATH', str(fb))
+    calls = []
+    monkeypatch.setattr(mirror_service.MirrorService, '_load_gadget',
+                        lambda self: calls.append('load'))
+    monkeypatch.setattr(mirror_service.MirrorService, '_unload_gadget',
+                        lambda self: calls.append('unload'))
+    monkeypatch.setattr(mirror_service.MirrorService, '_serve_loop', lambda self: None)
+    monkeypatch.setattr(mirror_service.MirrorService, '_serve_tcp_loop', lambda self: None)
+    return calls
+
+
+def test_ethernet_transport_leaves_the_usb_gadget_alone(service_paths):
+    svc = mirror_service.MirrorService()
+    svc.start(mirror_service.TRANSPORT_ETHERNET)
+    assert svc.is_running
+    assert svc._transport == mirror_service.TRANSPORT_ETHERNET
+    svc.stop()
+    assert service_paths == [], 'RNDIS must not be displaced by the ethernet transport'
+
+
+def test_serial_transport_still_takes_the_gadget(service_paths):
+    svc = mirror_service.MirrorService()
+    svc.start(mirror_service.TRANSPORT_SERIAL)
+    svc.stop()
+    assert service_paths == ['load', 'unload']
+
+
+def test_handle_serves_welcome_and_frames_over_a_socket(service_paths, monkeypatch):
+    """The TCP loop hands the accepted socket fd to _handle(); prove that path."""
+    import socket as _socket
+    import struct as _struct
+    import threading as _threading
+    import zlib as _zlib
+
+    svc = mirror_service.MirrorService()
+    svc._running = True
+    svc._fb_fd = open(mirror_service.FB_PATH, 'rb')
+
+    srv, cli = _socket.socketpair()
+    srv.settimeout(5)
+    cli.settimeout(5)
+    worker = _threading.Thread(target=svc._handle, args=(srv.fileno(),), daemon=True)
+    worker.start()
+
+    def recv_msg():
+        head = b''
+        while len(head) < 5:
+            chunk = cli.recv(5 - len(head))
+            assert chunk, 'connection closed'
+            head += chunk
+        assert head[:2] == mirror_service.MAGIC
+        size = _struct.unpack('>H', head[3:5])[0]
+        body = b''
+        while len(body) < size:
+            chunk = cli.recv(size - len(body))
+            assert chunk, 'connection closed'
+            body += chunk
+        return head[2], body
+
+    try:
+        cli.sendall(mirror_service.MAGIC + _struct.pack('>BH', 0x04, 0))
+        msg_type, payload = recv_msg()
+        assert msg_type == 0x05, 'expected WELCOME'
+        assert _struct.unpack('>HH', payload) == (240, 240)
+
+        cli.sendall(mirror_service.MAGIC + _struct.pack('>BH', 0x03, 0))
+        msg_type, payload = recv_msg()
+        assert msg_type == 0x01, 'expected FRAME'
+        assert len(_zlib.decompress(payload)) == mirror_service.FB_SIZE
+    finally:
+        svc._running = False
+        cli.close()
+        srv.close()
+        worker.join(timeout=3)
+        if svc._fb_fd:
+            svc._fb_fd.close()
