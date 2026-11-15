@@ -1,0 +1,12 @@
+[Unit]
+Description=Inject the RNDIS-coexistence fix into the installed iCopy-X app
+After=local-fs.target
+Before=icopy.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 /usr/local/sbin/icopy_postpatch.py
+
+[Install]
+WantedBy=multi-user.target
