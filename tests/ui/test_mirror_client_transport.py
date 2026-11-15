@@ -120,3 +120,128 @@ def test_full_handshake_and_frames_over_tcp():
     assert frames, 'no frame decoded over TCP'
     assert frames[0].size == (width, height)
     assert frames[0].getpixel((0, 0)) == (32, 64, 136), 'RGB565 0x1122 must decode'
+
+
+# ---------------------------------------------------------------------------
+# Reconnection: a dead session must not leave a frozen picture on screen
+# ---------------------------------------------------------------------------
+
+def _recv_exact(conn, count):
+    data = b''
+    while len(data) < count:
+        chunk = conn.recv(count - len(data))
+        if not chunk:
+            return None
+        data += chunk
+    return data
+
+
+def test_read_raises_when_the_peer_closes(pair):
+    """EOF is a disconnect, not "no data yet" — otherwise the loop never leaves."""
+    server, client = pair
+    transport = mc.SocketTransport(server)
+
+    client.close()
+    with pytest.raises(OSError):
+        transport.read(1)
+
+
+class _Device:
+    """Minimal mirror server: answers HELLO, then one frame per ACK."""
+
+    def __init__(self, drop_after_frames=None, silent=False):
+        self.drops = []
+        self.listener = socket.socket()
+        self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listener.bind(('127.0.0.1', 0))
+        self.listener.listen(2)
+        self.port = self.listener.getsockname()[1]
+        self.drop_after_frames = drop_after_frames
+        self.silent = silent
+        self.frames = 0
+        threading.Thread(target=self._serve, daemon=True).start()
+
+    def _serve(self):
+        while True:
+            try:
+                conn, _ = self.listener.accept()
+            except OSError:
+                return
+            threading.Thread(target=self._session, args=(conn,), daemon=True).start()
+
+    def _session(self, conn):
+        self.drops.append(time.monotonic())
+        conn.settimeout(5)
+        sent = 0
+        try:
+            while True:
+                head = _recv_exact(conn, 5)
+                if head is None:
+                    return
+                msg_type = head[2]
+                size = struct.unpack('>H', head[3:5])[0]
+                if _recv_exact(conn, size) is None:
+                    return
+                if msg_type == mc.MSG_HELLO:
+                    payload = struct.pack('>HH', mc.DEFAULT_WIDTH, mc.DEFAULT_HEIGHT)
+                    conn.sendall(mc.MAGIC + struct.pack('>BH', mc.MSG_WELCOME, len(payload)) + payload)
+                    if self.silent:
+                        # Keep the socket open and send nothing: no EOF, so the
+                        # client can only notice via its stall timeout.
+                        time.sleep(15)
+                        return
+                elif msg_type == mc.MSG_ACK and not self.silent:
+                    payload = zlib.compress(bytes([0x11, 0x22]) * (mc.DEFAULT_WIDTH * mc.DEFAULT_HEIGHT), 6)
+                    conn.sendall(mc.MAGIC + struct.pack('>BH', mc.MSG_FRAME, len(payload)) + payload)
+                    self.frames += 1
+                    sent += 1
+                    if self.drop_after_frames and sent >= self.drop_after_frames:
+                        return          # drop like a device restart
+        except OSError:
+            return
+        finally:
+            conn.close()
+
+    def close(self):
+        self.listener.close()
+
+
+def _connect(port):
+    connection = mc.SerialConnection('127.0.0.1:%d' % port)
+    frames = []
+    connection.on_frame = frames.append
+    connection.start()
+    return connection, frames
+
+
+def test_client_reconnects_after_the_session_drops(monkeypatch):
+    monkeypatch.setattr(mc, 'RECONNECT_INTERVAL', 0.2)
+    device = _Device(drop_after_frames=2)
+    connection, frames = _connect(device.port)
+    try:
+        deadline = time.monotonic() + 12
+        while time.monotonic() < deadline and (len(device.drops) < 2 or len(frames) < 3):
+            time.sleep(0.05)
+    finally:
+        connection.stop()
+        device.close()
+
+    assert len(device.drops) >= 2, 'the client must open a new session after the drop'
+    assert len(frames) >= 3, 'frames must flow again after reconnecting'
+
+
+def test_client_reconnects_when_the_stream_goes_silent(monkeypatch):
+    """Serial hosts never deliver EOF, so silence must time out too."""
+    monkeypatch.setattr(mc, 'RECONNECT_INTERVAL', 0.2)
+    monkeypatch.setattr(mc, 'STALL_TIMEOUT', 0.5)
+    device = _Device(silent=True)
+    connection, _frames = _connect(device.port)
+    try:
+        deadline = time.monotonic() + 8
+        while time.monotonic() < deadline and len(device.drops) < 2:
+            time.sleep(0.05)
+    finally:
+        connection.stop()
+        device.close()
+
+    assert len(device.drops) >= 2, 'a silent session must be abandoned and retried'

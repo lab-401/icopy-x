@@ -134,6 +134,10 @@ TCP_CONNECT_TIMEOUT = 2.0
 # Reconnect interval (seconds)
 RECONNECT_INTERVAL = 2.0
 
+# A live mirror streams continuously (one frame per ACK), so silence means the
+# session is dead. Serial hosts never deliver EOF, hence the timeout.
+STALL_TIMEOUT = 10.0
+
 # ---------------------------------------------------------------------------
 # Hotspot definitions
 # ---------------------------------------------------------------------------
@@ -266,10 +270,20 @@ class SocketTransport:
         return 65536 if ready else 0
 
     def read(self, count):
+        """Read from the socket; raise when the peer is gone.
+
+        recv() returns b'' at EOF, which is indistinguishable from "no bytes
+        right now" — the frame loop would spin on the dead socket forever and
+        never reconnect (the window keeps the last frame). Raising an OSError
+        subclass makes the caller treat it as a disconnect.
+        """
         try:
-            return self._sock.recv(max(1, count))
+            chunk = self._sock.recv(max(1, count))
         except (socket.timeout, BlockingIOError):
             return b''
+        if not chunk:
+            raise ConnectionError('peer closed the connection')
+        return chunk
 
     def write(self, data):
         self._sock.sendall(data)
@@ -511,8 +525,12 @@ class SerialConnection:
     def _frame_loop(self):
         """Read and dispatch frames until disconnect or stop."""
         buf = b''
+        last_progress = time.monotonic()
         while self._running and self._connected:
             try:
+                if time.monotonic() - last_progress > STALL_TIMEOUT:
+                    log.warning('No data for %.0fs — reconnecting', STALL_TIMEOUT)
+                    break
                 time.sleep(0.05)
                 if not self.ser:
                     break
@@ -522,6 +540,7 @@ class SerialConnection:
                 chunk = self.ser.read(waiting)
                 if not chunk:
                     continue
+                last_progress = time.monotonic()
                 buf += chunk
                 log.debug("Read %d bytes (buf=%d)", len(chunk), len(buf))
             except (serial.SerialException, OSError) as exc:
@@ -900,7 +919,20 @@ class MirrorApp:
 
     def _on_disconnected(self):
         """Called when device connection is lost."""
-        self._update_status("Disconnected")
+        self._update_status("Disconnected — reconnecting...")
+        self.root.after(0, self._clear_screen)
+
+    def _clear_screen(self):
+        """Blank the stale frame so a frozen picture is never mistaken for live.
+
+        Must run on the Tk thread.
+        """
+        try:
+            self.canvas.itemconfigure(self._screen_id, image='')
+            self.canvas.itemconfigure(self._status_id, state=tk.NORMAL)
+            log.info('Screen cleared — waiting for the device')
+        except tk.TclError:
+            pass
 
     def _on_close(self):
         """Handle window close."""
