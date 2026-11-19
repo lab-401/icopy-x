@@ -943,10 +943,10 @@ class RootFSBackupPlugin(object):
             canvas.create_text(10, y+18, text=detail[:23], anchor='nw', fill=color,
                                font=('Courier New', 12), tags=tag)
         if page > 0:
-            canvas.create_text(233, 52, text='▲', anchor='ne', fill='#1647D6',
+            canvas.create_text(235, 43, text='▲', anchor='ne', fill='#1647D6',
                                font=('Arial', 9), tags=tag)
         if (page + 1) * per_page < len(items):
-            canvas.create_text(233, 179, text='▼', anchor='se', fill='#1647D6',
+            canvas.create_text(235, 198, text='▼', anchor='se', fill='#1647D6',
                                font=('Arial', 9), tags=tag)
         total_pages = (len(items)+per_page-1)//per_page
         canvas.create_text(120, 191, text=self._translate('Page') + ' %d/%d' %
