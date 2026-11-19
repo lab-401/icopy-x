@@ -122,6 +122,12 @@ from lib._constants import (
 )
 from lib import resources
 
+try:  # tkinter is optional: headless tests drive the widgets with MockCanvas
+    from tkinter import TclError as _TclError
+except Exception:  # pragma: no cover - no Tk available
+    class _TclError(Exception):
+        """Stand-in so the guards below stay importable without tkinter."""
+
 logger = logging.getLogger(__name__)
 
 
@@ -820,6 +826,7 @@ class ProgressBar:
 
         self._anim_id = 0      # Monotonic counter to cancel stale animations
         self._after_ids = set()
+        self._dead = False     # canvas was destroyed under us — terminal
 
         # Canvas tags — unique per instance via createTag
         self._tag_bg = createTag(self, 'bg')
@@ -886,6 +893,9 @@ class ProgressBar:
             # Stale animation — a newer setProgress() superseded us
             if my_id != self._anim_id:
                 return
+            if not self._canvas_alive():
+                self._kill()
+                return
             if not self._showing:
                 self._progress = target
                 return
@@ -911,12 +921,18 @@ class ProgressBar:
         Useful for operations that finish and want a visual completion
         animation before transitioning to the next screen.
         """
+        if not self._canvas_alive():
+            # The screen is gone: never fire the transition callback.
+            self._kill()
+            return
         if not self._showing or self._progress == self._max:
             self._progress = self._max
             if self._showing:
                 self._redraw()
-            if callback:
-                callback()
+            # _redraw() makes the bar terminal when the canvas refuses to draw
+            # (see _canvas_alive). The transition must not follow it onto a
+            # screen that no longer exists - the caller is tearing down.
+            self._dispatch(callback)
             return
         # Calculate animation time: at most 10 steps * 15ms = 150ms + 50ms buffer
         gap = self._max - self._progress
@@ -925,10 +941,12 @@ class ProgressBar:
 
         self._animate_to(self._max)
 
-        if self._canvas and self._showing and callback:
+        if not callback:
+            return
+        if self._canvas and self._showing:
             self._schedule(delay, callback)
-        elif callback:
-            callback()
+        else:
+            self._dispatch(callback)
 
     def getProgress(self) -> int:
         """Get current progress."""
@@ -973,42 +991,116 @@ class ProgressBar:
         self._redraw()
 
     def hide(self):
-        """Remove from canvas."""
+        """Remove from canvas. Safe after the canvas is gone."""
         self._showing = False
-        self._canvas.delete(self._tag_bg)
-        self._canvas.delete(self._tag_fill)
-        self._canvas.delete(self._tag_msg)
-        self._canvas.delete(self._tag_timer)
-        self._canvas.delete(self._tag_pct)
+        for tag in (self._tag_bg, self._tag_fill, self._tag_msg,
+                    self._tag_timer, self._tag_pct):
+            try:
+                self._canvas.delete(tag)
+            except _TclError:
+                self._kill()
+                return
 
     def _schedule(self, delay, callback):
         """Track owned timers so disposal can cancel them before canvas teardown."""
+        if not self._canvas_alive():
+            self._kill()
+            return
         timer_id = None
 
         def _run():
+            # Tk delivers a timer even when after_cancel() failed on a dying
+            # widget, so the state has to be rechecked here, not only when the
+            # timer was scheduled.
             self._after_ids.discard(timer_id)
-            callback()
+            self._dispatch(callback)
 
-        timer_id = self._canvas.after(delay, _run)
+        try:
+            timer_id = self._canvas.after(delay, _run)
+        except _TclError:
+            self._kill()
+            return
         self._after_ids.add(timer_id)
+
+    def _dispatch(self, callback):
+        """Run *callback* only while the bar can still act on it.
+
+        Every widget callback goes through here. A rendering failure or a
+        teardown makes the bar terminal (see _kill), and a transition must not
+        follow it onto a screen that is going away - whether it is dispatched
+        right now or from a timer that was queued before that happened.
+        """
+        if not self._canvas_alive():
+            # A delivery landing on a dead bar is the last evidence we get that
+            # the canvas is gone: make that terminal and drop queued timers.
+            self._kill()
+            return
+        if callback is not None:
+            callback()
 
     def dispose(self):
         """Remove the bar and cancel animation/completion callbacks.
 
         Use when discarding the bar, before destroying its canvas. hide()
         remains a temporary visual change and preserves completion callbacks.
+        Safe to call after the canvas is already gone.
         """
-        self._anim_id += 1
-        for timer_id in self._after_ids:
-            self._canvas.after_cancel(timer_id)
-        self._after_ids.clear()
+        self._kill()
         self.hide()
+
+    def _canvas_alive(self) -> bool:
+        """False once the canvas has been destroyed (its activity was popped).
+
+        Tk timers registered with ``after()`` outlive the widget they were
+        scheduled from, so a progress update or an animation step can land on a
+        canvas the activity stack already destroyed. tkinter then raises
+        ``TclError('invalid command name ".!canvas2"')`` — in the Tk callback
+        and, via scan.so's error path, in the scan worker thread, which takes
+        the whole scan down with it.  Test doubles without ``winfo_exists`` are
+        assumed alive.
+        """
+        if self._dead:
+            return False
+        checker = getattr(self._canvas, 'winfo_exists', None)
+        if checker is None:
+            return True
+        try:
+            return bool(checker())
+        except Exception:
+            return False
+
+    def _kill(self):
+        """Make the bar terminal: cancel pending timers, stop animating."""
+        self._dead = True
+        self._anim_id += 1
+        for timer_id in list(self._after_ids):
+            try:
+                self._canvas.after_cancel(timer_id)
+            except Exception:
+                pass
+        self._after_ids.clear()
 
     # -----------------------------------------------------------------
     # Internal rendering
     # -----------------------------------------------------------------
 
     def _redraw(self):
+        """Update the progress bar, tolerating a canvas that is already gone.
+
+        See ``_canvas_alive``: the canvas can disappear between two animation
+        steps. Losing it must not raise — the bar simply goes terminal.
+        """
+        if not self._showing:
+            return
+        if not self._canvas_alive():
+            self._kill()
+            return
+        try:
+            self._render()
+        except _TclError:
+            self._kill()
+
+    def _render(self):
         """Update the progress bar in-place (no flicker).
 
         First call creates canvas items; subsequent calls update coords/text
