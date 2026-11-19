@@ -1,0 +1,623 @@
+{
+  "plugin": true,
+  "name": "Emergency Backup",
+  "version": "1.11.0",
+  "i18n": {},
+  "initial_state": "main_menu",
+  "states": {
+    "info_1": {
+      "screen": {
+        "title": "Why Backup?",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_1",
+          "DOWN": "set_state:info_2"
+        }
+      },
+      "on_enter": "call:draw_info_1",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_2": {
+      "screen": {
+        "title": "SD Protection",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_1",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_1",
+          "DOWN": "set_state:info_3"
+        }
+      },
+      "on_enter": "call:draw_info_2",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_3": {
+      "screen": {
+        "title": "BOOT TIMEOUT",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_2",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_2",
+          "DOWN": "set_state:info_4"
+        }
+      },
+      "on_enter": "call:draw_info_3",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_4": {
+      "screen": {
+        "title": "Emergency Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_3",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_3",
+          "DOWN": "set_state:info_5"
+        }
+      },
+      "on_enter": "call:draw_info_4",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_5": {
+      "screen": {
+        "title": "System Images",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_4",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_4",
+          "DOWN": "set_state:info_6"
+        }
+      },
+      "on_enter": "call:draw_info_5",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_6": {
+      "screen": {
+        "title": "UDUMP Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_5",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_5",
+          "DOWN": "set_state:info_7"
+        }
+      },
+      "on_enter": "call:draw_info_6",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_7": {
+      "screen": {
+        "title": "Disk Layout",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_6",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_6",
+          "DOWN": "set_state:info_8"
+        }
+      },
+      "on_enter": "call:draw_info_7",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_8": {
+      "screen": {
+        "title": "Image Output",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_7",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_7",
+          "DOWN": "set_state:info_9"
+        }
+      },
+      "on_enter": "call:draw_info_8",
+      "on_exit": "call:clear_info_screen"
+    },
+    "confirm": {
+      "screen": {
+        "title": "Start Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Continue"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:running",
+          "OK": "set_state:running"
+        }
+      },
+      "on_enter": "call:draw_space_summary",
+      "on_exit": "call:clear_space_summary"
+    },
+    "running": {
+      "on_enter": "run:do_backup",
+      "screen": {
+        "title": "Emergency Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": null
+        },
+        "keys": {
+          "M1": "call:request_cancel"
+        }
+      },
+      "transitions": {
+        "on_result.status==done": "done",
+        "on_result.status==cancelled": "cancelled",
+        "on_result.status==error": "error",
+        "on_error": "error"
+      }
+    },
+    "done": {
+      "screen": {
+        "title": "Backup Done",
+        "content": {
+          "type": "text",
+          "lines": [],
+          "scrollable": true
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_backup_done",
+      "on_exit": "call:clear_backup_done"
+    },
+    "cancelled": {
+      "screen": {
+        "title": "Backup Cancelled",
+        "content": {
+          "type": "text",
+          "lines": [],
+          "scrollable": true
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_backup_cancelled",
+      "on_exit": "call:clear_backup_cancelled"
+    },
+    "error": {
+      "screen": {
+        "title": "Backup Error",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Again"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_backup_error_large",
+      "on_exit": "call:clear_error_large"
+    },
+    "main_menu": {
+      "screen": {
+        "title": "Emergency Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Confirm"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:delete_scan",
+          "OK": "set_state:delete_scan",
+          "UP": "set_state:main_menu_backup",
+          "DOWN": "set_state:main_menu_backup"
+        }
+      },
+      "on_enter": "call:draw_menu_delete",
+      "on_exit": "call:clear_menu"
+    },
+    "preflight": {
+      "on_enter": "run:do_preflight",
+      "screen": {
+        "title": "Checking SD Space",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "confirm",
+        "on_result.status==no_space": "no_space",
+        "on_error": "no_space"
+      }
+    },
+    "no_space": {
+      "screen": {
+        "title": "Not Enough Space",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Menu"
+        },
+        "keys": {
+          "M1": "set_state:info_13",
+          "M2": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_space_error_large",
+      "on_exit": "call:clear_error_large"
+    },
+    "info_9": {
+      "screen": {
+        "title": "Restore SD Card",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_8",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_8",
+          "DOWN": "set_state:info_10"
+        }
+      },
+      "on_enter": "call:draw_info_9",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_10": {
+      "screen": {
+        "title": "Combine Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_9",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_9",
+          "DOWN": "set_state:info_11"
+        }
+      },
+      "on_enter": "call:draw_info_10",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_11": {
+      "screen": {
+        "title": "Write SD Card",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_10",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_10",
+          "DOWN": "set_state:info_12"
+        }
+      },
+      "on_enter": "call:draw_info_11",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_12": {
+      "screen": {
+        "title": "Time and Power",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_11",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_11",
+          "DOWN": "set_state:info_13"
+        }
+      },
+      "on_enter": "call:draw_info_12",
+      "on_exit": "call:clear_info_screen"
+    },
+    "info_13": {
+      "screen": {
+        "title": "Before Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:info_12",
+          "M2": "set_state:preflight",
+          "OK": "set_state:preflight",
+          "UP": "set_state:info_12",
+          "DOWN": "set_state:info_13"
+        }
+      },
+      "on_enter": "call:draw_info_13",
+      "on_exit": "call:clear_info_screen"
+    },
+    "main_menu_backup": {
+      "screen": {
+        "title": "Emergency Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Confirm"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:info_1",
+          "OK": "set_state:info_1",
+          "UP": "set_state:main_menu",
+          "DOWN": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_menu_backup",
+      "on_exit": "call:clear_menu"
+    },
+    "delete_scan": {
+      "on_enter": "run:scan_backups",
+      "screen": {
+        "title": "Delete Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==found": "delete_list",
+        "on_result.status==empty": "delete_empty",
+        "on_result.status==error": "delete_error",
+        "on_error": "delete_error"
+      }
+    },
+    "delete_empty": {
+      "screen": {
+        "title": "Delete Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Menu"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:main_menu",
+          "OK": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_no_backups_large",
+      "on_exit": "call:clear_error_large"
+    },
+    "delete_list": {
+      "screen": {
+        "title": "Delete Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Confirm"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "UP": "call:delete_up",
+          "DOWN": "call:delete_down",
+          "M2": "set_state:delete_confirm",
+          "OK": "set_state:delete_confirm"
+        }
+      },
+      "on_enter": "call:draw_delete_list",
+      "on_exit": "call:clear_delete_list"
+    },
+    "delete_confirm": {
+      "screen": {
+        "title": "Confirm Delete",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Delete"
+        },
+        "keys": {
+          "M1": "set_state:delete_list",
+          "M2": "set_state:deleting",
+          "OK": "set_state:deleting"
+        }
+      },
+      "on_enter": "call:draw_delete_confirm",
+      "on_exit": "call:clear_delete_confirm"
+    },
+    "deleting": {
+      "on_enter": "run:do_delete_backup",
+      "screen": {
+        "title": "Delete Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==done": "delete_done",
+        "on_result.status==error": "delete_error",
+        "on_error": "delete_error"
+      }
+    },
+    "delete_done": {
+      "screen": {
+        "title": "Backup Deleted",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Backups"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:delete_scan",
+          "OK": "set_state:delete_scan"
+        }
+      },
+      "on_enter": "call:draw_delete_done",
+      "on_exit": "call:clear_delete_done"
+    },
+    "delete_error": {
+      "screen": {
+        "title": "Delete Error",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Backups"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:delete_scan",
+          "OK": "set_state:delete_scan"
+        }
+      },
+      "on_enter": "call:draw_backup_error_large",
+      "on_exit": "call:clear_error_large"
+    }
+  }
+}
