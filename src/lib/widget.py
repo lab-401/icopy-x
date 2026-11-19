@@ -929,7 +929,10 @@ class ProgressBar:
             self._progress = self._max
             if self._showing:
                 self._redraw()
-            if callback:
+            # _redraw() makes the bar terminal when the canvas refuses to draw
+            # (see _canvas_alive). The transition must not follow it onto a
+            # screen that no longer exists - the caller is tearing down.
+            if callback and self._canvas_alive():
                 callback()
             return
         # Calculate animation time: at most 10 steps * 15ms = 150ms + 50ms buffer
@@ -939,9 +942,11 @@ class ProgressBar:
 
         self._animate_to(self._max)
 
-        if self._canvas and self._showing and callback:
-            self._schedule(delay, callback)
-        elif callback:
+        if not callback:
+            return
+        if self._canvas and self._showing:
+            self._schedule(delay, callback)      # guarded: no callback if dead
+        elif self._canvas_alive():
             callback()
 
     def getProgress(self) -> int:

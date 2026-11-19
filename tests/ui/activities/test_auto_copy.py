@@ -192,3 +192,61 @@ def test_success_reread_keeps_original_scan(read_flow):
     assert activity.state == 'reading'
     assert read_flow.reader.start.call_count == 2
     read_flow.scanner.scan_all_asynchronous.assert_called_once_with()
+
+
+def test_a_redraw_failure_does_not_let_the_scan_transition_fire(read_flow):
+    """A001 through the real call site: onScanFinish -> complete(cb).
+
+    The canvas still answers winfo_exists() while refusing to draw (the state a
+    Tk window reaches as its item commands are torn down). The failed redraw
+    makes the bar terminal, so the transition that ``_processScanResult``
+    performs must not run on the screen the caller is leaving.
+    """
+    from lib import widget as widget_mod
+
+    activity = start(read_flow)
+    bar = activity._progressbar
+    assert bar is not None, 'the scan screen owns the bar'
+    state_before = activity.state
+    bar._setProgressImmediate(bar.getMax())      # already full: immediate path
+
+    def boom(*args, **kwargs):
+        raise widget_mod._TclError('bad window path name ".!canvas2"')
+
+    canvas = activity.getCanvas()
+    for name in ('itemconfig', 'coords', 'create_rectangle', 'create_text', 'delete'):
+        setattr(canvas, name, boom)
+
+    bar.complete(activity._processScanResult)    # the exact call site expression
+
+    assert bar._dead, 'a failed redraw has to be terminal'
+    assert activity.state == state_before, 'no transition onto a dead screen'
+
+
+def test_a_scan_finishing_after_the_canvas_died_does_not_transition(read_flow):
+    """Canvas already gone: the bar's entry check stops it before drawing."""
+    activity = start(read_flow)
+    bar = activity._progressbar
+    state_before = activity.state
+
+    activity.getCanvas().winfo_exists = lambda: 0
+
+    read_flow.scan_result(activity, HF.copy())
+
+    assert bar._dead
+    assert activity.state == state_before
+
+
+def test_the_scan_result_is_processed_once_on_a_live_canvas(read_flow, monkeypatch):
+    """The suppression above must not swallow a normal completion."""
+    activity = start(read_flow)
+    calls = []
+    original = activity._processScanResult
+    monkeypatch.setattr(activity, '_processScanResult',
+                        lambda: (calls.append(1), original())[1])
+
+    read_flow.scan_result(activity, HF.copy())
+    activity.getCanvas().advance(1000)
+
+    assert calls == [1], 'completion must fire exactly once'
+    assert activity.state == 'reading'
