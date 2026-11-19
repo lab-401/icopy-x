@@ -34,6 +34,7 @@ class Canvas:
         # state a real Tk canvas is in when its item commands were torn down
         # but the window path survives long enough to answer winfo_exists().
         self.render_error = False
+        self.fail_cancel = False
 
     # -- lifecycle ---------------------------------------------------
     def _guard(self):
@@ -57,6 +58,10 @@ class Canvas:
 
     def after_cancel(self, timer_id):
         self._guard()
+        if self.fail_cancel:
+            # Real Tk raises once the widget's callback command is deleted; the
+            # timer stays queued and is still delivered.
+            raise widget_mod._TclError('invalid command name ".!canvas2"')
         self.timers.pop(timer_id, None)
 
     def run_pending(self):
@@ -220,3 +225,27 @@ def test_a_real_tk_canvas_teardown_suppresses_completion():
             root.destroy()
         except Exception:
             pass
+
+
+def test_a_queued_completion_does_not_fire_after_the_bar_goes_terminal(bar):
+    """The timer is queued while the bar is live; the bar dies before it runs.
+
+    Real Tk: after_cancel() raises once the widget's callback command is gone,
+    which _kill() swallows - the timer is still delivered. The completion must
+    therefore recheck the bar when it runs, not only when it was scheduled.
+    """
+    progress, canvas = bar
+    progress._setProgressImmediate(progress.getMax() // 2)   # below max: deferred
+
+    fired = []
+    progress.complete(lambda: fired.append(True))
+    assert canvas.timers, 'the completion must be queued'
+
+    canvas.fail_cancel = True          # cancellation will not succeed
+    canvas.render_error = True
+    progress.setMessage('teardown')    # a failing redraw makes the bar terminal
+    assert progress._dead
+
+    canvas.run_pending()               # Tk still delivers the queued timer
+
+    assert fired == [], 'a terminal bar must not deliver its queued completion'

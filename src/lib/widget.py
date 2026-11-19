@@ -932,8 +932,7 @@ class ProgressBar:
             # _redraw() makes the bar terminal when the canvas refuses to draw
             # (see _canvas_alive). The transition must not follow it onto a
             # screen that no longer exists - the caller is tearing down.
-            if callback and self._canvas_alive():
-                callback()
+            self._dispatch(callback)
             return
         # Calculate animation time: at most 10 steps * 15ms = 150ms + 50ms buffer
         gap = self._max - self._progress
@@ -945,9 +944,9 @@ class ProgressBar:
         if not callback:
             return
         if self._canvas and self._showing:
-            self._schedule(delay, callback)      # guarded: no callback if dead
-        elif self._canvas_alive():
-            callback()
+            self._schedule(delay, callback)
+        else:
+            self._dispatch(callback)
 
     def getProgress(self) -> int:
         """Get current progress."""
@@ -1010,8 +1009,11 @@ class ProgressBar:
         timer_id = None
 
         def _run():
+            # Tk delivers a timer even when after_cancel() failed on a dying
+            # widget, so the state has to be rechecked here, not only when the
+            # timer was scheduled.
             self._after_ids.discard(timer_id)
-            callback()
+            self._dispatch(callback)
 
         try:
             timer_id = self._canvas.after(delay, _run)
@@ -1019,6 +1021,22 @@ class ProgressBar:
             self._kill()
             return
         self._after_ids.add(timer_id)
+
+    def _dispatch(self, callback):
+        """Run *callback* only while the bar can still act on it.
+
+        Every widget callback goes through here. A rendering failure or a
+        teardown makes the bar terminal (see _kill), and a transition must not
+        follow it onto a screen that is going away - whether it is dispatched
+        right now or from a timer that was queued before that happened.
+        """
+        if not self._canvas_alive():
+            # A delivery landing on a dead bar is the last evidence we get that
+            # the canvas is gone: make that terminal and drop queued timers.
+            self._kill()
+            return
+        if callback is not None:
+            callback()
 
     def dispose(self):
         """Remove the bar and cancel animation/completion callbacks.
