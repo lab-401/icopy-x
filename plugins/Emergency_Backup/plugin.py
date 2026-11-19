@@ -16,7 +16,7 @@
 # EMERGENCY BACKUP - MAIN PLUGIN (iCopy-X / iCopy-XS)
 ##########################################################################
 # Purpose:
-#   - Provides Delete Backup and Full SD Image UI flows.
+#   - Provides Delete Backup, Full SD Image and Clean Userdata UI flows.
 #   - Shows paginated information, confirmation, progress, ETA and errors.
 #   - Checks available UDUMP space before backup and during writing;
 #     estimates compressed size and reserves 256 MiB as a safety margin.
@@ -264,6 +264,8 @@ class RootFSBackupPlugin(object):
         self._backup_items = []
         self._backup_selected = 0
         self._backup_to_delete = None
+        self._cleanup_plan = None
+        self._cleanup_result = None
 
     # Dump Diff 2-style info pages: draw only within the content canvas area.
     # No RF or backup I/O is performed by these synchronous call: methods.
@@ -633,10 +635,10 @@ class RootFSBackupPlugin(object):
         tag = '_emergency_menu'
         canvas.delete(tag)
         canvas.create_rectangle(0, 49, 239, 200, fill='white', outline='', tags=tag)
-        for i, title in enumerate(('Delete Backup', 'Full SD Image')):
-            y = 76 + i * 42
+        for i, title in enumerate(('Delete Backup', 'Full SD Image', 'Clean Userdata')):
+            y = 66 + i * 36
             if i == selected:
-                canvas.create_rectangle(9, y-5, 231, y+25, fill='#20A750',
+                canvas.create_rectangle(9, y-5, 231, y+24, fill='#20A750',
                                         outline='', tags=tag)
             canvas.create_text(18, y, text=self._translate(title), anchor='nw',
                                fill='white' if i == selected else '#1647D6',
@@ -661,6 +663,204 @@ class RootFSBackupPlugin(object):
         self._backup_menu_selected = 1
         self._draw_menu(1)
         self._ui_later(lambda: self._draw_menu(1), 160)
+
+    def draw_menu_cleanup(self):
+        self._cancel_key_hook()
+        self._backup_menu_selected = 2
+        self._draw_menu(2)
+        self._ui_later(lambda: self._draw_menu(2), 160)
+
+    # CLEANUP TARGETS: only expendable files by exact verified path and type.
+    # Never clean apt/lists, configuration, RFID dumps, dictionaries or binaries.
+    _PM3_LOG_NAME = re.compile(r'^log_[0-9]{8,20}\.txt$', re.I)
+    _APT_CACHE_NAMES = frozenset(('pkgcache.bin', 'srcpkgcache.bin'))
+    _CLEANUP_TARGETS = (
+        ('PIP Cache', '/root/.cache/pip'),
+        ('PIP Cache', '/home/pi/.cache/pip'),
+        ('PM3 Logs', '/root/.proxmark3/logs'),
+        ('PM3 Logs', '/home/pi/.proxmark3/logs'),
+        ('APT Cache', '/var/cache/apt'),
+    )
+    _HISTORY_FILES = ('/root/.proxmark3/history.txt',
+                      '/home/pi/.proxmark3/history.txt')
+
+    @staticmethod
+    def _safe_directory(root):
+        """Reject symlink redirection at every path component."""
+        root = os.path.abspath(root)
+        cur = os.path.sep
+        for component in root.split(os.path.sep):
+            if not component:
+                continue
+            cur = os.path.join(cur, component)
+            if os.path.islink(cur):
+                return False
+        return os.path.isdir(root)
+
+    @classmethod
+    def _cleanup_files_in(cls, root, group):
+        """Yield only regular unlinked files in explicitly allowed locations."""
+        if not cls._safe_directory(root):
+            return
+        for current, dirs, files in os.walk(root, topdown=True, followlinks=False):
+            dirs[:] = [d for d in dirs if cls._safe_directory(os.path.join(current, d))]
+            for name in files:
+                path = os.path.join(current, name)
+                if os.path.islink(path):
+                    continue
+                if group == 'PM3 Logs' and not cls._PM3_LOG_NAME.fullmatch(name):
+                    continue
+                if group == 'APT Cache':
+                    # The on-disk Debian archives and two regenerated APT caches.
+                    # APT lists are NOT touched; nor are dpkg status/db files.
+                    rel = os.path.relpath(path, root).replace(os.sep, '/')
+                    if not (rel in cls._APT_CACHE_NAMES or
+                            (rel.startswith('archives/') and rel.endswith('.deb') and '/' not in rel[9:])):
+                        continue
+                try:
+                    info = os.lstat(path)
+                except OSError:
+                    continue
+                if stat.S_ISREG(info.st_mode) and info.st_nlink == 1:
+                    yield path, info
+
+    @staticmethod
+    def _open_files():
+        """Best-effort list of currently opened files; never touch these."""
+        opened = set()
+        try:
+            for proc in os.listdir('/proc'):
+                if not proc.isdigit():
+                    continue
+                folder = '/proc/%s/fd' % proc
+                try:
+                    fds = os.listdir(folder)
+                except OSError:
+                    continue
+                for fd in fds:
+                    try:
+                        name = os.readlink(os.path.join(folder, fd))
+                        if name.startswith('/'):
+                            opened.add(name)
+                    except OSError:
+                        continue
+        except OSError:
+            pass
+        return opened
+
+    def _make_cleanup_plan(self):
+        opened = self._open_files()
+        plan = []
+        for group, root in self._CLEANUP_TARGETS:
+            for path, info in self._cleanup_files_in(root, group):
+                if path not in opened:
+                    plan.append((group, path, info.st_dev, info.st_ino, info.st_size))
+        for path in self._HISTORY_FILES:
+            if os.path.islink(path) or not self._safe_directory(os.path.dirname(path)):
+                continue
+            try:
+                info = os.lstat(path)
+            except OSError:
+                continue
+            if (stat.S_ISREG(info.st_mode) and info.st_nlink == 1
+                    and info.st_size > 0 and path not in opened):
+                plan.append(('PM3 History', path, info.st_dev, info.st_ino, info.st_size))
+        return plan
+
+    def scan_cleanup(self):
+        """Worker: scan only; make no changes to filesystem."""
+        try:
+            self._cleanup_plan = self._make_cleanup_plan()
+            self._cleanup_result = None
+            return {'status': 'ok'}
+        except Exception as exc:
+            self._last_error_msg = str(exc)
+            return {'status': 'error'}
+
+    def _draw_cleanup(self, mode):
+        canvas = self.host.getCanvas() if self.host is not None else None
+        if canvas is None:
+            return
+        tag = '_emergency_cleanup'
+        canvas.delete(tag)
+        canvas.create_rectangle(0, 49, 239, 200, fill='white', outline='', tags=tag)
+        if mode == 'result':
+            data = self._cleanup_result or {}
+            rows = [('Cleanup finished', '#1647D6'),
+                    ('Files cleaned: ' + str(data.get('files', 0)), '#777777'),
+                    ('Space: ' + _bytes(data.get('bytes', 0)), '#777777'),
+                    ('Errors: ' + str(data.get('errors', 0)),
+                     '#D52C2C' if data.get('errors') else '#777777')]
+            ys = [66, 95, 124, 153]
+        else:
+            plan = self._cleanup_plan or []
+            pip = [x for x in plan if x[0] == 'PIP Cache']
+            apt = [x for x in plan if x[0] == 'APT Cache']
+            logs = [x for x in plan if x[0] == 'PM3 Logs']
+            hist = [x for x in plan if x[0] == 'PM3 History']
+            rows = [('Clean Userdata', '#1647D6'),
+                    ('PIP: ' + _bytes(sum(x[4] for x in pip)), '#777777'),
+                    ('APT: ' + _bytes(sum(x[4] for x in apt)), '#777777'),
+                    ('PM3 logs: ' + str(len(logs)), '#777777'),
+                    ('History: ' + str(len(hist)), '#777777'),
+                    ('Total: ' + _bytes(sum(x[4] for x in plan)), '#1647D6'),
+                    ('Delete / empty files?', '#D52C2C')]
+            ys = [59, 78, 97, 116, 135, 154, 173]
+        for (line, color), y in zip(rows, ys):
+            canvas.create_text(120, y, text=self._translate(line),
+                               font=('Courier New', 12), fill=color,
+                               anchor='center', tags=tag)
+
+    def draw_cleanup_confirm(self):
+        self._draw_cleanup('confirm')
+        self._ui_later(lambda: self._draw_cleanup('confirm'), 160)
+
+    def draw_cleanup_result(self):
+        self._draw_cleanup('result')
+        self._ui_later(lambda: self._draw_cleanup('result'), 160)
+
+    def clear_cleanup_screen(self):
+        canvas = self.host.getCanvas() if self.host is not None else None
+        if canvas is not None:
+            canvas.delete('_emergency_cleanup')
+
+    def do_cleanup(self):
+        """Worker: delete only scanned files that are still same inode/size."""
+        count = cleared = errors = 0
+        try:
+            snapshot = self._cleanup_plan or []
+            still_allowed = {(g, p, dev, ino, size) for g, p, dev, ino, size
+                             in self._make_cleanup_plan()}
+            for group, path, dev, ino, size in snapshot:
+                if (group, path, dev, ino, size) not in still_allowed:
+                    errors += 1
+                    continue
+                try:
+                    current = os.lstat(path)
+                    if (current.st_dev, current.st_ino, current.st_size) != (dev, ino, size) or current.st_nlink != 1 or not stat.S_ISREG(current.st_mode):
+                        errors += 1
+                        continue
+                    if group == 'PM3 History':
+                        flags = os.O_WRONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
+                        fd = os.open(path, flags)
+                        try:
+                            check = os.fstat(fd)
+                            if (check.st_dev, check.st_ino, check.st_size) != (dev, ino, size) or check.st_nlink != 1:
+                                raise OSError('History changed')
+                            os.ftruncate(fd, 0)
+                        finally:
+                            os.close(fd)
+                    else:
+                        os.unlink(path)
+                    cleared += size
+                    count += 1
+                except OSError:
+                    errors += 1
+            self._cleanup_result = {'files': count, 'bytes': cleared, 'errors': errors}
+            return {'status': 'done'}
+        except Exception as exc:
+            self._last_error_msg = str(exc)
+            return {'status': 'error'}
 
     def clear_menu(self):
         canvas = self.host.getCanvas()

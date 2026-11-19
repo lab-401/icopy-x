@@ -237,5 +237,20 @@
   "Unsupported partition P4": "Unsupported partition P4",
   "Invalid SD partition geometry": "Invalid SD partition geometry",
   "Unsupported UDUMP placement": "Unsupported UDUMP placement",
-  "Extra SD partitions found": "Extra SD partitions found"
+  "Extra SD partitions found": "Extra SD partitions found",
+  "Clean Userdata": "Clean Userdata",
+  "Scan Userdata": "Scan Userdata",
+  "Cleanup Done": "Cleanup Done",
+  "Cleanup Error": "Cleanup Error",
+  "Clean": "Clean",
+  "Backup": "Backup",
+  "Cleanup finished": "Cleanup finished",
+  "Delete / empty files?": "Delete / empty files?",
+  "PIP:": "PIP:",
+  "APT:": "APT:",
+  "PM3 logs:": "PM3 logs:",
+  "History:": "History:",
+  "Files cleaned:": "Files cleaned:",
+  "Space:": "Space:",
+  "Errors:": "Errors:"
 }

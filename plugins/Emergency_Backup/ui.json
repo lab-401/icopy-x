@@ -1,7 +1,7 @@
 {
   "plugin": true,
   "name": "Emergency Backup",
-  "version": "1.11.0",
+  "version": "1.16.0",
   "i18n": {},
   "initial_state": "main_menu",
   "states": {
@@ -298,7 +298,7 @@
           "M1": "finish",
           "M2": "set_state:delete_scan",
           "OK": "set_state:delete_scan",
-          "UP": "set_state:main_menu_backup",
+          "UP": "set_state:main_menu_cleanup",
           "DOWN": "set_state:main_menu_backup"
         }
       },
@@ -471,7 +471,7 @@
           "M2": "set_state:info_1",
           "OK": "set_state:info_1",
           "UP": "set_state:main_menu",
-          "DOWN": "set_state:main_menu"
+          "DOWN": "set_state:main_menu_cleanup"
         }
       },
       "on_enter": "call:draw_menu_backup",
@@ -638,6 +638,128 @@
         }
       },
       "on_enter": "call:draw_space_error_large",
+      "on_exit": "call:clear_error_large"
+    },
+    "main_menu_cleanup": {
+      "screen": {
+        "title": "Emergency Backup",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Confirm"
+        },
+        "keys": {
+          "M1": "finish",
+          "M2": "set_state:cleanup_scan",
+          "OK": "set_state:cleanup_scan",
+          "UP": "set_state:main_menu_backup",
+          "DOWN": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_menu_cleanup",
+      "on_exit": "call:clear_menu"
+    },
+    "cleanup_scan": {
+      "on_enter": "run:scan_cleanup",
+      "screen": {
+        "title": "Scan Userdata",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "cleanup_confirm",
+        "on_result.status==error": "cleanup_error",
+        "on_error": "cleanup_error"
+      }
+    },
+    "cleanup_confirm": {
+      "screen": {
+        "title": "Clean Userdata",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Clean"
+        },
+        "keys": {
+          "M1": "set_state:main_menu_cleanup",
+          "M2": "set_state:cleanup_run",
+          "OK": "set_state:cleanup_run"
+        }
+      },
+      "on_enter": "call:draw_cleanup_confirm",
+      "on_exit": "call:clear_cleanup_screen"
+    },
+    "cleanup_run": {
+      "on_enter": "run:do_cleanup",
+      "screen": {
+        "title": "Clean Userdata",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==done": "cleanup_done",
+        "on_result.status==error": "cleanup_error",
+        "on_error": "cleanup_error"
+      }
+    },
+    "cleanup_done": {
+      "screen": {
+        "title": "Cleanup Done",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Backup"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:info_1",
+          "OK": "set_state:info_1"
+        }
+      },
+      "on_enter": "call:draw_cleanup_result",
+      "on_exit": "call:clear_cleanup_screen"
+    },
+    "cleanup_error": {
+      "screen": {
+        "title": "Cleanup Error",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Scan"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:cleanup_scan",
+          "OK": "set_state:cleanup_scan"
+        }
+      },
+      "on_enter": "call:draw_backup_error_large",
       "on_exit": "call:clear_error_large"
     }
   }

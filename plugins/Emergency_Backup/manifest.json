@@ -1,8 +1,8 @@
 {
   "name": "Emergency Backup",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "author": "jareckib",
-  "description": "Full bootable microSD backup of all partitions, bootloader and files for recovery after SD corruption, failed system modifications or BOOT TIMEOUT. Split 2 GiB IMG.GZ parts and Windows merge scripts.",
+  "description": "Full 16 GB SD image backup with partition compatibility checks, backup management and optional Userdata cleanup (PIP/APT caches, PM3 logs/history).",
   "entry_class": "RootFSBackupPlugin",
   "permissions": [
     "filesystem"
