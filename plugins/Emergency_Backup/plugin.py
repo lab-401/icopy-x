@@ -79,6 +79,10 @@ class BackupCancelled(Exception):
     pass
 
 
+class IncompatibleSDCard(OSError):
+    """Unsupported SD layout or FAT32 metadata; no image may be started."""
+
+
 def _text(path, limit=65536):
     try:
         with open(path, 'r', encoding='utf-8', errors='replace') as f:
@@ -512,11 +516,12 @@ class RootFSBackupPlugin(object):
         try:
             mount = self._mounted_udump()
             if mount['fstype'].lower() not in ('vfat','fat32','fat','msdos'):
-                raise OSError('UDUMP must be VFAT')
+                raise IncompatibleSDCard('UDUMP must be FAT32')
             layout, _head = self._disk_layout(mount)
             p4 = layout['partitions'][3]
             with open(p4['device'],'rb',buffering=0) as fd:
                 boot_sector = fd.read(512)
+            self._validate_udump_fat32(boot_sector, p4)
             fat = VirtualFAT32(UPAN_ROOT,os.path.join(UPAN_ROOT,'backups'),
                                boot_sector,p4['size_sectors'],p4['start_sector'])
             est, occupied = self._preflight_estimate(p4['start_sector']*512,fat)
@@ -537,10 +542,14 @@ class RootFSBackupPlugin(object):
                 self.host.set_var('space_error', self._last_space_error)
                 return {'status':'no_space'}
             return {'status':'ok'}
+        except IncompatibleSDCard as exc:
+            self._last_space_error = str(exc)
+            self.host.set_var('space_error', str(exc))
+            return {'status': 'incompatible'}
         except Exception as exc:
             self._last_space_error = str(exc)
-            self.host.set_var('space_error',str(exc))
-            return {'status':'no_space'}
+            self.host.set_var('space_error', str(exc))
+            return {'status': 'no_space'}
 
     def _draw_error_large(self, message):
         canvas = self.host.getCanvas() if self.host is not None else None
@@ -1000,6 +1009,71 @@ class RootFSBackupPlugin(object):
                 return {'device': parts[0], 'fstype': parts[2]}
         return {'device': '?', 'fstype': '?'}
 
+    def _validate_udump_fat32(self, boot_sector, p4):
+        """Check source FAT32 BPB before constructing a virtual UDUMP image.
+
+        This inspects only the source boot sector and never modifies the SD.
+        The virtual FAT32 generator has its own capacity/file checks.
+        """
+        if len(boot_sector) != 512 or boot_sector[510:512] != b'\x55\xaa':
+            raise IncompatibleSDCard('Invalid UDUMP FAT32 boot sector')
+        bytes_per_sector = struct.unpack_from('<H', boot_sector, 11)[0]
+        sectors_per_cluster = boot_sector[13]
+        reserved = struct.unpack_from('<H', boot_sector, 14)[0]
+        fat_count = boot_sector[16]
+        root_entries = struct.unpack_from('<H', boot_sector, 17)[0]
+        sectors_per_fat = struct.unpack_from('<I', boot_sector, 36)[0]
+        fat16_sectors = struct.unpack_from('<H', boot_sector, 22)[0]
+        root_cluster = struct.unpack_from('<I', boot_sector, 44)[0]
+        if (bytes_per_sector != 512 or sectors_per_cluster == 0 or
+                sectors_per_cluster & (sectors_per_cluster - 1) or
+                sectors_per_cluster > 128 or reserved == 0 or
+                fat_count not in (1, 2) or root_entries != 0 or
+                fat16_sectors != 0 or sectors_per_fat == 0 or
+                root_cluster < 2):
+            raise IncompatibleSDCard('Unsupported UDUMP FAT32 format')
+        total16 = struct.unpack_from('<H', boot_sector, 19)[0]
+        total32 = struct.unpack_from('<I', boot_sector, 32)[0]
+        total = total16 or total32
+        if (total == 0 or total > p4['size_sectors'] or
+                reserved + fat_count * sectors_per_fat >= total):
+            raise IncompatibleSDCard('Invalid UDUMP FAT32 size')
+
+    def _validate_partition_table(self, header, partitions, disk_size):
+        """Verify the on-card MBR geometry matches Linux block geometry.
+
+        Do not enforce one manufacturer's fixed offsets or partition sizes.
+        """
+        if len(header) < 512 or header[510:512] != b'\x55\xaa':
+            raise IncompatibleSDCard('Invalid SD partition table')
+        if disk_size <= 0 or disk_size % 512:
+            raise IncompatibleSDCard('Invalid SD capacity')
+        # This image writer supports four primary MBR entries, not GPT/extended.
+        for i, part in enumerate(partitions):
+            entry = header[446 + 16*i:446 + 16*(i+1)]
+            kind = entry[4]
+            start, size = struct.unpack_from('<II', entry, 8)
+            if (kind in (0, 0x05, 0x0f, 0x85, 0xee) or
+                    start != part['start_sector'] or
+                    size != part['size_sectors']):
+                raise IncompatibleSDCard('Unsupported partition P%d' % (i + 1))
+        ordered = sorted(partitions, key=lambda part: part['start_sector'])
+        previous_end = 1
+        for part in ordered:
+            start = part['start_sector']
+            end = start + part['size_sectors']
+            if start < previous_end or end > disk_size // 512 or end <= start:
+                raise IncompatibleSDCard('Invalid SD partition geometry')
+            previous_end = end
+        # The image generator streams all bytes before P4 as raw sectors.
+        if ordered[-1]['label'] != 'udump':
+            raise IncompatibleSDCard('Unsupported UDUMP placement')
+        # Detect additional partitions not represented in the image.
+        extra = [name for name in os.listdir('/sys/class/block')
+                 if re.fullmatch(r'mmcblk0p[5-9][0-9]*', name)]
+        if extra:
+            raise IncompatibleSDCard('Extra SD partitions found')
+
     def _disk_layout(self, mount):
         if not os.path.exists(DISK):
             raise OSError('Missing disk %s' % DISK)
@@ -1019,6 +1093,7 @@ class RootFSBackupPlugin(object):
             head = disk.read(head_size)
         if len(head) != head_size:
             raise IOError('Cannot read disk header')
+        self._validate_partition_table(head, infos, disk_size)
         layout = {'format': 'icopy-full-sd-v1', 'disk': DISK, 'disk_size_bytes': disk_size,
                   'sector_size': 512, 'partitions': infos, 'udump_mount': mount,
                   'disk_header_bytes': len(head), 'created_at': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1078,7 +1153,7 @@ class RootFSBackupPlugin(object):
             folder_stamp = time.strftime('%d.%m.%Y %Hh%Mm')
             mount = self._mounted_udump()
             if mount['fstype'].lower() not in ('vfat', 'fat32', 'fat', 'msdos'):
-                raise OSError('UDUMP must be VFAT')
+                raise IncompatibleSDCard('UDUMP must be FAT32')
             layout, _ = self._disk_layout(mount)
             disk_bytes = layout['disk_size_bytes']
             p4 = layout['partitions'][3]
@@ -1093,6 +1168,7 @@ class RootFSBackupPlugin(object):
             self._phase = 'Indexing UDUMP'
             self._progress_info = self._phase
             self._ui_later(self._draw_progress)
+            self._validate_udump_fat32(boot_sector, p4)
             fat = VirtualFAT32(UPAN_ROOT, os.path.join(UPAN_ROOT, 'backups'),
                                boot_sector, p4['size_sectors'], p4['start_sector'])
             self._done, self._total, self._last_update = 0, disk_bytes, 0

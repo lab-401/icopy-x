@@ -237,7 +237,7 @@
           "right": "Again"
         },
         "keys": {
-          "M1": "finish",
+          "M1": "set_state:main_menu",
           "M2": "set_state:main_menu"
         }
       },
@@ -276,7 +276,7 @@
           "right": "Again"
         },
         "keys": {
-          "M1": "finish",
+          "M1": "set_state:main_menu",
           "M2": "set_state:main_menu"
         }
       },
@@ -322,7 +322,8 @@
       "transitions": {
         "on_result.status==ok": "confirm",
         "on_result.status==no_space": "no_space",
-        "on_error": "no_space"
+        "on_error": "no_space",
+        "on_result.status==incompatible": "incompatible"
       }
     },
     "no_space": {
@@ -617,6 +618,26 @@
         }
       },
       "on_enter": "call:draw_backup_error_large",
+      "on_exit": "call:clear_error_large"
+    },
+    "incompatible": {
+      "screen": {
+        "title": "Incompatible SD Card",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Menu"
+        },
+        "keys": {
+          "M1": "set_state:main_menu",
+          "M2": "set_state:main_menu",
+          "OK": "set_state:main_menu"
+        }
+      },
+      "on_enter": "call:draw_space_error_large",
       "on_exit": "call:clear_error_large"
     }
   }

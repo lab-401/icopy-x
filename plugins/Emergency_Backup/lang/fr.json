@@ -223,5 +223,19 @@
   "Check free space.": "Vérifiez la place.",
   "OK - Start backup": "OK - Lancer la copie",
   "Continue": "Continuer",
-  "Start Backup": "Lancer la copie"
+  "Start Backup": "Lancer la copie",
+  "Incompatible SD Card": "Carte SD incompatible",
+  "UDUMP must be FAT32": "UDUMP doit etre FAT32",
+  "Invalid UDUMP FAT32 boot sector": "Secteur FAT32 invalide",
+  "Unsupported UDUMP FAT32 format": "Format FAT32 non pris",
+  "Invalid UDUMP FAT32 size": "Taille FAT32 invalide",
+  "Invalid SD partition table": "Table SD invalide",
+  "Invalid SD capacity": "Capacite SD invalide",
+  "Unsupported partition P1": "Partition P1 non prise",
+  "Unsupported partition P2": "Partition P2 non prise",
+  "Unsupported partition P3": "Partition P3 non prise",
+  "Unsupported partition P4": "Partition P4 non prise",
+  "Invalid SD partition geometry": "Geometrie SD invalide",
+  "Unsupported UDUMP placement": "Position UDUMP invalide",
+  "Extra SD partitions found": "Partitions SD en plus"
 }
