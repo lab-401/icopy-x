@@ -314,6 +314,27 @@ def startApp():
                         if not running_os or target not in running_os:
                             flash_needed = True
 
+                import re as _re_arm
+                # ARM-SOURCE-SHA256-BOOLEAN-V51
+                # hw version appends the 9-character ARM source SHA to OS.
+                # Compare only real ARM source hashes, never commit hashes.
+                # Preserve Lab401's version/probe decision as the baseline.
+                if not flash_needed:
+                    _target_arm_sha = image_ver.get('armsrc_sha256_9', '')
+                    if isinstance(_target_arm_sha, str) and _re_arm.fullmatch(
+                            r'[0-9a-fA-F]{9}', _target_arm_sha):
+                        _running_os = (ver_info or {}).get('os', '')
+                        _running_sha = _re_arm.search(
+                            r'(?<![0-9a-fA-F])([0-9a-fA-F]{9})\s*$',
+                            _running_os or '')
+                        if _running_sha:
+                            flash_needed = (
+                                _running_sha.group(1).lower() !=
+                                _target_arm_sha.lower())
+                            print('[app] ARM source SHA: running=%s, target=%s, flash=%s' %
+                                  (_running_sha.group(1).lower(),
+                                   _target_arm_sha.lower(), flash_needed), flush=True)
+                # end ARM-SOURCE-SHA256-BOOLEAN-V51
                 root.after(0, _on_check_complete, flash_needed)
             except Exception as e:
                 print('[app] post-UI PM3 check error: %s' % e, flush=True)
