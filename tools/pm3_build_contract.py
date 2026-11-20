@@ -30,6 +30,19 @@ def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def arm_source_hash(source):
+    """Compute 9-char ARM source SHA as tools/mkversion.sh does."""
+    source = Path(source)
+    files = []
+    for pattern in ('armsrc/*.[ch]', 'common_arm/*/*.[ch]'):
+        files.extend(source.glob(pattern))
+    names = sorted(str(path.relative_to(source)).replace('\\', '/') for path in files
+                   if not any(x in path.name for x in ('disabled', 'version_pm3', 'fpga_version_info')))
+    require(bool(names), 'No ARM files to checksum')
+    sha_input = ''.join('{}  {}\n'.format(sha256(source / name), name) for name in names)
+    return hashlib.sha256(sha_input.encode('utf-8')).hexdigest()[:9]
+
+
 def require(condition, message):
     if not condition:
         raise ValueError(message)
@@ -140,7 +153,8 @@ def client_record(source, commit, tag, binary, output, lua=None):
     revision(source, commit)
     check_client(binary)
     record = dict(source_commit=commit, source_tag=tag, build_platform=PLATFORM,
-                  fpga_part=FPGA_PART, client_sha256=sha256(binary))
+                  fpga_part=FPGA_PART, client_sha256=sha256(binary),
+                  armsrc_sha256_9=arm_source_hash(source))
     patches = json.loads((Path(source)/'.icopy-client-patches.json').read_text(encoding='utf-8'))
     require(patches['source_commit'] == commit, 'Patch provenance mismatch')
     record['patches'] = patches
@@ -159,6 +173,7 @@ def firmware_record(source, commit, tag, binary, output):
                   pm3_firmware_sha256=sha256(binary), build_platform=PLATFORM,
                   build_date=datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
                   source_commit=commit, fpga_part=FPGA_PART,
+                  armsrc_sha256_9=arm_source_hash(source),
                   fpga_input=dict(path=BITSTREAM, sha256=sha256(bitstream),
                                   origin='upstream-prebuilt-bitstream'))
     write_json(output, record)
@@ -174,6 +189,10 @@ def assemble(client, client_metadata, firmware, firmware_metadata, lua, output):
     require(re.fullmatch(r'[0-9a-f]{40}', c['source_commit']) is not None,
             'Missing full PM3 source commit')
     require(c['source_commit'] == f['source_commit'], 'Client/firmware source mismatch')
+    require(c.get('armsrc_sha256_9') == f.get('armsrc_sha256_9') and
+            bool(c.get('armsrc_sha256_9')),
+            'ARM source mismatch: client={}, firmware={}'.format(
+                c.get('armsrc_sha256_9'), f.get('armsrc_sha256_9')))
     require(c['source_tag'] == f['pm3_firmware_version'] == f['pm3_client_version'],
             'Client/firmware version mismatch')
     require(c['client_sha256'] == sha256(client), 'Client artifact hash mismatch')
