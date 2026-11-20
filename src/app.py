@@ -172,9 +172,50 @@ def swap_firmware():
         return False
 
 
+
+def _disable_universal_version():
+    """Disable only the temporary Universal version.so before app imports.
+
+    The original device-specific Lab401 version.so must never be renamed.
+    This runs after any staged firmware swap (including the execv restart).
+    """
+    lib_dir = os.path.join(APP_DIR, 'lib')
+    candidate = os.path.join(lib_dir, 'version.so')
+    python_version = os.path.join(lib_dir, 'version.py')
+    backup = candidate + '.bak'
+
+    if not os.path.isfile(candidate) or not os.path.isfile(python_version):
+        return
+
+    try:
+        # The exact group of fallback strings identifies our Universal shim.
+        # Never rename an unknown or factory version.so.
+        with open(candidate, 'rb') as f:
+            binary = f.read(1024 * 1024 + 1)
+        if len(binary) > 1024 * 1024:
+            print('[app] version.so too large to identify; leaving unchanged')
+            return
+        signatures = (b'2.0.0', b'1.10', b'1.0.2', b'1.0', b'00000000')
+        if not all(marker in binary for marker in signatures):
+            print('[app] version.so is not recognized Universal; leaving unchanged')
+            return
+
+        if os.path.lexists(backup):
+            # Preserve an existing backup, without allowing the shim to shadow
+            # the real version.py on a subsequent firmware installation.
+            os.remove(candidate)
+            print('[app] Removed redundant Universal version.so; backup retained')
+        else:
+            os.rename(candidate, backup)
+            print('[app] Disabled Universal version.so -> version.so.bak')
+    except OSError as error:
+        print('[app] Could not disable Universal version.so: %s' % error)
+
+
 if __name__ == '__main__':
     # Swap staged firmware if present before launching app
     swap_firmware()
+    _disable_universal_version()
     print("[app] Launching current application")
 
     sys.path.append("main")
