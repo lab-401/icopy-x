@@ -1,0 +1,861 @@
+{
+  "plugin": true,
+  "name": "T5577 Multiwriter",
+  "version": "1.1.11",
+  "initial_state": "init",
+  "states": {
+    "init": {
+      "on_enter": "run:do_init",
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Initializing...",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "menu",
+        "on_error": "menu"
+      }
+    },
+    "menu": {
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Select DEC or HEX input",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "or Read EM",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 88
+        },
+        "buttons": {
+          "left": "DEC",
+          "right": "HEX"
+        },
+        "keys": {
+          "OK": "run:do_read_fob",
+          "M1": "set_state:input_dec",
+          "M2": "set_state:input_hex",
+          "ALL": "finish"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_result.status==error": "input_method_error",
+        "on_error": "input_method_error",
+        "on_result.status==recover_reader": "recovering_reader",
+        "on_result.status==full": "uid_added_full"
+      },
+      "on_enter": "call:draw_menu_footer"
+    },
+    "add_uid_method": {
+      "screen": {
+        "title": "Add UID",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "Select input method",
+              "size": "large",
+              "align": "center"
+            },
+            {
+              "text": "DEC or HEX input",
+              "size": "large",
+              "align": "center"
+            },
+            {
+              "text": "or Read EM",
+              "size": "large",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "DEC",
+          "right": "HEX"
+        },
+        "keys": {
+          "OK": "run:do_read_fob",
+          "M1": "set_state:input_dec",
+          "M2": "set_state:input_hex"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==error": "input_method_error",
+        "on_error": "input_method_error",
+        "on_result.status==recover_reader": "recovering_reader",
+        "on_result.status==full": "uid_added_full"
+      },
+      "on_enter": "call:draw_add_uid_footer"
+    },
+    "input_hex": {
+      "on_enter": "call:show_hex_input",
+      "screen": {
+        "title": "Enter HEX UID (10 hex)",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "UP": "call:hex_roll_up",
+          "DOWN": "call:hex_roll_down",
+          "LEFT": "call:hex_move_left",
+          "RIGHT": "call:hex_move_right",
+          "OK": "call:do_capture_hex",
+          "M2": "call:do_capture_hex",
+          "M1": "call:hex_back_cleanse"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==error": "hex_error",
+        "on_error": "hex_error",
+        "on_result.status==empty": "menu",
+        "on_result.status==full": "uid_added_full"
+      }
+    },
+    "input_dec": {
+      "on_enter": "call:show_dec_input",
+      "screen": {
+        "title": "Enter DEC UID",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "UP": "call:dec_roll_up",
+          "DOWN": "call:dec_roll_down",
+          "LEFT": "call:dec_move_left",
+          "RIGHT": "call:dec_move_right",
+          "OK": "call:do_capture_dec",
+          "M2": "call:do_capture_dec",
+          "M1": "call:dec_back_cleanse"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==error": "dec_error",
+        "on_error": "dec_error",
+        "on_result.status==empty": "menu",
+        "on_result.status==full": "uid_added_full"
+      }
+    },
+    "uid_added": {
+      "screen": {
+        "title": "UID List",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{uid_count_label}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{uid_summary}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{block0_label}",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Remove",
+          "right": "Add"
+        },
+        "keys": {
+          "OK": "set_state:place_tag",
+          "M1": "call:do_remove_last",
+          "M2": "set_state:add_uid_method",
+          "ALL": "set_state:confirm_clear"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "uid_added",
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "menu"
+      },
+      "on_enter": "call:draw_uid_added_footer"
+    },
+    "uid_added_full": {
+      "screen": {
+        "title": "UID List",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{uid_count_label}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{uid_summary}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{block0_label}",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Remove",
+          "right": "Write"
+        },
+        "keys": {
+          "OK": "set_state:place_tag",
+          "M1": "call:do_remove_last",
+          "M2": "set_state:place_tag",
+          "ALL": "set_state:confirm_clear"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "uid_added",
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "uid_added_full"
+      },
+      "on_enter": "call:draw_uid_added_footer"
+    },
+    "place_tag": {
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Place T5577 tag on reader",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{uid_count_label}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{uid_summary}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{block0_label}",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Write"
+        },
+        "keys": {
+          "OK": "set_state:checking_tag",
+          "M1": "run:do_cancel_write",
+          "M2": "set_state:checking_tag"
+        }
+      },
+      "transitions": {
+        "on_result.status==done": "verifying",
+        "on_result.status==ok": "menu",
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_result.status==error": "write_error",
+        "on_error": "write_error"
+      },
+      "on_enter": "call:draw_place_tag_footer"
+    },
+    "verifying": {
+      "on_enter": "call:start_verify",
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Keep tag on reader",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Wait...",
+              "size": "medium",
+              "align": "center",
+              "color": "#0000FF"
+            },
+            {
+              "text": "Writing and verifying...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "success",
+        "on_result.status==failed": "verify_fail",
+        "on_result.status==error": "write_error",
+        "on_error": "write_error",
+        "on_result.status==lf_check_failed": "lf_check_error",
+        "on_result.status==recover_reader": "recovering_reader"
+      }
+    },
+    "success": {
+      "screen": {
+        "title": "Write OK",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{uid_count_label}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{uid_summary}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "{block0_label}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "New",
+          "right": "Write"
+        },
+        "keys": {
+          "OK": "set_state:place_tag",
+          "M1": "run:do_init",
+          "M2": "set_state:place_tag",
+          "ALL": "set_state:place_tag"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "menu",
+        "on_error": "menu"
+      },
+      "on_enter": "call:draw_success_footer"
+    },
+    "verify_fail": {
+      "screen": {
+        "title": "Verify Failed",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center",
+              "color": "#FF0000"
+            },
+            {
+              "text": "Adjust tag position.",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "OK": "set_state:checking_tag",
+          "M1": "run:do_cancel_write",
+          "M2": "set_state:checking_tag"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "write_error",
+        "on_result.status==done": "verifying",
+        "on_result.status==error": "write_error"
+      },
+      "on_enter": "call:draw_verify_fail_footer"
+    },
+    "input_method_error": {
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 88
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {
+          "OK": "set_state:add_uid_method",
+          "M1": "run:do_return_to_uid_list"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "menu"
+      },
+      "on_enter": "call:draw_input_method_error_footer"
+    },
+    "hex_error": {
+      "on_enter": "call:draw_error",
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{error_line1}",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            },
+            {
+              "text": "{error_line2}",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            }
+          ],
+          "y": 102
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "OK": "set_state:input_hex",
+          "M1": "run:do_return_to_uid_list",
+          "M2": "set_state:input_hex"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "menu",
+        "on_result.status==retry": "input_hex"
+      }
+    },
+    "dec_error": {
+      "on_enter": "call:draw_error",
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{error_line1}",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            },
+            {
+              "text": "{error_line2}",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            }
+          ],
+          "y": 102
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "OK": "set_state:input_dec",
+          "M1": "run:do_return_to_uid_list",
+          "M2": "set_state:input_dec"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "menu",
+        "on_result.status==retry": "input_dec"
+      }
+    },
+    "write_error": {
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": ""
+            },
+            {
+              "text": "{error_msg}",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "OK": "set_state:checking_tag",
+          "M1": "run:do_cancel_write",
+          "M2": "set_state:checking_tag"
+        }
+      },
+      "transitions": {
+        "on_result.status==done": "verifying",
+        "on_result.status==error": "write_error",
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "write_error"
+      },
+      "on_enter": "call:draw_write_error_footer"
+    },
+    "checking_tag": {
+      "on_enter": "call:start_precheck",
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Keep tag on reader",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Wait...",
+              "size": "medium",
+              "align": "center",
+              "color": "#0000FF"
+            },
+            {
+              "text": "Writing and verifying...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "detecting_tag",
+        "on_result.status==error": "write_error",
+        "on_error": "write_error",
+        "on_result.status==recover_reader": "recovering_reader"
+      }
+    },
+    "detecting_tag": {
+      "on_enter": "call:start_detect",
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Keep tag on reader",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Wait...",
+              "size": "medium",
+              "align": "center",
+              "color": "#0000FF"
+            },
+            {
+              "text": "Writing and verifying...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "writing",
+        "on_result.status==error": "write_error",
+        "on_error": "write_error",
+        "on_result.status==recover_reader": "recovering_reader"
+      }
+    },
+    "writing": {
+      "on_enter": "call:start_write",
+      "screen": {
+        "title": "T5577 Multiwriter",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Keep tag on reader",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "Wait...",
+              "size": "medium",
+              "align": "center",
+              "color": "#0000FF"
+            },
+            {
+              "text": "Writing and verifying...",
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==done": "verifying",
+        "on_result.status==error": "write_error",
+        "on_error": "write_error"
+      }
+    },
+    "lf_check_error": {
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "LF check failed",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "or timed out",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": ""
+            },
+            {
+              "text": "Check tag position",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 92
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "OK": "set_state:checking_tag",
+          "M1": "run:do_cancel_write",
+          "M2": "set_state:checking_tag"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu",
+        "on_error": "write_error",
+        "on_result.status==done": "verifying",
+        "on_result.status==error": "write_error"
+      },
+      "on_enter": "call:draw_lf_check_error_footer"
+    },
+    "recovering_reader": {
+      "on_enter": "call:start_reader_recovery",
+      "screen": {
+        "title": "Reader recovery",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Restarting reader...",
+              "size": "large",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==read_recovered": "input_method_error",
+        "on_result.status==write_recovered": "write_error",
+        "on_result.status==verify_recovered": "verify_fail",
+        "on_result.status==lf_check_failed": "lf_check_error",
+        "on_result.status==recovery_failed": "recovery_failed",
+        "on_error": "recovery_failed"
+      }
+    },
+    "recovery_failed": {
+      "on_enter": "call:draw_error",
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "PM3 restart failed.",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            },
+            {
+              "text": "Restart device.",
+              "size": "large",
+              "align": "center",
+              "color": "#FF0000"
+            }
+          ],
+          "y": 81
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": null
+        },
+        "keys": {
+          "M1": "finish",
+          "OK": "finish"
+        }
+      }
+    },
+    "confirm_clear": {
+      "on_enter": "call:draw_information",
+      "screen": {
+        "title": "Clear UID list",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Clear all stored UIDs?",
+              "size": "medium",
+              "align": "center"
+            },
+            {
+              "text": "The tag is unchanged.",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 81
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Clear"
+        },
+        "keys": {
+          "M1": "call:do_return_to_uid_list",
+          "OK": "call:do_clear_uid_list",
+          "M2": "call:do_clear_uid_list"
+        }
+      },
+      "transitions": {
+        "on_result.status==stored_more": "uid_added",
+        "on_result.status==stored_full": "uid_added_full",
+        "on_result.status==empty": "menu"
+      }
+    }
+  }
+}

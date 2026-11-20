@@ -1,0 +1,1049 @@
+{
+  "plugin": true,
+  "name": "Dump Diff 2",
+  "version": "1.0.65",
+  "initial_state": "init",
+  "states": {
+    "init": {
+      "on_enter": "call:enter_screen",
+      "screen": {
+        "title": "Dump Diff 2",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Loading...",
+              "size": "large",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==legacy_firmware": "firmware_notice",
+        "on_result.status==ok": "start_menu",
+        "on_error": "start_menu"
+      }
+    },
+    "firmware_notice": {
+      "on_enter": "call:draw_firmware_notice",
+      "screen": {
+        "title": "Dump Diff 2",
+        "content": {"type": "text", "lines": []},
+        "buttons": {"left": null, "right": "Continue"},
+        "keys": {"M2": "set_state:start_menu", "OK": "set_state:start_menu"}
+      }
+    },
+    "types": {
+      "screen": {
+        "title": "Dump Compare",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:type_up",
+          "DOWN": "call:type_down",
+          "OK": "run:choose_current_type",
+          "M2": "run:choose_current_type",
+          "M1": "set_state:start_menu"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "picker"
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_types"
+    },
+    "picker": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:picker_clear",
+      "screen": {
+        "title": "{picker_title}",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Comp."
+        },
+        "keys": {
+          "UP": "call:picker_up",
+          "DOWN": "call:picker_down",
+          "OK": "call:picker_toggle",
+          "M2": "run:picker_m2",
+          "M1": "set_state:types",
+          "LEFT": "call:picker_left",
+          "RIGHT": "call:picker_right",
+          "ALL": "run:prepare_details"
+        }
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==need_two": "need_two",
+        "on_result.status==mode": "compare_mode",
+        "on_result.status==identical": "identical_details",
+        "on_result.status==different": "different_details",
+        "on_result.status==details_ready": "details_dispatch",
+        "on_result.status==error": "error",
+        "on_error": "error"
+      }
+    },
+    "error": {
+      "screen": {
+        "title": "Result compare",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "",
+              "size": "large",
+              "align": "center"
+            },
+            {
+              "text": "",
+              "size": "large",
+              "align": "center"
+            },
+            {
+              "text": "{dd_msg_1014}",
+              "size": "large",
+              "align": "center"
+            },
+            {
+              "text": "{error_msg}",
+              "size": "large",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:picker",
+          "OK": "set_state:picker",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen"
+    },
+    "details_first": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_details",
+      "screen": {
+        "title": "Dump Details",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": "Next"
+        },
+        "keys": {
+          "UP": "call:prev_details",
+          "DOWN": "call:next_details",
+          "LEFT": "call:prev_details",
+          "RIGHT": "call:next_details",
+          "M2": "call:next_details",
+          "M1": "call:prev_details",
+          "ALL": "set_state:picker"
+        }
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==back": "picker"
+      }
+    },
+    "details_middle": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_details",
+      "screen": {
+        "title": "Dump Details",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": "Next"
+        },
+        "keys": {
+          "UP": "call:prev_details",
+          "DOWN": "call:next_details",
+          "LEFT": "call:prev_details",
+          "RIGHT": "call:next_details",
+          "M2": "call:next_details",
+          "M1": "call:prev_details",
+          "ALL": "set_state:picker"
+        }
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==back": "picker"
+      }
+    },
+    "details_last": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_details",
+      "screen": {
+        "title": "Dump Details",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": null
+        },
+        "keys": {
+          "UP": "call:prev_details",
+          "DOWN": "call:next_details",
+          "LEFT": "call:prev_details",
+          "RIGHT": "call:next_details",
+          "M2": "call:next_details",
+          "M1": "call:prev_details",
+          "ALL": "set_state:picker"
+        }
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==back": "picker"
+      }
+    },
+    "details_single": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_details",
+      "screen": {
+        "title": "Dump Details",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {
+          "UP": "call:prev_details",
+          "DOWN": "call:next_details",
+          "LEFT": "call:prev_details",
+          "RIGHT": "call:next_details",
+          "M2": "call:next_details",
+          "M1": "call:prev_details",
+          "ALL": "set_state:picker"
+        }
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==back": "picker"
+      }
+    },
+    "need_two": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_need_two",
+      "screen": {
+        "title": "Error",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      }
+    },
+    "compare_mode": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_compare_mode",
+      "screen": {
+        "title": "Compare mode",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Continue"
+        },
+        "keys": {
+          "M1": "set_state:picker",
+          "M2": "run:confirm_compare_mode",
+          "OK": "run:confirm_compare_mode",
+          "ALL": "set_state:picker"
+        }
+      },
+      "transitions": {
+        "on_result.status==identical": "identical_details",
+        "on_result.status==different": "different_details",
+        "on_result.status==error": "error"
+      }
+    },
+    "identical_details": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_changes",
+      "screen": {
+        "title": "Result compare",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": "Next"
+        },
+        "keys": {
+          "UP": "call:prev_changes",
+          "DOWN": "call:next_changes",
+          "LEFT": "call:prev_changes",
+          "RIGHT": "call:next_changes",
+          "M1": "call:prev_changes",
+          "OK": "call:next_changes",
+          "M2": "call:next_changes",
+          "ALL": "set_state:picker"
+        }
+      }
+    },
+    "different_details": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_changes",
+      "screen": {
+        "title": "Result compare",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": "Next"
+        },
+        "keys": {
+          "UP": "call:prev_changes",
+          "DOWN": "call:next_changes",
+          "LEFT": "call:prev_changes",
+          "RIGHT": "call:next_changes",
+          "M1": "call:prev_changes",
+          "OK": "call:next_changes",
+          "M2": "call:next_changes",
+          "ALL": "set_state:picker"
+        }
+      }
+    },
+    "start_menu": {
+      "screen": {
+        "title": "Dump Diff 2",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:start_up",
+          "DOWN": "call:start_down",
+          "OK": "run:start_choose",
+          "M2": "run:start_choose",
+          "M1": "finish"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_start",
+      "transitions": {
+        "on_result.status==auto_options": "auto_options",
+        "on_result.status==types": "types",
+        "on_result.status==auto_log_list": "auto_log_list",
+        "on_result.status==delete_log_list": "delete_log_list",
+        "on_result.status==auto_log_empty": "auto_log_empty",
+        "on_result.status==delete_log_empty": "delete_log_empty"
+      }
+    },
+    "auto_options": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:auto_up",
+          "DOWN": "call:auto_down",
+          "OK": "call:auto_choose",
+          "M2": "call:auto_choose",
+          "M1": "set_state:start_menu"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_options"
+    },
+    "auto_unavailable": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:auto_options",
+          "OK": "set_state:auto_options",
+          "M2": "set_state:auto_options",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_unavailable"
+    },
+    "auto_capture": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Scan"
+        },
+        "keys": {
+          "M1": "run:auto_cancel",
+          "OK": "run:auto_take_scan",
+          "M2": "run:auto_take_scan"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_capture",
+      "transitions": {
+        "on_result.status==ok": "auto_capture_next",
+        "on_result.status==complete": "auto_result",
+        "on_result.status==reject": "auto_status",
+        "on_result.status==error": "auto_status",
+        "on_result.status==no_tag": "auto_no_tag",
+        "on_error": "auto_status",
+        "on_result.status==unsupported": "auto_unsupported",
+        "on_result.status==cancelled": "auto_options",
+        "on_result.status==read_failed": "auto_read_failed"
+      }
+    },
+    "auto_no_tag": {
+      "screen": {
+        "title": "Tag Read",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next",
+          "M1": "set_state:auto_options"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_no_tag",
+      "transitions": {
+        "on_result.status==cancelled": "auto_options"
+      }
+    },
+    "auto_status": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next",
+          "M1": "set_state:auto_options"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_status",
+      "transitions": {
+        "on_result.status==cancelled": "auto_options",
+        "on_result.status==error": "auto_status"
+      }
+    },
+    "auto_result": {
+      "screen": {
+        "title": "Scan Result",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": "Next"
+        },
+        "keys": {
+          "M1": "call:auto_info_prev",
+          "M2": "call:auto_info_next",
+          "OK": "call:auto_info_next",
+          "UP": "call:auto_info_prev",
+          "DOWN": "call:auto_info_next",
+          "ALL": "set_state:auto_actions",
+          "LEFT": "call:auto_info_prev",
+          "RIGHT": "call:auto_info_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_result"
+    },
+    "auto_info": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Next"
+        },
+        "keys": {
+          "M1": "set_state:auto_result",
+          "M2": "call:auto_info_next",
+          "OK": "call:auto_info_next",
+          "UP": "call:auto_info_prev",
+          "DOWN": "call:auto_info_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_info"
+    },
+    "auto_report_prompt": {
+      "screen": {
+        "title": "Auto Scan Report",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Delete",
+          "right": "Save"
+        },
+        "keys": {
+          "M1": "run:auto_report_discard",
+          "M2": "set_state:auto_report_save_busy",
+          "OK": "set_state:auto_report_save_busy",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_report_prompt",
+      "transitions": {
+        "on_result.status==ok": "auto_report_done",
+        "on_result.status==error": "auto_report_retry",
+        "on_error": "auto_report_retry"
+      }
+    },
+    "auto_report_done": {
+      "screen": {
+        "title": "Auto Scan Report",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:start_menu",
+          "OK": "set_state:start_menu",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_report_done"
+    },
+    "auto_unsupported": {
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_unsupported",
+      "screen": {
+        "title": "Dump Diff 2",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {
+          "UP": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "LEFT": "call:notice_prev",
+          "RIGHT": "call:notice_next",
+          "M1": "set_state:auto_options"
+        }
+      },
+      "transitions": {
+        "on_result.status==cancelled": "auto_options",
+        "on_result.status==error": "auto_status",
+        "on_error": "auto_status"
+      }
+    },
+    "auto_report_retry": {
+      "screen": {
+        "title": "Auto Scan Report",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "set_state:auto_actions",
+          "M2": "run:auto_report_retry_action",
+          "OK": "run:auto_report_retry_action",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_report_retry",
+      "transitions": {
+        "on_result.status==ok": "auto_report_done",
+        "on_result.status==error": "auto_report_retry",
+        "on_error": "auto_report_retry"
+      }
+    },
+    "auto_capture_next": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Scan"
+        },
+        "keys": {
+          "M1": "run:auto_cancel",
+          "OK": "run:auto_take_scan",
+          "M2": "run:auto_take_scan"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_capture",
+      "transitions": {
+        "on_result.status==ok": "auto_capture",
+        "on_result.status==complete": "auto_result",
+        "on_result.status==reject": "auto_status",
+        "on_result.status==error": "auto_status",
+        "on_result.status==no_tag": "auto_no_tag",
+        "on_error": "auto_status",
+        "on_result.status==unsupported": "auto_unsupported",
+        "on_result.status==cancelled": "auto_options",
+        "on_result.status==read_failed": "auto_read_failed"
+      }
+    },
+    "auto_actions": {
+      "screen": {
+        "title": "Auto Scan Options",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:auto_actions_up",
+          "DOWN": "call:auto_actions_down",
+          "M1": "set_state:auto_result",
+          "M2": "call:auto_actions_choose",
+          "OK": "call:auto_actions_choose"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_actions"
+    },
+    "auto_report_save_busy": {
+      "screen": {
+        "title": "Auto Scan Report",
+        "content": {
+          "type": "text",
+          "y": 110,
+          "lines": [
+            {
+              "text": "{dd_msg_1030}",
+              "size": "large",
+              "align": "center",
+              "color": "#1647D6"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "on_enter": "call:enter_screen",
+      "transitions": {
+        "on_result.status==ok": "auto_report_done",
+        "on_result.status==error": "auto_report_retry",
+        "on_error": "auto_report_retry"
+      }
+    },
+    "auto_exit_busy": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{dd_msg_1010}",
+              "size": "large",
+              "align": "center"
+            }
+          ]
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "on_enter": "call:enter_screen",
+      "transitions": {
+        "on_result.status==ok": "start_menu",
+        "on_result.status==error": "auto_report_retry",
+        "on_error": "auto_report_retry"
+      }
+    },
+    "auto_log_list": {
+      "screen": {
+        "title": "Read Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Open"
+        },
+        "keys": {
+          "UP": "call:auto_log_up",
+          "DOWN": "call:auto_log_down",
+          "M1": "set_state:start_menu",
+          "M2": "run:auto_log_choose",
+          "OK": "run:auto_log_choose",
+          "LEFT": "call:auto_log_name_left",
+          "RIGHT": "call:auto_log_name_right"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_log_list",
+      "transitions": {
+        "on_result.status==auto_log_view": "auto_log_view"
+      }
+    },
+    "auto_log_view": {
+      "screen": {
+        "title": "Log Report",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Prev",
+          "right": "Next"
+        },
+        "keys": {
+          "M1": "call:auto_log_prev",
+          "M2": "call:auto_log_next",
+          "UP": "call:auto_log_prev",
+          "DOWN": "call:auto_log_next",
+          "OK": "call:auto_log_next",
+          "ALL": "set_state:auto_log_list",
+          "LEFT": "call:auto_log_prev",
+          "RIGHT": "call:auto_log_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_log_view"
+    },
+    "delete_log_list": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Delete"
+        },
+        "keys": {
+          "UP": "call:delete_log_up",
+          "DOWN": "call:delete_log_down",
+          "OK": "call:delete_log_toggle",
+          "M1": "set_state:start_menu",
+          "M2": "run:delete_log_execute",
+          "LEFT": "call:delete_log_name_left",
+          "RIGHT": "call:delete_log_name_right"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_delete_log_list",
+      "transitions": {
+        "on_result.status==delete_log_none": "delete_log_none",
+        "on_result.status==delete_log_error": "delete_log_error",
+        "on_result.status==delete_log_done": "delete_log_done"
+      }
+    },
+    "delete_log_none": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:delete_log_list",
+          "OK": "set_state:delete_log_list",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_delete_log_notice"
+    },
+    "delete_log_done": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:start_menu",
+          "OK": "set_state:start_menu",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_delete_log_notice"
+    },
+    "delete_log_error": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "set_state:delete_log_list",
+          "M2": "set_state:delete_log_retry_busy",
+          "OK": "set_state:delete_log_retry_busy",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_delete_log_notice",
+      "transitions": {
+        "on_result.status==delete_log_error": "delete_log_error",
+        "on_result.status==delete_log_done": "delete_log_done"
+      }
+    },
+    "auto_log_empty": {
+      "screen": {
+        "title": "Read Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:start_menu",
+          "OK": "set_state:start_menu"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_log_list"
+    },
+    "delete_log_empty": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": null
+        },
+        "keys": {
+          "M1": "set_state:start_menu",
+          "OK": "set_state:start_menu"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_delete_log_list"
+    },
+    "auto_read_failed": {
+      "screen": {
+        "title": "Auto Scan",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Menu",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "run:auto_cancel",
+          "M2": "call:auto_retry_read",
+          "OK": "call:auto_retry_read",
+          "UP": "call:notice_prev",
+          "LEFT": "call:notice_prev",
+          "DOWN": "call:notice_next",
+          "RIGHT": "call:notice_next"
+        }
+      },
+      "on_enter": "call:enter_screen",
+      "on_exit": "call:clear_auto_read_failed",
+      "transitions": {
+        "on_result.status==cancelled": "auto_options"
+      }
+    },
+    "details_dispatch": {
+      "on_enter": "call:finish_details",
+      "screen": {
+        "title": "Details",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==first": "details_first",
+        "on_result.status==middle": "details_middle",
+        "on_result.status==last": "details_last",
+        "on_result.status==single": "details_single",
+        "on_result.status==error": "error",
+        "on_error": "error",
+        "on_result.status==invalid": "picker"
+      }
+    },
+    "delete_log_retry_busy": {
+      "screen": {
+        "title": "Delete Logs",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {}
+      },
+      "on_enter": "call:begin_delete_log_retry",
+      "on_exit": "call:clear_delete_log_notice",
+      "transitions": {
+        "on_result.status==delete_log_error": "delete_log_error",
+        "on_result.status==delete_log_done": "delete_log_done"
+      }
+    }
+  }
+}

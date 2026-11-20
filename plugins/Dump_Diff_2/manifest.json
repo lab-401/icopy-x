@@ -1,0 +1,12 @@
+{
+    "name": "Dump Diff 2",
+    "version": "1.0.65",
+    "author": "jareckib",
+    "description": "Independent dump comparison for selected RFID memory types. Concept inspired by Dump Diff by uaih3k9x.",
+    "entry_class": "DumpDiff2Plugin",
+    "permissions": [
+        "filesystem",
+        "pm3"
+    ],
+    "order": 36
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Emergency Backup",
+  "version": "1.16.0",
+  "author": "jareckib",
+  "description": "Full 16 GB SD image backup with partition compatibility checks, backup management and optional Userdata cleanup (PIP/APT caches, PM3 logs/history).",
+  "entry_class": "RootFSBackupPlugin",
+  "permissions": [
+    "filesystem"
+  ],
+  "order": 37
+}

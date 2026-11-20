@@ -1,0 +1,11 @@
+{
+  "name": "MIFARE Classic Fix",
+  "version": "1.0.0",
+  "author": "jareckib",
+  "description": "Attempt block-0 recovery on writable-UID MIFARE Classic Magic cards after a bad write. No dump needed.",
+  "entry_class": "MifareClassicRepairPlugin",
+  "permissions": [
+    "pm3"
+  ],
+  "order": 43
+}

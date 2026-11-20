@@ -1,0 +1,479 @@
+{
+    "plugin": true,
+    "name": "Electra RAW",
+    "version": "1.0.0",
+    "initial_state": "init",
+    "states": {
+        "init": {
+            "on_enter": "call:do_init",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Initializing...",
+                            "size": "medium",
+                            "align": "center"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==ok": "menu",
+                "on_error": "menu"
+            }
+        },
+        "menu": {
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "list",
+                    "electra_menu": true,
+                    "items": [
+                        {
+                            "label": "Read Electra tag"
+                        },
+                        {
+                            "label": "Clone last RAW"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": "Select"
+                },
+                "keys": {
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down",
+                    "OK": "call:select_menu",
+                    "M2": "call:select_menu",
+                    "M1": "finish"
+                }
+            }
+        },
+        "read_tag": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Place Electra tag",
+                            "size": "medium"
+                        }
+                    ],
+                    "hint": "OK - Read tag"
+                },
+                "buttons": {
+                    "left": "Back",
+                    "right": "Read"
+                },
+                "keys": {
+                    "OK": "set_state:reading",
+                    "M2": "set_state:reading",
+                    "M1": "set_state:menu",
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down"
+                }
+            }
+        },
+        "show_data": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{profile}"
+                        },
+                        {
+                            "text": "UID:",
+                            "color": "#1647D6",
+                            "variable": "uid_hex"
+                        },
+                        {
+                            "text": "Facility:",
+                            "variable": "electra_facility",
+                            "color": "#1647D6"
+                        },
+                        {
+                            "text": "ID:",
+                            "variable": "electra_id",
+                            "color": "#1647D6"
+                        },
+                        {
+                            "text": "Epilogue:",
+                            "color": "#1647D6",
+                            "variable": "electra_epilogue"
+                        },
+                        {
+                            "text": "Filler:",
+                            "color": "#1647D6",
+                            "variable": "filler_hex"
+                        },
+                        {
+                            "text": "RAW:",
+                            "color": "#1647D6",
+                            "variable": "raw_hex"
+                        }
+                    ],
+                    "hint": "OK - Clone to T5577"
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Clone"
+                },
+                "keys": {
+                    "OK": "call:do_prepare_clone",
+                    "M2": "call:do_prepare_clone",
+                    "M1": "set_state:menu",
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down"
+                }
+            },
+            "transitions": {
+                "on_result.status==ready": "checking",
+                "on_result.status==error": "error",
+                "on_error": "error"
+            }
+        },
+        "clone_ok": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Clone Success!",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "RAW cloned OK",
+                            "size": "medium"
+                        },
+                        {
+                            "text": "Cloned tags:",
+                            "size": "medium",
+                            "color": "#1647D6",
+                            "variable": "clone_count"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Next"
+                },
+                "keys": {
+                    "OK": "set_state:show_data",
+                    "M2": "set_state:show_data",
+                    "M1": "set_state:menu",
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down"
+                }
+            }
+        },
+        "error": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "color": "#D62636"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Menu",
+                    "right": "Retry"
+                },
+                "keys": {
+                    "OK": "set_state:retrying",
+                    "M2": "set_state:retrying",
+                    "M1": "set_state:menu",
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down"
+                }
+            }
+        },
+        "reading": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Reading tag...",
+                            "size": "medium",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_read_tag",
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==found_last": "show_data",
+                "on_result.status==ready": "checking",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "loading": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Loading RAW...",
+                            "size": "medium",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_show_last_raw",
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==found_last": "show_data",
+                "on_result.status==ready": "checking",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "retrying": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Retrying...",
+                            "size": "medium",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_error_retry",
+            "transitions": {
+                "on_result.status==found": "show_data",
+                "on_result.status==found_last": "show_data",
+                "on_result.status==ready": "checking",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "checking": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Checking T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Checking tag...",
+                            "size": "medium",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_precheck_clone",
+            "transitions": {
+                "on_result.status==ok": "detecting",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "detecting": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Detecting T5577",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Detecting tag...",
+                            "size": "medium",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_detect_clone",
+            "transitions": {
+                "on_result.status==ok": "writing",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "writing": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Keep tag on reader"
+                        },
+                        {
+                            "text": "",
+                            "spacer": true
+                        },
+                        {
+                            "text": "Verifying and writing",
+                            "color": "#1647D6",
+                            "blink": true
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_write_raw",
+            "transitions": {
+                "on_result.status==written": "verifying",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "verifying": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Keep tag on reader"
+                        },
+                        {
+                            "text": "",
+                            "spacer": true
+                        },
+                        {
+                            "text": "Verifying and writing",
+                            "color": "#1647D6",
+                            "blink": true
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "worker": "do_verify_raw",
+            "transitions": {
+                "on_result.status==done": "clone_ok",
+                "on_result.status==error": "error",
+                "on_error": "error",
+                "on_result.status==recover_reader": "recovering"
+            }
+        },
+        "recovering": {
+            "on_enter": "call:enter_screen",
+            "worker": "do_recover_reader",
+            "screen": {
+                "title": "Electra RAW",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "Restarting reader...",
+                            "color": "#1647D6"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": null,
+                    "right": null
+                },
+                "keys": {}
+            },
+            "transitions": {
+                "on_result.status==error": "error",
+                "on_result.status==recovery_failed": "recovery_failed",
+                "on_error": "recovery_failed"
+            }
+        },
+        "recovery_failed": {
+            "on_enter": "call:enter_screen",
+            "screen": {
+                "title": "Error",
+                "content": {
+                    "type": "text",
+                    "lines": [
+                        {
+                            "text": "{error_msg}",
+                            "size": "medium",
+                            "color": "#D62636"
+                        }
+                    ]
+                },
+                "buttons": {
+                    "left": "Exit",
+                    "right": null
+                },
+                "keys": {
+                    "M1": "finish",
+                    "UP": "call:move_up",
+                    "DOWN": "call:move_down"
+                }
+            }
+        }
+    }
+}

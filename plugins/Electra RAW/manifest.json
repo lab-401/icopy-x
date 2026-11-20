@@ -1,0 +1,11 @@
+{
+    "name": "Electra RAW Clone",
+    "version": "1.0.0",
+    "author": "jareckib (historical Flipper/Leptoptilos port attribution: PROTOCOL.md)",
+    "description": "Read Electra 128-bit RAW tags, verify data, and clone to T5577.",
+    "entry_class": "ElectraPlugin",
+    "permissions": [
+        "pm3"
+    ],
+    "order": 41
+}

@@ -360,6 +360,11 @@ class PluginActivity(BaseActivity):
             self._handle_run(method_name)
             return
 
+        if action_str.startswith('call:'):
+            method_name = action_str[5:]
+            self._handle_call(method_name)
+            return
+
         logger.warning("Unknown plugin action: %s", action_str)
 
     # ------------------------------------------------------------------
@@ -468,18 +473,23 @@ class PluginActivity(BaseActivity):
                 resolved_title = '%s %s' % (resolved_title, self._renderer.resolve(page))
             self.setTitle(resolved_title)
 
-        # Render content — input_hex/input_text use the InputMethods widget,
+        # Render content — input_hex/input_text/input_dec use the InputMethods widget,
         # all others go through JsonRenderer (existing behaviour untouched).
         content = screen.get('content', {})
         content_type = content.get('type')
-        if content_type in ('input_hex', 'input_text'):
+        if content_type in ('input_hex', 'input_text', 'input_dec'):
             is_text = content_type == 'input_text'
-            fmt = 'text' if is_text else 'hex'
-            length = content.get('length', 16 if is_text else 8)
-            if is_text:
-                placeholder = content.get('placeholder', ' ' * length)
-            else:
+            is_dec = content_type == 'input_dec'
+            
+            if is_dec:
+                fmt = 'dec'
+                length = content.get('length', 10)
                 placeholder = content.get('placeholder', '0' * length)
+            else:
+                fmt = 'text' if is_text else 'hex'
+                length = content.get('length', 16 if is_text else 8)
+                placeholder = content.get('placeholder', ' ' * length if is_text else '0' * length)
+                
             label = content.get('label', '')
             if label:
                 canvas.create_text(
@@ -693,6 +703,43 @@ class PluginActivity(BaseActivity):
         else:
             # No screens on stack — finish the activity
             self.finish()
+
+    # ------------------------------------------------------------------
+    # Synchronous UI-thread call (call:<method>)
+    # ------------------------------------------------------------------
+
+    def _handle_call(self, method_name):
+        """Call a plugin method synchronously on the UI thread.
+
+        Intended for cheap UI-only actions such as custom canvas drawing
+        and view-local state changes.  Long-running work should use
+        ``run:<method>`` instead.
+        """
+        if self._plugin_instance is None:
+            logger.warning("No plugin instance for call:%s", method_name)
+            self._show_error_toast("Plugin has no entry class")
+            return
+
+        method = getattr(self._plugin_instance, method_name, None)
+        if method is None or not callable(method):
+            logger.warning("Plugin method not found: %s", method_name)
+            self._show_error_toast("Method not found: %s" % method_name)
+            return
+
+        try:
+            result = method()
+        except Exception as exc:
+            logger.error("Plugin call:%s error: %s",
+                         method_name, traceback.format_exc())
+            self._state['_error'] = str(exc)
+            self._check_transitions('on_error', error=exc)
+            return
+
+        if isinstance(result, dict):
+            self._state.update(result)
+            self._check_transitions_from_result(result)
+        elif result is not None:
+            self._state['_result'] = result
 
     # ------------------------------------------------------------------
     # Background task execution (run:<method>)
