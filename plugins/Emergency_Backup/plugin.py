@@ -575,10 +575,41 @@ class RootFSBackupPlugin(object):
         self._ui_later(lambda: self._draw_error_large(
             getattr(self, '_last_error_msg', 'Backup error')), 160)
 
+    def _draw_no_space_centered(self):
+        """Centered, larger low-space warning; leave other error screens alone."""
+        canvas = self.host.getCanvas() if self.host is not None else None
+        if canvas is None:
+            return
+        tag = '_emergency_error_large'
+        canvas.delete(tag)
+        canvas.create_rectangle(0, 49, 239, 200, fill='white', outline='', tags=tag)
+        message = getattr(self, '_last_space_error', 'Not enough space')
+        lines = []
+        for index, paragraph in enumerate(message.split('\n')):
+            width = 19 if index == 0 else 21
+            for part in textwrap.wrap(self._translate(paragraph), width=width,
+                                      break_long_words=True,
+                                      break_on_hyphens=False) or ['']:
+                lines.append((part, index == 0))
+        lines = lines[:6]
+        line_height = 23
+        first_y = 124 - (len(lines)-1)*line_height/2.0
+        for i, (line, is_heading) in enumerate(lines):
+            canvas.create_text(120, first_y + i*line_height, text=line,
+                               anchor='center', fill='#D52C2C',
+                               font=('Courier New', 14 if is_heading else 12, 'bold'),
+                               tags=tag)
+
     def draw_space_error_large(self):
-        self._draw_error_large(getattr(self, '_last_space_error', 'Not enough space'))
-        self._ui_later(lambda: self._draw_error_large(
-            getattr(self, '_last_space_error', 'Not enough space')), 160)
+        # Both low-space and incompatible-layout screens use this callback.
+        # Only the low-space warning gets the new centered layout.
+        if getattr(self.host, '_current_state_id', None) == 'incompatible':
+            self._draw_error_large(getattr(self, '_last_space_error', 'Not enough space'))
+            self._ui_later(lambda: self._draw_error_large(
+                getattr(self, '_last_space_error', 'Not enough space')), 160)
+        else:
+            self._draw_no_space_centered()
+            self._ui_later(self._draw_no_space_centered, 160)
 
     def draw_no_backups_large(self):
         # Center the empty-list message in the available body canvas.
