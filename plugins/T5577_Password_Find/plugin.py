@@ -34,6 +34,8 @@
 #     instead of slow client-side checking of each password.
 #   - Displays progress, timing estimates, success and error messages.
 #   - Supports password management with bounded detect and recovery.
+#   - Wipe success requires protection off and Page 0 blocks 0-7 readback:
+#     default configuration in block 0 and zero data in blocks 1-7.
 #   - Keeps Canvas/input operations on the UI thread and RF work on run:.
 #   - Cancels between PM3 batches; avoids replaying uncertain write results.
 # Dependencies: lib/candidates.py, ui.json, manifest.json, lang/en.json,
@@ -1044,6 +1046,16 @@ class T5577PasswordFindPlugin:
                 state,new_block=detect_state(v)
                 success=bool(check_ok and state=='clear' and
                              (operation!='Wipe' or new_block=='000880E0'))
+                if success and operation=='Wipe':
+                    # Read Page 0 without a password after protection is disabled.
+                    # Never repeat wipe/write when any readback is uncertain.
+                    for block_index in range(8):
+                        read_ok,readback=self.pm3('lf t55xx read -b %d --r0'%block_index,12000)
+                        clean=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', str(readback or ''))
+                        values=re.findall(r'(?im)^\s*(?:\[\+\]\s*)?0*%d\s*\|\s*([0-9A-F]{8})\s*\|'%block_index,clean)
+                        expected='000880E0' if block_index==0 else '00000000'
+                        if not read_ok or not values or any(value.upper()!=expected for value in values):
+                            return self._write_unconfirmed(operation,'verify_block_%d_failed'%block_index)
         except Exception as exc:
             return self._write_unconfirmed(operation,'verify_exception:%s'%type(exc).__name__)
         if not success:
