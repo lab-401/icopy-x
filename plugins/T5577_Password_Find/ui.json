@@ -1,0 +1,990 @@
+{
+  "plugin": true,
+  "name": "T5577 Password Find",
+  "version": "0.2.0",
+  "initial_state": "init",
+  "states": {
+    "init": {
+      "on_enter": "run:do_init",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Initializing...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "menu",
+        "on_error": "firmware_notice",
+        "on_result.status==incompatible": "firmware_notice"
+      }
+    },
+    "menu": {
+      "on_enter": "call:draw_menu",
+      "on_exit": "call:clear_menu",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:menu_up",
+          "DOWN": "call:menu_down",
+          "OK": "call:choose_mode",
+          "M2": "call:choose_mode",
+          "M1": "finish"
+        }
+      },
+      "transitions": {
+        "on_result.status==scan": "scan",
+        "on_result.status==date": "date_field",
+        "on_result.status==set": "precheck_set"
+      }
+    },
+    "scan": {
+      "on_enter": "run:do_p1detect",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Checking T55xx P1...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "detecting",
+        "on_result.status==not_found": "p1_failed",
+        "on_result.status==error": "error",
+        "on_error": "error",
+        "on_result.status==detect_failed": "detect_failed"
+      }
+    },
+    "precheck_set": {
+      "on_enter": "run:do_p1detect",
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Checking T55xx P1...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "detecting_set",
+        "on_result.status==not_found": "p1_failed_set",
+        "on_result.status==error": "error",
+        "on_error": "error",
+        "on_result.status==detect_failed": "detect_failed"
+      }
+    },
+    "not_protected": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_not_protected",
+      "on_exit": "call:clear_screen"
+    },
+    "already_locked": {
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_already_locked",
+      "on_exit": "call:clear_screen"
+    },
+    "unknown": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_unknown",
+      "on_exit": "call:clear_screen"
+    },
+    "absent": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_absent",
+      "on_exit": "call:clear_screen"
+    },
+    "search": {
+      "on_enter": "call:draw_search_ready",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:cancelled",
+          "M2": "set_state:batch_prepare",
+          "OK": "set_state:batch_prepare"
+        }
+      },
+      "transitions": {}
+    },
+    "not_found": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_not_found",
+      "on_exit": "call:clear_screen"
+    },
+    "cancelled": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_cancelled",
+      "on_exit": "call:clear_screen"
+    },
+    "save_prompt": {
+      "screen": {
+        "title": "Password Found",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "No",
+          "right": "Yes"
+        },
+        "keys": {
+          "M1": "call:skip_save",
+          "M2": "run:save_password",
+          "OK": "run:save_password",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "found_menu",
+        "on_result.status==saved": "found_menu",
+        "on_result.status==error": "error"
+      },
+      "on_enter": "call:screen_save_prompt",
+      "on_exit": "call:clear_screen"
+    },
+    "found_menu": {
+      "screen": {
+        "title": "Password Found",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "UP": "call:action_up",
+          "DOWN": "call:action_down",
+          "M1": "set_state:menu",
+          "M2": "call:choose_action",
+          "OK": "call:choose_action"
+        }
+      },
+      "on_enter": "call:draw_action_menu",
+      "transitions": {
+        "on_result.status==back": "menu",
+        "on_result.status==confirm": "action_confirm",
+        "on_result.status==new_password": "input_hex"
+      },
+      "on_exit": "call:clear_action_menu"
+    },
+    "date_field": {
+      "on_enter": "call:show_dec",
+      "on_exit": "call:hide_dec",
+      "screen": {
+        "title": "Date Range",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "UP": "call:dec_roll_up",
+          "DOWN": "call:dec_roll_down",
+          "LEFT": "call:dec_move_left",
+          "RIGHT": "call:dec_move_right",
+          "OK": "call:dec_capture",
+          "M2": "call:dec_capture",
+          "M1": "set_state:menu"
+        }
+      },
+      "transitions": {
+        "on_result.status==more": "date_field",
+        "on_result.status==ready": "date_ready",
+        "on_result.status==error": "error",
+        "on_result.status==back": "menu",
+        "on_result.status==format": "date_format"
+      }
+    },
+    "date_ready": {
+      "screen": {
+        "title": "Date Range",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Start"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:scan",
+          "OK": "set_state:scan",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_date_ready",
+      "on_exit": "call:clear_screen"
+    },
+    "input_hex": {
+      "on_enter": "call:show_hex",
+      "on_exit": "call:hide_hex",
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "UP": "call:hex_roll_up",
+          "DOWN": "call:hex_roll_down",
+          "LEFT": "call:hex_move_left",
+          "RIGHT": "call:hex_move_right",
+          "OK": "call:hex_capture",
+          "M2": "call:hex_capture",
+          "M1": "call:hex_back"
+        }
+      },
+      "transitions": {
+        "on_result.status==ready": "set_confirm",
+        "on_result.status==change_ready": "action_confirm",
+        "on_result.status==error": "error",
+        "on_result.status==back": "menu"
+      }
+    },
+    "set_confirm": {
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Protect"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:setting",
+          "OK": "set_state:setting",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_set_confirm",
+      "on_exit": "call:clear_screen"
+    },
+    "setting": {
+      "on_enter": "run:do_set_password",
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Writing protection...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "set_success",
+        "on_result.status==unsafe": "unknown",
+        "on_error": "error",
+        "on_result.status==error": "error",
+        "on_result.status==already_locked": "already_locked",
+        "on_result.status==detect_failed": "detect_failed"
+      }
+    },
+    "set_success": {
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_set_success",
+      "on_exit": "call:clear_screen"
+    },
+    "error": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_error",
+      "on_exit": "call:clear_screen"
+    },
+    "action_confirm": {
+      "on_enter": "call:screen_action_confirm",
+      "screen": {
+        "title": "Confirm Action",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:found_menu",
+          "OK": "set_state:action_running",
+          "M2": "set_state:action_running",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_exit": "call:clear_screen"
+    },
+    "action_running": {
+      "on_enter": "run:do_action",
+      "screen": {
+        "title": "Working...",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Please wait...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ok": "action_success",
+        "on_result.status==error": "error",
+        "on_error": "error",
+        "on_result.status==detect_failed": "detect_failed"
+      }
+    },
+    "action_success": {
+      "on_enter": "call:screen_action_success",
+      "screen": {
+        "title": "Operation Success",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "OK": "set_state:menu",
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_exit": "call:clear_screen"
+    },
+    "search_failed": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "OK"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:menu",
+          "OK": "set_state:menu",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_search_failed",
+      "on_exit": "call:clear_screen"
+    },
+    "detect_failed": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Exit",
+          "right": null
+        },
+        "keys": {
+          "M1": "finish",
+          "OK": "finish",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_detect_failed",
+      "on_exit": "call:clear_screen"
+    },
+    "detecting": {
+      "on_enter": "run:do_detect",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Detecting T5577...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==clear": "not_protected",
+        "on_result.status==protected": "confirm_locked",
+        "on_result.status==unknown": "confirm_locked",
+        "on_result.status==absent": "p1_failed",
+        "on_result.status==detect_failed": "detect_failed",
+        "on_error": "error",
+        "on_result.status==error": "error",
+        "on_result.status==confirm_locked": "confirm_locked",
+        "on_result.status==scan_warning": "confirm_locked"
+      }
+    },
+    "detecting_set": {
+      "on_enter": "run:do_detect",
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Detecting T5577...",
+              "size": "medium",
+              "align": "center"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==clear": "input_hex",
+        "on_result.status==protected": "already_locked",
+        "on_result.status==unknown": "unknown",
+        "on_result.status==absent": "absent",
+        "on_result.status==detect_failed": "detect_failed",
+        "on_error": "error",
+        "on_result.status==error": "error",
+        "on_result.status==scan_warning": "already_locked"
+      }
+    },
+    "confirm_locked": {
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Continue"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "call:confirm_locked_tag",
+          "OK": "call:confirm_locked_tag",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_enter": "call:screen_confirm_locked",
+      "on_exit": "call:clear_screen",
+      "transitions": {
+        "on_result.status==ok": "search",
+        "on_result.status==unsafe": "unknown",
+        "on_error": "error"
+      }
+    },
+    "p1_failed": {
+      "on_enter": "call:screen_p1_failed",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:scan",
+          "OK": "set_state:scan",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_exit": "call:clear_screen"
+    },
+    "scan_warning": {
+      "on_enter": "call:screen_scan_warning",
+      "on_exit": "call:clear_screen",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": "Continue"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "call:confirm_scan_warning",
+          "OK": "call:confirm_scan_warning",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "search",
+        "on_result.status==unsafe": "unknown",
+        "on_error": "error"
+      }
+    },
+    "batch_work": {
+      "on_enter": "run:do_search",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{scan_phase}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "Checked: {scan_progress}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_batch}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_bar}",
+              "size": "medium",
+              "align": "center",
+              "color": "#38A757"
+            },
+            {
+              "text": "{scan_percent}",
+              "size": "medium",
+              "align": "center",
+              "color": "#38A757"
+            },
+            {
+              "text": "{scan_eta}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_upper}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": null
+        },
+        "keys": {
+          "M1": "call:cancel_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==found": "save_prompt",
+        "on_result.status==none": "not_found",
+        "on_result.status==cancel": "cancelled",
+        "on_result.status==unsafe": "unknown",
+        "on_error": "error",
+        "on_result.status==error": "error",
+        "on_result.status==more": "batch_prepare",
+        "on_result.status==detect_failed": "detect_failed"
+      }
+    },
+    "batch_prepare": {
+      "on_enter": "call:prepare_batch_ui",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "{scan_phase}",
+              "size": "medium",
+              "align": "center",
+              "color": "#1647D6"
+            },
+            {
+              "text": "Checked: {scan_progress}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_batch}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_bar}",
+              "size": "medium",
+              "align": "center",
+              "color": "#38A757"
+            },
+            {
+              "text": "{scan_percent}",
+              "size": "medium",
+              "align": "center",
+              "color": "#38A757"
+            },
+            {
+              "text": "{scan_eta}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            },
+            {
+              "text": "{scan_upper}",
+              "size": "medium",
+              "align": "center",
+              "color": "#555555"
+            }
+          ]
+        },
+        "buttons": {
+          "left": "Cancel",
+          "right": null
+        },
+        "keys": {
+          "M1": "call:cancel_scan"
+        }
+      },
+      "transitions": {
+        "on_result.status==ok": "batch_work",
+        "on_error": "error"
+      }
+    },
+    "firmware_notice": {
+      "on_enter": "call:screen_firmware_notice",
+      "on_exit": "call:clear_screen",
+      "screen": {
+        "title": "T5577 Password Find",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": null,
+          "right": "Exit"
+        },
+        "keys": {
+          "M2": "finish",
+          "OK": "finish",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      }
+    },
+    "date_format": {
+      "on_enter": "call:draw_date_format_menu",
+      "on_exit": "call:clear_date_format_menu",
+      "screen": {
+        "title": "Date format",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Select"
+        },
+        "keys": {
+          "UP": "call:format_up",
+          "DOWN": "call:format_down",
+          "OK": "call:choose_date_format",
+          "M2": "call:choose_date_format",
+          "M1": "set_state:menu"
+        }
+      },
+      "transitions": {
+        "on_result.status==ready": "date_count"
+      }
+    },
+    "date_count": {
+      "on_enter": "run:prepare_date_count",
+      "screen": {
+        "title": "Date Range",
+        "content": {
+          "type": "text",
+          "lines": [
+            {
+              "text": "Counting passwords...",
+              "align": "center",
+              "size": "medium"
+            }
+          ],
+          "y": 110
+        },
+        "buttons": {
+          "left": null,
+          "right": null
+        },
+        "keys": {}
+      },
+      "transitions": {
+        "on_result.status==ready": "date_ready",
+        "on_result.status==error": "error",
+        "on_error": "error"
+      }
+    },
+    "p1_failed_set": {
+      "on_enter": "call:screen_p1_failed",
+      "screen": {
+        "title": "Set Password",
+        "content": {
+          "type": "text",
+          "lines": []
+        },
+        "buttons": {
+          "left": "Back",
+          "right": "Retry"
+        },
+        "keys": {
+          "M1": "set_state:menu",
+          "M2": "set_state:precheck_set",
+          "OK": "set_state:precheck_set",
+          "UP": "call:info_up",
+          "DOWN": "call:info_down"
+        }
+      },
+      "on_exit": "call:clear_screen"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "T5577 Password Find",
+  "version": "0.2.0",
+  "author": "jareckib",
+  "description": "T5577 password search and management with explicit protection-state safety checks.",
+  "entry_class": "T5577PasswordFindPlugin",
+  "permissions": [
+    "pm3"
+  ],
+  "order": 44
+}
