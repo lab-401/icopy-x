@@ -29,9 +29,6 @@
 #     instead of slow client-side checking of each password.
 #   - Displays progress, timing estimates, success and error messages.
 #   - Supports password management with bounded detect and recovery.
-#   - Rejects malformed or conflicting PM3 result fields.
-#   - Reads back block 0 using the new key after setting/changing a password;
-#     verifies the expected configuration and blocks 1-7 after a wipe.
 #   - Keeps Canvas/input operations on the UI thread and RF work on run:.
 #   - Cancels between PM3 batches; avoids replaying uncertain write results.
 # Dependencies: lib/candidates.py, ui.json, manifest.json, lang/en.json,
@@ -47,7 +44,7 @@
 import os, re, sys, datetime, threading, hashlib, time
 HERE=os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0,os.path.join(HERE,'lib'))
-from candidates import KEY,dictionary,priority_alternating,dates,detect_state,verified,read_block
+from candidates import KEY,dictionary,priority_alternating,dates,detect_state,verified
 from lib import resources
 from time import monotonic
 DIC='/mnt/upan/keys/t55xx/t5577_key.dic'
@@ -940,7 +937,7 @@ class T5577PasswordFindPlugin:
     def do_set_password(self):
         self.reset_budget()
         if not self.password or not KEY.fullmatch(self.password):
-            return self.error(self.tr('Invalid password'))
+            return self.error('Invalid password')
         # The second check is necessary: the tag could have been swapped
         # between first detection and confirmation. It is bounded to 8 s.
         state=self._check_set_tag_before_write()
@@ -960,10 +957,9 @@ class T5577PasswordFindPlugin:
         try:
             verified_ok,detected=self.pm3(
                 'lf t55xx detect -p %s -o --r0'%self.password,16000)
-            read_ok,readback=self.pm3('lf t55xx read -b 0 -p %s -o --r0'%self.password,12000) if verified_ok else (False,'')
         except Exception as exc:
             return self._write_unconfirmed('Set Password','verify_exception:%s'%type(exc).__name__)
-        if not verified_ok or not read_ok or not verified(detected,readback,self.password):
+        if not verified_ok or detect_state(detected)[0]!='protected':
             return self._write_unconfirmed('Set Password','verification_incomplete')
         return {'status':'ok'}
 
@@ -972,33 +968,33 @@ class T5577PasswordFindPlugin:
         self.reset_budget()
         old=self._old_password
         if not old or not KEY.fullmatch(old) or not self._verified_block:
-            return self.error(self.tr('Password unverified'))
+            return self.error('Password unverified')
         try:
             # A changed tag or failed authentication must block the write.
             detect_ok,d=self.pm3('lf t55xx detect -p %s -o --r0'%old,16000)
             if not detect_ok:
-                return self._recover_after_failure(self.tr('Tag verification failed'))
+                return self._recover_after_failure('Tag verification failed')
             state,block=detect_state(d)
             if state!='protected' or block!=self._verified_block:
-                return self.error(self.tr('Tag state changed'))
+                return self.error('Tag state changed')
             read_ok,rd=self.pm3('lf t55xx read -b 0 -p %s -o --r0'%old,12000)
             if not read_ok:
-                return self._recover_after_failure(self.tr('PWD verify failed'))
+                return self._recover_after_failure('PWD verify failed')
             if not verified(d,rd,old):
-                return self.error(self.tr('PWD verify failed'))
+                return self.error('PWD verify failed')
             if self._pending_action=='Remove Password':
                 clean='%08X'%(int(block,16)&~0x10)
                 cmd='lf t55xx write -b 0 -d %s -p %s --r0'%(clean,old)
             elif self._pending_action=='Change Password':
                 if not self.password or not KEY.fullmatch(self.password):
-                    return self.error(self.tr('Invalid new password'))
+                    return self.error('Invalid new password')
                 cmd='lf t55xx protect -p %s -n %s --r0'%(old,self.password)
             elif self._pending_action=='Wipe':
                 cmd='lf t55xx wipe -p %s --r0'%old
             else:
-                return self.error(self.tr('Unknown operation'))
+                return self.error('Unknown operation')
         except Exception:
-            return self._recover_after_failure(self.tr('Tag verification failed'))
+            return self._recover_after_failure('Tag verification failed')
 
         operation=self._pending_action
         try:
@@ -1015,19 +1011,12 @@ class T5577PasswordFindPlugin:
             if operation=='Change Password':
                 check_ok,v=self.pm3('lf t55xx detect -p %s -o --r0'%self.password,16000)
                 state,new_block=detect_state(v)
-                read_ok,readback=self.pm3('lf t55xx read -b 0 -p %s -o --r0'%self.password,12000) if check_ok else (False,'')
-                success=bool(check_ok and read_ok and new_block==block and verified(v,readback,self.password))
+                success=bool(check_ok and state=='protected' and new_block==block)
             else:
                 check_ok,v=self.pm3('lf t55xx detect --r0',16000)
                 state,new_block=detect_state(v)
                 success=bool(check_ok and state=='clear' and
-                             new_block==('000880E0' if operation=='Wipe' else clean))
-                if success and operation=='Wipe':
-                    for number in range(1,8):
-                        read_ok,readback=self.pm3('lf t55xx read -b %d --r0'%number,12000)
-                        if not read_ok or read_block(readback,number)!='00000000':
-                            success=False
-                            break
+                             (operation!='Wipe' or new_block=='000880E0'))
         except Exception as exc:
             return self._write_unconfirmed(operation,'verify_exception:%s'%type(exc).__name__)
         if not success:

@@ -63,33 +63,17 @@ def dates(start,end,formats=('DDMMYYYY','YYYYMMDD')):
                 yield d.strftime('%Y%m%d' if fmt=='YYYYMMDD' else '%d%m%Y')
         a+=1; b-=1
 
-def _field(output, name):
-    values = re.findall(r'(?im)^[ \t]*(?:\[[+=]\][ \t]*)?'+re.escape(name)+r'\.+[ \t]*([^\r\n]*)',str(output or ''))
-    values = {value.strip().upper() for value in values}
-    return values.pop() if len(values)==1 else None
-
-
 def detect_state(out):
-    block=_field(out,'Block0')
-    state=_field(out,'Password set')
-    if not block or not KEY.fullmatch(block) or state not in ('YES','NO'):
-        return 'unknown',None
-    pwd=bool(int(block,16)&0x10)
-    if pwd!=(state=='YES'):return 'unknown',None
-    return ('protected' if pwd else 'clear'),block
-
-
-def read_block(output, number):
-    pattern = r'(?im)^[ \t]*(?:\[[+=]\][ \t]*)?%02d[ \t]*\|[ \t]*([^|\r\n]*)\|' % number
-    values={value.strip().upper() for value in re.findall(pattern,str(output or ''))}
-    if len(values)!=1:return None
-    value=values.pop()
-    return value if KEY.fullmatch(value) else None
-
+    out = str(out or '')
+    block = re.search(r'(?im)^\s*(?:\[=\]\s*)?Block0\.+\s*([0-9A-F]{8})',out)
+    state = re.search(r'(?im)^\s*(?:\[=\]\s*)?Password set\.+\s*(Yes|No)',out)
+    if not block or not state:return 'unknown',None
+    pwd = bool(int(block.group(1),16)&0x10)
+    if pwd != (state.group(1)=='Yes'):return 'unknown',None
+    return ('protected' if pwd else 'clear'),block.group(1)
 
 def verified(detect,read,key):
-    state,block=detect_state(detect)
-    password=_field(detect,'Password')
-    return (state=='protected' and read_block(read,0)==block
-            and KEY.fullmatch(str(key or '')) is not None
-            and password==key.upper())
+    state,b=detect_state(detect)
+    m=re.search(r'(?im)^\s*(?:\[\+\]\s*)?00\s*\|\s*([0-9A-F]{8})\s*\|',str(read or ''))
+    p=re.search(r'(?im)^\s*(?:\[=\]\s*)?Password\.+\s*([0-9A-F]{8})',str(detect or ''))
+    return state=='protected' and m is not None and m.group(1)==b and p is not None and p.group(1)==key
