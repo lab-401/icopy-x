@@ -462,6 +462,8 @@ class T5577PasswordFindPlugin:
         """
         if self.mode not in (1,2) or not self.start or not self.end:
             return self.error(self.tr('Date range missing'))
+        if self.end<self.start:
+            return self.error(self.tr('End before start'))
         self._prepared_keys=None
         self._prepared_total=None
         keys=[]
@@ -702,6 +704,8 @@ class T5577PasswordFindPlugin:
         # automatically to the next batch, without asking for Continue.
         if not self.protected or not self._p1_verified:
             return {'status':'unsafe'}
+        if self.mode in (1,2) and self.start and self.end and self.end<self.start:
+            return self.error(self.tr('End before start'))
         if not self._scan_ready:
             if not self._inspect_source_dictionary():
                 return self.error(self.tr('Dictionary missing'))
@@ -853,6 +857,10 @@ class T5577PasswordFindPlugin:
             return self._date_warning(self.tr('Year: 1900-2100'))
         if field in (1,4) and not 1<=n<=12:
             return self._date_warning(self.tr('Month: 01-12'))
+        if field==3 and n<self.fields[0]:
+            return self._date_warning(self.tr('End before start'))
+        if field==4 and self.fields[3]==self.fields[0] and n<self.fields[1]:
+            return self._date_warning(self.tr('End before start'))
         if field in (2,5):
             if n<1 or n>31:return self._date_warning(self.tr('Invalid day'))
             try:
