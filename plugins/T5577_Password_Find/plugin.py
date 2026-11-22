@@ -18,6 +18,10 @@
 # Purpose:
 #   - Provides Dictionary, Password from Date, Date + Dictionary and
 #     Set Password workflows through the native iCopy-X/XS UI state machine.
+#   - Searches dictionary entries alternately from both ends: first, last,
+#     second, second-to-last, continuing inward without priority entries.
+#   - Searches dates alternately from the start and end of the date range.
+#     Date + Dictionary checks the dictionary first, then unique dates.
 #   - Accepts a start/end date and the YYYYMMDD or DDMMYYYY password format.
 #   - Validates dates and counts unique dictionary/date candidates before scan.
 #   - Checks firmware compatibility and T55xx password-protection status.
