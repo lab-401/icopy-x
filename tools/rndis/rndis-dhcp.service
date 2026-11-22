@@ -1,0 +1,17 @@
+[Unit]
+Description=DHCP server for iCopy-X RNDIS link (usb0 -> PC)
+After=rndis.service
+Wants=rndis.service
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/dnsmasq --keep-in-foreground --interface=usb0 --bind-interfaces \
+    --dhcp-range=10.1.1.100,10.1.1.150,255.255.255.0,12h \
+    --dhcp-option=3,10.1.1.1 --dhcp-option=1,255.255.255.0 \
+    --dhcp-option=28,10.1.1.255 \
+    --no-resolv --no-hosts --port=0 --log-dhcp
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -190,6 +190,30 @@ def setScreenMirror(value):
     config.setKeyValue('screen_mirror', str(int(value)))
 
 
+def getMirrorTransport():
+    """Get the screen-mirror transport.
+
+    Returns:
+        int: 0=USB serial gadget (g_serial, COM port on the host),
+             1=Ethernet over the RNDIS link (TCP, no USB gadget involved)
+             Default 0 so existing devices keep the serial path.
+    """
+    val = config.getValue('mirror_transport', '0')
+    try:
+        return int(val)
+    except (TypeError, ValueError):
+        return 0
+
+
+def setMirrorTransport(value):
+    """Set the screen-mirror transport.
+
+    Args:
+        value: int 0=serial, 1=ethernet
+    """
+    config.setKeyValue('mirror_transport', str(int(value)))
+
+
 def getLanguage():
     """Get the configured UI language code.
 

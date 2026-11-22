@@ -479,10 +479,12 @@ class SettingsMenuActivity(BaseActivity):
     # Row indices
     _ROW_MIRROR = 0
     _ROW_LANGUAGE = 1
-    _ROW_COUNT = 2
+    _ROW_TRANSPORT = 2
+    _ROW_COUNT = 3
 
     def __init__(self, bundle=None):
         self._mirror_state = False
+        self._transport = 0       # 0=serial gadget, 1=ethernet (RNDIS)
         self._selected = 0
         self._tk_img = None  # prevent GC of PhotoImage
         super().__init__(bundle)
@@ -503,12 +505,17 @@ class SettingsMenuActivity(BaseActivity):
         return None
 
     def onCreate(self, bundle=None):
-        # Load current mirror state
+        # Load current mirror state and transport
         try:
             import settings as _settings
             self._mirror_state = bool(_settings.getScreenMirror())
         except Exception:
             self._mirror_state = False
+        try:
+            import settings as _settings
+            self._transport = int(_settings.getMirrorTransport())
+        except Exception:
+            self._transport = 0
 
         self._render()
 
@@ -587,6 +594,25 @@ class SettingsMenuActivity(BaseActivity):
             tags='settings_row',
         )
 
+        # Transport row: label on the left, active link on the right
+        canvas.create_text(
+            15, self._row_center_y(self._ROW_TRANSPORT),
+            text=resources.get_str('mirror_transport'),
+            fill=NORMAL_TEXT_COLOR,
+            font=resources.get_font(14),
+            anchor='w',
+            tags='settings_row',
+        )
+        canvas.create_text(
+            SCREEN_W - 15, self._row_center_y(self._ROW_TRANSPORT),
+            text=resources.get_str(
+                'link_ethernet' if self._transport else 'link_serial'),
+            fill=NORMAL_TEXT_COLOR,
+            font=resources.get_font(14),
+            anchor='e',
+            tags='settings_row',
+        )
+
         # Mirror toggle icon (right side)
         self._draw_toggle()
 
@@ -616,6 +642,51 @@ class SettingsMenuActivity(BaseActivity):
         except Exception:
             pass
         self._draw_toggle()
+        self._apply_mirror()
+
+    def _toggle_transport(self):
+        """Switch the mirror link and restart the service if it is running."""
+        self._transport = 1 - self._transport
+        try:
+            import settings as _settings
+            _settings.setMirrorTransport(self._transport)
+        except Exception:
+            pass
+        self._render()
+        self._apply_mirror(restart=True)
+
+    def _apply_mirror(self, restart=False):
+        """Start or stop the mirror service so the toggle takes effect now.
+
+        The service is otherwise only started once, from application.py, when
+        getScreenMirror() is set at launch — flipping this row used to change
+        nothing until the app was restarted, so no COM port ever appeared.
+
+        Runs off the UI thread: start() releases the UDC and modprobes g_serial,
+        stop() joins the serve thread. Both can take a moment.
+
+        Args:
+            restart: stop before starting, so a transport change is picked up
+                (start() reads the saved transport).
+        """
+        import threading
+
+        wanted = self._mirror_state
+
+        def _run():
+            try:
+                from lib.mirror_service import get_service
+                service = get_service()
+                if restart:
+                    service.stop()
+                if wanted:
+                    service.start()
+                else:
+                    service.stop()
+            except Exception as e:
+                logger.warning('mirror toggle failed: %s', e)
+
+        threading.Thread(target=_run, daemon=True).start()
 
     def onKeyEvent(self, key):
         if key == KEY_UP:
@@ -631,6 +702,8 @@ class SettingsMenuActivity(BaseActivity):
                 self._toggle_mirror()
             elif self._selected == self._ROW_LANGUAGE:
                 actstack.start_activity(LanguageActivity)
+            elif self._selected == self._ROW_TRANSPORT:
+                self._toggle_transport()
         elif key == KEY_PWR:
             if self._handlePWR():
                 return
