@@ -44,7 +44,7 @@
 import os, re, sys, datetime, threading, hashlib, time
 HERE=os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0,os.path.join(HERE,'lib'))
-from candidates import KEY,dictionary,priority_alternating,dates,detect_state,verified
+from candidates import KEY,dictionary,alternating,dates,detect_state,verified
 from lib import resources
 from time import monotonic
 DIC='/mnt/upan/keys/t55xx/t5577_key.dic'
@@ -490,7 +490,7 @@ class T5577PasswordFindPlugin:
     def _candidate_generator(self):
         if self.mode in (0,2):
             self._phase='Dictionary'
-            for key in (self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)):
+            for key in alternating(self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)):
                 yield key,'Dictionary'
         if self.mode in (1,2):
             for key in dates(self.start,self.end,formats=(('YYYYMMDD','DDMMYYYY')[self.date_format_index],)):yield key,'Date'
