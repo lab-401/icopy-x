@@ -298,6 +298,16 @@ class T5577PasswordFindPlugin:
     def choose_mode(self):
         self.mode=self.index;self._pending_action=None;self.protected=False;self.cancel.clear();self.reset_budget();self._scan_ready=False
         self._prepared_keys=None;self._prepared_total=None
+        # Reset before batch_prepare can render data from the previous search.
+        self._sequence=None;self._seen=set();self._done=0;self._total=0
+        self._pending_batch=None;self._batch_index=0;self._batch_size=CHK_BATCH_INITIAL
+        self._last_batch_s=None;self._batch_timings=[]
+        self._scan_started_mono=None;self._scan_started_wall=None
+        self._eta_line='ETA: calculating';self._upper_line='Max est: calculating'
+        self._phase='Date' if self.mode==1 else 'Dictionary'
+        self.found=None;self._old_password=None;self._verified_block=None
+        self.var('scan_key','');self.var('found_password','')
+        self.prepare_batch_ui()
         if self.mode==3:return {'status':'set'}
         if self.mode in (1,2):
             self.field=0;self.fields=[]
