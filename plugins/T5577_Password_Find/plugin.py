@@ -18,9 +18,11 @@
 # Purpose:
 #   - Provides Dictionary, Password from Date, Date + Dictionary and
 #     Set Password workflows through the native iCopy-X/XS UI state machine.
-#   - Searches dictionary entries in their stored file order, in PM3 batches.
+#   - Searches whole dictionary batches alternately from the start and end,
+#     moving inward without repeating entries; preserves order within each batch.
 #   - Searches dates alternately from the start and end of the date range.
-#     Date + Dictionary checks the dictionary first, then unique dates.
+#   - Date + Dictionary treats dictionary and unique chronological dates as
+#     one list, checking whole batches from opposite ends toward the middle.
 #   - Accepts a start/end date and the YYYYMMDD or DDMMYYYY password format.
 #   - Validates dates and counts unique dictionary/date candidates before scan.
 #   - Checks firmware compatibility and T55xx password-protection status.
@@ -494,10 +496,36 @@ class T5577PasswordFindPlugin:
 
     def _candidate_generator(self):
         if self.mode in (0,2):
-            self._phase='Dictionary'
-            for key in (self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)):
-                yield key,'Dictionary'
-        if self.mode in (1,2):
+            keys=self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)
+            dictionary_keys=set(keys)
+            date_count=(self.end-self.start).days+1 if self.mode==2 else 0
+            left,right=0,len(keys)+date_count
+            from_start=True
+            while left<right:
+                # One logical list: dictionary followed by chronological dates.
+                # Generate only the current batch, never the full date list.
+                batch=[]
+                limit=min(CHK_BATCH_HARD_MAX,self._batch_size)
+                while left<right and len(batch)<limit:
+                    if from_start:
+                        index=left;left+=1
+                    else:
+                        right-=1;index=right
+                    if index<len(keys):
+                        key,phase=keys[index],'Dictionary'
+                    else:
+                        day=self.start+datetime.timedelta(days=index-len(keys))
+                        key=day.strftime(('%Y%m%d','%d%m%Y')[self.date_format_index])
+                        if key in dictionary_keys:
+                            continue
+                        phase='Date'
+                    batch.append((key,phase))
+                if not from_start:
+                    batch.reverse()
+                from_start=not from_start
+                for candidate in batch:
+                    yield candidate
+        elif self.mode==1:
             for key in dates(self.start,self.end,formats=(('YYYYMMDD','DDMMYYYY')[self.date_format_index],)):yield key,'Date'
 
     def _next_batch(self):
