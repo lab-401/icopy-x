@@ -80,7 +80,7 @@ class T5577PasswordFindPlugin:
         self._prepared_keys=None;self._prepared_total=None
         self._action_index=0;self._pending_action=None;self._verified_block=None;self._old_password=None
         self._chip_type='';self._lf_id='';self._search_note='';self._p1_verified=False
-        self._pm3_serial=0;self._pending_batch=None;self._batch_size=CHK_BATCH_INITIAL;self._batch_index=0;self._last_batch_s=None;self._scan_started_mono=None;self._scan_started_wall=None;self._batch_timings=[];self._eta_line="ETA: calculating";self._upper_line="Upper: calculating";self._firmware_notice=''
+        self._pm3_serial=0;self._pending_batch=None;self._batch_size=CHK_BATCH_INITIAL;self._batch_index=0;self._last_batch_s=None;self._scan_started_mono=None;self._scan_started_wall=None;self._batch_timings=[];self._eta_line=self.tr('ETA: calculating');self._upper_line=self.tr('Upper: calculating');self._firmware_notice=''
 
     def var(self,k,v):self.host.set_var(k,str(v))
     def tr(self,v):
@@ -305,7 +305,7 @@ class T5577PasswordFindPlugin:
         self._pending_batch=None;self._batch_index=0;self._batch_size=CHK_BATCH_INITIAL
         self._last_batch_s=None;self._batch_timings=[]
         self._scan_started_mono=None;self._scan_started_wall=None
-        self._eta_line='ETA: calculating';self._upper_line='Max est: calculating'
+        self._eta_line=self.tr('ETA: calculating');self._upper_line=self.tr('Max est: calculating')
         self._phase='Date' if self.mode==1 else 'Dictionary'
         self.found=None;self._old_password=None;self._verified_block=None
         self.var('scan_key','');self.var('found_password','')
@@ -341,7 +341,7 @@ class T5577PasswordFindPlugin:
             self._p1_verified=True
             self._chip_type='T55xx'
             self.var('chip_type','T55xx')
-            self._search_note='Chipset: T55xx'
+            self._search_note=self.tr('Chipset: T55xx')
             self.var('search_note',self._search_note)
             return {'status':'ok'}
         # Even a normal negative response may precede another read.
@@ -725,7 +725,7 @@ class T5577PasswordFindPlugin:
         return ret,result
 
     def draw_search_ready(self):
-        self._draw_lines(['Ready to search','ARM flash dictionary',self.host.tr('First: %d keys')%CHK_BATCH_INITIAL,'OK - Start search'])
+        self._draw_lines([self.tr('Ready to search'),self.tr('ARM flash dictionary'),self.host.tr('First: %d keys')%CHK_BATCH_INITIAL,self.tr('OK - Start search')])
 
     def do_search(self):
         # One bounded chk -m operation per UI state entry; UI transitions
@@ -742,7 +742,7 @@ class T5577PasswordFindPlugin:
             self._sequence=self._candidate_generator()
             self._seen=set();self._done=0;self._pending_batch=None;self._batch_size=CHK_BATCH_INITIAL;self._batch_index=0;self._last_batch_s=None
             self._scan_started_mono=monotonic();self._scan_started_wall=self._wall_time()
-            self._batch_timings=[];self._eta_line='ETA: calculating';self._upper_line='Max est: calculating'
+            self._batch_timings=[];self._eta_line=self.tr('ETA: calculating');self._upper_line=self.tr('Max est: calculating')
             if self.mode in (1,2):
                 if self._prepared_total is None:
                     return self.error(self.tr('Date count missing'))
@@ -964,7 +964,7 @@ class T5577PasswordFindPlugin:
     def do_set_password(self):
         self.reset_budget()
         if not self.password or not KEY.fullmatch(self.password):
-            return self.error('Invalid password')
+            return self.error(self.tr('Invalid password'))
         # The second check is necessary: the tag could have been swapped
         # between first detection and confirmation. It is bounded to 8 s.
         state=self._check_set_tag_before_write()
@@ -995,33 +995,33 @@ class T5577PasswordFindPlugin:
         self.reset_budget()
         old=self._old_password
         if not old or not KEY.fullmatch(old) or not self._verified_block:
-            return self.error('Password unverified')
+            return self.error(self.tr('Password unverified'))
         try:
             # A changed tag or failed authentication must block the write.
             detect_ok,d=self.pm3('lf t55xx detect -p %s -o --r0'%old,16000)
             if not detect_ok:
-                return self._recover_after_failure('Tag verification failed')
+                return self._recover_after_failure(self.tr('Tag verification failed'))
             state,block=detect_state(d)
             if state!='protected' or block!=self._verified_block:
-                return self.error('Tag state changed')
+                return self.error(self.tr('Tag state changed'))
             read_ok,rd=self.pm3('lf t55xx read -b 0 -p %s -o --r0'%old,12000)
             if not read_ok:
-                return self._recover_after_failure('PWD verify failed')
+                return self._recover_after_failure(self.tr('PWD verify failed'))
             if not verified(d,rd,old):
-                return self.error('PWD verify failed')
+                return self.error(self.tr('PWD verify failed'))
             if self._pending_action=='Remove Password':
                 clean='%08X'%(int(block,16)&~0x10)
                 cmd='lf t55xx write -b 0 -d %s -p %s --r0'%(clean,old)
             elif self._pending_action=='Change Password':
                 if not self.password or not KEY.fullmatch(self.password):
-                    return self.error('Invalid new password')
+                    return self.error(self.tr('Invalid new password'))
                 cmd='lf t55xx protect -p %s -n %s --r0'%(old,self.password)
             elif self._pending_action=='Wipe':
                 cmd='lf t55xx wipe -p %s --r0'%old
             else:
-                return self.error('Unknown operation')
+                return self.error(self.tr('Unknown operation'))
         except Exception:
-            return self._recover_after_failure('Tag verification failed')
+            return self._recover_after_failure(self.tr('Tag verification failed'))
 
         operation=self._pending_action
         try:
