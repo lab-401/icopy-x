@@ -687,7 +687,7 @@ class T5577PasswordFindPlugin:
         ret,loaded=self._executor_command(upload, LOAD_TIMEOUT_MS, 'upload')
         m=re.search(r'Wrote\s+(\d+)\s+passwords\s+to file\s+dict_t55xx\.bin', loaded, re.I)
         expected=len(self._pending_batch or ())
-        if ret != 1 or m is None or int(m.group(1))!=expected:
+        if ret not in (0, 1) or m is None or int(m.group(1))!=expected:
             return -2,loaded
         if self.cancel.is_set():
             return -3,loaded
@@ -747,7 +747,7 @@ class T5577PasswordFindPlugin:
             return {'status':'cancel'}
         if ret == -1:
             return self._recover_after_failure(self.tr('CHK timed out'))
-        if ret != 1:
+        if ret not in (0, 1):
             return self._recover_after_failure(self.tr('CHK command error'))
         output=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',str(out or ''))
         if re.search(r'Loaded\s+\d+\s+passwords from spiffs|found valid password|check pwd failed', output, re.I):
