@@ -18,8 +18,7 @@
 # Purpose:
 #   - Provides Dictionary, Password from Date, Date + Dictionary and
 #     Set Password workflows through the native iCopy-X/XS UI state machine.
-#   - Searches dictionary entries alternately from both ends: first, last,
-#     second, second-to-last, continuing inward without priority entries.
+#   - Searches dictionary entries in their stored file order, in PM3 batches.
 #   - Searches dates alternately from the start and end of the date range.
 #     Date + Dictionary checks the dictionary first, then unique dates.
 #   - Accepts a start/end date and the YYYYMMDD or DDMMYYYY password format.
@@ -48,7 +47,7 @@
 import os, re, sys, datetime, threading, hashlib, time
 HERE=os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0,os.path.join(HERE,'lib'))
-from candidates import KEY,dictionary,alternating,dates,detect_state,verified
+from candidates import KEY,dictionary,priority_alternating,dates,detect_state,verified
 from lib import resources
 from time import monotonic
 DIC='/mnt/upan/keys/t55xx/t5577_key.dic'
@@ -238,17 +237,7 @@ class T5577PasswordFindPlugin:
             self._firmware_notice=self.tr('PM3 version unknown') if recovered else self.tr('PM3 recovery failed')
             return False
         status=self._firmware_status(out) if ok else 'read_error'
-        if status=='supported':
-            try:
-                chk_ok,chk=self.pm3('lf t55xx chk -h',5000)
-                load_ok,load=self.pm3('mem load -h',5000)
-                capable=chk_ok and load_ok and '--r0' in chk and re.search(r'(?<!\w)-m\b',chk) and re.search(r'(?<!\w)-t\b',load)
-                if capable:return True
-                if not chk_ok or not load_ok:self._recover_set_detect()
-            except Exception:
-                self._recover_set_detect()
-            self._firmware_notice=self.tr('Required PM3 commands unavailable')
-            return False
+        if status=='supported': return True
         self._firmware_notice=(self.tr('Older PM3 detected') if status=='legacy_1090' else self.tr('PM3 version unknown'))
         return False
 
@@ -333,7 +322,7 @@ class T5577PasswordFindPlugin:
         try:
             ok,out=self.pm3('lf t55xx p1detect',6000)
             clean=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',str(out or ''))
-            found=bool(ok and re.search(r'\bT55xx chip found!',clean,re.IGNORECASE))
+            found=bool(re.search(r'\bT55xx chip found!',clean,re.IGNORECASE))
         except Exception:
             failed=True
         if found:
@@ -494,7 +483,7 @@ class T5577PasswordFindPlugin:
     def _candidate_generator(self):
         if self.mode in (0,2):
             self._phase='Dictionary'
-            for key in alternating(self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)):
+            for key in (self._prepared_keys if self._prepared_keys is not None else dictionary(DIC)):
                 yield key,'Dictionary'
         if self.mode in (1,2):
             for key in dates(self.start,self.end,formats=(('YYYYMMDD','DDMMYYYY')[self.date_format_index],)):yield key,'Date'
@@ -687,7 +676,7 @@ class T5577PasswordFindPlugin:
         ret,loaded=self._executor_command(upload, LOAD_TIMEOUT_MS, 'upload')
         m=re.search(r'Wrote\s+(\d+)\s+passwords\s+to file\s+dict_t55xx\.bin', loaded, re.I)
         expected=len(self._pending_batch or ())
-        if ret not in (0, 1) or m is None or int(m.group(1))!=expected:
+        if ret == -1 or m is None or int(m.group(1))!=expected:
             return -2,loaded
         if self.cancel.is_set():
             return -3,loaded
@@ -747,7 +736,7 @@ class T5577PasswordFindPlugin:
             return {'status':'cancel'}
         if ret == -1:
             return self._recover_after_failure(self.tr('CHK timed out'))
-        if ret not in (0, 1):
+        if ret != 1 and ret != 0:
             return self._recover_after_failure(self.tr('CHK command error'))
         output=re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',str(out or ''))
         if re.search(r'Loaded\s+\d+\s+passwords from spiffs|found valid password|check pwd failed', output, re.I):
@@ -758,7 +747,7 @@ class T5577PasswordFindPlugin:
         if found:
             key=found.group(1).upper()
             state,block=detect_state(output)
-            if key not in batch or state!='protected' or not block or not re.search(r'(?im)^\s*(?:\[=\]\s*)?Password\.+\s*'+re.escape(key)+r'\s*$', output):
+            if key not in batch or state!='protected' or not block or not re.search(r'(?im)^\s*\[=\]\s*Password\.+\s*'+re.escape(key)+r'\s*$', output):
                 return self._recover_after_failure(self.tr('CHK invalid result'))
             self._pending_batch=None
             self.found=key;self._old_password=key;self._verified_block=block
@@ -802,19 +791,7 @@ class T5577PasswordFindPlugin:
         try:
             os.makedirs(os.path.dirname(DIC),exist_ok=True)
             if self.found not in set(dictionary(DIC)):
-                import tempfile
-                previous=b''
-                if os.path.exists(DIC):
-                    with open(DIC,'rb') as source:previous=source.read()
-                separator=b'\n' if previous and not previous.endswith(b'\n') else b''
-                fd,temp=tempfile.mkstemp(prefix='.t5577-',dir=os.path.dirname(DIC))
-                try:
-                    with os.fdopen(fd,'wb') as target:
-                        target.write(previous+separator+self.found.encode('ascii')+b'\n')
-                        target.flush();os.fsync(target.fileno())
-                    os.replace(temp,DIC)
-                finally:
-                    if os.path.exists(temp):os.unlink(temp)
+                with open(DIC,'a',encoding='ascii') as f:f.write(self.found+'\n')
             return {'status':'saved'}
         except OSError:return self.error(self.tr('Dictionary write error'))
     def skip_save(self):

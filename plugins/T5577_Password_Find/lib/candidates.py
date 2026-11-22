@@ -65,8 +65,8 @@ def dates(start,end,formats=('DDMMYYYY','YYYYMMDD')):
 
 def detect_state(out):
     out = str(out or '')
-    block = re.search(r'(?im)^\s*(?:\[=\]\s*)?Block0\.+\s*([0-9A-F]{8})',out)
-    state = re.search(r'(?im)^\s*(?:\[=\]\s*)?Password set\.+\s*(Yes|No)',out)
+    block = re.search(r'(?im)^\s*\[=\]\s*Block0\.+\s*([0-9A-F]{8})',out)
+    state = re.search(r'(?im)^\s*\[=\]\s*Password set\.+\s*(Yes|No)',out)
     if not block or not state:return 'unknown',None
     pwd = bool(int(block.group(1),16)&0x10)
     if pwd != (state.group(1)=='Yes'):return 'unknown',None
@@ -74,6 +74,6 @@ def detect_state(out):
 
 def verified(detect,read,key):
     state,b=detect_state(detect)
-    m=re.search(r'(?im)^\s*(?:\[\+\]\s*)?00\s*\|\s*([0-9A-F]{8})\s*\|',str(read or ''))
-    p=re.search(r'(?im)^\s*(?:\[=\]\s*)?Password\.+\s*([0-9A-F]{8})',str(detect or ''))
+    m=re.search(r'(?im)^\s*\[\+\]\s*00\s*\|\s*([0-9A-F]{8})\s*\|',str(read or ''))
+    p=re.search(r'(?im)^\s*\[=\]\s*Password\.+\s*([0-9A-F]{8})',str(detect or ''))
     return state=='protected' and m is not None and m.group(1)==b and p is not None and p.group(1)==key
